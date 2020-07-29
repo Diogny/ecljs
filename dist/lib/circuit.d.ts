@@ -1,0 +1,62 @@
+import EC from "./ec";
+import Wire from "./wire";
+import ItemBoard from "./itemsBoard";
+import Rect from "./rect";
+import { IPoint, IBaseComponent } from "./interfaces";
+import Point from "./point";
+export default class Circuit {
+    version: string;
+    name: string;
+    description: string;
+    uniqueCounters: any;
+    compMap: Map<string, IBaseComponent>;
+    ecMap: Map<string, EC>;
+    wireMap: Map<string, Wire>;
+    rootComponent(name: string): IBaseComponent | undefined;
+    static defaultZoom: number;
+    __zoom: number;
+    get zoom(): number;
+    set zoom(value: number);
+    static get zoomMultipliers(): number[];
+    static get zoomFactors(): string[];
+    static validZoom(zoom: number): boolean;
+    __modified: boolean;
+    get modified(): boolean;
+    set modified(value: boolean);
+    get ecList(): EC[];
+    get wireList(): Wire[];
+    get empty(): boolean;
+    get components(): ItemBoard[];
+    selectedComponents: EC[];
+    filePath: string;
+    view: Point;
+    get(id: string): EC | Wire | undefined;
+    get ec(): EC | undefined;
+    constructor(options: {
+        name: string;
+        zoom: number;
+        version?: string;
+        filePath?: string;
+        description?: string;
+    });
+    hasComponent(id: string): boolean;
+    selectAll(value: boolean): EC[];
+    toggleSelect(comp: EC): void;
+    selectThis(comp: EC): boolean;
+    selectRect(rect: Rect): void;
+    deleteSelected(): number;
+    delete(comp: ItemBoard): boolean;
+    add(options: {
+        name: string;
+        x: number;
+        y: number;
+        points: IPoint[];
+    }): EC | Wire;
+    static load(args: {
+        filePath: string;
+        data: string;
+    }): Circuit;
+    save(): Promise<boolean | string>;
+    destroy(): void;
+    boundariesRect(): Rect;
+}

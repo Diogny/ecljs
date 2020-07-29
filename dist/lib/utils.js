@@ -1,6 +1,7 @@
 //... still in progress ...
 import ajaxp from './ajaxp';
 import { isObj, isFn, attr, aEL, consts as _, pojo } from './dab';
+import * as fs from 'fs';
 function scriptContent(key, text) {
     let regexSingle = /<script[^\>]*>([\s\S]*?)<\/script>/gi, //regex are not reusable
     match = regexSingle.exec(text);
@@ -128,3 +129,13 @@ export const basePath = () => {
     return meta ? meta.getAttribute('content') : "";
 };
 export const matrix = (rows, cols, filler) => Array.from({ length: rows }, () => new Array(cols).fill(filler));
+export const readLibraryJson = (path) => {
+    try {
+        var data = fs.readFileSync(path);
+        let json = JSON.parse(data.toString().replace(/[\t\r\n]*/g, ""));
+        return json;
+    }
+    catch (e) {
+        return false;
+    }
+};

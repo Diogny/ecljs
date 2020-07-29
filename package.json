@@ -1,7 +1,7 @@
 {
 	"name": "ecljs",
 	"author": "Diogny A. B. <diognyab@outlook.com>",
-	"version": "0.1.02",
+	"version": "0.1.5",
 	"description": "electric circuits library",
 	"license": "MIT",
 	"main": "dist/index.js",
@@ -22,6 +22,9 @@
 		"package",
 		"dabberio"
 	],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"preinstall": "node -e \"!process.env.npm_config_user_agent.startsWith('pnpm/') && !console.log('Use \\`npx pnpm install\\` to install dependencies in this repository\\n') && process.exit(1)\"",
 		"build-ts": "tsc --noEmitHelpers --importHelpers",
@@ -30,7 +33,6 @@
 		"build-prod": "pnpm run build-ts && webpack --config webpack.config.js --env.mode='production' -p",
 		"start-dev": "webpack-dev-server --env.mode='development' --open"
 	},
-	"files": [],
 	"devDependencies": {
 		"@types/chai": "^4.2.12",
 		"@types/mocha": "^8.0.0",

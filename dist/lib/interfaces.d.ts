@@ -2,6 +2,7 @@ import Comp from "./components";
 import Bond from "./bonds";
 import { Type } from "./types";
 import Point from './point';
+import UIProp from "./props";
 export interface IPoint {
     x: number;
     y: number;
@@ -11,6 +12,29 @@ export interface ISize {
     height: number;
 }
 export interface IRect extends IPoint, ISize {
+}
+export interface IUIPropertyCallback {
+    (value: number | boolean | string | string[], where: number, prop: UIProp, e: any): void;
+}
+export interface IUIPropertyOptions {
+    tag: string | Element;
+    onChange?: IUIPropertyCallback | undefined;
+    toStringFn?: () => string;
+}
+export interface IUIProperty extends IUIPropertyOptions {
+    id: string;
+    name: string;
+    type: string;
+    html: HTMLElement;
+    editable: boolean;
+    nodeName: string;
+    value: number | boolean | string | string[];
+}
+export interface IUIPropertySettings extends IUIProperty {
+    getter: string;
+    htmlSelect: boolean;
+    selectCount: number;
+    selectMultiple: boolean;
 }
 export interface IComponentOptions {
     type: string;

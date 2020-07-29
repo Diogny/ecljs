@@ -2,6 +2,7 @@
 
 import ajaxp from './ajaxp';
 import { isObj, isFn, attr, aEL, consts as _, pojo } from './dab';
+import * as fs from 'fs';
 
 function scriptContent(key: string, text: string) {
 	let
@@ -163,3 +164,14 @@ export const basePath = () => {
 
 export const matrix = <T>(rows: number, cols: number, filler: T): T[][] =>
 	Array.from({ length: rows }, () => new Array(cols).fill(filler));
+
+
+export const readLibraryJson = (path: string): any => {
+	try {
+		var data = fs.readFileSync(path);
+		let
+			json = JSON.parse(data.toString().replace(/[\t\r\n]*/g, ""));
+		return json
+	}
+	catch (e) { return false }
+}

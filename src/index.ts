@@ -7,6 +7,7 @@ import Rect from "./lib/rect";
 import Size from "./lib/size";
 import { Type, TypedClass } from "./lib/types";
 import { Templates, XML } from "./lib/templates";
+import UIProp from "./lib/props";
 import Units from "./lib/units";
 import Bonds from "./lib/bonds";
 import * as Interfaces from "./lib/interfaces";
@@ -38,6 +39,7 @@ export {
 	Templates,
 	XML,
 	Units,
+	UIProp,
 
 	Interfaces,
 	Type,

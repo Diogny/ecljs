@@ -1,5 +1,5 @@
 # ecljs
 
-An electronic circuits Typescript ES^library used in my Electron app.
+An electronic circuits Typescript ES6 library used in my Electron app.
 
 ![Many components](img/img04.png)

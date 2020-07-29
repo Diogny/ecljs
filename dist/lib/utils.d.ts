@@ -26,3 +26,4 @@ export declare const qSA: (s: string) => NodeListOf<Element>;
 export declare const gEId: (id: string) => HTMLElement | null;
 export declare const basePath: () => string | null;
 export declare const matrix: <T>(rows: number, cols: number, filler: T) => T[][];
+export declare const readLibraryJson: (path: string) => any;

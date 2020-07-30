@@ -1,13 +1,16 @@
-import { addClass, removeClass, attr, isArr, extend } from './dab';
-import { tag } from './utils';
-import { Type } from './types';
-import ItemBoard from './itemsBoard';
-import Point from './point';
-import Rect from './rect';
-export default class Wire extends ItemBoard {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const dab_1 = require("./dab");
+const utils_1 = require("./utils");
+const types_1 = require("./types");
+const itemsBoard_1 = tslib_1.__importDefault(require("./itemsBoard"));
+const point_1 = tslib_1.__importDefault(require("./point"));
+const rect_1 = tslib_1.__importDefault(require("./rect"));
+class Wire extends itemsBoard_1.default {
     constructor(circuit, options) {
         super(circuit, options);
-        this.settings.polyline = tag("polyline", "", {
+        this.settings.polyline = utils_1.tag("polyline", "", {
             "svg-type": "line",
             line: "0",
             points: "",
@@ -29,12 +32,12 @@ export default class Wire extends ItemBoard {
             where: 1 //signals it was a change inside the object
         });
     }
-    get type() { return Type.WIRE; }
+    get type() { return types_1.Type.WIRE; }
     get count() { return this.settings.points.length; }
     get last() { return this.settings.points.length - 1; }
     get lastLine() { return this.editMode ? this.settings.lines.length : 0; }
     get isOpen() { return !this.nodeBonds(0) || !this.nodeBonds(this.last); }
-    rect() { return Rect.create(this.box); }
+    rect() { return rect_1.default.create(this.box); }
     get points() { return Array.from(this.settings.points); }
     get editMode() { return this.settings.edit; }
     set editMode(value) {
@@ -50,15 +53,15 @@ export default class Wire extends ItemBoard {
             //		.recreate polyline
             this.refresh();
             //		.show polyline
-            removeClass(this.settings.polyline, "hide");
+            dab_1.removeClass(this.settings.polyline, "hide");
         }
         else {
             //	will change to true
             //		.hide polyline
-            addClass(this.settings.polyline, "hide");
+            dab_1.addClass(this.settings.polyline, "hide");
             //		.create lines
             for (let i = 0, a = this.settings.points[0], cnt = this.last; i < cnt; i++) {
-                let b = this.settings.points[i + 1], ln = tag("line", "", {
+                let b = this.settings.points[i + 1], ln = utils_1.tag("line", "", {
                     "svg-type": "line",
                     line: (i + 1),
                     x1: a.x,
@@ -74,7 +77,7 @@ export default class Wire extends ItemBoard {
         this.settings.edit = value;
     }
     refresh() {
-        attr(this.settings.polyline, {
+        dab_1.attr(this.settings.polyline, {
             points: this.settings.points.map(p => `${p.x}, ${p.y}`).join(' ')
         });
         return this;
@@ -82,8 +85,8 @@ export default class Wire extends ItemBoard {
     nodeRefresh(node) {
         if (this.editMode) {
             let ln, p = this.settings.points[node];
-            (ln = this.settings.lines[node - 1]) && attr(ln, { x2: p.x, y2: p.y });
-            (ln = this.settings.lines[node]) && attr(ln, { x1: p.x, y1: p.y });
+            (ln = this.settings.lines[node - 1]) && dab_1.attr(ln, { x2: p.x, y2: p.y });
+            (ln = this.settings.lines[node]) && dab_1.attr(ln, { x1: p.x, y1: p.y });
         }
         else {
             this.refresh();
@@ -104,7 +107,7 @@ export default class Wire extends ItemBoard {
         this.editMode = false;
         for (let i = 0, p = this.settings.points[i], end = this.last; i <= end; p = this.settings.points[++i]) {
             if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.nodeBonds(i))) {
-                this.setNode(i, Point.translateBy(p, dx, dy));
+                this.setNode(i, point_1.default.translateBy(p, dx, dy));
             }
         }
         this.editMode = savedEditMode;
@@ -132,7 +135,7 @@ export default class Wire extends ItemBoard {
     }
     getNodeRealXY(node) {
         let p = this.getNode(node);
-        return p && Point.create(p);
+        return p && point_1.default.create(p);
     }
     appendNode(p) {
         return !this.editMode && (this.settings.points.push(p), this.refresh(), true);
@@ -149,11 +152,11 @@ export default class Wire extends ItemBoard {
             && (!(this.nodeBonds(node) && (node == 0 || node == this.last)));
     }
     setPoints(points) {
-        if (!isArr(points)
+        if (!dab_1.isArr(points)
             || points.length < 2)
             throw 'Poliwire min 2 points';
         if (!this.editMode) {
-            this.settings.points = points.map(p => new Point(p.x | 0, p.y | 0));
+            this.settings.points = points.map(p => new point_1.default(p.x | 0, p.y | 0));
             moveToStart.call(this);
             this.settings.lines = [];
             this.refresh();
@@ -236,7 +239,7 @@ export default class Wire extends ItemBoard {
         return -1;
     }
     propertyDefaults() {
-        return extend(super.propertyDefaults(), {
+        return dab_1.extend(super.propertyDefaults(), {
             name: "wire",
             class: "wire",
             pad: 5,
@@ -244,6 +247,7 @@ export default class Wire extends ItemBoard {
         });
     }
 }
+exports.default = Wire;
 function moveToStart() {
     this.move(this.settings.points[0].x, this.settings.points[0].y);
 }

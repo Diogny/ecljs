@@ -1,4 +1,6 @@
-export default class ajaxp {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class ajaxp {
     static x() { return window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'); }
     static query(data, ask) {
         let query = [];
@@ -54,6 +56,7 @@ export default class ajaxp {
         return (ox = ox || {}, ox.method = ajaxp.sPost, ox.data = ajaxp.query(ox.data, false), ajaxp.send(url, ox));
     }
 }
+exports.default = ajaxp;
 ajaxp.sGet = "GET";
 ajaxp.sPost = "POST";
 ajaxp.xobj = {

@@ -1,8 +1,11 @@
-import ItemBase from "./itemsBase";
-import { Type } from "./types";
-import { extend, attr } from "./dab";
-import { tag } from "./utils";
-export default class HighlightNode extends ItemBase {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
+const types_1 = require("./types");
+const dab_1 = require("./dab");
+const utils_1 = require("./utils");
+class HighlightNode extends itemsBase_1.default {
     constructor(options) {
         //override
         options.selectedNode = -1;
@@ -10,13 +13,13 @@ export default class HighlightNode extends ItemBase {
         options.id = "highlighNode";
         super(options);
         this.g.setAttribute("svg-comp", "h-node");
-        this.mainNode = tag("circle", "", {
+        this.mainNode = utils_1.tag("circle", "", {
             "svg-type": "node",
             r: this.radius
         });
         this.g.append(this.mainNode);
     }
-    get type() { return Type.HIGHLIGHT; }
+    get type() { return types_1.Type.HIGHLIGHT; }
     get radius() { return this.settings.radius; }
     get selectedId() { return this.settings.selectedId; }
     get selectedNode() { return this.settings.selectedNode; }
@@ -33,7 +36,7 @@ export default class HighlightNode extends ItemBase {
     }
     show(x, y, id, node) {
         this.move(x, y);
-        attr(this.mainNode, {
+        dab_1.attr(this.mainNode, {
             cx: this.x,
             cy: this.y,
             //"node-x": <any>node,
@@ -47,7 +50,7 @@ export default class HighlightNode extends ItemBase {
         this.mainNode.classList.add("hide");
         this.g.classList.remove("hide");
         nodes.forEach(p => {
-            let circle = tag("circle", "", {
+            let circle = utils_1.tag("circle", "", {
                 cx: p.x,
                 cy: p.y,
                 r: this.radius,
@@ -58,7 +61,7 @@ export default class HighlightNode extends ItemBase {
         return this;
     }
     propertyDefaults() {
-        return extend(super.propertyDefaults(), {
+        return dab_1.extend(super.propertyDefaults(), {
             name: "h-node",
             class: "h-node",
             visible: false,
@@ -66,3 +69,4 @@ export default class HighlightNode extends ItemBase {
         });
     }
 }
+exports.default = HighlightNode;

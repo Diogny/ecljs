@@ -1,19 +1,22 @@
-import { condClass, obj, attr, extend, isFn } from './dab';
-import Bond from './bonds';
-import ItemBase from './itemsBase';
-import Comp from './components';
-import Point from './point';
-import { Type } from './types';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const dab_1 = require("./dab");
+const bonds_1 = tslib_1.__importDefault(require("./bonds"));
+const itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
+const components_1 = tslib_1.__importDefault(require("./components"));
+const point_1 = tslib_1.__importDefault(require("./point"));
+const types_1 = require("./types");
 //ItemBoard->Wire
-export default class ItemBoard extends ItemBase {
+class ItemBoard extends itemsBase_1.default {
     constructor(circuit, options) {
         super(options);
         this.circuit = circuit;
-        let base = Comp.find(this.name);
+        let base = components_1.default.find(this.name);
         if (!base || !circuit)
             throw `cannot create component`;
-        this.settings.props = obj(base.props);
-        attr(this.g, {
+        this.settings.props = dab_1.obj(base.props);
+        dab_1.attr(this.g, {
             id: this.id,
             "svg-comp": this.base.type,
         });
@@ -31,7 +34,7 @@ export default class ItemBoard extends ItemBase {
             //set new value
             this.settings.selected = value;
             //add class if selected
-            condClass(this.g, "selected", this.selected);
+            dab_1.condClass(this.g, "selected", this.selected);
             //trigger property changed if applicable
             this.onProp && this.onProp({
                 id: `#${this.id}`,
@@ -57,7 +60,7 @@ export default class ItemBoard extends ItemBase {
         return this;
     }
     setOnProp(value) {
-        isFn(value) && (this.settings.onProp = value);
+        dab_1.isFn(value) && (this.settings.onProp = value);
         return this;
     }
     bond(thisNode, ic, icNode) {
@@ -67,7 +70,7 @@ export default class ItemBoard extends ItemBase {
             || !ic.valid(icNode))
             return false;
         if (!entry) {
-            this.settings.bonds[thisNode] = entry = new Bond(this, ic, icNode, thisNode);
+            this.settings.bonds[thisNode] = entry = new bonds_1.default(this, ic, icNode, thisNode);
         }
         else if (!entry.add(ic, icNode)) {
             console.log('Oooopsie!');
@@ -110,7 +113,7 @@ export default class ItemBoard extends ItemBase {
             this.unbondNode(node);
     }
     propertyDefaults() {
-        return extend(super.propertyDefaults(), {
+        return dab_1.extend(super.propertyDefaults(), {
             selected: false,
             onProp: void 0,
             bonds: [],
@@ -127,7 +130,7 @@ export default class ItemBoard extends ItemBase {
                         .filter(b => !wireList.find(w => w.id == b.id))
                         .forEach(b => {
                         let wire = circuit.get(b.id), toWireBond = wire.nodeBonds(oppositeEdge(b.ndx, wire.last));
-                        if (toWireBond.to[0].type == Type.EC) {
+                        if (toWireBond.to[0].type == types_1.Type.EC) {
                             ecIdList.includes(toWireBond.to[0].id)
                                 && wireList.push(wire);
                         }
@@ -157,18 +160,18 @@ export default class ItemBoard extends ItemBase {
                 if (!w)
                     throw `Invalid bond connections`; //shouldn't happen, but to catch wrong code
                 switch (b.type) {
-                    case Type.WIRE:
+                    case types_1.Type.WIRE:
                         if (!wiresFound.some(id => id == b.id)) {
                             wiresFound.push(w.id);
                             wireCollection.push(w);
                             points.push({
                                 it: w,
-                                p: Point.create(w.getNode(b.ndx)),
+                                p: point_1.default.create(w.getNode(b.ndx)),
                                 n: b.ndx
                             });
                         }
                         break;
-                    case Type.EC:
+                    case types_1.Type.EC:
                         points.push({
                             it: w,
                             p: w.getNodeRealXY(b.ndx),
@@ -186,3 +189,4 @@ export default class ItemBoard extends ItemBase {
         return points;
     }
 }
+exports.default = ItemBoard;

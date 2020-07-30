@@ -1,4 +1,6 @@
-import { obj } from './dab';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const dab_1 = require("./dab");
 const defaultIdTemplate = "{base.comp.name}-{base.count}";
 const defaultComponent = (name) => ({
     name: name,
@@ -11,16 +13,16 @@ const defaultComponent = (name) => ({
         }
     }
 });
-export default class Comp {
+class Comp {
     constructor(options) {
         let that = this, template = options.tmpl;
         delete options.tmpl;
-        this.settings = obj(options);
+        this.settings = dab_1.obj(options);
         if (template) {
             let base = Comp.find(template.name);
             this.settings.data = base.data;
             this.settings.meta = JSON.parse(JSON.stringify(base.meta));
-            template.label && (this.settings.meta.label = obj(template.label));
+            template.label && (this.settings.meta.label = dab_1.obj(template.label));
             template.nodeLabels.forEach((lbl, ndx) => {
                 that.settings.meta.nodes.list[ndx].label = lbl;
             });
@@ -45,6 +47,7 @@ export default class Comp {
         return set;
     }
 }
+exports.default = Comp;
 Comp.baseComps = Comp.initializeComponents([defaultComponent("tooltip"), defaultComponent("wire")]);
 Comp.register = (options) => new Comp(options);
 Comp.store = (name, comp) => Comp.baseComps.has(name) ?

@@ -2,7 +2,6 @@
 
 import ajaxp from './ajaxp';
 import { isObj, isFn, attr, aEL, consts as _, pojo } from './dab';
-import * as fs from 'fs';
 
 function scriptContent(key: string, text: string) {
 	let
@@ -13,7 +12,7 @@ function scriptContent(key: string, text: string) {
 };
 
 //ajaxp.get(`${base}api/1.0/templates/circuits/stockSymbol,gate_card`, { 'responseType': 'json' })
-export const templatesUrl = (url: string, obj?: object) => ajaxp.get(url, obj || { 'responseType': 'json' })
+export const templatesUrl = (url: string, obj?: { [key: string]: any }) => ajaxp.get(url, obj || { 'responseType': 'json' })
 	.then((data: any) => {
 		let
 			regex = /<script.*?id\s*=\s*['"]([^'|^"]*)['"].*?>([\s\S]*?)<\/script>/gmi,
@@ -32,12 +31,11 @@ export const templatesUrl = (url: string, obj?: object) => ajaxp.get(url, obj ||
 		return templates;
 	});
 
-export const templatesDOM = (query: string | string[]): Promise<{ [key: string]: string }> => {
+export const templatesDOM = (query: string | string[]): Promise<{ [key: string]: any }> => {
 	return new Promise(function (resolve, reject) {
 		//query:string   id0|id1|id[n]
 		let
-			templates = {
-			},
+			templates: { [key: string]: any } = {},
 			count = 0,
 			idList = Array.isArray(query) ? query : query.split('|');
 		idList.forEach((id: string) => {
@@ -164,14 +162,3 @@ export const basePath = () => {
 
 export const matrix = <T>(rows: number, cols: number, filler: T): T[][] =>
 	Array.from({ length: rows }, () => new Array(cols).fill(filler));
-
-
-export const readLibraryJson = (path: string): any => {
-	try {
-		var data = fs.readFileSync(path);
-		let
-			json = JSON.parse(data.toString().replace(/[\t\r\n]*/g, ""));
-		return json
-	}
-	catch (e) { return false }
-}

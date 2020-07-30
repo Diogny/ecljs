@@ -1,5 +1,7 @@
-import { round } from './dab';
-export default class Size {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const dab_1 = require("./dab");
+class Size {
     constructor(width, height) {
         this.width = parseFloat(width); //ensure it's a number
         this.height = parseFloat(height);
@@ -15,7 +17,8 @@ export default class Size {
     }
     toString(options) {
         let noVars = ((options = options | 0) & 4) != 0, noPars = (options & 2) != 0;
-        return `${noPars ? "" : "("}${noVars ? "" : "w: "}${round(this.width, 1)}, ${noVars ? "" : "h: "}${round(this.height, 1)}${noPars ? "" : ")"}`;
+        return `${noPars ? "" : "("}${noVars ? "" : "w: "}${dab_1.round(this.width, 1)}, ${noVars ? "" : "h: "}${dab_1.round(this.height, 1)}${noPars ? "" : ")"}`;
     }
 }
+exports.default = Size;
 Size.empty = new Size(0, 0);

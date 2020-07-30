@@ -1,4 +1,6 @@
-export default class Rect {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Rect {
     constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
@@ -46,3 +48,4 @@ export default class Rect {
     static create(r) { return new Rect(r.x, r.y, r.width, r.height); }
     static empty() { return new Rect(0, 0, 0, 0); }
 }
+exports.default = Rect;

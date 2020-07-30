@@ -1,6 +1,8 @@
-import { Type } from './types';
-import { obj } from './dab';
-export default class Bond {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const types_1 = require("./types");
+const dab_1 = require("./dab");
+class Bond {
     /**
      * @description implements a component bond, it must be created by default as a One-to-One bond
      * @param {object} _from from
@@ -19,7 +21,7 @@ export default class Bond {
         this.to = [];
         this.add(to, node);
     }
-    get type() { return Type.BOND; }
+    get type() { return types_1.Type.BOND; }
     get count() { return this.to.length; }
     // 0>id-0(1)&id-1(12)
     get link() { return `${this.from.ndx}>` + this.to.map(b => `${b.id}(${b.ndx})`).join('&'); }
@@ -30,7 +32,7 @@ export default class Bond {
     add(t, ndx) {
         if (t && !this.has(t.id)) {
             let b = this.create(t, ndx);
-            if (b.type == Type.EC || b.type == Type.WIRE) {
+            if (b.type == types_1.Type.EC || b.type == types_1.Type.WIRE) {
                 this.to.push(b);
                 return true;
             }
@@ -38,7 +40,7 @@ export default class Bond {
         return false;
     }
     create(ec, ndx) {
-        return obj({
+        return dab_1.obj({
             id: ec.id,
             type: ec.type,
             ndx: ndx
@@ -55,4 +57,5 @@ export default class Bond {
         return b;
     }
 }
+exports.default = Bond;
 Bond.display = (arr) => { return arr.map((o) => o.toString()); };

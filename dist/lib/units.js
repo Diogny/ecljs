@@ -1,12 +1,14 @@
-import { isStr } from "./dab";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const dab_1 = require("./dab");
 //... in progress ...
 //npm https://www.npmjs.com/package/@dabberio/electric-units
-export default class Unit {
+class Unit {
     constructor(n) {
         this.toString = () => {
             return `${this.value}${this.prefix}${this.unit}`;
         };
-        if (!isStr(n) || !(n = n.trim()))
+        if (!dab_1.isStr(n) || !(n = n.trim()))
             throw `number ${n} must be a not empty string`;
         var ndx = n.length - 1, error = () => `invalid number: ${n}`, indexOf = (s, x, u) => s.indexOf(u ? x.toUpperCase() : x);
         //defaults
@@ -45,6 +47,7 @@ export default class Unit {
     get exponent() { return Math.pow(10, Unit.prefixExponents[this.settings.prefix]); }
     get value() { return this.settings.value; }
 }
+exports.default = Unit;
 //self sufficient dummy
 Unit.split = (text) => text.split('|');
 //prefixNames = ['yocto', 'zepto', 'atto', 'femto', 'pico', 'nano', 'micro', 'mili', 'centi', 'deci', '',

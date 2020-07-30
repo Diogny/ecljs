@@ -4,9 +4,21 @@ export default abstract class ajaxp {
     static xobj: object;
     static rt: string;
     static x(): any;
-    static query(data: any, ask: boolean): string;
-    static update(io: any, obj: any): any;
-    static send(url: string, ox: any): Promise<unknown>;
-    static get(url: string, ox: any): any;
-    static post(url: string, ox: any): any;
+    static query(data: {
+        [key: string]: any;
+    }, ask: boolean): string;
+    static update(io: any, obj: {
+        [key: string]: any;
+    }): {
+        [key: string]: any;
+    };
+    static send(url: string, ox: {
+        [key: string]: any;
+    }): Promise<any>;
+    static get(url: string, ox: {
+        [key: string]: any;
+    }): Promise<any>;
+    static post(url: string, ox: {
+        [key: string]: any;
+    }): Promise<any>;
 }

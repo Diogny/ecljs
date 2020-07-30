@@ -1,19 +1,22 @@
-import ItemBase from "./itemsBase";
-import { Type } from "./types";
-import { obj, aCld, attr, extend } from "./dab";
-import { tag } from "./utils";
-export default class Label extends ItemBase {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
+const types_1 = require("./types");
+const dab_1 = require("./dab");
+const utils_1 = require("./utils");
+class Label extends itemsBase_1.default {
     constructor(options) {
         options.visible = false;
         super(options);
         this.text = '';
-        this.t = tag("text", "", {});
-        aCld(this.g, this.t);
+        this.t = utils_1.tag("text", "", {});
+        dab_1.aCld(this.g, this.t);
     }
-    get type() { return Type.LABEL; }
+    get type() { return types_1.Type.LABEL; }
     get size() {
         let b = this.t.getBBox();
-        return obj({
+        return dab_1.obj({
             width: Math.round(b.width),
             height: Math.round(b.height)
         });
@@ -21,7 +24,7 @@ export default class Label extends ItemBase {
     get fontSize() { return this.settings.fontSize; }
     move(x, y) {
         super.move(x, y);
-        attr(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
+        dab_1.attr(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
         return this;
     }
     setFontSize(value) {
@@ -29,7 +32,7 @@ export default class Label extends ItemBase {
         return this.build();
     }
     build() {
-        attr(this.t, {
+        dab_1.attr(this.t, {
             "font-size": this.fontSize,
             x: 0,
             y: 0
@@ -41,10 +44,11 @@ export default class Label extends ItemBase {
         return this.build();
     }
     propertyDefaults() {
-        return extend(super.propertyDefaults(), {
+        return dab_1.extend(super.propertyDefaults(), {
             name: "label",
             class: "label",
             fontSize: 50
         });
     }
 }
+exports.default = Label;

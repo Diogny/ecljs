@@ -1,7 +1,10 @@
-import Point from "./point";
-import { obj, copy, unique } from "./dab";
-import { TypedClass } from "./types";
-export default class Item extends TypedClass {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const point_1 = tslib_1.__importDefault(require("./point"));
+const dab_1 = require("./dab");
+const types_1 = require("./types");
+class Item extends types_1.TypedClass {
     constructor(options) {
         super();
         //merge defaults and deep copy
@@ -9,8 +12,8 @@ export default class Item extends TypedClass {
         // options is for custom options only
         let optionsClass = options.class || "";
         delete options.class;
-        this.settings = obj(copy(this.propertyDefaults(), options));
-        this.settings.class = unique((this.class + " " + optionsClass).split(' ')).join(' ');
+        this.settings = dab_1.obj(dab_1.copy(this.propertyDefaults(), options));
+        this.settings.class = dab_1.unique((this.class + " " + optionsClass).split(' ')).join(' ');
         this.settings.x = this.settings.x || 0;
         this.settings.y = this.settings.y || 0;
     }
@@ -18,7 +21,7 @@ export default class Item extends TypedClass {
     get id() { return this.settings.id; }
     get x() { return this.settings.x; }
     get y() { return this.settings.y; }
-    get p() { return new Point(this.x, this.y); }
+    get p() { return new point_1.default(this.x, this.y); }
     get class() { return this.settings.class; }
     get visible() { return this.settings.visible; }
     setVisible(value) {
@@ -49,3 +52,4 @@ export default class Item extends TypedClass {
         };
     }
 }
+exports.default = Item;

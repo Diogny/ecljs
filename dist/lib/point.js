@@ -1,7 +1,9 @@
+"use strict";
 //Point class is adapted from:
 //https://github.com/Microsoft/TypeScriptSamples/blob/master/raytracer/raytracer.ts
-import { round, isNumeric } from './dab';
-export default class Point {
+Object.defineProperty(exports, "__esModule", { value: true });
+const dab_1 = require("./dab");
+class Point {
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -24,7 +26,7 @@ export default class Point {
     }
     toString(options) {
         let noVars = ((options = options | 0) & 4) != 0, noPars = (options & 2) != 0;
-        return `${noPars ? "" : "("}${noVars ? "" : "x: "}${round(this.x, 1)}, ${noVars ? "" : "y: "}${round(this.y, 1)}${noPars ? "" : ")"}`;
+        return `${noPars ? "" : "("}${noVars ? "" : "x: "}${dab_1.round(this.x, 1)}, ${noVars ? "" : "y: "}${dab_1.round(this.y, 1)}${noPars ? "" : ")"}`;
     }
     //get positive(): boolean { return this.x >= 0 && this.y >= 0 }
     /**
@@ -51,7 +53,7 @@ export default class Point {
      */
     static parse(value) {
         let arr = value.split(",");
-        if (arr.length == 2 && isNumeric(arr[0]) && isNumeric(arr[1])) {
+        if (arr.length == 2 && dab_1.isNumeric(arr[0]) && dab_1.isNumeric(arr[1])) {
             return new Point(parseInt(arr[0]), parseInt(arr[1]));
         }
         //invalid point
@@ -69,3 +71,4 @@ export default class Point {
     //
     static inside(p, s) { return p.x >= 0 && p.x <= s.width && p.y >= 0 && p.y <= s.height; }
 }
+exports.default = Point;

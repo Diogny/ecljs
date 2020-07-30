@@ -8,10 +8,10 @@ export default abstract class ajaxp {
 		responseType: "text"
 	}
 	static rt: string = "responseType";
-	
+
 	public static x() { return window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'); }
 
-	static query(data: any, ask: boolean) {
+	static query(data: { [key: string]: any }, ask: boolean) {
 		let query = [];
 		for (let key in data) {
 			query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
@@ -19,14 +19,14 @@ export default abstract class ajaxp {
 		return ((ask && query.length) ? "?" : "") + query.join("&");
 	}
 
-	static update(io: any, obj: any) {
+	static update(io: any, obj: { [key: string]: any }) {
 		for (let p in io) {
 			obj[p] = obj[p] || io[p];
 		}
 		return obj;
 	}
 
-	static send(url: string, ox: any) {
+	static send(url: string, ox: { [key: string]: any }): Promise<any> {
 		return new Promise(function (resolve, reject) {
 			let
 				x = ajaxp.x();
@@ -62,12 +62,12 @@ export default abstract class ajaxp {
 		});
 	}
 
-	public static get(url: string, ox: any): any {
+	public static get(url: string, ox: { [key: string]: any }): Promise<any> {
 		return (ox = ox || {}, ox.method = ajaxp.sGet, url += ajaxp.query(ox.data, true), ox.data = void 0, ajaxp.send(url, ox))
 	}
 
-	public static post(url: string, ox: any): any {
+	public static post(url: string, ox: { [key: string]: any }): Promise<any> {
 		return (ox = ox || {}, ox.method = ajaxp.sPost, ox.data = ajaxp.query(ox.data, false), ajaxp.send(url, ox));
 	}
-	
+
 }

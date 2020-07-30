@@ -1,18 +1,21 @@
-import { attr, obj, isStr, pojo, extend } from './dab';
-import { tag, map, filter } from './utils';
-import { Type } from "./types";
-import Label from './label';
-export default class Tooltip extends Label {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const dab_1 = require("./dab");
+const utils_1 = require("./utils");
+const types_1 = require("./types");
+const label_1 = tslib_1.__importDefault(require("./label"));
+class Tooltip extends label_1.default {
     constructor(options) {
         super(options);
-        this.svgRect = tag("rect", "", {
+        this.svgRect = utils_1.tag("rect", "", {
             x: 0,
             y: 0,
             rx: this.borderRadius
         });
         this.g.insertBefore(this.svgRect, this.t);
     }
-    get type() { return Type.TOOLTIP; }
+    get type() { return types_1.Type.TOOLTIP; }
     get borderRadius() { return this.settings.borderRadius; }
     /*	DOESN'T WORK
     set visible(value: boolean) {
@@ -22,7 +25,7 @@ export default class Tooltip extends Label {
     */
     get size() {
         let b = this.t.getBBox();
-        return obj({
+        return dab_1.obj({
             width: Math.round(b.width) + 10,
             height: Math.round(b.height) + this.gap
         });
@@ -41,13 +44,13 @@ export default class Tooltip extends Label {
     }
     build() {
         this.gap = Math.round(this.fontSize / 2) + 1;
-        attr(this.t, {
+        dab_1.attr(this.t, {
             "font-size": this.fontSize,
             x: Math.round(this.gap / 2),
             y: this.fontSize //+ 8
         });
         let s = this.size;
-        attr(this.svgRect, {
+        dab_1.attr(this.svgRect, {
             width: s.width,
             height: s.height,
             rx: this.borderRadius
@@ -55,7 +58,7 @@ export default class Tooltip extends Label {
         return this;
     }
     setText(value) {
-        let arr = isStr(value) ?
+        let arr = dab_1.isStr(value) ?
             value.split(/\r?\n/) :
             value, txtArray = [];
         //catch UI error here
@@ -64,12 +67,12 @@ export default class Tooltip extends Label {
         //}
         this.t.innerHTML = arr.map((value, ndx) => {
             let txt = '', attrs = '';
-            if (isStr(value)) {
+            if (dab_1.isStr(value)) {
                 txt = value;
             }
-            else if (pojo(value)) {
+            else if (dab_1.pojo(value)) {
                 txt = value.text;
-                attrs = map(filter(value, (val, key) => key != 'text'), (v, k) => `${k}="${v}"`).join('');
+                attrs = utils_1.map(utils_1.filter(value, (val, key) => key != 'text'), (v, k) => `${k}="${v}"`).join('');
             }
             txtArray.push(txt);
             return `<tspan x="5" dy="${ndx}.1em"${attrs}>${txt}</tspan>`;
@@ -79,10 +82,11 @@ export default class Tooltip extends Label {
         return this.build();
     }
     propertyDefaults() {
-        return extend(super.propertyDefaults(), {
+        return dab_1.extend(super.propertyDefaults(), {
             name: "tooltip",
             class: "tooltip",
             borderRadius: 4
         });
     }
 }
+exports.default = Tooltip;

@@ -4,8 +4,8 @@ import ItemBoard from "./itemsBoard";
 import { Type } from "./types";
 import Rect from "./rect";
 import { isNum } from "./dab";
-import * as xml2js from 'xml2js';
-import * as fs from 'fs';
+// import * as xml2js from 'xml2js';
+// import * as fs from 'fs';
 import { IPoint, IBaseComponent } from "./interfaces";
 import Point from "./point";
 import Comp from "./components";
@@ -157,34 +157,34 @@ export default class Circuit {
 		return <any>comp
 	}
 
-	public static load(args: { filePath: string, data: string }): Circuit {
-		//check filePath & data
+	// public static load(args: { filePath: string, data: string }): Circuit {
+	// 	//check filePath & data
 
-		let circuit = new Circuit({
-			filePath: args.filePath,
-			name: "",
-			zoom: 0,
-			version: "",
-		});
-		parseCircuitXML(circuit, args.data);
-		return circuit;
-	}
+	// 	let circuit = new Circuit({
+	// 		filePath: args.filePath,
+	// 		name: "",
+	// 		zoom: 0,
+	// 		version: "",
+	// 	});
+	// 	parseCircuitXML(circuit, args.data);
+	// 	return circuit;
+	// }
 
-	public save(): Promise<boolean | string> {
-		let
-			that = this as Circuit;
-		return new Promise(function (resolve, reject) {
-			let
-				content = getCircuitXML(that);
-			if (that.filePath) {
-				fs.writeFileSync(that.filePath, content, 'utf-8');
-				that.modified = false;
-				resolve(true)
-			} else {
-				resolve(content);
-			}
-		})
-	}
+	// public save(): Promise<boolean | string> {
+	// 	let
+	// 		that = this as Circuit;
+	// 	return new Promise(function (resolve, reject) {
+	// 		let
+	// 			content = getCircuitXML(that);
+	// 		if (that.filePath) {
+	// 			fs.writeFileSync(that.filePath, content, 'utf-8');
+	// 			that.modified = false;
+	// 			resolve(true)
+	// 		} else {
+	// 			resolve(content);
+	// 		}
+	// 	})
+	// }
 
 	public destroy() {
 		this.ecList.forEach(ec => this.delete(ec));
@@ -283,84 +283,84 @@ function createBoardItem(circuit: Circuit, options: any): EC | Wire {
 	return <any>item
 }
 
-function parseCircuitXML(circuit: Circuit, data: string) {
-	xml2js.parseString(data, {
-		trim: true,
-		explicitArray: false
-	}, (err, json) => {
-		if (err)
-			console.log(err);
-		else {
-			let
-				jsoncircuit = json.circuit || json.CIRCUIT,
-				atttrs = jsoncircuit.$,
-				getData = (value: any): any[] => {
-					if (!value || (typeof value == "string"))
-						return [];
-					if (value.$)
-						return [value]
-					else
-						return value;
-				},
-				getDataCompatibility = (group: string) => {
-					switch (group) {
-						case "ecs":
-							return getData(jsoncircuit.ecs ? jsoncircuit.ecs.ec : jsoncircuit.ECS.EC);
-						case "wires":
-							return getData(jsoncircuit.wires ? jsoncircuit.wires.wire : jsoncircuit.WIRES.WIRE);
-						case "bonds":
-							return getData(jsoncircuit.bonds ? jsoncircuit.bonds.bond : jsoncircuit.BONDS.BOND);
-					}
-					return [];
-				},
-				ECS = getDataCompatibility("ecs"),
-				WIRES = getDataCompatibility("wires"),
-				BONDS = getDataCompatibility("bonds"),
-				view = (atttrs.view || "").split(',');
-			//attributes
-			circuit.version = atttrs.version;
-			!Circuit.validZoom(circuit.zoom = parseFloat(atttrs.zoom))
-				&& (circuit.zoom = Circuit.defaultZoom);
-			circuit.name = atttrs.name;
-			circuit.description = atttrs.description;
-			circuit.view = new Point(parseInt(view[0]) | 0, parseInt(view[1]) | 0);
-			//create ECs
-			ECS.forEach((xml: { $: { id: string, name: string, x: string, y: string, rot: string, label: string } }) => {
-				<EC>createBoardItem(circuit, {
-					id: xml.$.id,
-					name: xml.$.name,
-					x: parseInt(xml.$.x),
-					y: parseInt(xml.$.y),
-					rotation: parseInt(xml.$.rot),
-					label: xml.$.label,
-				});
-			})
-			WIRES.forEach((xml: { $: { id: string, points: string, label: string } }) => {
-				let
-					options = {
-						id: xml.$.id,
-						name: "wire",
-						label: xml.$.label,
-						points: xml.$.points.split('|').map(s => Point.parse(s)),
-					};
-				if (options.points.some(p => !p))
-					throw `invalid wire points`;
-				<Wire>createBoardItem(circuit, options);
-			})
-			BONDS.forEach((s: string) => {
-				let
-					arr = s.split(','),
-					fromIt = <ItemBoard>circuit.get(<string>arr.shift()),
-					fromNdx = parseInt(<string>arr.shift()),
-					toIt = <ItemBoard>circuit.get(<string>arr.shift()),
-					toNdx = parseInt(<string>arr.shift());
-				if (arr.length || !fromIt || !toIt || !fromIt.getNode(fromNdx) || !toIt.getNode(toNdx))
-					throw `invalid bond`;
-				fromIt.bond(fromNdx, toIt, toNdx);
-			})
-		}
-	})
-}
+// function parseCircuitXML(circuit: Circuit, data: string) {
+// 	xml2js.parseString(data, {
+// 		trim: true,
+// 		explicitArray: false
+// 	}, (err, json) => {
+// 		if (err)
+// 			console.log(err);
+// 		else {
+// 			let
+// 				jsoncircuit = json.circuit || json.CIRCUIT,
+// 				atttrs = jsoncircuit.$,
+// 				getData = (value: any): any[] => {
+// 					if (!value || (typeof value == "string"))
+// 						return [];
+// 					if (value.$)
+// 						return [value]
+// 					else
+// 						return value;
+// 				},
+// 				getDataCompatibility = (group: string) => {
+// 					switch (group) {
+// 						case "ecs":
+// 							return getData(jsoncircuit.ecs ? jsoncircuit.ecs.ec : jsoncircuit.ECS.EC);
+// 						case "wires":
+// 							return getData(jsoncircuit.wires ? jsoncircuit.wires.wire : jsoncircuit.WIRES.WIRE);
+// 						case "bonds":
+// 							return getData(jsoncircuit.bonds ? jsoncircuit.bonds.bond : jsoncircuit.BONDS.BOND);
+// 					}
+// 					return [];
+// 				},
+// 				ECS = getDataCompatibility("ecs"),
+// 				WIRES = getDataCompatibility("wires"),
+// 				BONDS = getDataCompatibility("bonds"),
+// 				view = (atttrs.view || "").split(',');
+// 			//attributes
+// 			circuit.version = atttrs.version;
+// 			!Circuit.validZoom(circuit.zoom = parseFloat(atttrs.zoom))
+// 				&& (circuit.zoom = Circuit.defaultZoom);
+// 			circuit.name = atttrs.name;
+// 			circuit.description = atttrs.description;
+// 			circuit.view = new Point(parseInt(view[0]) | 0, parseInt(view[1]) | 0);
+// 			//create ECs
+// 			ECS.forEach((xml: { $: { id: string, name: string, x: string, y: string, rot: string, label: string } }) => {
+// 				<EC>createBoardItem(circuit, {
+// 					id: xml.$.id,
+// 					name: xml.$.name,
+// 					x: parseInt(xml.$.x),
+// 					y: parseInt(xml.$.y),
+// 					rotation: parseInt(xml.$.rot),
+// 					label: xml.$.label,
+// 				});
+// 			})
+// 			WIRES.forEach((xml: { $: { id: string, points: string, label: string } }) => {
+// 				let
+// 					options = {
+// 						id: xml.$.id,
+// 						name: "wire",
+// 						label: xml.$.label,
+// 						points: xml.$.points.split('|').map(s => Point.parse(s)),
+// 					};
+// 				if (options.points.some(p => !p))
+// 					throw `invalid wire points`;
+// 				<Wire>createBoardItem(circuit, options);
+// 			})
+// 			BONDS.forEach((s: string) => {
+// 				let
+// 					arr = s.split(','),
+// 					fromIt = <ItemBoard>circuit.get(<string>arr.shift()),
+// 					fromNdx = parseInt(<string>arr.shift()),
+// 					toIt = <ItemBoard>circuit.get(<string>arr.shift()),
+// 					toNdx = parseInt(<string>arr.shift());
+// 				if (arr.length || !fromIt || !toIt || !fromIt.getNode(fromNdx) || !toIt.getNode(toNdx))
+// 					throw `invalid bond`;
+// 				fromIt.bond(fromNdx, toIt, toNdx);
+// 			})
+// 		}
+// 	})
+// }
 
 function getAllCircuitBonds(circuit: Circuit): string[] {
 	let

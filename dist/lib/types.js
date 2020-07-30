@@ -1,4 +1,7 @@
-export var Type;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TypedClass = exports.Type = void 0;
+var Type;
 (function (Type) {
     Type[Type["UNDEFINED"] = 0] = "UNDEFINED";
     Type[Type["EC"] = 1] = "EC";
@@ -8,7 +11,8 @@ export var Type;
     Type[Type["WIN"] = 5] = "WIN";
     Type[Type["TOOLTIP"] = 6] = "TOOLTIP";
     Type[Type["HIGHLIGHT"] = 7] = "HIGHLIGHT";
-})(Type || (Type = {}));
+})(Type = exports.Type || (exports.Type = {}));
 ;
-export class TypedClass {
+class TypedClass {
 }
+exports.TypedClass = TypedClass;

@@ -52,11 +52,6 @@ export default class Circuit {
         y: number;
         points: IPoint[];
     }): EC | Wire;
-    static load(args: {
-        filePath: string;
-        data: string;
-    }): Circuit;
-    save(): Promise<boolean | string>;
     destroy(): void;
     boundariesRect(): Rect;
 }

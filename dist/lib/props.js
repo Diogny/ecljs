@@ -1,7 +1,9 @@
-import { attr, isFn, dP, typeOf, isInt, splat, isElement, isStr, isNumeric } from './dab';
-import { qS } from './utils';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const dab_1 = require("./dab");
+const utils_1 = require("./utils");
 //... in progress...
-export default class UIProp {
+class UIProp {
     constructor(options) {
         //set default values
         this.settings = {
@@ -14,7 +16,7 @@ export default class UIProp {
             selectMultiple: false
         };
         if (!options
-            || !(this.settings.html = (isElement(options.tag) ? (options.tag) : qS(options.tag))))
+            || !(this.settings.html = (dab_1.isElement(options.tag) ? (options.tag) : utils_1.qS(options.tag))))
             throw 'wrong options';
         //set event handler if any, this uses setter for type checking
         this.onChange = options.onChange;
@@ -25,7 +27,7 @@ export default class UIProp {
         //set properties
         this.settings.tag = options.tag;
         this.settings.name = this.html.getAttribute("name");
-        this.settings.id = this.html.id || attr(this.html, "prop-id") || ('property' + UIProp._propId++);
+        this.settings.id = this.html.id || dab_1.attr(this.html, "prop-id") || ('property' + UIProp._propId++);
         switch (this.nodeName) {
             case 'input':
                 this.settings.type = this.html.type.toLowerCase();
@@ -71,7 +73,7 @@ export default class UIProp {
                 let index = -1;
                 this.settings.selectCount = this.html.length;
                 //later return an array for select multiple
-                dP(this, "index", {
+                dab_1.dP(this, "index", {
                     get: () => index,
                     set(value) {
                         (value >= 0 && value < this.settings.selectCount) && // this.options.length
@@ -80,7 +82,7 @@ export default class UIProp {
                                 this.selectionUiChanged());
                     }
                 });
-                dP(this, "selectedOption", {
+                dab_1.dP(this, "selectedOption", {
                     get: () => this.html.options[this.html.selectedIndex]
                 });
                 break;
@@ -104,7 +106,7 @@ export default class UIProp {
     get nodeName() { return this.html.nodeName.toLowerCase(); }
     get onChange() { return this.settings.onChange; }
     set onChange(fn) {
-        isFn(fn) && (this.settings.onChange = fn);
+        dab_1.isFn(fn) && (this.settings.onChange = fn);
     }
     get value() {
         let val = this.html[this.settings.getter]; //select.selectedOptions
@@ -125,23 +127,23 @@ export default class UIProp {
     }
     set value(val) {
         if (!this.settings.htmlSelect) {
-            let valtype = typeOf(val);
+            let valtype = dab_1.typeOf(val);
             if ((this.type == "text" && valtype == "string") ||
                 (this.type == "boolean" && valtype == "boolean") ||
-                (this.type == "integer" && isInt(val)) ||
-                (this.type == "number" && isNumeric(val)))
+                (this.type == "integer" && dab_1.isInt(val)) ||
+                (this.type == "number" && dab_1.isNumeric(val)))
                 this.html[this.settings.getter] = val;
         }
         else {
             //this.getsetSelect(<HTMLSelectElement>this.html, 'selectedIndex', splat(val));
             if (this.settings.selectMultiple) {
-                let values = splat(val).map((num) => num + '');
+                let values = dab_1.splat(val).map((num) => num + '');
                 [].forEach.call(this.html.options, (option) => {
                     (values.indexOf(option.value) >= 0) && (option.selected = true);
                 });
             }
             else {
-                if (isStr(this.value)) {
+                if (dab_1.isStr(this.value)) {
                     val = [].findIndex.call(this.html.options, (option) => option.value == val);
                 }
                 this.html.selectedIndex = val | 0;
@@ -165,5 +167,6 @@ export default class UIProp {
             );
     }
 }
+exports.default = UIProp;
 UIProp.textOnly = "a|abbr|acronym|b|bdo|big|cite|code|dfn|em|i|kbd|label|legend|li|q|samp|small|span|strong|sub|sup|td|th|tt|var".split('|');
 UIProp._propId = 1;

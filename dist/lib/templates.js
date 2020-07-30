@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.XML = exports.Templates = void 0;
 class Templates {
     static get(key) { return Templates.map.get(key); }
     static set(key, value) { Templates.map.set(key, value); }
@@ -106,6 +109,7 @@ class Templates {
             : xml.body.innerHTML;
     }
 }
+exports.Templates = Templates;
 Templates.map = new Map();
 //https://gist.github.com/max-pub/a5c15b7831bbfaba7ad13acefc3d0781
 const XML = {
@@ -144,4 +148,4 @@ const XML = {
         return output + (onlyOneTextChild ? '' : tabs) + `</${node.tagName}>` + newLine;
     }
 };
-export { Templates, XML };
+exports.XML = XML;

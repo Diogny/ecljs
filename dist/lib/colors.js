@@ -1,6 +1,9 @@
+"use strict";
 //Color class is adapted from:
 //https://github.com/Microsoft/TypeScriptSamples/blob/master/raytracer/raytracer.ts
-export class Color {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Colors = exports.Color = void 0;
+class Color {
     constructor(r, g, b) {
         this.r = r;
         this.g = g;
@@ -23,13 +26,14 @@ export class Color {
         return Colors[color !== undefined ? color : (defaultColor !== undefined) ? defaultColor : ''];
     }
 }
+exports.Color = Color;
 Color.white = new Color(1.0, 1.0, 1.0);
 Color.grey = new Color(0.5, 0.5, 0.5);
 Color.black = new Color(0.0, 0.0, 0.0);
 Color.background = Color.black;
 Color.defaultColor = Color.black;
 //supported colors for a board component
-export var Colors;
+var Colors;
 (function (Colors) {
     Colors[Colors["white"] = 0] = "white";
     Colors[Colors["black"] = 1] = "black";
@@ -45,4 +49,4 @@ export var Colors;
     Colors[Colors["navy"] = 11] = "navy";
     Colors[Colors["teal"] = 12] = "teal";
     Colors[Colors["violet"] = 13] = "violet";
-})(Colors || (Colors = {}));
+})(Colors = exports.Colors || (exports.Colors = {}));

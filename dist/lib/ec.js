@@ -1,20 +1,23 @@
-import { attr, obj, extend, aCld } from './dab';
-import { each, tag } from './utils';
-import { Type } from './types';
-import Point from './point';
-import ItemSolid from './itemSolid';
-import Label from './label';
-export default class EC extends ItemSolid {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const dab_1 = require("./dab");
+const utils_1 = require("./utils");
+const types_1 = require("./types");
+const point_1 = tslib_1.__importDefault(require("./point"));
+const itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
+const label_1 = tslib_1.__importDefault(require("./label"));
+class EC extends itemSolid_1.default {
     constructor(circuit, options) {
         super(circuit, options);
         this.g.innerHTML = this.base.data;
         let createText = (attr, text) => {
-            let svgText = tag("text", "", attr);
+            let svgText = utils_1.tag("text", "", attr);
             return svgText.innerHTML = text, svgText;
         };
         //for labels in N555, 7408, Atmega168
         if (this.base.meta.label) {
-            aCld(this.g, createText({
+            dab_1.aCld(this.g, createText({
                 x: this.base.meta.label.x,
                 y: this.base.meta.label.y,
                 "class": this.base.meta.label.class
@@ -25,11 +28,11 @@ export default class EC extends ItemSolid {
             let pins = this.count / 2;
             for (let y = 55, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
                 for (let col = 0; col < pins; col++, i++, x += factor)
-                    aCld(this.g, createText({ x: x, y: y }, i + ""));
+                    dab_1.aCld(this.g, createText({ x: x, y: y }, i + ""));
         }
         //create label if defined
         if (this.base.meta.labelId) {
-            this.labelSVG = new Label({
+            this.labelSVG = new label_1.default({
                 fontSize: 15,
                 x: this.base.meta.labelId.x,
                 y: this.base.meta.labelId.y
@@ -52,7 +55,7 @@ export default class EC extends ItemSolid {
         });
     }
     get last() { return this.base.meta.nodes.list.length - 1; }
-    get type() { return Type.EC; }
+    get type() { return types_1.Type.EC; }
     get count() {
         return this.base.meta.nodes.list.length;
     }
@@ -71,25 +74,25 @@ export default class EC extends ItemSolid {
         if (this.rotation) {
             attrs.transform += ` rotate(${this.rotation} ${center.x} ${center.y})`;
         }
-        attr(this.g, attrs);
-        each(this.bonds, (b, key) => {
+        dab_1.attr(this.g, attrs);
+        utils_1.each(this.bonds, (b, key) => {
             this.nodeRefresh(key);
         });
         if (this.labelSVG) {
-            let pos = Point.plus(this.p, this.labelSVG.p);
+            let pos = point_1.default.plus(this.p, this.labelSVG.p);
             attrs = {
                 transform: `translate(${pos.x} ${pos.y})`
             };
-            this.rotation && (center = Point.minus(Point.plus(this.p, center), pos),
+            this.rotation && (center = point_1.default.minus(point_1.default.plus(this.p, center), pos),
                 attrs.transform += ` rotate(${this.rotation} ${center.x} ${center.y})`);
-            attr(this.labelSVG.g, attrs);
+            dab_1.attr(this.labelSVG.g, attrs);
         }
         return this;
     }
     nodeRefresh(node) {
         let bond = this.nodeBonds(node), pos = this.getNode(node);
         pos && bond && bond.to.forEach((d) => {
-            let ic = this.circuit.get(d.id), p = Point.plus(this.p, this.rotation ? pos.rot : pos).round();
+            let ic = this.circuit.get(d.id), p = point_1.default.plus(this.p, this.rotation ? pos.rot : pos).round();
             ic && ic.setNode(d.ndx, p); //no transform
         });
         return this;
@@ -100,17 +103,17 @@ export default class EC extends ItemSolid {
             if (!rotation)
                 return obj;
             let rot = obj.rotateBy(center.x, center.y, -rotation);
-            return new Point(rot.x, rot.y);
+            return new point_1.default(rot.x, rot.y);
         };
         if (!pin)
             return null;
-        pin.rot = rotate(new Point(pin.x, pin.y), this.rotation, this.origin);
+        pin.rot = rotate(new point_1.default(pin.x, pin.y), this.rotation, this.origin);
         //
-        return obj(pin);
+        return dab_1.obj(pin);
     }
     getNodeRealXY(node) {
         let pos = this.getNode(node);
-        return pos ? Point.plus(this.p, this.rotation ? pos.rot : pos).round() : null;
+        return pos ? point_1.default.plus(this.p, this.rotation ? pos.rot : pos).round() : null;
     }
     overNode(p, ln) {
         for (let i = 0, len = this.count; i < len; i++) {
@@ -129,7 +132,7 @@ export default class EC extends ItemSolid {
         let dx = p.x - this.x, dy = p.y - this.y, rotation = -this.rotation, origin = this.origin;
         for (let i = 0, list = this.base.meta.nodes.list, meta = list[i], len = list.length; i < len; meta = list[++i]) {
             let nodePoint = this.rotation
-                ? Point.prototype.rotateBy.call(meta, origin.x, origin.y, rotation)
+                ? point_1.default.prototype.rotateBy.call(meta, origin.x, origin.y, rotation)
                 : meta;
             //radius 5 =>  5^2 = 25
             if ((Math.pow(dx - nodePoint.x, 2) + Math.pow(dy - nodePoint.y, 2)) <= 81)
@@ -162,8 +165,9 @@ export default class EC extends ItemSolid {
         this.labelSVG && (this.g.insertAdjacentElement("afterend", this.labelSVG.g), this.labelSVG.setVisible(true));
     }
     propertyDefaults() {
-        return extend(super.propertyDefaults(), {
+        return dab_1.extend(super.propertyDefaults(), {
             class: "ec",
         });
     }
 }
+exports.default = EC;

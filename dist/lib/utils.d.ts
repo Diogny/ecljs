@@ -1,6 +1,8 @@
-export declare const templatesUrl: (url: string, obj?: object | undefined) => any;
+export declare const templatesUrl: (url: string, obj?: {
+    [key: string]: any;
+} | undefined) => Promise<any>;
 export declare const templatesDOM: (query: string | string[]) => Promise<{
-    [key: string]: string;
+    [key: string]: any;
 }>;
 export declare const pad: (t: string, e: number, ch?: any) => string;
 export declare const fillChar: (ch: string, len: number) => string;
@@ -26,4 +28,3 @@ export declare const qSA: (s: string) => NodeListOf<Element>;
 export declare const gEId: (id: string) => HTMLElement | null;
 export declare const basePath: () => string | null;
 export declare const matrix: <T>(rows: number, cols: number, filler: T) => T[][];
-export declare const readLibraryJson: (path: string) => any;

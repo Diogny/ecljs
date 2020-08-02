@@ -43,6 +43,7 @@ export default class Circuit {
     selectAll(value: boolean): EC[];
     toggleSelect(comp: EC): void;
     selectThis(comp: EC): boolean;
+    unselectThis(comp: EC): void;
     selectRect(rect: Rect): void;
     deleteSelected(): number;
     delete(comp: ItemBoard): boolean;

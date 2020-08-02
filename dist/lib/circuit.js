@@ -73,6 +73,11 @@ class Circuit {
         return comp
             && (this.selectAll(false).push(comp.select(true)), true);
     }
+    unselectThis(comp) {
+        comp.select(false);
+        this.selectedComponents =
+            this.ecList.filter(c => c.selected);
+    }
     selectRect(rect) {
         (this.selectedComponents =
             this.ecList.filter((item) => {

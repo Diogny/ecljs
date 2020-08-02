@@ -111,6 +111,12 @@ export default class Circuit {
 			&& (this.selectAll(false).push(comp.select(true) as EC), true)
 	}
 
+	public unselectThis(comp: EC) {
+		comp.select(false);
+		this.selectedComponents =
+			this.ecList.filter(c => c.selected);
+	}
+
 	public selectRect(rect: Rect) {
 		(this.selectedComponents =
 			this.ecList.filter((item) => {

@@ -11,6 +11,7 @@ var Type;
     Type[Type["WIN"] = 5] = "WIN";
     Type[Type["TOOLTIP"] = 6] = "TOOLTIP";
     Type[Type["HIGHLIGHT"] = 7] = "HIGHLIGHT";
+    Type[Type["FLOWCHART"] = 8] = "FLOWCHART";
 })(Type = exports.Type || (exports.Type = {}));
 ;
 class TypedClass {

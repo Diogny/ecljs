@@ -14,7 +14,7 @@ export default abstract class ItemBoard extends ItemBase {
 
 	protected settings: IItemBoardProperties;
 
-	get base(): Comp { return this.settings.base }
+
 	get onProp(): Function { return this.settings.onProp }
 	get selected(): boolean { return this.settings.selected }
 	get bonds(): Bond[] { return this.settings.bonds }
@@ -37,11 +37,8 @@ export default abstract class ItemBoard extends ItemBase {
 
 	constructor(public circuit: Circuit, options: IItemBaseOptions) {
 		super(options);
-		let
-			base = <Comp>Comp.find(this.name);
-		if (!base || !circuit)
-			throw `cannot create component`;
-		this.settings.props = obj(base.props);
+		if (!circuit)
+			throw `component without circuit`;
 		attr(this.g, {
 			id: this.id,
 			"svg-comp": this.base.type,

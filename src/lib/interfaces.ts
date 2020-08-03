@@ -18,6 +18,26 @@ export interface ISize {
 
 export interface IRect extends IPoint, ISize { }
 
+//***************************************** Component Property ************************************//
+
+export interface IComponentProperty {
+	name: string;
+	value: string;
+	valueType: string;
+	type: string;
+	isProperty: boolean;
+	readonly: boolean;
+	label: string;
+	class: string;
+	options?: string[];
+
+	//this's for EC properties like this.p show in property window
+	//ec: ItemBoard;
+	setValue(val: string): boolean;
+}
+
+export type ComponentPropertyType = string | number | IComponentProperty;
+
 //***************************************** UIProperty ************************************//
 
 export interface IUIPropertyCallback {
@@ -51,7 +71,7 @@ export interface IUIPropertySettings extends IUIProperty {
 export interface IComponentOptions {
 	type: string;
 	name: string;
-	properties: any;
+	properties: { [x: string]: any };
 	data: string;
 	meta: IComponentMetadata;
 	tmpl: IComponentTemplate;
@@ -148,17 +168,16 @@ export interface ITooltipText extends ILabelText {
 
 //the object item base has all properties, but restricted in the constructor
 export interface IItemBaseProperties extends IItemBaseOptions {
+	props: { [x: string]: any };
 	g: SVGElement;
 }
 
-export interface ITooltipSettings extends IItemBaseOptions {
-	g: SVGElement;
+export interface ITooltipSettings extends IItemBaseProperties {
 	fontSize: number;
 	borderRadius: number;
 }
 
-export interface IHighlighNodeSettings extends IItemBaseOptions {
-	g: SVGElement;
+export interface IHighlighNodeSettings extends IItemBaseProperties {
 	radius: number;
 	//these're the current selected node properties
 	selectedId: string;
@@ -166,7 +185,6 @@ export interface IHighlighNodeSettings extends IItemBaseOptions {
 }
 
 export interface IItemBoardProperties extends IItemBaseProperties {
-	props: any;
 	selected: boolean;
 	onProp: Function;
 	bonds: Bond[];

@@ -10,7 +10,8 @@ const defaultComponent = (name) => ({
         meta: {
             nameTmpl: defaultIdTemplate,
             nodes: []
-        }
+        },
+        properties: {}
     }
 });
 class Comp {

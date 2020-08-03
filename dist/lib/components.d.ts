@@ -5,7 +5,9 @@ export default class Comp {
     get name(): string;
     get type(): string;
     get data(): string;
-    get props(): any;
+    get props(): {
+        [x: string]: any;
+    };
     get meta(): IComponentMetadata;
     constructor(options: IComponentOptions);
     static register: (options: IComponentOptions) => Comp;

@@ -1,14 +1,16 @@
 import { obj, addClass, removeClass, isStr } from './dab';
 import { tag } from './utils';
-import { IItemBaseProperties, IItemBaseOptions, ISize } from './interfaces';
+import { IItemBaseProperties, IItemBaseOptions, ISize, ComponentPropertyType } from './interfaces';
 import Item from './item';
 import Rect from './rect';
 import Point from './point';
+import Comp from './components';
 
 export default abstract class ItemBase extends Item {
 
 	protected settings: IItemBaseProperties;
 
+	get base(): Comp { return this.settings.base }
 	get g(): SVGElement { return this.settings.g }
 
 	get ClientRect(): ISize {
@@ -40,6 +42,11 @@ export default abstract class ItemBase extends Item {
 	constructor(options: IItemBaseOptions) {
 		super(options);
 		let
+			base = <Comp>Comp.find(this.name);
+		if (!base)
+			throw `cannot create component`;
+		this.settings.props = obj(base.props);
+		let
 			classArr = isStr(this.class) ? this.class.split(' ') : [];
 		!this.settings.visible && (classArr.push("hide"));
 		this.settings.g = tag("g", this.settings.id, {
@@ -52,4 +59,8 @@ export default abstract class ItemBase extends Item {
 	}
 
 	public afterDOMinserted() { }
+
+	public prop(propName: string): ComponentPropertyType {
+		return this.settings.props[propName]
+	}
 }

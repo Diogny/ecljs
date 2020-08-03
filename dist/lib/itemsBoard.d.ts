@@ -1,6 +1,5 @@
 import Bond from './bonds';
 import ItemBase from './itemsBase';
-import Comp from './components';
 import { IPoint, IItemNode, IItemBoardProperties, IItemBaseOptions } from './interfaces';
 import Point from './point';
 import Circuit from './circuit';
@@ -9,7 +8,6 @@ import Wire from './wire';
 export default abstract class ItemBoard extends ItemBase {
     circuit: Circuit;
     protected settings: IItemBoardProperties;
-    get base(): Comp;
     get onProp(): Function;
     get selected(): boolean;
     get bonds(): Bond[];

@@ -10,7 +10,8 @@ const defaultComponent = (name: string): IBaseStoreComponent => (<any>{
 		meta: {
 			nameTmpl: defaultIdTemplate,
 			nodes: []
-		}
+		},
+		properties: {}
 	}
 });
 
@@ -24,7 +25,7 @@ export default class Comp {
 	get name(): string { return this.settings.name }
 	get type(): string { return this.settings.type }
 	get data(): string { return this.settings.data }
-	get props(): any { return this.settings.properties }
+	get props(): { [x: string]: any } { return this.settings.properties }
 	get meta(): IComponentMetadata { return this.settings.meta }
 
 	constructor(options: IComponentOptions) {

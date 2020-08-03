@@ -6,15 +6,21 @@ const utils_1 = require("./utils");
 const item_1 = tslib_1.__importDefault(require("./item"));
 const rect_1 = tslib_1.__importDefault(require("./rect"));
 const point_1 = tslib_1.__importDefault(require("./point"));
+const components_1 = tslib_1.__importDefault(require("./components"));
 class ItemBase extends item_1.default {
     constructor(options) {
         super(options);
+        let base = components_1.default.find(this.name);
+        if (!base)
+            throw `cannot create component`;
+        this.settings.props = dab_1.obj(base.props);
         let classArr = dab_1.isStr(this.class) ? this.class.split(' ') : [];
         !this.settings.visible && (classArr.push("hide"));
         this.settings.g = utils_1.tag("g", this.settings.id, {
             class: (this.settings.class = classArr.join(' '))
         });
     }
+    get base() { return this.settings.base; }
     get g() { return this.settings.g; }
     get ClientRect() {
         let b = this.g.getBoundingClientRect();
@@ -41,5 +47,8 @@ class ItemBase extends item_1.default {
         (_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.g);
     }
     afterDOMinserted() { }
+    prop(propName) {
+        return this.settings.props[propName];
+    }
 }
 exports.default = ItemBase;

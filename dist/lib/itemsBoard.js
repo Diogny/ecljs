@@ -4,7 +4,6 @@ const tslib_1 = require("tslib");
 const dab_1 = require("./dab");
 const bonds_1 = tslib_1.__importDefault(require("./bonds"));
 const itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
-const components_1 = tslib_1.__importDefault(require("./components"));
 const point_1 = tslib_1.__importDefault(require("./point"));
 const types_1 = require("./types");
 //ItemBoard->Wire
@@ -12,10 +11,8 @@ class ItemBoard extends itemsBase_1.default {
     constructor(circuit, options) {
         super(options);
         this.circuit = circuit;
-        let base = components_1.default.find(this.name);
-        if (!base || !circuit)
-            throw `cannot create component`;
-        this.settings.props = dab_1.obj(base.props);
+        if (!circuit)
+            throw `component without circuit`;
         dab_1.attr(this.g, {
             id: this.id,
             "svg-comp": this.base.type,
@@ -24,7 +21,6 @@ class ItemBoard extends itemsBase_1.default {
         //properties still cannot access super value
         //(<any>this.settings).__selected = dab.propDescriptor(this, "selected");
     }
-    get base() { return this.settings.base; }
     get onProp() { return this.settings.onProp; }
     get selected() { return this.settings.selected; }
     get bonds() { return this.settings.bonds; }

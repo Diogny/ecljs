@@ -49,7 +49,12 @@ class Comp {
     }
 }
 exports.default = Comp;
-Comp.baseComps = Comp.initializeComponents([defaultComponent("tooltip"), defaultComponent("wire")]);
+Comp.baseComps = Comp.initializeComponents([
+    defaultComponent("label"),
+    defaultComponent("tooltip"),
+    defaultComponent("wire"),
+    defaultComponent("h-node")
+]);
 Comp.register = (options) => new Comp(options);
 Comp.store = (name, comp) => Comp.baseComps.has(name) ?
     false :

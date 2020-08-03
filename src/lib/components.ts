@@ -18,7 +18,11 @@ const defaultComponent = (name: string): IBaseStoreComponent => (<any>{
 export default class Comp {
 
 	private static baseComps: Map<string, Comp> =
-		Comp.initializeComponents([defaultComponent("tooltip"), defaultComponent("wire")]);
+		Comp.initializeComponents([
+			defaultComponent("label"),
+			defaultComponent("tooltip"),
+			defaultComponent("wire"),
+			defaultComponent("h-node")]);
 
 	protected settings: IComponentOptions;
 

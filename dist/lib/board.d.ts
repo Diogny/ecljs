@@ -20,8 +20,9 @@ export default class Board extends BaseSettings {
     constructor(options: IBoardOptions);
     add(container: Container<EC | FlowchartComponent>): void;
     center(): Point;
-    get(library: string): Container<EC | FlowchartComponent> | undefined;
-    clear(options: IBoardOptions): void;
+    get(name: string): Container<EC | FlowchartComponent> | undefined;
+    libraries(library: string): Container<EC | FlowchartComponent>[];
+    destroy(): void;
     propertyDefaults(): IBoardProperties;
     static get zoomMultipliers(): number[];
     static get zoomFactors(): string[];

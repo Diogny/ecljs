@@ -4,6 +4,7 @@ import Point from "./point";
 import Container from "./container";
 import FlowchartComponent from "./flowchartComponent";
 import EC from "./ec";
+import { unique } from "./dab";
 
 export default class Board extends BaseSettings {
 
@@ -39,9 +40,21 @@ export default class Board extends BaseSettings {
 
 	constructor(options: IBoardOptions) {
 		super(options);
+		if (options.viewPoint) {
+			//panning
+			this.viewBox.x = options.viewPoint.x;
+			this.viewBox.y = options.viewPoint.y
+		}
+		let
+			names = this.containers.map(c => c.name);
+		if (names.length != unique(names).length)
+			throw `duplicated container names`;
+		setZoom(this, options.zoom || Board.defaultZoom, true);
 	}
 
 	public add(container: Container<EC | FlowchartComponent>) {
+		if (this.containers.some(c => c.name == container.name))
+			throw `duplicated container name: ${container.name}`;
 		this.containers.push(container)
 	}
 
@@ -52,15 +65,18 @@ export default class Board extends BaseSettings {
 		)
 	}
 
-	public get(library: string): Container<EC | FlowchartComponent> | undefined {
-		return this.containers.find(c => c.library == library)
+	public get(name: string): Container<EC | FlowchartComponent> | undefined {
+		return this.containers.find(c => c.name == name)
 	}
 
-	public clear(options: IBoardOptions): void {
-		this.settings && this.containers
+	public libraries(library: string): Container<EC | FlowchartComponent>[] {
+		return this.containers.filter(c => c.library == library)
+	}
+
+	public destroy() {
+		this.containers
 			.forEach(c => c.destroy());
-		super.clear(options);
-		setUpBoard(this, options)
+		this.settings = <any>void 0;
 	}
 
 	public propertyDefaults(): IBoardProperties {
@@ -99,13 +115,4 @@ function setZoom(board: Board, value: number, force: boolean) {
 		(<any>board).settings.zoom = value;
 		(<any>board).settings.onZoom && (<any>board).settings.onZoom(value)
 	}
-}
-
-function setUpBoard(board: Board, options: IBoardOptions) {
-	if (options.viewPoint) {
-		//panning
-		board.viewBox.x = options.viewPoint.x;
-		board.viewBox.y = options.viewPoint.y
-	}
-	setZoom(board, options.zoom || Board.defaultZoom, true);
 }

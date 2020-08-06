@@ -63,6 +63,7 @@ export interface IBoardProperties {
     onZoom: (zoom: number) => void;
 }
 export interface IContainerProperties<T extends ItemBoard> {
+    name: string;
     uniqueCounters: {
         [x: string]: any;
     };

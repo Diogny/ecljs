@@ -2,7 +2,6 @@ import Container from "./container";
 import FlowchartComponent from "./flowchartComponent";
 import Wire from "./wire";
 export default class Flowchart extends Container<FlowchartComponent> {
-    get name(): string;
     get library(): string;
     get directionalWires(): boolean;
     createItem(options: {

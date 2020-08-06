@@ -9,9 +9,16 @@ var wire_1 = tslib_1.__importDefault(require("./wire"));
 var components_1 = tslib_1.__importDefault(require("./components"));
 var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
-    function Container() {
-        return _super.call(this, {}) || this;
+    function Container(name) {
+        return _super.call(this, {
+            name: name
+        }) || this;
     }
+    Object.defineProperty(Container.prototype, "name", {
+        get: function () { return this.settings.name; },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Container.prototype, "uniqueCounters", {
         get: function () { return this.settings.uniqueCounters; },
         enumerable: false,
@@ -78,6 +85,7 @@ var Container = /** @class */ (function (_super) {
     });
     Container.prototype.propertyDefaults = function () {
         return {
+            name: "",
             uniqueCounters: {},
             componentTemplates: new Map(),
             itemMap: new Map(),

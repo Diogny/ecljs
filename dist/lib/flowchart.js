@@ -9,11 +9,6 @@ var Flowchart = /** @class */ (function (_super) {
     function Flowchart() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Object.defineProperty(Flowchart.prototype, "name", {
-        get: function () { return "Flowchart"; },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Flowchart.prototype, "library", {
         get: function () { return "flowchart"; },
         enumerable: false,

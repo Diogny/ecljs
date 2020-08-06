@@ -8,11 +8,6 @@ var Circuit = /** @class */ (function (_super) {
     function Circuit() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Object.defineProperty(Circuit.prototype, "name", {
-        get: function () { return "Circuit"; },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Circuit.prototype, "library", {
         get: function () { return "circuit"; },
         enumerable: false,

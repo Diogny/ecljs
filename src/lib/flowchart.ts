@@ -6,7 +6,6 @@ import FlowConditional from "./conditional";
 
 export default class Flowchart extends Container<FlowchartComponent>{
 
-	get name(): string { return "Flowchart" }
 	get library(): string { return "flowchart" }
 	get directionalWires(): boolean { return true }
 

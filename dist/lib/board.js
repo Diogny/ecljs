@@ -4,10 +4,21 @@ var tslib_1 = require("tslib");
 var interfaces_1 = require("./interfaces");
 var rect_1 = tslib_1.__importDefault(require("./rect"));
 var point_1 = tslib_1.__importDefault(require("./point"));
+var dab_1 = require("./dab");
 var Board = /** @class */ (function (_super) {
     tslib_1.__extends(Board, _super);
     function Board(options) {
-        return _super.call(this, options) || this;
+        var _this = _super.call(this, options) || this;
+        if (options.viewPoint) {
+            //panning
+            _this.viewBox.x = options.viewPoint.x;
+            _this.viewBox.y = options.viewPoint.y;
+        }
+        var names = _this.containers.map(function (c) { return c.name; });
+        if (names.length != dab_1.unique(names).length)
+            throw "duplicated container names";
+        setZoom(_this, options.zoom || Board.defaultZoom, true);
+        return _this;
     }
     Object.defineProperty(Board.prototype, "version", {
         get: function () { return this.settings.version; },
@@ -65,19 +76,23 @@ var Board = /** @class */ (function (_super) {
         configurable: true
     });
     Board.prototype.add = function (container) {
+        if (this.containers.some(function (c) { return c.name == container.name; }))
+            throw "duplicated container name: " + container.name;
         this.containers.push(container);
     };
     Board.prototype.center = function () {
         return new point_1.default(Math.round(this.viewBox.x + this.viewBox.width / 2 | 0), Math.round(this.viewBox.y + this.viewBox.height / 2 | 0));
     };
-    Board.prototype.get = function (library) {
-        return this.containers.find(function (c) { return c.library == library; });
+    Board.prototype.get = function (name) {
+        return this.containers.find(function (c) { return c.name == name; });
     };
-    Board.prototype.clear = function (options) {
-        this.settings && this.containers
+    Board.prototype.libraries = function (library) {
+        return this.containers.filter(function (c) { return c.library == library; });
+    };
+    Board.prototype.destroy = function () {
+        this.containers
             .forEach(function (c) { return c.destroy(); });
-        _super.prototype.clear.call(this, options);
-        setUpBoard(this, options);
+        this.settings = void 0;
     };
     Board.prototype.propertyDefaults = function () {
         return {
@@ -120,12 +135,4 @@ function setZoom(board, value, force) {
         board.settings.zoom = value;
         board.settings.onZoom && board.settings.onZoom(value);
     }
-}
-function setUpBoard(board, options) {
-    if (options.viewPoint) {
-        //panning
-        board.viewBox.x = options.viewPoint.x;
-        board.viewBox.y = options.viewPoint.y;
-    }
-    setZoom(board, options.zoom || Board.defaultZoom, true);
 }

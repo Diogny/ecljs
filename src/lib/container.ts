@@ -8,7 +8,7 @@ import Comp from "./components";
 
 export default abstract class Container<T extends ItemBoard> extends BaseSettings {
 
-	abstract get name(): string;
+	public get name(): string { return this.settings.name }
 	abstract get library(): string;
 	abstract get directionalWires(): boolean;
 
@@ -40,12 +40,15 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		this.settings.modified = value;
 	}
 
-	constructor() {
-		super({});
+	constructor(name: string) {
+		super({
+			name: name
+		});
 	}
 
 	public propertyDefaults(): IContainerProperties<T> {
 		return <IContainerProperties<T>>{
+			name: "",
 			uniqueCounters: {},
 			componentTemplates: new Map(),
 			itemMap: new Map(),

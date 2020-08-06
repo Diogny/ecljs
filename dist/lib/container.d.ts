@@ -4,7 +4,7 @@ import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 export default abstract class Container<T extends ItemBoard> extends BaseSettings {
-    abstract get name(): string;
+    get name(): string;
     abstract get library(): string;
     abstract get directionalWires(): boolean;
     protected settings: IContainerProperties<T>;
@@ -29,7 +29,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
     get(id: string): T | Wire | undefined;
     get modified(): boolean;
     set modified(value: boolean);
-    constructor();
+    constructor(name: string);
     propertyDefaults(): IContainerProperties<T>;
     rootComponent(name: string): IBaseComponent | undefined;
     hasComponent(id: string): boolean;

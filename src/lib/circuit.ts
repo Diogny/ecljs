@@ -3,7 +3,6 @@ import Container from "./container";
 
 export default class Circuit extends Container<EC> {
 
-	get name(): string { return "Circuit" }
 	get library(): string { return "circuit" }
 	get directionalWires(): boolean { return false }
 

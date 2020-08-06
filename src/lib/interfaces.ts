@@ -75,6 +75,7 @@ export interface IBoardProperties {
 }
 
 export interface IContainerProperties<T extends ItemBoard> {
+	name: string;
 	uniqueCounters: { [x: string]: any; };
 	componentTemplates: Map<string, IBaseComponent>;
 	itemMap: Map<string, { c: T, b: Bond[] }>;

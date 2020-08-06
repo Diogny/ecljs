@@ -1,12 +1,12 @@
-import { obj } from './dab';
 import { IComponentOptions, IBaseStoreComponent, IComponentMetadata } from './interfaces';
+import { obj } from './dab';
 
 const defaultIdTemplate = "{base.comp.name}-{base.count}";
-const defaultComponent = (name: string): IBaseStoreComponent => (<any>{
+const defaultComponent = (type: string, name: string): IBaseStoreComponent => (<any>{
 	name: name,
 	comp: {
+		type: type,
 		name: name,
-		type: name,
 		meta: {
 			nameTmpl: defaultIdTemplate,
 			nodes: []
@@ -19,14 +19,16 @@ export default class Comp {
 
 	private static baseComps: Map<string, Comp> =
 		Comp.initializeComponents([
-			defaultComponent("label"),
-			defaultComponent("tooltip"),
-			defaultComponent("wire"),
-			defaultComponent("h-node")]);
+			defaultComponent("utils", "label"),
+			defaultComponent("utils", "tooltip"),
+			defaultComponent("utils", "h-node"),
+			defaultComponent("wire", "wire")
+		]);
 
 	protected settings: IComponentOptions;
 
 	get name(): string { return this.settings.name }
+	get library(): string { return this.settings.library }
 	get type(): string { return this.settings.type }
 	get data(): string { return this.settings.data }
 	get props(): { [x: string]: any } { return this.settings.properties }
@@ -77,5 +79,7 @@ export default class Comp {
 	public static find = (name: string): Comp | undefined => {
 		return Comp.baseComps.get(name);
 	}
+
+	public static get size(): number { return Comp.baseComps.size }
 
 }

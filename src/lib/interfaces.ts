@@ -1,8 +1,78 @@
-import Comp from "./components";
-import Bond from "./bonds";
-import { Type } from "./types";
+import { obj, copy } from "./dab";
 import Point from './point';
+import Comp from "./components";
 import UIProp from "./props";
+import Label from "./label";
+import Container from "./container";
+import FlowchartComponent from "./flowchartComponent";
+import EC from "./ec";
+import ItemBoard from "./itemsBoard";
+import Bond from "./bonds";
+import Wire from "./wire";
+import Rect from "./rect";
+
+
+//***************************************** Types ************************************//
+
+export enum Type {
+	UNDEFINED = 0,
+	EC = 1,
+	WIRE = 2,
+	BOND = 3,
+	LABEL = 4,
+	WIN = 5,
+	TOOLTIP = 6,
+	HIGHLIGHT = 7,
+	FLOWCHART = 8
+};
+
+export interface IType {
+	type: Type;
+}
+
+export interface IBaseSettings {
+	propertyDefaults(): { [x: string]: any };
+}
+
+export abstract class BaseSettings implements IBaseSettings {
+
+	protected settings: { [x: string]: any };
+
+	constructor(options: { [x: string]: any; }) {
+		this.settings = obj(copy(this.propertyDefaults(), options));
+	}
+
+	propertyDefaults(): { [x: string]: any; } {
+		return {}
+	}
+
+}
+
+export interface IBoardOptions {
+	name: string;
+	description?: string;
+	zoom?: number;
+	filePath?: string;
+}
+
+export interface IBoardProperties {
+	version: string;
+	name: string;
+	description: string;
+	filePath: string;
+	viewBox: Rect;
+	zoom: number;
+	containers: Container<EC | FlowchartComponent>[]
+}
+
+export interface IContainerProperties<T extends ItemBoard> {
+	uniqueCounters: { [x: string]: any; };
+	componentTemplates: Map<string, IBaseComponent>;
+	itemMap: Map<string, { c: T, b: Bond[] }>;
+	wireMap: Map<string, { c: Wire, b: Bond[] }>;
+	selected: T[];
+	modified: boolean;
+}
 
 //***************************************** General ************************************//
 
@@ -22,7 +92,7 @@ export interface IRect extends IPoint, ISize { }
 
 export interface IComponentProperty {
 	name: string;
-	value: string;
+	value: string | number | any;
 	valueType: string;
 	type: string;
 	isProperty: boolean;
@@ -69,6 +139,7 @@ export interface IUIPropertySettings extends IUIProperty {
 
 //***************************************** Component ************************************//
 export interface IComponentOptions {
+	library: string;
 	type: string;
 	name: string;
 	properties: { [x: string]: any };
@@ -187,20 +258,23 @@ export interface IHighlighNodeSettings extends IItemBaseProperties {
 export interface IItemBoardProperties extends IItemBaseProperties {
 	selected: boolean;
 	onProp: Function;
-	bonds: Bond[];
-	bondsCount: number;
+	directional: boolean;
 }
 
 export interface IItemSolidProperties extends IItemBoardProperties {
 	rotation: number;
 }
 
-export interface IWireProperties extends IItemSolidProperties {
+export interface IWireProperties extends IItemBoardProperties {
 	points: Point[];
 	polyline: SVGElement;
 	lines: SVGElement[];		//used on edit-mode only
 	pad: number;
 	edit: boolean;
+}
+
+export interface IECProperties extends IItemSolidProperties {
+	boardLabel: Label;
 }
 
 export interface IHighlightable {
@@ -221,7 +295,7 @@ export interface IHighlightable {
 
 //***************************************** Bonds ************************************//
 
-export interface IBondItem {
+export interface IBondLink {
 	id: string;
 	type: Type;
 	ndx: number;

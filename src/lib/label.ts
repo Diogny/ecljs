@@ -1,8 +1,7 @@
-import ItemBase from "./itemsBase";
-import { Type } from "./types";
-import { ITooltipSettings, ISize, ILabelText } from "./interfaces";
+import { Type, ITooltipSettings, ISize, ILabelText } from "./interfaces";
 import { obj, aCld, attr, extend } from "./dab";
 import { tag } from "./utils";
+import ItemBase from "./itemsBase";
 
 export default class Label extends ItemBase {
 

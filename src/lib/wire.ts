@@ -1,11 +1,10 @@
+import { Type, IItemWireOptions, IItemNode, IPoint, IWireProperties } from './interfaces';
 import { addClass, removeClass, attr, isArr, extend } from './dab';
 import { tag } from './utils';
-import { Type } from './types';
-import { IItemWireOptions, IItemNode, IPoint, IWireProperties } from './interfaces';
-import ItemBoard from './itemsBoard';
 import Point from './point';
 import Rect from './rect';
-import Circuit from './circuit';
+import ItemBoard from './itemsBoard';
+import Container from './container';
 
 export default class Wire extends ItemBoard {
 
@@ -65,8 +64,9 @@ export default class Wire extends ItemBoard {
 		this.settings.edit = value
 	}
 
-	constructor(circuit: Circuit, options: IItemWireOptions) {
-		super(circuit, options);
+	constructor(container: Container<ItemBoard>, options: IItemWireOptions) {
+		super(container, options);
+		this.settings.directional = container.directionalWires;
 		this.settings.polyline = tag("polyline", "", {
 			"svg-type": "line",
 			line: "0",
@@ -83,7 +83,7 @@ export default class Wire extends ItemBoard {
 				x: this.x,
 				y: this.y,
 				points: this.settings.points,
-				bonds: '[' + this.bonds.map((b) => b.link).join(', ') + ']'
+				bonds: '[' + this.bonds?.map((b) => b.link).join(', ') + ']'
 			},
 			method: 'create',
 			where: 1			//signals it was a change inside the object
@@ -112,7 +112,7 @@ export default class Wire extends ItemBoard {
 				bond = this.nodeBonds(node),
 				p = this.settings.points[node];
 			bond && bond.to.forEach(b => {
-				this.circuit.get(b.id)?.setNode(b.ndx, p)
+				this.container.get(b.id)?.setNode(b.ndx, p)
 			})
 		}
 		return this;
@@ -321,7 +321,7 @@ function fixBondIndexes(node: number, newIndex: number): boolean {
 	//because it's a wire last node, it has only one destination, so fix all incoming indexes
 	lastBond.to.forEach(bond => {
 		let
-			compTo = (this as Wire).circuit.get(bond.id),
+			compTo = (this as Wire).container.get(bond.id),
 			compToBonds = compTo?.nodeBonds(bond.ndx);
 		compToBonds?.to
 			.filter(b => b.id == (this as Wire).id)

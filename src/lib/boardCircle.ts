@@ -1,8 +1,8 @@
 
 import { IHighlightable } from "./interfaces";
-import Point from "./point";
-import { tag } from "./utils";
 import { attr } from "./dab";
+import { tag } from "./utils";
+import Point from "./point";
 
 export default class BoardCircle implements IHighlightable {
 

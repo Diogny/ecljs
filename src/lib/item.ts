@@ -1,12 +1,13 @@
-import { ISize, IItemBaseOptions } from "./interfaces";
+import { IType, ISize, IItemBaseOptions, Type, BaseSettings } from "./interfaces";
+import { unique } from "./dab";
 import Point from "./point";
-import { obj, copy, unique } from "./dab";
-import { TypedClass } from "./types";
 
-export default abstract class Item extends TypedClass {
+export default abstract class Item extends BaseSettings implements IType {
 
 	//thi's until we can get real private variables
 	protected settings: IItemBaseOptions;
+
+	abstract get type(): Type;
 
 	get name(): string { return this.settings.name }
 	get id(): string { return this.settings.id }
@@ -20,14 +21,14 @@ export default abstract class Item extends TypedClass {
 	abstract get box(): any;
 
 	constructor(options: IItemBaseOptions) {
-		super();
 		//merge defaults and deep copy
 		//all default properties must be refrenced from this or this.settings
 		// options is for custom options only
 		let
 			optionsClass = options.class || "";
 		delete options.class;
-		this.settings = obj(copy(this.propertyDefaults(), options));
+		super(options);
+		//this.settings = obj(copy(this.propertyDefaults(), options));
 		this.settings.class = unique((this.class + " " + optionsClass).split(' ')).join(' ');
 		this.settings.x = this.settings.x || 0;
 		this.settings.y = this.settings.y || 0;

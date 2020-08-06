@@ -28,11 +28,29 @@ export default class Point implements IPoint {
 		return this
 	}
 
+	/**
+	 * @description returns string of a Point oobject
+	 * @param options 0 = x,y	1 = parenthesis; 	2 = variables x: x, y: y
+	 */
 	public toString(options?: number): string {
 		let
-			noVars: boolean = ((options = <any>options | 0) & 4) != 0,
-			noPars: boolean = (options & 2) != 0;
-		return `${noPars ? "" : "("}${noVars ? "" : "x: "}${round(this.x, 1)}, ${noVars ? "" : "y: "}${round(this.y, 1)}${noPars ? "" : ")"}`
+			vars: boolean = ((options = <any>options | 0) & 2) != 0,
+			pars: boolean = (options & 1) != 0;
+		return `${pars ? "(" : ""}${vars ? "x: " : ""}${round(this.x, 1)}, ${vars ? "y: " : ""}${round(this.y, 1)}${pars ? ")" : ""}`
+	}
+
+	/**	
+	 * @description returns quadrant of this point
+	 * @returns 0 (0,0); -1 (x==0 or y ==0); 1 (y>0,x>0); 2 (y>0,x<0); 3 (y<0,x<0); 4 (y<0,x>0)
+	 */
+	public get quadrant(): number {
+		if (this.x == 0 || this.y == 0) {
+			return (this.x == this.y) ? 0 : -1;
+		}
+		if (this.y > 0)
+			return (this.x > 0) ? 1 : 2
+		else
+			return (this.x < 0) ? 3 : 4
 	}
 	//get positive(): boolean { return this.x >= 0 && this.y >= 0 }
 
@@ -66,14 +84,13 @@ export default class Point implements IPoint {
 	 * @description parse an string into an (x,y) Point
 	 * @param value string in the for "x, y"
 	 */
-	static parse(value: string): Point {
+	static parse(value: string): Point | undefined{
 		let
 			arr = value.split(",");
 		if (arr.length == 2 && isNumeric(arr[0]) && isNumeric(arr[1])) {
 			return new Point(parseInt(arr[0]), parseInt(arr[1]));
 		}
 		//invalid point
-		return <any>void 0;
 	}
 
 	static distance(p1: Point, p2: Point) {

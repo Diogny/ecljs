@@ -1,42 +1,27 @@
-import { attr, obj, extend, aCld } from './dab';
-import { each, tag } from './utils';
-import { Type } from './types';
-import Bond from './bonds';
+import { Type, IItemSolidOptions, IPoint, IECProperties } from './interfaces';
+import { attr, extend, aCld } from './dab';
+import { tag } from './utils';
 import Point from './point';
-import { IItemSolidOptions, IPoint, IItemNode, IItemBoardProperties } from './interfaces';
 import ItemSolid from './itemSolid';
 import Label from './label';
 import Circuit from './circuit';
 
 export default class EC extends ItemSolid {
 
-	labelSVG: Label;
-
-	get last(): number { return this.base.meta.nodes.list.length - 1 }
+	protected settings: IECProperties;
 
 	get type(): Type { return Type.EC }
 
-	get count(): number {
-		return this.base.meta.nodes.list.length
-	}
+	get boardLabel(): Label { return this.settings.boardLabel }
 
 	constructor(circuit: Circuit, options: IItemSolidOptions) {
 		super(circuit, options);
-		this.g.innerHTML = this.base.data;
 		let
 			createText = (attr: any, text: string) => {
 				let
 					svgText = tag("text", "", attr);
 				return svgText.innerHTML = text, svgText
 			}
-		//for labels in N555, 7408, Atmega168
-		if (this.base.meta.label) {
-			aCld(this.g, createText({
-				x: this.base.meta.label.x,
-				y: this.base.meta.label.y,
-				"class": this.base.meta.label.class
-			}, this.base.meta.label.text))
-		}
 		//add node labels for DIP packages
 		if (this.base.meta.nodes.createLabels) {
 			let
@@ -47,12 +32,12 @@ export default class EC extends ItemSolid {
 		}
 		//create label if defined
 		if (this.base.meta.labelId) {
-			this.labelSVG = new Label(<any>{
+			this.settings.boardLabel = new Label(<any>{
 				fontSize: 15,
 				x: this.base.meta.labelId.x,
 				y: this.base.meta.labelId.y
 			});
-			this.labelSVG.setText(this.label);
+			this.boardLabel.setText(this.label);
 		}
 		this.refresh();
 		//signal component creation
@@ -70,113 +55,22 @@ export default class EC extends ItemSolid {
 		});
 	}
 
-	public rotate(value: number): EC {
-		super.rotate(value);
-		return this.refresh();
-	}
-
-	public move(x: number, y: number): EC {
-		super.move(x, y);
-		return this.refresh();
-	}
-
 	public refresh(): EC {
-		let
-			attrs: any = {
-				transform: `translate(${this.x} ${this.y})`
-			},
-			center = this.origin;
-		if (this.rotation) {
-			attrs.transform += ` rotate(${this.rotation} ${center.x} ${center.y})`
-		}
-		attr(this.g, attrs);
-		each(this.bonds, (b: Bond, key: any) => {
-			this.nodeRefresh(key);
-		});
-		if (this.labelSVG) {
+		super.refresh();
+		if (this.boardLabel) {
 			let
-				pos = Point.plus(this.p, this.labelSVG.p);
-			attrs = {
-				transform: `translate(${pos.x} ${pos.y})`
-			};
+				pos = Point.plus(this.p, this.boardLabel.p),
+				center = this.origin,
+				attrs = {
+					transform: `translate(${pos.x} ${pos.y})`
+				};
 			this.rotation && (
 				center = Point.minus(Point.plus(this.p, center), pos),
 				attrs.transform += ` rotate(${this.rotation} ${center.x} ${center.y})`
 			);
-			attr(this.labelSVG.g, attrs)
+			attr(this.boardLabel.g, attrs)
 		}
 		return this;
-	}
-
-	public nodeRefresh(node: number): EC {
-		let
-			bond = this.nodeBonds(node),
-			pos = this.getNode(node);
-		pos && bond && bond.to.forEach((d) => {
-			let
-				ic = this.circuit.get(d.id),
-				p = Point.plus(this.p, this.rotation ? pos.rot : pos).round();
-			ic && ic.setNode(d.ndx, p)	//no transform
-		});
-		return this;
-	}
-
-	//this returns (x, y) relative to the EC location
-	public getNode(pinNode: number): IItemNode {
-		let
-			pin: IItemNode = <IItemNode>this.base.meta.nodes.list[pinNode],
-			rotate = (obj: Point, rotation: number, center: Point): Point => {
-				if (!rotation)
-					return obj;
-				let
-					rot = obj.rotateBy(center.x, center.y, -rotation);
-				return new Point(rot.x, rot.y)
-			};
-		if (!pin)
-			return <any>null;
-		pin.rot = rotate(new Point(pin.x, pin.y), this.rotation, this.origin);
-		//
-		return obj(pin);
-	}
-
-	public getNodeRealXY(node: number): Point {
-		let
-			pos = this.getNode(node);
-		return pos ? Point.plus(this.p, this.rotation ? pos.rot : pos).round() : <any>null;
-	}
-
-	public overNode(p: IPoint, ln: number): number {
-		for (let i = 0, len = this.count; i < len; i++) {
-			let
-				pin = this.getNode(i);
-			if (this.rotation) {
-				pin.x = Math.round(pin.rot.x);
-				pin.y = Math.round(pin.rot.y);
-			}
-			//radius 5 =>  5^2 = 25
-			if ((Math.pow((p.x - this.x) - pin.x, 2) + Math.pow((p.y - this.y) - pin.y, 2)) <= 81)
-				return i;
-		}
-		return -1;
-	}
-
-	public findNode(p: Point): number {
-		let
-			dx = p.x - this.x,
-			dy = p.y - this.y,
-			rotation = -this.rotation,
-			origin = this.origin;
-		for (let i = 0, list = this.base.meta.nodes.list, meta = list[i], len = list.length;
-			i < len; meta = list[++i]) {
-			let
-				nodePoint = this.rotation
-					? Point.prototype.rotateBy.call(meta, origin.x, origin.y, rotation)
-					: meta;
-			//radius 5 =>  5^2 = 25
-			if ((Math.pow(dx - nodePoint.x, 2) + Math.pow(dy - nodePoint.y, 2)) <= 81)
-				return i;
-		}
-		return -1;
 	}
 
 	public setNode(node: number, p: IPoint): EC {
@@ -184,33 +78,26 @@ export default class EC extends ItemSolid {
 		throw 'somebody called me, not good!';
 	}
 
-	public valid(node: number): boolean {
-		return !!this.getNode(node)
-	}
-
-	public nodeHighlightable(name: number): boolean {
-		return this.valid(name)	//for now all valid nodes are highlightables
-	}
-
 	public setVisible(value: boolean): EC {
 		super.setVisible(value);
-		this.labelSVG && this.labelSVG.setVisible(value);
+		this.boardLabel && this.boardLabel.setVisible(value);
 		return this;
 	}
 
 	public remove() {
 		//delete label if any first
-		this.labelSVG && this.g.parentNode?.removeChild(this.labelSVG.g);
+		this.boardLabel && this.g.parentNode?.removeChild(this.boardLabel.g);
 		super.remove();
 	}
 
 	public afterDOMinserted() {
-		this.labelSVG && (this.g.insertAdjacentElement("afterend", this.labelSVG.g), this.labelSVG.setVisible(true))
+		this.boardLabel && (this.g.insertAdjacentElement("afterend", this.boardLabel.g), this.boardLabel.setVisible(true))
 	}
 
-	public propertyDefaults(): IItemBoardProperties {
+	public propertyDefaults(): IECProperties {
 		return extend(super.propertyDefaults(), {
 			class: "ec",
+			boardLabel: void 0
 		})
 	}
 }

@@ -1,16 +1,16 @@
 import ajaxp from "./lib/ajaxp";
 import * as dab from "./lib/dab";
 import * as utils from "./lib/utils";
+import * as Interfaces from "./lib/interfaces";
+
 import { Color, Colors } from "./lib/colors";
 import Point from "./lib/point";
 import Rect from "./lib/rect";
 import Size from "./lib/size";
-import { Type, TypedClass } from "./lib/types";
 import { Templates, XML } from "./lib/templates";
 import UIProp from "./lib/props";
 import Units from "./lib/units";
 import Bonds from "./lib/bonds";
-import * as Interfaces from "./lib/interfaces";
 
 import BoardCircle from "./lib/boardCircle";
 import HighlightNode from "./lib/highlightNode";
@@ -18,13 +18,23 @@ import Label from "./lib/label";
 import Tooltip from "./lib/tooltip";
 
 import Comp from "./lib/components";
+
 import Item from "./lib/item";
 import ItemBase from "./lib/itemsBase";
 import ItemBoard from "./lib/itemsBoard";
 import ItemSolid from "./lib/itemSolid";
+
+import Board from "./lib/board";
+import Container from "./lib/container";
+import Circuit from "./lib/circuit";
+import Flowchart from "./lib/flowchart";
+
 import EC from "./lib/ec";
 import Wire from "./lib/wire";
-import Circuit from "./lib/circuit";
+
+import FlowchartComponent from "./lib/flowchartComponent";
+import FlowProcess from "./lib/process";
+import FlowConditional from "./lib/conditional";
 
 export {
 	ajaxp,
@@ -42,8 +52,7 @@ export {
 	UIProp,
 
 	Interfaces,
-	Type,
-	TypedClass,
+
 	Bonds,
 	BoardCircle,
 	HighlightNode,
@@ -51,11 +60,22 @@ export {
 	Tooltip,
 
 	Comp,
+
 	Item,
 	ItemBase,
 	ItemBoard,
+
+	Board,
+	Container,
+	Circuit,
+	Flowchart,
+
 	ItemSolid,
 	EC,
 	Wire,
-	Circuit,
+
+	FlowchartComponent,
+	FlowProcess,
+	FlowConditional,
+
 }

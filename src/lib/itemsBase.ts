@@ -1,9 +1,9 @@
+import { IItemBaseProperties, IItemBaseOptions, ISize, ComponentPropertyType } from './interfaces';
 import { obj, addClass, removeClass, isStr } from './dab';
 import { tag } from './utils';
-import { IItemBaseProperties, IItemBaseOptions, ISize, ComponentPropertyType } from './interfaces';
-import Item from './item';
 import Rect from './rect';
 import Point from './point';
+import Item from './item';
 import Comp from './components';
 
 export default abstract class ItemBase extends Item {

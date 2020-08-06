@@ -1,7 +1,6 @@
+import {Type, ITooltipText, ISize, ITooltipSettings } from "./interfaces";
 import { attr, obj, isStr, pojo, extend } from './dab';
 import { tag, map, filter } from './utils';
-import { Type } from "./types";
-import { ITooltipText, ISize, ITooltipSettings } from "./interfaces";
 import Label from './label';
 
 export default class Tooltip extends Label {

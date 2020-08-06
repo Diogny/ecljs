@@ -1,5 +1,5 @@
-import { attr, isFn, dP, typeOf, isInt, splat, isElement, isStr, isNumeric } from './dab';
 import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty } from './interfaces';
+import { attr, isFn, dP, typeOf, isInt, splat, isElement, isStr, isNumeric } from './dab';
 import { qS } from './utils';
 
 //... in progress...

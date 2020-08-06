@@ -1,9 +1,8 @@
-import ItemBase from "./itemsBase";
-import { Type } from "./types";
-import { IHighlighNodeSettings } from "./interfaces";
+import {Type, IHighlighNodeSettings } from "./interfaces";
 import { extend, attr } from "./dab";
 import { tag } from "./utils";
 import Point from "./point";
+import ItemBase from "./itemsBase";
 
 export default class HighlightNode extends ItemBase {
 

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const dab_1 = require("./dab");
-const defaultIdTemplate = "{base.comp.name}-{base.count}";
-const defaultComponent = (type, name) => ({
+var dab_1 = require("./dab");
+var defaultIdTemplate = "{base.comp.name}-{base.count}";
+var defaultComponent = function (type, name) { return ({
     name: name,
     comp: {
         type: type,
@@ -13,55 +13,86 @@ const defaultComponent = (type, name) => ({
         },
         properties: {}
     }
-});
-class Comp {
-    constructor(options) {
-        let that = this, template = options.tmpl;
+}); };
+var Comp = /** @class */ (function () {
+    function Comp(options) {
+        var that = this, template = options.tmpl;
         delete options.tmpl;
         this.settings = dab_1.obj(options);
         if (template) {
-            let base = Comp.find(template.name);
+            var base = Comp.find(template.name);
             this.settings.data = base.data;
             this.settings.meta = JSON.parse(JSON.stringify(base.meta));
             template.label && (this.settings.meta.label = dab_1.obj(template.label));
-            template.nodeLabels.forEach((lbl, ndx) => {
+            template.nodeLabels.forEach(function (lbl, ndx) {
                 that.settings.meta.nodes.list[ndx].label = lbl;
             });
         }
         !this.settings.meta.nameTmpl && (this.settings.meta.nameTmpl = defaultIdTemplate);
         if (!Comp.store(this.settings.name, this))
-            throw `duplicated: ${this.settings.name}`;
+            throw "duplicated: " + this.settings.name;
     }
-    get name() { return this.settings.name; }
-    get library() { return this.settings.library; }
-    get type() { return this.settings.type; }
-    get data() { return this.settings.data; }
-    get props() { return this.settings.properties; }
-    get meta() { return this.settings.meta; }
-    static initializeComponents(list) {
-        let set = Comp.baseComps;
+    Object.defineProperty(Comp.prototype, "name", {
+        get: function () { return this.settings.name; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Comp.prototype, "library", {
+        get: function () { return this.settings.library; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Comp.prototype, "type", {
+        get: function () { return this.settings.type; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Comp.prototype, "data", {
+        get: function () { return this.settings.data; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Comp.prototype, "props", {
+        get: function () { return this.settings.properties; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Comp.prototype, "meta", {
+        get: function () { return this.settings.meta; },
+        enumerable: false,
+        configurable: true
+    });
+    Comp.initializeComponents = function (list) {
+        var set = Comp.baseComps;
         if (set == null) {
             set = new Map();
         }
-        list.forEach((c) => {
+        list.forEach(function (c) {
             set.set(c.name, c.comp);
         });
         return set;
-    }
-    static get size() { return Comp.baseComps.size; }
-}
+    };
+    Object.defineProperty(Comp, "size", {
+        get: function () { return Comp.baseComps.size; },
+        enumerable: false,
+        configurable: true
+    });
+    Comp.baseComps = Comp.initializeComponents([
+        defaultComponent("utils", "label"),
+        defaultComponent("utils", "tooltip"),
+        defaultComponent("utils", "h-node"),
+        defaultComponent("wire", "wire")
+    ]);
+    Comp.register = function (options) { return new Comp(options); };
+    Comp.store = function (name, comp) {
+        return Comp.baseComps.has(name) ?
+            false :
+            (Comp.baseComps.set(name, comp), true);
+    };
+    Comp.has = function (name) { return Comp.baseComps.has(name); };
+    Comp.find = function (name) {
+        return Comp.baseComps.get(name);
+    };
+    return Comp;
+}());
 exports.default = Comp;
-Comp.baseComps = Comp.initializeComponents([
-    defaultComponent("utils", "label"),
-    defaultComponent("utils", "tooltip"),
-    defaultComponent("utils", "h-node"),
-    defaultComponent("wire", "wire")
-]);
-Comp.register = (options) => new Comp(options);
-Comp.store = (name, comp) => Comp.baseComps.has(name) ?
-    false :
-    (Comp.baseComps.set(name, comp), true);
-Comp.has = (name) => Comp.baseComps.has(name);
-Comp.find = (name) => {
-    return Comp.baseComps.get(name);
-};

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const interfaces_1 = require("./interfaces");
-const dab_1 = require("./dab");
-class Bond {
+var interfaces_1 = require("./interfaces");
+var dab_1 = require("./dab");
+var Bond = /** @class */ (function () {
     /**
      * @description implements a component bond, it must be created by default as a One-to-One bond
      * @param {object} from from
@@ -10,11 +10,12 @@ class Bond {
      * @param {number} toNode node
      * @param {any} fromPin pin
      */
-    constructor(from, fromPin, to, toNode, origin) {
+    function Bond(from, fromPin, to, toNode, origin) {
+        var _this = this;
         this.origin = origin;
-        this.toString = () => {
-            let fn = (o) => `#${o.id} [${o.ndx}]`, toStr = this.to.map((b) => fn(b)).join(', ');
-            return `from ${fn(this.from)} to ${toStr}`;
+        this.toString = function () {
+            var fn = function (o) { return "#" + o.id + " [" + o.ndx + "]"; }, toStr = _this.to.map(function (b) { return fn(b); }).join(', ');
+            return "from " + fn(_this.from) + " to " + toStr;
         };
         if (!from || !to)
             throw 'empty bond';
@@ -22,41 +23,54 @@ class Bond {
         this.to = [];
         this.add(to, toNode);
     }
-    get type() { return interfaces_1.Type.BOND; }
-    get count() { return this.to.length; }
-    // 0>id-0(1)&id-1(12)
-    get link() { return `${this.from.ndx}>` + this.to.map(b => `${b.id}(${b.ndx})`).join('&'); }
-    has(id) { return this.to.some((b) => id == b.id); }
-    get(id) {
-        return this.to.find((b) => id == b.id);
-    }
-    add(t, ndx) {
+    Object.defineProperty(Bond.prototype, "type", {
+        get: function () { return interfaces_1.Type.BOND; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Bond.prototype, "count", {
+        get: function () { return this.to.length; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Bond.prototype, "link", {
+        // 0>id-0(1)&id-1(12)
+        get: function () { return this.from.ndx + ">" + this.to.map(function (b) { return b.id + "(" + b.ndx + ")"; }).join('&'); },
+        enumerable: false,
+        configurable: true
+    });
+    Bond.prototype.has = function (id) { return this.to.some(function (b) { return id == b.id; }); };
+    Bond.prototype.get = function (id) {
+        return this.to.find(function (b) { return id == b.id; });
+    };
+    Bond.prototype.add = function (t, ndx) {
         if (t && !this.has(t.id)) {
-            let b = this.create(t, ndx);
+            var b = this.create(t, ndx);
             this.to.push(b);
             return true;
         }
         return false;
-    }
-    create(ec, ndx) {
+    };
+    Bond.prototype.create = function (ec, ndx) {
         return dab_1.obj({
             id: ec.id,
             type: ec.type,
             ndx: ndx
         });
-    }
+    };
     /**
      * @description removes a bond connection from this component item
      * @param {String} id id name of the destination bond
      * @returns {IBondLink} removed bond item or null if none
      */
-    remove(id) {
-        let ndx = this.to.findIndex((b) => b.id == id), b = (ndx == -1) ? null : this.to[ndx];
+    Bond.prototype.remove = function (id) {
+        var ndx = this.to.findIndex(function (b) { return b.id == id; }), b = (ndx == -1) ? null : this.to[ndx];
         (b != null) && this.to.splice(ndx, 1);
         return b;
-    }
-}
+    };
+    Bond.display = function (arr) {
+        return (arr == undefined) ? [] : arr === null || arr === void 0 ? void 0 : arr.filter(function (b) { return b != undefined; }).map(function (o) { return o.toString(); });
+    };
+    return Bond;
+}());
 exports.default = Bond;
-Bond.display = (arr) => {
-    return (arr == undefined) ? [] : arr === null || arr === void 0 ? void 0 : arr.map((o) => o.toString());
-};

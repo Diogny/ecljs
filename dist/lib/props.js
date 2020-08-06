@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const dab_1 = require("./dab");
-const utils_1 = require("./utils");
+var dab_1 = require("./dab");
+var utils_1 = require("./utils");
 //... in progress...
-class UIProp {
-    constructor(options) {
+var UIProp = /** @class */ (function () {
+    function UIProp(options) {
+        var _this = this;
         //set default values
         this.settings = {
             type: "text",
@@ -70,20 +71,20 @@ class UIProp {
                 }
                 this.settings.type = "integer";
                 //define properties for 'SELECT'
-                let index = -1;
+                var index_1 = -1;
                 this.settings.selectCount = this.html.length;
                 //later return an array for select multiple
                 dab_1.dP(this, "index", {
-                    get: () => index,
-                    set(value) {
+                    get: function () { return index_1; },
+                    set: function (value) {
                         (value >= 0 && value < this.settings.selectCount) && // this.options.length
-                            ((index != -1) && (this.html.options[index].selected = !1),
-                                this.html.options[index = value].selected = !0,
+                            ((index_1 != -1) && (this.html.options[index_1].selected = !1),
+                                this.html.options[index_1 = value].selected = !0,
                                 this.selectionUiChanged());
                     }
                 });
                 dab_1.dP(this, "selectedOption", {
-                    get: () => this.html.options[this.html.selectedIndex]
+                    get: function () { return _this.html.options[_this.html.selectedIndex]; }
                 });
                 break;
             default:
@@ -91,82 +92,119 @@ class UIProp {
                     this.settings.getter = 'innerText';
                 }
                 else
-                    throw `Unsupported HTML tag: ${this.nodeName}`;
+                    throw "Unsupported HTML tag: " + this.nodeName;
         }
         ;
         //later see how can I register change event only for editable properties
         this.html.addEventListener('change', this.selectionUiChanged);
     }
-    get id() { return this.settings.id; }
-    get type() { return this.settings.type; }
-    get name() { return this.settings.name; }
-    get tag() { return this.settings.tag; }
-    get html() { return this.settings.html; }
-    get editable() { return this.settings.editable; }
-    get nodeName() { return this.html.nodeName.toLowerCase(); }
-    get onChange() { return this.settings.onChange; }
-    set onChange(fn) {
-        dab_1.isFn(fn) && (this.settings.onChange = fn);
-    }
-    get value() {
-        let val = this.html[this.settings.getter]; //select.selectedOptions
-        if (!this.settings.htmlSelect) {
-            switch (this.type) {
-                case "integer":
-                    return isNaN(val = parseInt(val)) ? 0 : val;
-                case "number":
-                    return isNaN(val = parseFloat(val)) ? 0 : val;
+    Object.defineProperty(UIProp.prototype, "id", {
+        get: function () { return this.settings.id; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "type", {
+        get: function () { return this.settings.type; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "name", {
+        get: function () { return this.settings.name; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "tag", {
+        get: function () { return this.settings.tag; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "html", {
+        get: function () { return this.settings.html; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "editable", {
+        get: function () { return this.settings.editable; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "nodeName", {
+        get: function () { return this.html.nodeName.toLowerCase(); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "onChange", {
+        get: function () { return this.settings.onChange; },
+        set: function (fn) {
+            dab_1.isFn(fn) && (this.settings.onChange = fn);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "value", {
+        get: function () {
+            var val = this.html[this.settings.getter]; //select.selectedOptions
+            if (!this.settings.htmlSelect) {
+                switch (this.type) {
+                    case "integer":
+                        return isNaN(val = parseInt(val)) ? 0 : val;
+                    case "number":
+                        return isNaN(val = parseFloat(val)) ? 0 : val;
+                }
+                return val;
             }
-            return val;
-        }
-        else if (this.settings.selectMultiple) {
-            return [].map.call(val, (option) => option.value);
-        }
-        else
-            return this.html.options[val].value;
-    }
-    set value(val) {
-        if (!this.settings.htmlSelect) {
-            let valtype = dab_1.typeOf(val);
-            if ((this.type == "text" && valtype == "string") ||
-                (this.type == "boolean" && valtype == "boolean") ||
-                (this.type == "integer" && dab_1.isInt(val)) ||
-                (this.type == "number" && dab_1.isNumeric(val)))
-                this.html[this.settings.getter] = val;
-        }
-        else {
-            //this.getsetSelect(<HTMLSelectElement>this.html, 'selectedIndex', splat(val));
-            if (this.settings.selectMultiple) {
-                let values = dab_1.splat(val).map((num) => num + '');
-                [].forEach.call(this.html.options, (option) => {
-                    (values.indexOf(option.value) >= 0) && (option.selected = true);
-                });
+            else if (this.settings.selectMultiple) {
+                return [].map.call(val, function (option) { return option.value; });
+            }
+            else
+                return this.html.options[val].value;
+        },
+        set: function (val) {
+            if (!this.settings.htmlSelect) {
+                var valtype = dab_1.typeOf(val);
+                if ((this.type == "text" && valtype == "string") ||
+                    (this.type == "boolean" && valtype == "boolean") ||
+                    (this.type == "integer" && dab_1.isInt(val)) ||
+                    (this.type == "number" && dab_1.isNumeric(val)))
+                    this.html[this.settings.getter] = val;
             }
             else {
-                if (dab_1.isStr(this.value)) {
-                    val = [].findIndex.call(this.html.options, (option) => option.value == val);
+                //this.getsetSelect(<HTMLSelectElement>this.html, 'selectedIndex', splat(val));
+                if (this.settings.selectMultiple) {
+                    var values_1 = dab_1.splat(val).map(function (num) { return num + ''; });
+                    [].forEach.call(this.html.options, function (option) {
+                        (values_1.indexOf(option.value) >= 0) && (option.selected = true);
+                    });
                 }
-                this.html.selectedIndex = val | 0;
+                else {
+                    if (dab_1.isStr(this.value)) {
+                        val = [].findIndex.call(this.html.options, function (option) { return option.value == val; });
+                    }
+                    this.html.selectedIndex = val | 0;
+                }
             }
-        }
-        //trigger the property change event
-        this.selectionUiChanged(null);
-    }
-    toString() {
-        return this.settings.toStringFn ? this.settings.toStringFn() : `${this.id}: ${this.value}`;
-    }
-    selectionUiChanged(e) {
+            //trigger the property change event
+            this.selectionUiChanged(null);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    UIProp.prototype.toString = function () {
+        return this.settings.toStringFn ? this.settings.toStringFn() : this.id + ": " + this.value;
+    };
+    UIProp.prototype.selectionUiChanged = function (e) {
         //when comming from UI, this is the DOM Element
         // 	otherwise it's the property
-        let prop = this instanceof UIProp ? this : this.dab;
+        var prop = this instanceof UIProp ? this : this.dab;
         if (prop && prop.onChange)
             prop.onChange(prop.value, //this cache current value
             (e) ? 1 : 2, // 1 == 'ui' : 2 == 'prop'
             prop, //not needed, but just in case
             e //event if UI triggered
             );
-    }
-}
+    };
+    UIProp.textOnly = "a|abbr|acronym|b|bdo|big|cite|code|dfn|em|i|kbd|label|legend|li|q|samp|small|span|strong|sub|sup|td|th|tt|var".split('|');
+    UIProp._propId = 1;
+    return UIProp;
+}());
 exports.default = UIProp;
-UIProp.textOnly = "a|abbr|acronym|b|bdo|big|cite|code|dfn|em|i|kbd|label|legend|li|q|samp|small|span|strong|sub|sup|td|th|tt|var".split('|');
-UIProp._propId = 1;

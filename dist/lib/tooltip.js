@@ -1,92 +1,107 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const interfaces_1 = require("./interfaces");
-const dab_1 = require("./dab");
-const utils_1 = require("./utils");
-const label_1 = tslib_1.__importDefault(require("./label"));
-class Tooltip extends label_1.default {
-    constructor(options) {
-        super(options);
-        this.svgRect = utils_1.tag("rect", "", {
+var tslib_1 = require("tslib");
+var interfaces_1 = require("./interfaces");
+var dab_1 = require("./dab");
+var utils_1 = require("./utils");
+var label_1 = tslib_1.__importDefault(require("./label"));
+var Tooltip = /** @class */ (function (_super) {
+    tslib_1.__extends(Tooltip, _super);
+    function Tooltip(options) {
+        var _this = _super.call(this, options) || this;
+        _this.svgRect = utils_1.tag("rect", "", {
             x: 0,
             y: 0,
-            rx: this.borderRadius
+            rx: _this.borderRadius
         });
-        this.g.insertBefore(this.svgRect, this.t);
+        _this.g.insertBefore(_this.svgRect, _this.t);
+        return _this;
     }
-    get type() { return interfaces_1.Type.TOOLTIP; }
-    get borderRadius() { return this.settings.borderRadius; }
-    /*	DOESN'T WORK
-    set visible(value: boolean) {
-        //weird way to access an ancestor property  super.visible doesn't work
-        super["visible"] = value;
-    }
-    */
-    get size() {
-        let b = this.t.getBBox();
-        return dab_1.obj({
-            width: Math.round(b.width) + 10,
-            height: Math.round(b.height) + this.gap
-        });
-    }
-    setVisible(value) {
-        super.setVisible(value);
+    Object.defineProperty(Tooltip.prototype, "type", {
+        get: function () { return interfaces_1.Type.TOOLTIP; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Tooltip.prototype, "borderRadius", {
+        get: function () { return this.settings.borderRadius; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Tooltip.prototype, "size", {
+        /*	DOESN'T WORK
+        set visible(value: boolean) {
+            //weird way to access an ancestor property  super.visible doesn't work
+            super["visible"] = value;
+        }
+        */
+        get: function () {
+            var b = this.t.getBBox();
+            return dab_1.obj({
+                width: Math.round(b.width) + 10,
+                height: Math.round(b.height) + this.gap
+            });
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Tooltip.prototype.setVisible = function (value) {
+        _super.prototype.setVisible.call(this, value);
         //clear values
         //because Firefox give DOM not loaded on g.getBox() because it's not visible yet
         // so I've to display tooltip in DOM and then continue setting text, move, font-size,...
         this.text = this.t.innerHTML = '';
         return this;
-    }
-    setBorderRadius(value) {
+    };
+    Tooltip.prototype.setBorderRadius = function (value) {
         this.settings.borderRadius = value | 0;
         return this.build();
-    }
-    build() {
+    };
+    Tooltip.prototype.build = function () {
         this.gap = Math.round(this.fontSize / 2) + 1;
         dab_1.attr(this.t, {
             "font-size": this.fontSize,
             x: Math.round(this.gap / 2),
             y: this.fontSize //+ 8
         });
-        let s = this.size;
+        var s = this.size;
         dab_1.attr(this.svgRect, {
             width: s.width,
             height: s.height,
             rx: this.borderRadius
         });
         return this;
-    }
-    setText(value) {
-        let arr = dab_1.isStr(value) ?
+    };
+    Tooltip.prototype.setText = function (value) {
+        var arr = dab_1.isStr(value) ?
             value.split(/\r?\n/) :
             value, txtArray = [];
         //catch UI error here
         //if (!Array.isArray(arr)) {
         //	console.log("ooooh")
         //}
-        this.t.innerHTML = arr.map((value, ndx) => {
-            let txt = '', attrs = '';
+        this.t.innerHTML = arr.map(function (value, ndx) {
+            var txt = '', attrs = '';
             if (dab_1.isStr(value)) {
                 txt = value;
             }
             else if (dab_1.pojo(value)) {
                 txt = value.text;
-                attrs = utils_1.map(utils_1.filter(value, (val, key) => key != 'text'), (v, k) => `${k}="${v}"`).join('');
+                attrs = utils_1.map(utils_1.filter(value, function (val, key) { return key != 'text'; }), function (v, k) { return k + "=\"" + v + "\""; }).join('');
             }
             txtArray.push(txt);
-            return `<tspan x="5" dy="${ndx}.1em"${attrs}>${txt}</tspan>`;
+            return "<tspan x=\"5\" dy=\"" + ndx + ".1em\"" + attrs + ">" + txt + "</tspan>";
         }).join('');
         //set text
         this.text = txtArray.join('\r\n');
         return this.build();
-    }
-    propertyDefaults() {
-        return dab_1.extend(super.propertyDefaults(), {
+    };
+    Tooltip.prototype.propertyDefaults = function () {
+        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
             name: "tooltip",
             class: "tooltip",
             borderRadius: 4
         });
-    }
-}
+    };
+    return Tooltip;
+}(label_1.default));
 exports.default = Tooltip;

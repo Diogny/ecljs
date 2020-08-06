@@ -1,54 +1,70 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const interfaces_1 = require("./interfaces");
-const dab_1 = require("./dab");
-const utils_1 = require("./utils");
-const itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
-class Label extends itemsBase_1.default {
-    constructor(options) {
+var tslib_1 = require("tslib");
+var interfaces_1 = require("./interfaces");
+var dab_1 = require("./dab");
+var utils_1 = require("./utils");
+var itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
+var Label = /** @class */ (function (_super) {
+    tslib_1.__extends(Label, _super);
+    function Label(options) {
+        var _this = this;
         options.visible = false;
-        super(options);
-        this.text = '';
-        this.t = utils_1.tag("text", "", {});
-        dab_1.aCld(this.g, this.t);
+        _this = _super.call(this, options) || this;
+        _this.text = '';
+        _this.t = utils_1.tag("text", "", {});
+        dab_1.aCld(_this.g, _this.t);
+        return _this;
     }
-    get type() { return interfaces_1.Type.LABEL; }
-    get size() {
-        let b = this.t.getBBox();
-        return dab_1.obj({
-            width: Math.round(b.width),
-            height: Math.round(b.height)
-        });
-    }
-    get fontSize() { return this.settings.fontSize; }
-    move(x, y) {
-        super.move(x, y);
+    Object.defineProperty(Label.prototype, "type", {
+        get: function () { return interfaces_1.Type.LABEL; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Label.prototype, "size", {
+        get: function () {
+            var b = this.t.getBBox();
+            return dab_1.obj({
+                width: Math.round(b.width),
+                height: Math.round(b.height)
+            });
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Label.prototype, "fontSize", {
+        get: function () { return this.settings.fontSize; },
+        enumerable: false,
+        configurable: true
+    });
+    Label.prototype.move = function (x, y) {
+        _super.prototype.move.call(this, x, y);
         dab_1.attr(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
         return this;
-    }
-    setFontSize(value) {
+    };
+    Label.prototype.setFontSize = function (value) {
         this.settings.fontSize = value;
         return this.build();
-    }
-    build() {
+    };
+    Label.prototype.build = function () {
         dab_1.attr(this.t, {
             "font-size": this.fontSize,
             x: 0,
             y: 0
         });
         return this;
-    }
-    setText(value) {
+    };
+    Label.prototype.setText = function (value) {
         this.t.innerHTML = this.text = value;
         return this.build();
-    }
-    propertyDefaults() {
-        return dab_1.extend(super.propertyDefaults(), {
+    };
+    Label.prototype.propertyDefaults = function () {
+        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
             name: "label",
             class: "label",
             fontSize: 50
         });
-    }
-}
+    };
+    return Label;
+}(itemsBase_1.default));
 exports.default = Label;

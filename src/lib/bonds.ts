@@ -74,7 +74,7 @@ export default class Bond implements IType {
 	}
 
 	public static display = (arr: Bond[] | undefined): string[] => {
-		return (arr == undefined) ? [] : arr?.map((o) => o.toString())
+		return (arr == undefined) ? [] : arr?.filter(b => b != undefined).map((o) => o.toString())
 	}
 
 }

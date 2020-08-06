@@ -1,32 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class ajaxp {
-    static x() { return window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'); }
-    static query(data, ask) {
-        let query = [];
-        for (let key in data) {
+var ajaxp = /** @class */ (function () {
+    function ajaxp() {
+    }
+    ajaxp.x = function () { return window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'); };
+    ajaxp.query = function (data, ask) {
+        var query = [];
+        for (var key in data) {
             query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
         }
         return ((ask && query.length) ? "?" : "") + query.join("&");
-    }
-    static update(io, obj) {
-        for (let p in io) {
+    };
+    ajaxp.update = function (io, obj) {
+        for (var p in io) {
             obj[p] = obj[p] || io[p];
         }
         return obj;
-    }
-    static send(url, ox) {
+    };
+    ajaxp.send = function (url, ox) {
         return new Promise(function (resolve, reject) {
-            let x = ajaxp.x();
+            var x = ajaxp.x();
             ox = ajaxp.update(ajaxp.xobj, ox);
             x.open(ox.method, url, true);
             x[ajaxp.rt] = ox.responseType;
             x.onreadystatechange = function () {
-                let DONE = 4, // readyState 4 means the request is done.
+                var DONE = 4, // readyState 4 means the request is done.
                 OK = 200, // status 200 is a successful return.
                 NOT_MODIFIED = 304;
                 if (x.readyState == DONE) {
-                    let isJson = x[ajaxp.rt] && (x[ajaxp.rt] == "json");
+                    var isJson = x[ajaxp.rt] && (x[ajaxp.rt] == "json");
                     if (x.status === OK || x.status === NOT_MODIFIED) {
                         resolve(isJson ? x.response : x.responseText);
                     }
@@ -48,20 +50,21 @@ class ajaxp {
                 reject({ status: x.status, statusText: x.statusText, xhr: x });
             }
         });
-    }
-    static get(url, ox) {
+    };
+    ajaxp.get = function (url, ox) {
         return (ox = ox || {}, ox.method = ajaxp.sGet, url += ajaxp.query(ox.data, true), ox.data = void 0, ajaxp.send(url, ox));
-    }
-    static post(url, ox) {
+    };
+    ajaxp.post = function (url, ox) {
         return (ox = ox || {}, ox.method = ajaxp.sPost, ox.data = ajaxp.query(ox.data, false), ajaxp.send(url, ox));
-    }
-}
+    };
+    ajaxp.sGet = "GET";
+    ajaxp.sPost = "POST";
+    ajaxp.xobj = {
+        method: ajaxp.sGet,
+        data: void 0,
+        responseType: "text"
+    };
+    ajaxp.rt = "responseType";
+    return ajaxp;
+}());
 exports.default = ajaxp;
-ajaxp.sGet = "GET";
-ajaxp.sPost = "POST";
-ajaxp.xobj = {
-    method: ajaxp.sGet,
-    data: void 0,
-    responseType: "text"
-};
-ajaxp.rt = "responseType";

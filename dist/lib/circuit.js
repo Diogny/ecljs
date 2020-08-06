@@ -1,35 +1,56 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const templates_1 = require("./templates");
-const ec_1 = tslib_1.__importDefault(require("./ec"));
+var tslib_1 = require("tslib");
+var templates_1 = require("./templates");
+var ec_1 = tslib_1.__importDefault(require("./ec"));
 // import * as xml2js from 'xml2js';
 // import * as fs from 'fs';
-const container_1 = tslib_1.__importDefault(require("./container"));
-class Circuit extends container_1.default {
-    get name() { return "Circuit"; }
-    get library() { return "circuit"; }
-    get directionalWires() { return false; }
-    get ec() {
-        return !this.selected.length ? void 0 : this.selected[0];
+var container_1 = tslib_1.__importDefault(require("./container"));
+var Circuit = /** @class */ (function (_super) {
+    tslib_1.__extends(Circuit, _super);
+    function Circuit() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    createItem(options) {
+    Object.defineProperty(Circuit.prototype, "name", {
+        get: function () { return "Circuit"; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Circuit.prototype, "library", {
+        get: function () { return "circuit"; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Circuit.prototype, "directionalWires", {
+        get: function () { return false; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Circuit.prototype, "ec", {
+        get: function () {
+            return !this.selected.length ? void 0 : this.selected[0];
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Circuit.prototype.createItem = function (options) {
         return new ec_1.default(this, options);
-    }
-    getXML() {
+    };
+    Circuit.prototype.getXML = function () {
         return '<?xml version="1.0" encoding="utf-8"?>\n'
             + templates_1.Templates.parse('circuitXml', {
                 itemList: this.components,
-                wireList: this.wires.map(w => ({
+                wireList: this.wires.map(function (w) { return ({
                     id: w.id,
                     label: w.label,
-                    points: w.points.map(p => templates_1.Templates.nano('simplePoint', p))
+                    points: w.points.map(function (p) { return templates_1.Templates.nano('simplePoint', p); })
                         .join('|')
-                })),
+                }); }),
                 bonds: this.getAllBonds()
             }, true);
-    }
-}
+    };
+    return Circuit;
+}(container_1.default));
 exports.default = Circuit;
 // function parseCircuitXML(circuit: Circuit, data: string) {
 // 	xml2js.parseString(data, {

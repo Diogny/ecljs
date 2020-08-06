@@ -154,7 +154,8 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	public itemBonds(item: T | Wire): Bond[] | undefined {
 		let
 			bonds = this.itemMap.get(item.id)?.b || this.wireMap.get(item.id)?.b;
-		return bonds && bonds.filter(b => b != undefined)
+		//"bonds" cannot be filtered so array node indexes don't get lost
+		return bonds
 	}
 
 	public nodeBonds(item: T | Wire, node: number): Bond | undefined {

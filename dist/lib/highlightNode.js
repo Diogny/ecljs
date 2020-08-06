@@ -1,40 +1,59 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const interfaces_1 = require("./interfaces");
-const dab_1 = require("./dab");
-const utils_1 = require("./utils");
-const itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
-class HighlightNode extends itemsBase_1.default {
-    constructor(options) {
+var tslib_1 = require("tslib");
+var interfaces_1 = require("./interfaces");
+var dab_1 = require("./dab");
+var utils_1 = require("./utils");
+var itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
+var HighlightNode = /** @class */ (function (_super) {
+    tslib_1.__extends(HighlightNode, _super);
+    function HighlightNode(options) {
+        var _this = this;
         //override
         options.selectedNode = -1;
         options.selectedId = "";
         options.id = "highlighNode";
-        super(options);
-        this.g.setAttribute("svg-comp", "h-node");
-        this.mainNode = utils_1.tag("circle", "", {
+        _this = _super.call(this, options) || this;
+        _this.g.setAttribute("svg-comp", "h-node");
+        _this.mainNode = utils_1.tag("circle", "", {
             "svg-type": "node",
-            r: this.radius
+            r: _this.radius
         });
-        this.g.append(this.mainNode);
+        _this.g.append(_this.mainNode);
+        return _this;
     }
-    get type() { return interfaces_1.Type.HIGHLIGHT; }
-    get radius() { return this.settings.radius; }
-    get selectedId() { return this.settings.selectedId; }
-    get selectedNode() { return this.settings.selectedNode; }
-    setRadius(value) {
+    Object.defineProperty(HighlightNode.prototype, "type", {
+        get: function () { return interfaces_1.Type.HIGHLIGHT; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(HighlightNode.prototype, "radius", {
+        get: function () { return this.settings.radius; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(HighlightNode.prototype, "selectedId", {
+        get: function () { return this.settings.selectedId; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(HighlightNode.prototype, "selectedNode", {
+        get: function () { return this.settings.selectedNode; },
+        enumerable: false,
+        configurable: true
+    });
+    HighlightNode.prototype.setRadius = function (value) {
         this.mainNode.setAttribute("r", (this.settings.radius = value <= 0 ? 5 : value));
         return this;
-    }
-    hide() {
+    };
+    HighlightNode.prototype.hide = function () {
         this.g.classList.add("hide");
         this.mainNode.classList.remove("hide");
         this.g.innerHTML = "";
         this.g.append(this.mainNode);
         return this;
-    }
-    show(x, y, id, node) {
+    };
+    HighlightNode.prototype.show = function (x, y, id, node) {
         this.move(x, y);
         dab_1.attr(this.mainNode, {
             cx: this.x,
@@ -45,28 +64,30 @@ class HighlightNode extends itemsBase_1.default {
         this.settings.selectedId = id;
         this.g.classList.remove("hide");
         return this;
-    }
-    showConnections(nodes) {
+    };
+    HighlightNode.prototype.showConnections = function (nodes) {
+        var _this = this;
         this.mainNode.classList.add("hide");
         this.g.classList.remove("hide");
-        nodes.forEach(p => {
-            let circle = utils_1.tag("circle", "", {
+        nodes.forEach(function (p) {
+            var circle = utils_1.tag("circle", "", {
                 cx: p.x,
                 cy: p.y,
-                r: this.radius,
+                r: _this.radius,
                 class: "node",
             });
-            this.g.append(circle);
+            _this.g.append(circle);
         });
         return this;
-    }
-    propertyDefaults() {
-        return dab_1.extend(super.propertyDefaults(), {
+    };
+    HighlightNode.prototype.propertyDefaults = function () {
+        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
             name: "h-node",
             class: "h-node",
             visible: false,
             radius: 5
         });
-    }
-}
+    };
+    return HighlightNode;
+}(itemsBase_1.default));
 exports.default = HighlightNode;

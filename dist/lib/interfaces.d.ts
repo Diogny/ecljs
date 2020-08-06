@@ -45,7 +45,6 @@ export declare abstract class BaseSettings implements IBaseSettings {
 export interface IBoardOptions {
     name: string;
     description?: string;
-    zoom?: number;
     filePath?: string;
     viewPoint?: Point;
     containers?: Container<EC | FlowchartComponent>[];

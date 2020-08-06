@@ -67,7 +67,7 @@ export const round = (v: number, decimals: number) => {
 	return (decimals = decimals | 0, Number(Math.round(Number(v + "e" + decimals)) + "e-" + decimals));
 } //force toArray
 
-export const splat = (o: any) => isArr(o) ? o : (dfnd(o) ? [o] : []);
+export const splat = <T>(o: any): T[] => isArr(o) ? o : (dfnd(o) ? [o] : []);
 
 //copy all properties in src to obj, and returns obj
 export const extend = (obj: any, src: any) => { //no support for IE 8 https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/

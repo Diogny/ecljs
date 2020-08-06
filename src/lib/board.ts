@@ -21,7 +21,10 @@ export default class Board extends BaseSettings {
 
 	get zoom(): number { return this.settings.zoom }
 	set zoom(value: number) {
-		setZoom(this, value, false)
+		if (this.zoom != value && Board.validZoom(value)) {
+			this.settings.zoom = value;
+			this.settings.onZoom && this.settings.onZoom(value)
+		}
 	}
 
 	public get modified(): boolean {
@@ -49,7 +52,6 @@ export default class Board extends BaseSettings {
 			names = this.containers.map(c => c.name);
 		if (names.length != unique(names).length)
 			throw `duplicated container names`;
-		setZoom(this, options.zoom || Board.defaultZoom, true);
 	}
 
 	public add(container: Container<EC | FlowchartComponent>) {
@@ -86,7 +88,7 @@ export default class Board extends BaseSettings {
 			description: "",
 			filePath: "",
 			viewBox: Rect.empty(),
-			zoom: Board.defaultZoom,
+			zoom: 0,		//this way we must set zoom after creation to trigger event, 0 is an invalid zoom
 			containers: [],
 			modified: false,
 			onZoom: <any>void 0
@@ -106,13 +108,5 @@ export default class Board extends BaseSettings {
 			isNaN(zoom)
 			|| !Board.zoomMultipliers.some(z => z == zoom)
 		)
-	}
-}
-
-function setZoom(board: Board, value: number, force: boolean) {
-	if (force || board.zoom != value) {
-		!Board.validZoom(value) && (value = Board.defaultZoom);
-		(<any>board).settings.zoom = value;
-		(<any>board).settings.onZoom && (<any>board).settings.onZoom(value)
 	}
 }

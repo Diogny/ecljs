@@ -17,7 +17,6 @@ var Board = /** @class */ (function (_super) {
         var names = _this.containers.map(function (c) { return c.name; });
         if (names.length != dab_1.unique(names).length)
             throw "duplicated container names";
-        setZoom(_this, options.zoom || Board.defaultZoom, true);
         return _this;
     }
     Object.defineProperty(Board.prototype, "version", {
@@ -53,7 +52,10 @@ var Board = /** @class */ (function (_super) {
     Object.defineProperty(Board.prototype, "zoom", {
         get: function () { return this.settings.zoom; },
         set: function (value) {
-            setZoom(this, value, false);
+            if (this.zoom != value && Board.validZoom(value)) {
+                this.settings.zoom = value;
+                this.settings.onZoom && this.settings.onZoom(value);
+            }
         },
         enumerable: false,
         configurable: true
@@ -101,7 +103,7 @@ var Board = /** @class */ (function (_super) {
             description: "",
             filePath: "",
             viewBox: rect_1.default.empty(),
-            zoom: Board.defaultZoom,
+            zoom: 0,
             containers: [],
             modified: false,
             onZoom: void 0
@@ -129,10 +131,3 @@ var Board = /** @class */ (function (_super) {
     return Board;
 }(interfaces_1.BaseSettings));
 exports.default = Board;
-function setZoom(board, value, force) {
-    if (force || board.zoom != value) {
-        !Board.validZoom(value) && (value = Board.defaultZoom);
-        board.settings.zoom = value;
-        board.settings.onZoom && board.settings.onZoom(value);
-    }
-}

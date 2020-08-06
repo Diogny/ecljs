@@ -143,11 +143,7 @@ var Container = /** @class */ (function (_super) {
         return r;
     };
     Container.prototype.add = function (options) {
-        var comp;
-        ((options.name == "wire")
-            && (options.points = options.points, true))
-            || (options.x = options.x, options.y = options.y);
-        comp = createBoardItem(this, options);
+        var comp = createBoardItem(this, options);
         if (comp.type != interfaces_1.Type.WIRE && comp.base.library != this.library)
             throw "component incompatible type";
         this.modified = true;
@@ -253,7 +249,7 @@ function getItem(container, id) {
     return container.itemMap.get(id) || container.wireMap.get(id);
 }
 function createBoardItem(container, options) {
-    var regex = /(?:{([^}]+?)})+/g, name = (options === null || options === void 0 ? void 0 : options.name) || "", base = container.rootComponent(name), newComp = !base, item = void 0;
+    var regex = /(?:{([^}]+?)})+/g, name = options.name || "", base = container.rootComponent(name), newComp = !base, item = void 0;
     !base && (base = {
         comp: components_1.default.find(name),
         count: 0

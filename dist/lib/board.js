@@ -48,7 +48,19 @@ var Board = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Board.prototype, "modified", {
-        get: function () { return this.containers.some(function (c) { return c.modified; }); },
+        get: function () {
+            //check for any change in containers
+            if (!this.settings.modified && this.containers.some(function (c) { return c.modified; }))
+                this.settings.modified = true;
+            return this.settings.modified;
+        },
+        set: function (value) {
+            //trying to set to false with containers modified, is overrided by true
+            if (!value && this.containers.some(function (c) { return c.modified; })) {
+                value = true;
+            }
+            this.settings.modified = value;
+        },
         enumerable: false,
         configurable: true
     });
@@ -76,6 +88,7 @@ var Board = /** @class */ (function (_super) {
             viewBox: rect_1.default.empty(),
             zoom: Board.defaultZoom,
             containers: [],
+            modified: false,
             onZoom: void 0
         };
     };

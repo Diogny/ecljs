@@ -23,7 +23,19 @@ export default class Board extends BaseSettings {
 		setZoom(this, value, false)
 	}
 
-	public get modified(): boolean { return this.containers.some(c => c.modified) }
+	public get modified(): boolean {
+		//check for any change in containers
+		if (!this.settings.modified && this.containers.some(c => c.modified))
+			this.settings.modified = true;
+		return this.settings.modified
+	}
+	public set modified(value: boolean) {
+		//trying to set to false with containers modified, is overrided by true
+		if (!value && this.containers.some(c => c.modified)) {
+			value = true
+		}
+		this.settings.modified = value;
+	}
 
 	constructor(options: IBoardOptions) {
 		super(options);
@@ -60,6 +72,7 @@ export default class Board extends BaseSettings {
 			viewBox: Rect.empty(),
 			zoom: Board.defaultZoom,
 			containers: [],
+			modified: false,
 			onZoom: <any>void 0
 		}
 	}

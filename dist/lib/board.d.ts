@@ -16,6 +16,7 @@ export default class Board extends BaseSettings {
     get zoom(): number;
     set zoom(value: number);
     get modified(): boolean;
+    set modified(value: boolean);
     constructor(options: IBoardOptions);
     add(container: Container<EC | FlowchartComponent>): void;
     center(): Point;

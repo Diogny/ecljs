@@ -1,4 +1,3 @@
-import { IPoint } from "./interfaces";
 import Container from "./container";
 import FlowchartComponent from "./flowchartComponent";
 import FlowProcess from "./process";
@@ -11,7 +10,7 @@ export default class Flowchart extends Container<FlowchartComponent>{
 	get library(): string { return "flowchart" }
 	get directionalWires(): boolean { return true }
 
-	public createItem(options: { name: string, x: number, y: number, points: IPoint[] }): FlowchartComponent {
+	public createItem(options: { [x: string]: any; }): FlowchartComponent {
 		switch (options.name) {
 			case "process":
 				return new FlowProcess(this, <any>options);

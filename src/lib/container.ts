@@ -123,15 +123,11 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		return r;
 	}
 
-	abstract createItem(options: { name: string, x: number, y: number, points: IPoint[] }): T;
+	abstract createItem(options: { [x: string]: any; }): T;
 
-	public add(options: { name: string, x: number, y: number, points: IPoint[] }): T | Wire {
+	public add(options: { [x: string]: any; }): T | Wire {
 		let
-			comp: T | Wire;
-		((options.name == "wire")
-			&& (options.points = options.points, true))
-			|| (options.x = options.x, options.y = options.y);
-		comp = createBoardItem(this, options);
+			comp: T | Wire = createBoardItem(this, options);
 		if (comp.type != Type.WIRE && comp.base.library != this.library)
 			throw `component incompatible type`;
 		this.modified = true;
@@ -263,10 +259,10 @@ function getItem<T extends ItemBoard>(container: Container<T>, id: string)
 	return container.itemMap.get(id) || container.wireMap.get(id)
 }
 
-function createBoardItem<T extends ItemBoard>(container: Container<T>, options: any): T | Wire {
+function createBoardItem<T extends ItemBoard>(container: Container<T>, options: { [x: string]: any; }): T | Wire {
 	let
 		regex = /(?:{([^}]+?)})+/g,
-		name = options?.name || "",
+		name = options.name || "",
 		base = <IBaseComponent>container.rootComponent(name),
 		newComp = !base,
 		item: T | Wire = <any>void 0;
@@ -321,7 +317,7 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 		//this happens when this component is created...
 	});
 	if (name == "wire") {
-		item = new Wire(container, options);
+		item = new Wire(container, <any>options);
 		if (container.wireMap.has(item.id))
 			throw `duplicated connector`;
 		container.wireMap.set(item.id, { c: <Wire>item, b: [] });

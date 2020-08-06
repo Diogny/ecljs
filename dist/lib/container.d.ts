@@ -1,4 +1,4 @@
-import { IBaseComponent, IPoint, IContainerProperties, BaseSettings } from "./interfaces";
+import { IBaseComponent, IContainerProperties, BaseSettings } from "./interfaces";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
@@ -42,16 +42,10 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
     destroy(): void;
     boundariesRect(): Rect;
     abstract createItem(options: {
-        name: string;
-        x: number;
-        y: number;
-        points: IPoint[];
+        [x: string]: any;
     }): T;
     add(options: {
-        name: string;
-        x: number;
-        y: number;
-        points: IPoint[];
+        [x: string]: any;
     }): T | Wire;
     delete(comp: T | Wire): boolean;
     itemBonds(item: T | Wire): Bond[] | undefined;

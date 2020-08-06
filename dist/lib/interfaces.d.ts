@@ -58,6 +58,7 @@ export interface IBoardProperties {
     filePath: string;
     viewBox: Rect;
     zoom: number;
+    modified: boolean;
     containers: Container<EC | FlowchartComponent>[];
     onZoom: (zoom: number) => void;
 }

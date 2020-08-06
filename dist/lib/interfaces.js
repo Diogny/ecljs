@@ -18,8 +18,11 @@ var Type;
 ;
 var BaseSettings = /** @class */ (function () {
     function BaseSettings(options) {
-        this.settings = dab_1.obj(dab_1.copy(this.propertyDefaults(), options));
+        this.clear(options);
     }
+    BaseSettings.prototype.clear = function (options) {
+        this.settings = dab_1.obj(dab_1.copy(this.propertyDefaults(), options || {}));
+    };
     BaseSettings.prototype.propertyDefaults = function () {
         return {};
     };

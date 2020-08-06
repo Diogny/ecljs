@@ -62,5 +62,4 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
     unbondNode(thisObj: T | Wire, node: number): void;
     disconnect(thisObj: T | Wire): void;
     getAllBonds(): string[];
-    abstract getXML(): string;
 }

@@ -39,7 +39,11 @@ export abstract class BaseSettings implements IBaseSettings {
 	protected settings: { [x: string]: any };
 
 	constructor(options: { [x: string]: any; }) {
-		this.settings = obj(copy(this.propertyDefaults(), options));
+		this.clear(options);
+	}
+
+	public clear(options?: { [x: string]: any; }): void {
+		this.settings = obj(copy(this.propertyDefaults(), options || {}));
 	}
 
 	propertyDefaults(): { [x: string]: any; } {
@@ -53,6 +57,9 @@ export interface IBoardOptions {
 	description?: string;
 	zoom?: number;
 	filePath?: string;
+	viewPoint?: Point;
+	containers?: Container<EC | FlowchartComponent>[];
+	onZoom?: (zoom: number) => void;
 }
 
 export interface IBoardProperties {
@@ -62,7 +69,8 @@ export interface IBoardProperties {
 	filePath: string;
 	viewBox: Rect;
 	zoom: number;
-	containers: Container<EC | FlowchartComponent>[]
+	containers: Container<EC | FlowchartComponent>[];
+	onZoom: (zoom: number) => void;
 }
 
 export interface IContainerProperties<T extends ItemBoard> {

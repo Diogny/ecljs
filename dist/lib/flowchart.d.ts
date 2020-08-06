@@ -13,5 +13,4 @@ export default class Flowchart extends Container<FlowchartComponent> {
         points: IPoint[];
     }): FlowchartComponent;
     bond(thisObj: FlowchartComponent | Wire, thisNode: number, ic: FlowchartComponent | Wire, icNode: number): boolean;
-    getXML(): string;
 }

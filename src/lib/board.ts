@@ -1,5 +1,4 @@
 import { IBoardProperties, BaseSettings, IBoardOptions } from "./interfaces";
-import { Templates } from "./templates";
 import Rect from "./rect";
 import Point from "./point";
 import Container from "./container";
@@ -21,9 +20,48 @@ export default class Board extends BaseSettings {
 
 	get zoom(): number { return this.settings.zoom }
 	set zoom(value: number) {
-		Board.validZoom(value)
-			&& (this.zoom != value)
-			&& (this.settings.zoom = value)
+		setZoom(this, value, false)
+	}
+
+	public get modified(): boolean { return this.containers.some(c => c.modified) }
+
+	constructor(options: IBoardOptions) {
+		super(options);
+	}
+
+	public add(container: Container<EC | FlowchartComponent>) {
+		this.containers.push(container)
+	}
+
+	public center(): Point {
+		return new Point(
+			Math.round(this.viewBox.x + this.viewBox.width / 2 | 0),
+			Math.round(this.viewBox.y + this.viewBox.height / 2 | 0)
+		)
+	}
+
+	public get(library: string): Container<EC | FlowchartComponent> | undefined {
+		return this.containers.find(c => c.library == library)
+	}
+
+	public clear(options: IBoardOptions): void {
+		this.settings && this.containers
+			.forEach(c => c.destroy());
+		super.clear(options);
+		setUpBoard(this, options)
+	}
+
+	public propertyDefaults(): IBoardProperties {
+		return <IBoardProperties>{
+			version: "1.1.5",
+			name: "",
+			description: "",
+			filePath: "",
+			viewBox: Rect.empty(),
+			zoom: Board.defaultZoom,
+			containers: [],
+			onZoom: <any>void 0
+		}
 	}
 
 	public static get zoomMultipliers(): number[] {
@@ -40,48 +78,21 @@ export default class Board extends BaseSettings {
 			|| !Board.zoomMultipliers.some(z => z == zoom)
 		)
 	}
+}
 
-	public get modified(): boolean { return this.containers.some(c => c.modified) }
-
-	constructor(options: IBoardOptions) {
-		super(options);
-		!Board.validZoom(this.zoom) && (this.settings.zoom = Board.defaultZoom);
+function setZoom(board: Board, value: number, force: boolean) {
+	if (force || board.zoom != value) {
+		!Board.validZoom(value) && (value = Board.defaultZoom);
+		(<any>board).settings.zoom = value;
+		(<any>board).settings.onZoom && (<any>board).settings.onZoom(value)
 	}
+}
 
-	public add(container: Container<EC | FlowchartComponent>) {
-		this.containers.push(container)
+function setUpBoard(board: Board, options: IBoardOptions) {
+	if (options.viewPoint) {
+		//panning
+		board.viewBox.x = options.viewPoint.x;
+		board.viewBox.y = options.viewPoint.y
 	}
-
-	public center(): Point {
-		return new Point(
-			Math.round(this.viewBox.x + this.viewBox.width / 2 | 0),
-			Math.round(this.viewBox.y + this.viewBox.height / 2 | 0)
-		)
-	}
-
-	public getXML(): string {
-		return '<?xml version="1.0" encoding="utf-8"?>\n'
-			+ Templates.parse('boardXml', {
-				name: this.name,
-				version: this.version,
-				zoom: this.zoom,
-				description: this.description,
-				view: this.viewBox,
-				data: this.containers.map(c => c.getXML()).join('\r\n')
-			},
-				true)
-	}
-
-	public propertyDefaults(): IBoardProperties {
-		return <IBoardProperties>{
-			version: "1.1.5",
-			name: "",
-			description: "",
-			filePath: "",
-			viewBox: Rect.empty(),
-			zoom: 1,
-			containers: [],
-		}
-	}
-
+	setZoom(board, options.zoom || Board.defaultZoom, true);
 }

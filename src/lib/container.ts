@@ -256,8 +256,6 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		return bonds;
 	}
 
-	abstract getXML(): string;
-
 }
 
 function getItem<T extends ItemBoard>(container: Container<T>, id: string)

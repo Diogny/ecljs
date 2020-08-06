@@ -32,7 +32,4 @@ export default class Flowchart extends Container<FlowchartComponent>{
 			&& this.bondSingle(ic, icNode, thisObj, thisNode, false)
 	}
 
-	public getXML(): string {
-		return "";
-	}
 }

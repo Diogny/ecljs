@@ -42,9 +42,6 @@ var Flowchart = /** @class */ (function (_super) {
         return this.bondSingle(thisObj, thisNode, ic, icNode, true)
             && this.bondSingle(ic, icNode, thisObj, thisNode, false);
     };
-    Flowchart.prototype.getXML = function () {
-        return "";
-    };
     return Flowchart;
 }(container_1.default));
 exports.default = Flowchart;

@@ -15,13 +15,14 @@ export default class Board extends BaseSettings {
     static defaultZoom: number;
     get zoom(): number;
     set zoom(value: number);
-    static get zoomMultipliers(): number[];
-    static get zoomFactors(): string[];
-    static validZoom(zoom: number): boolean;
     get modified(): boolean;
     constructor(options: IBoardOptions);
     add(container: Container<EC | FlowchartComponent>): void;
     center(): Point;
-    getXML(): string;
+    get(library: string): Container<EC | FlowchartComponent> | undefined;
+    clear(options: IBoardOptions): void;
     propertyDefaults(): IBoardProperties;
+    static get zoomMultipliers(): number[];
+    static get zoomFactors(): string[];
+    static validZoom(zoom: number): boolean;
 }

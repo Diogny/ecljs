@@ -12,5 +12,4 @@ export default class Circuit extends Container<EC> {
         y: number;
         points: IPoint[];
     }): EC;
-    getXML(): string;
 }

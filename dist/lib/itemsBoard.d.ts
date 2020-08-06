@@ -1,0 +1,35 @@
+import { IPoint, IItemNode, IItemBoardProperties, IItemBaseOptions } from './interfaces';
+import Point from './point';
+import Bond from './bonds';
+import ItemBase from './itemsBase';
+import Container from './container';
+export default abstract class ItemBoard extends ItemBase {
+    container: Container<ItemBoard>;
+    protected settings: IItemBoardProperties;
+    get onProp(): Function;
+    get selected(): boolean;
+    get bonds(): Bond[] | undefined;
+    get directional(): boolean;
+    get label(): string;
+    abstract get count(): number;
+    abstract valid(node: number): boolean;
+    abstract get last(): number;
+    abstract refresh(): ItemBoard;
+    abstract nodeRefresh(node: number): ItemBoard;
+    abstract getNode(node: number): IItemNode;
+    abstract getNodeRealXY(node: number): Point;
+    abstract setNode(node: number, p: IPoint): ItemBoard;
+    abstract overNode(p: IPoint, ln: number): number;
+    abstract findNode(p: Point): number;
+    abstract nodeHighlightable(node: number): boolean;
+    constructor(container: Container<ItemBoard>, options: IItemBaseOptions);
+    select(value: boolean): ItemBoard;
+    move(x: number, y: number): ItemBoard;
+    setOnProp(value: Function): ItemBoard;
+    bond(thisNode: number, ic: ItemBoard, icNode: number): boolean;
+    nodeBonds(node: number): Bond | undefined;
+    unbond(node: number, id: string): void;
+    unbondNode(node: number): void;
+    disconnect(): void;
+    propertyDefaults(): IItemBoardProperties;
+}

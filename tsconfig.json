@@ -14,10 +14,12 @@
 		//"sourceMap": true,
 		"declaration": true,
 		"outDir": "./dist",
-		"baseUrl": "."
+		"baseUrl": ".",
+		"rootDirs": ["src", "tests"]
 	},
 	"include": [
-		"src/**/*", "tests"
+		"src/**/*",
+		"tests"
 	],
 	"exclude": [
 		"node_modules"

@@ -259,8 +259,7 @@ var Wire = /** @class */ (function (_super) {
         this.editMode = false;
         //fix all bonds link indexes from last to this node
         for (var n = this.last; n >= node; n--) {
-            //	fixBondIndexes.call(this, n, n + 1);
-            this.container.shiftRightFrom(this.id, n, n + 1);
+            this.container.moveBond(this.id, n, n + 1);
         }
         this.settings.points.splice(node, 0, p);
         this.editMode = savedEditMode;
@@ -296,7 +295,6 @@ function deleteWireNode(wire, node) {
     if (node <= 0 || node >= last || isNaN(node))
         return;
     wire.unbondNode(node);
-    //fixBondIndexes.call(this, last, last - 1);
-    wire.container.shiftRightFrom(wire.id, last, last - 1);
-    return this.settings.points.splice(node, 1)[0];
+    wire.container.moveBond(wire.id, last, last - 1);
+    return wire.settings.points.splice(node, 1)[0];
 }

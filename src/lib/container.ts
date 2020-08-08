@@ -242,7 +242,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		return bonds;
 	}
 
-	public shiftRightFrom(id: string, node: number, newIndex: number) {
+	public moveBond(id: string, node: number, newIndex: number) {
 		let
 			item = getItem(this, id),
 			wire = item?.c as Wire;
@@ -253,7 +253,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		if (bond) {
 			//fix this from index
 			bond.from.ndx = newIndex;
-			//because it's a wire last node, it has only one destination, so fix all incoming indexes
+			//fix all incoming indexes
 			bond.to.forEach(bond => {
 				let
 					compTo = wire.container.get(bond.id),
@@ -274,13 +274,12 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 function unbond<T extends ItemBoard>(container: Container<T>, thisObj: T | Wire, node: number, id: string, origin: boolean): void {
 	let
 		item = getItem(container, thisObj.id),
-		bond = item && item.b[node], //this.nodeBonds(node),
+		bond = item && item.b[node],
 		b = bond?.remove(id);
 	if (bond && b && item) {
 		delete item.b[node];
 		if (bond.count == 0) {
 			item.b = [];
-			//(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
 		}
 		thisObj.nodeRefresh(node);
 		if (origin) {

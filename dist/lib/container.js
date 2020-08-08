@@ -240,7 +240,7 @@ var Container = /** @class */ (function (_super) {
             .forEach(function (comp) { var _a; return (_a = comp.bonds) === null || _a === void 0 ? void 0 : _a.forEach(findBonds); });
         return bonds;
     };
-    Container.prototype.shiftRightFrom = function (id, node, newIndex) {
+    Container.prototype.moveBond = function (id, node, newIndex) {
         var item = getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.c;
         if (!item || !wire || wire.type != interfaces_1.Type.WIRE)
             return;
@@ -248,7 +248,7 @@ var Container = /** @class */ (function (_super) {
         if (bond) {
             //fix this from index
             bond.from.ndx = newIndex;
-            //because it's a wire last node, it has only one destination, so fix all incoming indexes
+            //fix all incoming indexes
             bond.to.forEach(function (bond) {
                 var compTo = wire.container.get(bond.id), compToBonds = compTo === null || compTo === void 0 ? void 0 : compTo.nodeBonds(bond.ndx);
                 compToBonds === null || compToBonds === void 0 ? void 0 : compToBonds.to.filter(function (b) { return b.id == wire.id; }).forEach(function (b) {
@@ -264,13 +264,11 @@ var Container = /** @class */ (function (_super) {
 }(interfaces_1.BaseSettings));
 exports.default = Container;
 function unbond(container, thisObj, node, id, origin) {
-    var item = getItem(container, thisObj.id), bond = item && item.b[node], //this.nodeBonds(node),
-    b = bond === null || bond === void 0 ? void 0 : bond.remove(id);
+    var item = getItem(container, thisObj.id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(id);
     if (bond && b && item) {
         delete item.b[node];
         if (bond.count == 0) {
             item.b = [];
-            //(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
         }
         thisObj.nodeRefresh(node);
         if (origin) {

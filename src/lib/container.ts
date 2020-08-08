@@ -17,20 +17,20 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	get uniqueCounters(): { [x: string]: any; } { return this.settings.uniqueCounters }
 	get componentTemplates(): Map<string, IBaseComponent> { return this.settings.componentTemplates }
 
-	get itemMap(): Map<string, { c: T, b: Bond[] }> { return this.settings.itemMap }
-	get wireMap(): Map<string, { c: Wire, b: Bond[] }> { return this.settings.wireMap }
+	get itemMap(): Map<string, { t: T, b: Bond[], c: number }> { return this.settings.itemMap }
+	get wireMap(): Map<string, { t: Wire, b: Bond[], c: number }> { return this.settings.wireMap }
 
 	get selected(): (T | Wire)[] { return this.settings.selected }
 
-	get components(): T[] { return Array.from(this.itemMap.values()).map(item => item.c) }
-	get wires(): Wire[] { return Array.from(this.wireMap.values()).map(item => item.c) }
+	get components(): T[] { return Array.from(this.itemMap.values()).map(item => item.t) }
+	get wires(): Wire[] { return Array.from(this.wireMap.values()).map(item => item.t) }
 	get all(): (T | Wire)[] { return (this.components as (T | Wire)[]).concat(this.wires) }
 
 	get empty(): boolean { return !(this.wireMap.size || this.itemMap.size) }
 	get size(): number { return this.itemMap.size + this.wireMap.size }
 
 	public get(id: string): T | Wire | undefined {
-		return this.itemMap.get(id)?.c || this.wireMap.get(id)?.c
+		return this.itemMap.get(id)?.t || this.wireMap.get(id)?.t
 	}
 
 	get modified(): boolean { return this.settings.modified }
@@ -174,20 +174,20 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 			|| !ic.valid(icNode))
 			return false;
 		if (entry) {
-			if (!entry.add(ic, icNode)) {
-				console.log('Oooopsie!')
-			}
+			if (!entry.add(ic, icNode))
+				throw `duplicated bond`;
 		} else {
 			//this's the origin of the bond
 			entry = new Bond(thisObj, thisNode, ic, icNode, origin);
 			item.b[thisNode] = entry;
 		}
+		item.c++;
 		thisObj.nodeRefresh(thisNode);
 		return true
 	}
 
 	public unbond(thisObj: T | Wire, node: number, id: string): void {
-		unbond(this, thisObj, node, id, true)
+		unbond(this, thisObj.id, node, id, true);
 	}
 
 	public unbondNode(thisObj: T | Wire, node: number): void {
@@ -198,12 +198,10 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		if (!bond || !item)
 			return;
 		//try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
-		for (let i = 0, len = bond.to.length; i < len; i++) {
-			link = bond.to[i];
-			this.get(link.id)?.unbond(link.ndx, bond.from.id);
+		while (bond.to.length) {
+			link = bond.to[0];
+			unbond(this, link.id, link.ndx, thisObj.id, true)
 		}
-		delete item?.b[node];
-		(bond.count == 0) && (item.b = [])
 	}
 
 	public disconnect(thisObj: T | Wire) {
@@ -238,7 +236,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	public moveBond(id: string, node: number, newIndex: number) {
 		let
 			item = getItem(this, id),
-			wire = item?.c as Wire;
+			wire = item?.t as Wire;
 		if (!item || !wire || wire.type != Type.WIRE)
 			return;
 		let
@@ -264,25 +262,22 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	}
 }
 
-function unbond<T extends ItemBoard>(container: Container<T>, thisObj: T | Wire, node: number, id: string, origin: boolean): void {
+function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: number, toId: string, origin: boolean): void {
 	let
-		item = getItem(container, thisObj.id),
+		item = getItem(container, id),
 		bond = item && item.b[node],
-		b = bond?.remove(id);
+		b = bond?.remove(toId);
 	if (bond && b && item) {
 		delete item.b[node];
-		(bond.count == 0) && (item.b = []);
-		thisObj.nodeRefresh(node);
+		(--item.c == 0) && (item.b = []);
 		if (origin) {
-			let
-				ic = container.get(id);
-			ic && unbond(container, ic, b.ndx, thisObj.id, false);
+			unbond(container, toId, b.ndx, id, false);
 		}
 	}
 }
 
 function getItem<T extends ItemBoard>(container: Container<T>, id: string)
-	: { c: T | Wire, b: { [x: number]: Bond } } | undefined {
+	: { t: T | Wire, b: Bond[], c: number } | undefined {
 	return container.itemMap.get(id) || container.wireMap.get(id)
 }
 
@@ -347,13 +342,13 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 		item = new Wire(container, <any>options);
 		if (container.wireMap.has(item.id))
 			throw `duplicated connector`;
-		container.wireMap.set(item.id, { c: <Wire>item, b: [] });
+		container.wireMap.set(item.id, { t: <Wire>item, b: [], c: 0 });
 	} else {
 		options.type = base.comp.type;
 		item = container.createItem(options);
 		if (container.itemMap.has(item.id))
 			throw `duplicated component: ${item.id}`;
-		container.itemMap.set(item.id, { c: <T>item, b: [] });
+		container.itemMap.set(item.id, { t: <T>item, b: [], c: 0 });
 	}
 	return item
 }

@@ -13,12 +13,14 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
     };
     get componentTemplates(): Map<string, IBaseComponent>;
     get itemMap(): Map<string, {
-        c: T;
+        t: T;
         b: Bond[];
+        c: number;
     }>;
     get wireMap(): Map<string, {
-        c: Wire;
+        t: Wire;
         b: Bond[];
+        c: number;
     }>;
     get selected(): (T | Wire)[];
     get components(): T[];

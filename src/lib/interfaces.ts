@@ -77,8 +77,8 @@ export interface IContainerProperties<T extends ItemBoard> {
 	name: string;
 	uniqueCounters: { [x: string]: any; };
 	componentTemplates: Map<string, IBaseComponent>;
-	itemMap: Map<string, { c: T, b: Bond[] }>;
-	wireMap: Map<string, { c: Wire, b: Bond[] }>;
+	itemMap: Map<string, { t: T, b: Bond[], c: number }>;
+	wireMap: Map<string, { t: Wire, b: Bond[], c: number }>;
 	selected: (T | Wire)[];
 	modified: boolean;
 }

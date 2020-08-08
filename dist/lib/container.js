@@ -45,12 +45,12 @@ var Container = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Container.prototype, "components", {
-        get: function () { return Array.from(this.itemMap.values()).map(function (item) { return item.c; }); },
+        get: function () { return Array.from(this.itemMap.values()).map(function (item) { return item.t; }); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "wires", {
-        get: function () { return Array.from(this.wireMap.values()).map(function (item) { return item.c; }); },
+        get: function () { return Array.from(this.wireMap.values()).map(function (item) { return item.t; }); },
         enumerable: false,
         configurable: true
     });
@@ -71,7 +71,7 @@ var Container = /** @class */ (function (_super) {
     });
     Container.prototype.get = function (id) {
         var _a, _b;
-        return ((_a = this.itemMap.get(id)) === null || _a === void 0 ? void 0 : _a.c) || ((_b = this.wireMap.get(id)) === null || _b === void 0 ? void 0 : _b.c);
+        return ((_a = this.itemMap.get(id)) === null || _a === void 0 ? void 0 : _a.t) || ((_b = this.wireMap.get(id)) === null || _b === void 0 ? void 0 : _b.t);
     };
     Object.defineProperty(Container.prototype, "modified", {
         get: function () { return this.settings.modified; },
@@ -187,33 +187,30 @@ var Container = /** @class */ (function (_super) {
             || !ic.valid(icNode))
             return false;
         if (entry) {
-            if (!entry.add(ic, icNode)) {
-                console.log('Oooopsie!');
-            }
+            if (!entry.add(ic, icNode))
+                throw "duplicated bond";
         }
         else {
             //this's the origin of the bond
             entry = new bonds_1.default(thisObj, thisNode, ic, icNode, origin);
             item.b[thisNode] = entry;
         }
+        item.c++;
         thisObj.nodeRefresh(thisNode);
         return true;
     };
     Container.prototype.unbond = function (thisObj, node, id) {
-        unbond(this, thisObj, node, id, true);
+        unbond(this, thisObj.id, node, id, true);
     };
     Container.prototype.unbondNode = function (thisObj, node) {
-        var _a;
         var item = getItem(this, thisObj.id), bond = item && item.b[node], link = void 0;
         if (!bond || !item)
             return;
         //try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
-        for (var i = 0, len = bond.to.length; i < len; i++) {
-            link = bond.to[i];
-            (_a = this.get(link.id)) === null || _a === void 0 ? void 0 : _a.unbond(link.ndx, bond.from.id);
+        while (bond.to.length) {
+            link = bond.to[0];
+            unbond(this, link.id, link.ndx, thisObj.id, true);
         }
-        item === null || item === void 0 ? true : delete item.b[node];
-        (bond.count == 0) && (item.b = []);
     };
     Container.prototype.disconnect = function (thisObj) {
         for (var node = 0; node < thisObj.count; node++)
@@ -235,7 +232,7 @@ var Container = /** @class */ (function (_super) {
         return bonds;
     };
     Container.prototype.moveBond = function (id, node, newIndex) {
-        var item = getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.c;
+        var item = getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.t;
         if (!item || !wire || wire.type != interfaces_1.Type.WIRE)
             return;
         var bond = wire.nodeBonds(node);
@@ -257,15 +254,13 @@ var Container = /** @class */ (function (_super) {
     return Container;
 }(interfaces_1.BaseSettings));
 exports.default = Container;
-function unbond(container, thisObj, node, id, origin) {
-    var item = getItem(container, thisObj.id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(id);
+function unbond(container, id, node, toId, origin) {
+    var item = getItem(container, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
     if (bond && b && item) {
         delete item.b[node];
-        (bond.count == 0) && (item.b = []);
-        thisObj.nodeRefresh(node);
+        (--item.c == 0) && (item.b = []);
         if (origin) {
-            var ic = container.get(id);
-            ic && unbond(container, ic, b.ndx, thisObj.id, false);
+            unbond(container, toId, b.ndx, id, false);
         }
     }
 }
@@ -318,14 +313,14 @@ function createBoardItem(container, options) {
         item = new wire_1.default(container, options);
         if (container.wireMap.has(item.id))
             throw "duplicated connector";
-        container.wireMap.set(item.id, { c: item, b: [] });
+        container.wireMap.set(item.id, { t: item, b: [], c: 0 });
     }
     else {
         options.type = base.comp.type;
         item = container.createItem(options);
         if (container.itemMap.has(item.id))
             throw "duplicated component: " + item.id;
-        container.itemMap.set(item.id, { c: item, b: [] });
+        container.itemMap.set(item.id, { t: item, b: [], c: 0 });
     }
     return item;
 }

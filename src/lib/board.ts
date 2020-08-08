@@ -10,12 +10,14 @@ export default class Board extends BaseSettings {
 
 	protected settings: IBoardProperties;
 
-	public get version(): string { return this.settings.version }
-	public get name(): string { return this.settings.name }
-	public get description(): string { return this.settings.description }
-	public get filePath(): string { return this.settings.filePath }
-	public get viewBox(): Rect { return this.settings.viewBox }
-	public get containers(): Container<EC | FlowchartComponent>[] { return this.settings.containers }
+	get version(): string { return this.settings.version }
+	get name(): string { return this.settings.name }
+	set name(value: string) { this.settings.name = value }
+	get description(): string { return this.settings.description }
+	set description(value: string) { this.settings.description = value }
+	get filePath(): string { return this.settings.filePath }
+	get viewBox(): Rect { return this.settings.viewBox }
+	get containers(): Container<EC | FlowchartComponent>[] { return this.settings.containers }
 
 	public static defaultZoom: number = 1;	// 1X
 

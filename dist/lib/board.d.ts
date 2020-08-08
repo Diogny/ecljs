@@ -8,7 +8,9 @@ export default class Board extends BaseSettings {
     protected settings: IBoardProperties;
     get version(): string;
     get name(): string;
+    set name(value: string);
     get description(): string;
+    set description(value: string);
     get filePath(): string;
     get viewBox(): Rect;
     get containers(): Container<EC | FlowchartComponent>[];

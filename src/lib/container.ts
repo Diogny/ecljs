@@ -1,4 +1,4 @@
-import { Type, IBaseComponent, IPoint, IBondLink, IContainerProperties, BaseSettings } from "./interfaces";
+import { Type, IBaseComponent, IBondLink, IContainerProperties, BaseSettings } from "./interfaces";
 import { isNum } from "./dab";
 import Rect from "./rect";
 import Bond from "./bonds";
@@ -8,7 +8,8 @@ import Comp from "./components";
 
 export default abstract class Container<T extends ItemBoard> extends BaseSettings {
 
-	public get name(): string { return this.settings.name }
+	get name(): string { return this.settings.name }
+	set name(value: string) { this.settings.name = value }
 	abstract get library(): string;
 	abstract get directionalWires(): boolean;
 

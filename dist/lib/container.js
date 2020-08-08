@@ -16,6 +16,7 @@ var Container = /** @class */ (function (_super) {
     }
     Object.defineProperty(Container.prototype, "name", {
         get: function () { return this.settings.name; },
+        set: function (value) { this.settings.name = value; },
         enumerable: false,
         configurable: true
     });

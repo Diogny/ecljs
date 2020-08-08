@@ -5,6 +5,7 @@ import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 export default abstract class Container<T extends ItemBoard> extends BaseSettings {
     get name(): string;
+    set name(value: string);
     abstract get library(): string;
     abstract get directionalWires(): boolean;
     protected settings: IContainerProperties<T>;

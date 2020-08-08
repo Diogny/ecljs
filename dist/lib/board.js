@@ -26,11 +26,13 @@ var Board = /** @class */ (function (_super) {
     });
     Object.defineProperty(Board.prototype, "name", {
         get: function () { return this.settings.name; },
+        set: function (value) { this.settings.name = value; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Board.prototype, "description", {
         get: function () { return this.settings.description; },
+        set: function (value) { this.settings.description = value; },
         enumerable: false,
         configurable: true
     });

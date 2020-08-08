@@ -75,7 +75,7 @@ export interface IContainerProperties<T extends ItemBoard> {
         c: Wire;
         b: Bond[];
     }>;
-    selected: T[];
+    selected: (T | Wire)[];
     modified: boolean;
 }
 export interface IPoint {

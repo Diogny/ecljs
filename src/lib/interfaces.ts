@@ -79,7 +79,7 @@ export interface IContainerProperties<T extends ItemBoard> {
 	componentTemplates: Map<string, IBaseComponent>;
 	itemMap: Map<string, { c: T, b: Bond[] }>;
 	wireMap: Map<string, { c: Wire, b: Bond[] }>;
-	selected: T[];
+	selected: (T | Wire)[];
 	modified: boolean;
 }
 

@@ -20,7 +20,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	get itemMap(): Map<string, { c: T, b: Bond[] }> { return this.settings.itemMap }
 	get wireMap(): Map<string, { c: Wire, b: Bond[] }> { return this.settings.wireMap }
 
-	get selected(): T[] { return this.settings.selected }
+	get selected(): (T | Wire)[] { return this.settings.selected }
 
 	get components(): T[] { return Array.from(this.itemMap.values()).map(item => item.c) }
 	get wires(): Wire[] { return Array.from(this.wireMap.values()).map(item => item.c) }
@@ -64,48 +64,43 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 
 	public hasComponent(id: string): boolean { return this.itemMap.has(id) || this.wireMap.has(id); }
 
-	public selectAll(value: boolean): T[] {
-		return this.settings.selected = Array.from(this.itemMap.values())
-			.filter(comp => (comp.c.select(value), value))
-			.map(item => item.c)
+	public selectAll(value: boolean): (T | Wire)[] {
+		return this.settings.selected = this.all
+			.filter(comp => (comp.select(value), value))
 	}
 
 	public toggleSelect(comp: T) {
 		comp.select(!comp.selected);
-		this.settings.selected =
-			this.components.filter(c => c.selected);
+		this.settings.selected = this.all.filter(c => c.selected);
 	}
 
-	public selectThis(comp: T): boolean {
+	public selectThis(comp: T | Wire): boolean {
 		return comp
-			&& (this.selectAll(false).push(comp.select(true) as T), true)
+			&& (this.selectAll(false).push(comp.select(true) as T | Wire), true)
 	}
 
 	public unselectThis(comp: T) {
 		comp.select(false);
-		this.settings.selected =
-			this.components.filter(c => c.selected);
+		this.settings.selected = this.all.filter(c => c.selected);
 	}
 
 	public selectRect(rect: Rect) {
-		(this.settings.selected =
-			this.components.filter((item) => {
-				return rect.intersect(item.rect())
-			}))
+		(this.settings.selected = this.all.filter((item) => {
+			return rect.intersect(item.rect())
+		}))
 			.forEach(item => item.select(true));
 	}
 
 	public deleteSelected(): number {
 		let
 			deletedCount = 0;
-		this.settings.selected =
-			this.selected.filter((c) => {
-				if (this.delete(c)) {
-					deletedCount++;
-					return false;
-				}
-				return true;
-			});
+		this.settings.selected = this.selected.filter((c) => {
+			if (this.delete(c)) {
+				deletedCount++;
+				return false;
+			}
+			return true;
+		});
 		return deletedCount
 	}
 
@@ -138,16 +133,14 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	}
 
 	public delete(comp: T | Wire): boolean {
-		if (comp.type == Type.WIRE ?
+		if (comp == undefined)
+			return false;
+		comp.disconnect();
+		comp.remove();
+		this.modified = true;
+		return (comp.type == Type.WIRE) ?
 			this.wireMap.delete(comp.id) :
 			this.itemMap.delete(comp.id)
-		) {
-			comp.disconnect();
-			comp.remove();
-			this.modified = true;
-			return true
-		}
-		return false
 	}
 
 	public itemBonds(item: T | Wire): Bond[] | undefined {
@@ -173,7 +166,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	protected bondSingle(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean {
 		let
 			item = getItem(this, thisObj.id),
-			entry = item && item.b[thisNode]; // this.nodeBonds(thisObj, thisNode);
+			entry = item && item.b[thisNode];
 		if (!item)
 			return false;
 		if (!ic
@@ -202,7 +195,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 			item = getItem(this, thisObj.id),
 			bond = item && item.b[node],
 			link: IBondLink = <any>void 0;
-		if (!bond)
+		if (!bond || !item)
 			return;
 		//try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
 		for (let i = 0, len = bond.to.length; i < len; i++) {
@@ -210,7 +203,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 			this.get(link.id)?.unbond(link.ndx, bond.from.id);
 		}
 		delete item?.b[node];
-		//(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
+		(bond.count == 0) && (item.b = [])
 	}
 
 	public disconnect(thisObj: T | Wire) {
@@ -278,9 +271,7 @@ function unbond<T extends ItemBoard>(container: Container<T>, thisObj: T | Wire,
 		b = bond?.remove(id);
 	if (bond && b && item) {
 		delete item.b[node];
-		if (bond.count == 0) {
-			item.b = [];
-		}
+		(bond.count == 0) && (item.b = []);
 		thisObj.nodeRefresh(node);
 		if (origin) {
 			let

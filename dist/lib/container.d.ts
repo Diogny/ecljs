@@ -20,7 +20,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
         c: Wire;
         b: Bond[];
     }>;
-    get selected(): T[];
+    get selected(): (T | Wire)[];
     get components(): T[];
     get wires(): Wire[];
     get all(): (T | Wire)[];
@@ -33,9 +33,9 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
     propertyDefaults(): IContainerProperties<T>;
     rootComponent(name: string): IBaseComponent | undefined;
     hasComponent(id: string): boolean;
-    selectAll(value: boolean): T[];
+    selectAll(value: boolean): (T | Wire)[];
     toggleSelect(comp: T): void;
-    selectThis(comp: T): boolean;
+    selectThis(comp: T | Wire): boolean;
     unselectThis(comp: T): void;
     selectRect(rect: Rect): void;
     deleteSelected(): number;

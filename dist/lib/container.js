@@ -99,14 +99,12 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.hasComponent = function (id) { return this.itemMap.has(id) || this.wireMap.has(id); };
     Container.prototype.selectAll = function (value) {
-        return this.settings.selected = Array.from(this.itemMap.values())
-            .filter(function (comp) { return (comp.c.select(value), value); })
-            .map(function (item) { return item.c; });
+        return this.settings.selected = this.all
+            .filter(function (comp) { return (comp.select(value), value); });
     };
     Container.prototype.toggleSelect = function (comp) {
         comp.select(!comp.selected);
-        this.settings.selected =
-            this.components.filter(function (c) { return c.selected; });
+        this.settings.selected = this.all.filter(function (c) { return c.selected; });
     };
     Container.prototype.selectThis = function (comp) {
         return comp
@@ -114,27 +112,24 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.unselectThis = function (comp) {
         comp.select(false);
-        this.settings.selected =
-            this.components.filter(function (c) { return c.selected; });
+        this.settings.selected = this.all.filter(function (c) { return c.selected; });
     };
     Container.prototype.selectRect = function (rect) {
-        (this.settings.selected =
-            this.components.filter(function (item) {
-                return rect.intersect(item.rect());
-            }))
+        (this.settings.selected = this.all.filter(function (item) {
+            return rect.intersect(item.rect());
+        }))
             .forEach(function (item) { return item.select(true); });
     };
     Container.prototype.deleteSelected = function () {
         var _this = this;
         var deletedCount = 0;
-        this.settings.selected =
-            this.selected.filter(function (c) {
-                if (_this.delete(c)) {
-                    deletedCount++;
-                    return false;
-                }
-                return true;
-            });
+        this.settings.selected = this.selected.filter(function (c) {
+            if (_this.delete(c)) {
+                deletedCount++;
+                return false;
+            }
+            return true;
+        });
         return deletedCount;
     };
     Container.prototype.destroy = function () {
@@ -158,15 +153,14 @@ var Container = /** @class */ (function (_super) {
         return comp;
     };
     Container.prototype.delete = function (comp) {
-        if (comp.type == interfaces_1.Type.WIRE ?
+        if (comp == undefined)
+            return false;
+        comp.disconnect();
+        comp.remove();
+        this.modified = true;
+        return (comp.type == interfaces_1.Type.WIRE) ?
             this.wireMap.delete(comp.id) :
-            this.itemMap.delete(comp.id)) {
-            comp.disconnect();
-            comp.remove();
-            this.modified = true;
-            return true;
-        }
-        return false;
+            this.itemMap.delete(comp.id);
     };
     Container.prototype.itemBonds = function (item) {
         var _a, _b;
@@ -185,7 +179,7 @@ var Container = /** @class */ (function (_super) {
             && this.bondSingle(ic, icNode, thisObj, thisNode, false);
     };
     Container.prototype.bondSingle = function (thisObj, thisNode, ic, icNode, origin) {
-        var item = getItem(this, thisObj.id), entry = item && item.b[thisNode]; // this.nodeBonds(thisObj, thisNode);
+        var item = getItem(this, thisObj.id), entry = item && item.b[thisNode];
         if (!item)
             return false;
         if (!ic
@@ -211,7 +205,7 @@ var Container = /** @class */ (function (_super) {
     Container.prototype.unbondNode = function (thisObj, node) {
         var _a;
         var item = getItem(this, thisObj.id), bond = item && item.b[node], link = void 0;
-        if (!bond)
+        if (!bond || !item)
             return;
         //try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
         for (var i = 0, len = bond.to.length; i < len; i++) {
@@ -219,7 +213,7 @@ var Container = /** @class */ (function (_super) {
             (_a = this.get(link.id)) === null || _a === void 0 ? void 0 : _a.unbond(link.ndx, bond.from.id);
         }
         item === null || item === void 0 ? true : delete item.b[node];
-        //(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
+        (bond.count == 0) && (item.b = []);
     };
     Container.prototype.disconnect = function (thisObj) {
         for (var node = 0; node < thisObj.count; node++)
@@ -267,9 +261,7 @@ function unbond(container, thisObj, node, id, origin) {
     var item = getItem(container, thisObj.id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(id);
     if (bond && b && item) {
         delete item.b[node];
-        if (bond.count == 0) {
-            item.b = [];
-        }
+        (bond.count == 0) && (item.b = []);
         thisObj.nodeRefresh(node);
         if (origin) {
             var ic = container.get(id);

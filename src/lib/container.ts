@@ -194,20 +194,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	}
 
 	public unbond(thisObj: T | Wire, node: number, id: string): void {
-		let
-			item = getItem(this, thisObj.id),
-			bond = item && item.b[node], //this.nodeBonds(node),
-			b = bond?.remove(id);
-		if (bond && b && item) {
-			if (bond.count == 0) {
-				delete item.b[node];
-				//(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
-			}
-			thisObj.nodeRefresh(node);
-			let
-				ic = this.get(id);
-			ic && ic.unbond(b.ndx, thisObj.id);
-		}
+		unbond(this, thisObj, node, id, true)
 	}
 
 	public unbondNode(thisObj: T | Wire, node: number): void {
@@ -255,6 +242,53 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		return bonds;
 	}
 
+	public shiftRightFrom(id: string, node: number, newIndex: number) {
+		let
+			item = getItem(this, id),
+			wire = item?.c as Wire;
+		if (!item || !wire || wire.type != Type.WIRE)
+			return;
+		let
+			bond = wire.nodeBonds(node);
+		if (bond) {
+			//fix this from index
+			bond.from.ndx = newIndex;
+			//because it's a wire last node, it has only one destination, so fix all incoming indexes
+			bond.to.forEach(bond => {
+				let
+					compTo = wire.container.get(bond.id),
+					compToBonds = compTo?.nodeBonds(bond.ndx);
+				compToBonds?.to
+					.filter(b => b.id == wire.id)
+					.forEach(b => {
+						b.ndx = newIndex;
+					})
+			});
+			//move last bond entry
+			delete item.b[node];
+			item.b[newIndex] = bond;
+		}
+	}
+}
+
+function unbond<T extends ItemBoard>(container: Container<T>, thisObj: T | Wire, node: number, id: string, origin: boolean): void {
+	let
+		item = getItem(container, thisObj.id),
+		bond = item && item.b[node], //this.nodeBonds(node),
+		b = bond?.remove(id);
+	if (bond && b && item) {
+		delete item.b[node];
+		if (bond.count == 0) {
+			item.b = [];
+			//(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
+		}
+		thisObj.nodeRefresh(node);
+		if (origin) {
+			let
+				ic = container.get(id);
+			ic && unbond(container, ic, b.ndx, thisObj.id, false);
+		}
+	}
 }
 
 function getItem<T extends ItemBoard>(container: Container<T>, id: string)

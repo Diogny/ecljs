@@ -206,17 +206,7 @@ var Container = /** @class */ (function (_super) {
         return true;
     };
     Container.prototype.unbond = function (thisObj, node, id) {
-        var item = getItem(this, thisObj.id), bond = item && item.b[node], //this.nodeBonds(node),
-        b = bond === null || bond === void 0 ? void 0 : bond.remove(id);
-        if (bond && b && item) {
-            if (bond.count == 0) {
-                delete item.b[node];
-                //(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
-            }
-            thisObj.nodeRefresh(node);
-            var ic = this.get(id);
-            ic && ic.unbond(b.ndx, thisObj.id);
-        }
+        unbond(this, thisObj, node, id, true);
     };
     Container.prototype.unbondNode = function (thisObj, node) {
         var _a;
@@ -250,9 +240,45 @@ var Container = /** @class */ (function (_super) {
             .forEach(function (comp) { var _a; return (_a = comp.bonds) === null || _a === void 0 ? void 0 : _a.forEach(findBonds); });
         return bonds;
     };
+    Container.prototype.shiftRightFrom = function (id, node, newIndex) {
+        var item = getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.c;
+        if (!item || !wire || wire.type != interfaces_1.Type.WIRE)
+            return;
+        var bond = wire.nodeBonds(node);
+        if (bond) {
+            //fix this from index
+            bond.from.ndx = newIndex;
+            //because it's a wire last node, it has only one destination, so fix all incoming indexes
+            bond.to.forEach(function (bond) {
+                var compTo = wire.container.get(bond.id), compToBonds = compTo === null || compTo === void 0 ? void 0 : compTo.nodeBonds(bond.ndx);
+                compToBonds === null || compToBonds === void 0 ? void 0 : compToBonds.to.filter(function (b) { return b.id == wire.id; }).forEach(function (b) {
+                    b.ndx = newIndex;
+                });
+            });
+            //move last bond entry
+            delete item.b[node];
+            item.b[newIndex] = bond;
+        }
+    };
     return Container;
 }(interfaces_1.BaseSettings));
 exports.default = Container;
+function unbond(container, thisObj, node, id, origin) {
+    var item = getItem(container, thisObj.id), bond = item && item.b[node], //this.nodeBonds(node),
+    b = bond === null || bond === void 0 ? void 0 : bond.remove(id);
+    if (bond && b && item) {
+        delete item.b[node];
+        if (bond.count == 0) {
+            item.b = [];
+            //(--this.settings.bondsCount == 0) && (this.settings.bonds = []);
+        }
+        thisObj.nodeRefresh(node);
+        if (origin) {
+            var ic = container.get(id);
+            ic && unbond(container, ic, b.ndx, thisObj.id, false);
+        }
+    }
+}
 function getItem(container, id) {
     return container.itemMap.get(id) || container.wireMap.get(id);
 }

@@ -20,7 +20,7 @@ var Wire = /** @class */ (function (_super) {
         });
         _this.g.append(_this.settings.polyline);
         _this.setPoints(options.points);
-        moveToStart.call(_this);
+        moveToStart(_this);
         _this.onProp && _this.onProp({
             id: "#" + _this.id,
             args: {
@@ -177,7 +177,7 @@ var Wire = /** @class */ (function (_super) {
     Wire.prototype.setNode = function (node, p) {
         this.settings.points[node].x = p.x | 0;
         this.settings.points[node].y = p.y | 0;
-        moveToStart.call(this);
+        moveToStart(this);
         return this.nodeRefresh(node);
     };
     Wire.prototype.nodeHighlightable = function (node) {
@@ -191,7 +191,7 @@ var Wire = /** @class */ (function (_super) {
             throw 'Poliwire min 2 points';
         if (!this.editMode) {
             this.settings.points = points.map(function (p) { return new point_1.default(p.x | 0, p.y | 0); });
-            moveToStart.call(this);
+            moveToStart(this);
             this.settings.lines = [];
             this.refresh();
         }
@@ -237,17 +237,17 @@ var Wire = /** @class */ (function (_super) {
             return false;
         var savedEditMode = this.editMode;
         this.editMode = false;
-        deleteWireNode.call(this, line);
-        deleteWireNode.call(this, line - 1);
-        moveToStart.call(this);
+        deleteWireNode(this, line);
+        deleteWireNode(this, line - 1);
+        moveToStart(this);
         this.editMode = savedEditMode;
         return true;
     };
     Wire.prototype.deleteNode = function (node) {
         var savedEditMode = this.editMode, p;
         this.editMode = false;
-        p = deleteWireNode.call(this, node);
-        moveToStart.call(this);
+        p = deleteWireNode(this, node);
+        moveToStart(this);
         this.editMode = savedEditMode;
         return p;
     };
@@ -259,7 +259,8 @@ var Wire = /** @class */ (function (_super) {
         this.editMode = false;
         //fix all bonds link indexes from last to this node
         for (var n = this.last; n >= node; n--) {
-            fixBondIndexes.call(this, n, n + 1);
+            //	fixBondIndexes.call(this, n, n + 1);
+            this.container.shiftRightFrom(this.id, n, n + 1);
         }
         this.settings.points.splice(node, 0, p);
         this.editMode = savedEditMode;
@@ -286,34 +287,16 @@ var Wire = /** @class */ (function (_super) {
     return Wire;
 }(itemsBoard_1.default));
 exports.default = Wire;
-function moveToStart() {
-    this.move(this.settings.points[0].x, this.settings.points[0].y);
+function moveToStart(wire) {
+    wire.move(wire.settings.points[0].x, wire.settings.points[0].y);
 }
-function deleteWireNode(node) {
-    var last = this.last;
+function deleteWireNode(wire, node) {
+    var last = wire.last;
     //first or last node cannot be deleted, only middle nodes
     if (node <= 0 || node >= last || isNaN(node))
         return;
-    this.unbondNode(node);
-    fixBondIndexes.call(this, last, last - 1);
+    wire.unbondNode(node);
+    //fixBondIndexes.call(this, last, last - 1);
+    wire.container.shiftRightFrom(wire.id, last, last - 1);
     return this.settings.points.splice(node, 1)[0];
-}
-function fixBondIndexes(node, newIndex) {
-    var _this = this;
-    var lastBond = this.nodeBonds(node);
-    if (!lastBond)
-        return false;
-    //fix this from index
-    lastBond.from.ndx = newIndex;
-    //because it's a wire last node, it has only one destination, so fix all incoming indexes
-    lastBond.to.forEach(function (bond) {
-        var compTo = _this.container.get(bond.id), compToBonds = compTo === null || compTo === void 0 ? void 0 : compTo.nodeBonds(bond.ndx);
-        compToBonds === null || compToBonds === void 0 ? void 0 : compToBonds.to.filter(function (b) { return b.id == _this.id; }).forEach(function (b) {
-            b.ndx = newIndex;
-        });
-    });
-    //move last bond entry
-    delete this.settings.bonds[node];
-    this.settings.bonds[newIndex] = lastBond;
-    return true;
 }

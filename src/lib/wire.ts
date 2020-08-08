@@ -74,7 +74,7 @@ export default class Wire extends ItemBoard {
 		});
 		this.g.append(this.settings.polyline);
 		this.setPoints(options.points);
-		moveToStart.call(this);
+		moveToStart(this);
 		this.onProp && this.onProp({
 			id: `#${this.id}`,
 			args: {
@@ -169,7 +169,7 @@ export default class Wire extends ItemBoard {
 	public setNode(node: number, p: IPoint): Wire {
 		this.settings.points[node].x = p.x | 0;
 		this.settings.points[node].y = p.y | 0;
-		moveToStart.call(this);
+		moveToStart(this);
 		return this.nodeRefresh(node);
 	}
 
@@ -185,7 +185,7 @@ export default class Wire extends ItemBoard {
 			throw 'Poliwire min 2 points';
 		if (!this.editMode) {
 			this.settings.points = points.map(p => new Point(p.x | 0, p.y | 0));
-			moveToStart.call(this);
+			moveToStart(this);
 			this.settings.lines = [];
 			this.refresh();
 		}
@@ -240,9 +240,9 @@ export default class Wire extends ItemBoard {
 		let
 			savedEditMode = this.editMode;
 		this.editMode = false;
-		deleteWireNode.call(this, line);
-		deleteWireNode.call(this, line - 1);
-		moveToStart.call(this);
+		deleteWireNode(this, line);
+		deleteWireNode(this, line - 1);
+		moveToStart(this);
 		this.editMode = savedEditMode;
 		return true;
 	}
@@ -252,8 +252,8 @@ export default class Wire extends ItemBoard {
 			savedEditMode = this.editMode,
 			p;
 		this.editMode = false;
-		p = deleteWireNode.call(this, node);
-		moveToStart.call(this);
+		p = deleteWireNode(this, node);
+		moveToStart(this);
 		this.editMode = savedEditMode;
 		return p;
 	}
@@ -267,7 +267,8 @@ export default class Wire extends ItemBoard {
 		this.editMode = false;
 		//fix all bonds link indexes from last to this node
 		for (let n = this.last; n >= node; n--) {
-			fixBondIndexes.call(this, n, n + 1);
+			//	fixBondIndexes.call(this, n, n + 1);
+			this.container.shiftRightFrom(this.id, n, n + 1);
 		}
 		this.settings.points.splice(node, 0, p);
 		this.editMode = savedEditMode;
@@ -296,41 +297,18 @@ export default class Wire extends ItemBoard {
 
 }
 
-function moveToStart() {
-	(this as Wire).move(this.settings.points[0].x, this.settings.points[0].y)
+function moveToStart(wire: Wire) {
+	wire.move((<any>wire).settings.points[0].x, (<any>wire).settings.points[0].y)
 }
 
-function deleteWireNode(node: number): Point | undefined {
+function deleteWireNode(wire: Wire, node: number): Point | undefined {
 	let
-		last = (this as Wire).last;
+		last = wire.last;
 	//first or last node cannot be deleted, only middle nodes
 	if (node <= 0 || node >= last || isNaN(node))
 		return;
-	(this as Wire).unbondNode(node);
-	fixBondIndexes.call(this, last, last - 1);
+	wire.unbondNode(node);
+	//fixBondIndexes.call(this, last, last - 1);
+	wire.container.shiftRightFrom(wire.id, last, last - 1);
 	return this.settings.points.splice(node, 1)[0];
-}
-
-function fixBondIndexes(node: number, newIndex: number): boolean {
-	let
-		lastBond = (this as Wire).nodeBonds(node);
-	if (!lastBond)
-		return false;
-	//fix this from index
-	lastBond.from.ndx = newIndex;
-	//because it's a wire last node, it has only one destination, so fix all incoming indexes
-	lastBond.to.forEach(bond => {
-		let
-			compTo = (this as Wire).container.get(bond.id),
-			compToBonds = compTo?.nodeBonds(bond.ndx);
-		compToBonds?.to
-			.filter(b => b.id == (this as Wire).id)
-			.forEach(b => {
-				b.ndx = newIndex;
-			})
-	})
-	//move last bond entry
-	delete this.settings.bonds[node];
-	this.settings.bonds[newIndex] = lastBond;
-	return true
 }

@@ -3,10 +3,13 @@
 //https://github.com/Microsoft/TypeScriptSamples/blob/master/raytracer/raytracer.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 var dab_1 = require("./dab");
+/**
+ * @description a 2 dimension integer point class
+ */
 var Point = /** @class */ (function () {
     function Point(x, y) {
-        this.x = x;
-        this.y = y;
+        this.x = Math.round(x);
+        this.y = Math.round(y);
     }
     Point.prototype.distance = function (p) {
         var dx = this.x - p.x;
@@ -14,16 +17,8 @@ var Point = /** @class */ (function () {
         return Math.sqrt(dx * dx + dy * dy);
     };
     Point.prototype.clone = function () { return new Point(this.x, this.y); };
-    Point.prototype.round = function () {
-        this.x = Math.round(this.x);
-        this.y = Math.round(this.y);
-        return this;
-    };
-    Point.prototype.add = function (x, y) {
-        this.x += Math.round(x);
-        this.y += Math.round(y);
-        return this;
-    };
+    Point.prototype.add = function (x, y) { return new Point(this.x + x, this.y + y); };
+    Point.prototype.mul = function (x, y) { return new Point(this.x * x, this.y * y); };
     /**
      * @description returns string of a Point oobject
      * @param options 0 = x,y	1 = parenthesis; 	2 = variables x: x, y: y
@@ -82,9 +77,6 @@ var Point = /** @class */ (function () {
             return new Point(parseInt(arr[0]), parseInt(arr[1]));
         }
         //invalid point
-    };
-    Point.distance = function (p1, p2) {
-        return p1.distance(p2);
     };
     Point.scale = function (v, k) { return new Point(k * v.x, k * v.y); };
     Point.translateBy = function (v, dx, dy) { return new Point(v.x + dx, v.y + dy); };

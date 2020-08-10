@@ -26,7 +26,4 @@ export default class Board extends Base {
     libraries(library: string): Container<EC | FlowchartComp>[];
     destroy(): void;
     defaults(): IBoardProperties;
-    static get zoomMultipliers(): number[];
-    static get zoomFactors(): string[];
-    static validZoom(zoom: number): boolean;
 }

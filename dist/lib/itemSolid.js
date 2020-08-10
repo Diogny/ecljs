@@ -110,7 +110,7 @@ var ItemSolid = /** @class */ (function (_super) {
         var _this = this;
         var bond = this.nodeBonds(node), pos = this.getNode(node);
         pos && bond && bond.to.forEach(function (d) {
-            var ic = _this.container.get(d.id), p = point_1.default.plus(_this.p, _this.rotation ? pos.rot : pos).round();
+            var ic = _this.container.get(d.id), p = point_1.default.plus(_this.p, _this.rotation ? pos.rot : pos);
             ic && ic.setNode(d.ndx, p); //no transform
         });
         return this;
@@ -145,7 +145,7 @@ var ItemSolid = /** @class */ (function (_super) {
     };
     ItemSolid.prototype.getNodeRealXY = function (node) {
         var pos = this.getNode(node);
-        return pos ? point_1.default.plus(this.p, this.rotation ? pos.rot : pos).round() : null;
+        return pos ? point_1.default.plus(this.p, this.rotation ? pos.rot : pos) : null;
     };
     return ItemSolid;
 }(itemsBoard_1.default));

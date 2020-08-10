@@ -11,8 +11,8 @@ var Board = /** @class */ (function (_super) {
         var _this = _super.call(this, options) || this;
         if (options.viewPoint) {
             //panning
-            _this.viewBox.x = options.viewPoint.x;
-            _this.viewBox.y = options.viewPoint.y;
+            _this.viewBox.x = options.viewPoint.x | 0;
+            _this.viewBox.y = options.viewPoint.y | 0;
         }
         var names = _this.containers.map(function (c) {
             c.board = _this;
@@ -62,7 +62,7 @@ var Board = /** @class */ (function (_super) {
     Object.defineProperty(Board.prototype, "zoom", {
         get: function () { return this.__s.zoom; },
         set: function (value) {
-            if (this.zoom != value && Board.validZoom(value)) {
+            if (!isNaN(value) && this.zoom != value) {
                 this.__s.zoom = value;
                 this.modified = true;
                 this.__s.onZoom && this.__s.onZoom(value);
@@ -72,18 +72,11 @@ var Board = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Board.prototype, "modified", {
-        get: function () {
-            //check for any change in containers
-            if (!this.__s.modified && this.containers.some(function (c) { return c.modified; }))
-                this.__s.modified = true;
-            return this.__s.modified;
-        },
+        get: function () { return this.__s.modified; },
         set: function (value) {
-            //trying to set to false with containers modified, is overrided by true
-            // all containers must have modified == false, to go through this
-            if (!value && this.containers.some(function (c) { return c.modified; })) {
-                value = true;
-            }
+            //brings uniformity to all containers
+            this.containers
+                .forEach(function (c) { return c.setModified(value); });
             this.__s.modified = value;
             this.__s.onModified && this.__s.onModified(value);
         },
@@ -124,24 +117,6 @@ var Board = /** @class */ (function (_super) {
             onZoom: void 0,
             onModified: void 0
         };
-    };
-    Object.defineProperty(Board, "zoomMultipliers", {
-        get: function () {
-            return Array.from([8, 4, 2, 1, 0.75, 0.5, 0.33, 0.25, 0.166, 0.125]);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Board, "zoomFactors", {
-        get: function () {
-            return Array.from(["1/8X", "1/4X", "1/2X", "1X", "1 1/2X", "2X", "3X", "4X", "6X", "8X"]);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Board.validZoom = function (zoom) {
-        return !(isNaN(zoom)
-            || !Board.zoomMultipliers.some(function (z) { return z == zoom; }));
     };
     Board.defaultZoom = 1; // 1X
     return Board;

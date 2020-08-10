@@ -135,7 +135,7 @@ export default abstract class ItemSolid extends ItemBoard {
 		pos && bond && bond.to.forEach((d) => {
 			let
 				ic = this.container.get(d.id),
-				p = Point.plus(this.p, this.rotation ? pos.rot : pos).round();
+				p = Point.plus(this.p, this.rotation ? pos.rot : pos);
 			ic && ic.setNode(d.ndx, p)	//no transform
 		});
 		return this;
@@ -178,6 +178,6 @@ export default abstract class ItemSolid extends ItemBoard {
 	public getNodeRealXY(node: number): Point {
 		let
 			pos = this.getNode(node);
-		return pos ? Point.plus(this.p, this.rotation ? pos.rot : pos).round() : <any>null;
+		return pos ? Point.plus(this.p, this.rotation ? pos.rot : pos) : <any>null;
 	}
 }

@@ -1,12 +1,15 @@
 import { IPoint, ISize } from './interfaces';
+/**
+ * @description a 2 dimension integer point class
+ */
 export default class Point implements IPoint {
     x: number;
     y: number;
     constructor(x: number, y: number);
     distance(p: Point): number;
     clone(): Point;
-    round(): Point;
     add(x: number, y: number): Point;
+    mul(x: number, y: number): Point;
     /**
      * @description returns string of a Point oobject
      * @param options 0 = x,y	1 = parenthesis; 	2 = variables x: x, y: y
@@ -32,7 +35,6 @@ export default class Point implements IPoint {
      * @param value string in the for "x, y"
      */
     static parse(value: string): Point | undefined;
-    static distance(p1: Point, p2: Point): number;
     static scale(v: IPoint, k: number): Point;
     static translateBy(v: IPoint, dx: number, dy: number): Point;
     static times(v: IPoint, scaleX: number, scaleY: number): Point;

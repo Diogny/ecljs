@@ -101,6 +101,13 @@ var Container = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    /**
+     * @description sets the container modified flag, but doesn't rise a modified event to parent board
+     * @param value modified value
+     */
+    Container.prototype.setModified = function (value) {
+        this.__s.modified = value;
+    };
     Container.prototype.defaults = function () {
         return {
             name: "",

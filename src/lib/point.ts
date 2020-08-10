@@ -4,11 +4,19 @@
 import { IPoint, ISize } from './interfaces';
 import { round, isNumeric } from './dab';
 
+/**
+ * @description a 2 dimension integer point class
+ */
 export default class Point implements IPoint {
+	x: number;
+	y: number;
 
-	constructor(public x: number, public y: number) { }
+	constructor(x: number, y: number) {
+		this.x = Math.round(x);
+		this.y = Math.round(y)
+	}
 
-	public distance(p: Point) {
+	public distance(p: Point): number {
 		var dx = this.x - p.x;
 		var dy = this.y - p.y;
 		return Math.sqrt(dx * dx + dy * dy);
@@ -16,17 +24,9 @@ export default class Point implements IPoint {
 
 	public clone(): Point { return new Point(this.x, this.y) }
 
-	public round(): Point {
-		this.x = Math.round(this.x);
-		this.y = Math.round(this.y);
-		return this
-	}
+	public add(x: number, y: number): Point { return new Point(this.x + x, this.y + y) }
 
-	public add(x: number, y: number): Point {
-		this.x += Math.round(x);
-		this.y += Math.round(y);
-		return this
-	}
+	public mul(x: number, y: number): Point { return new Point(this.x * x, this.y * y) }
 
 	/**
 	 * @description returns string of a Point oobject
@@ -84,17 +84,13 @@ export default class Point implements IPoint {
 	 * @description parse an string into an (x,y) Point
 	 * @param value string in the for "x, y"
 	 */
-	static parse(value: string): Point | undefined{
+	static parse(value: string): Point | undefined {
 		let
 			arr = value.split(",");
 		if (arr.length == 2 && isNumeric(arr[0]) && isNumeric(arr[1])) {
 			return new Point(parseInt(arr[0]), parseInt(arr[1]));
 		}
 		//invalid point
-	}
-
-	static distance(p1: Point, p2: Point) {
-		return p1.distance(p2)
 	}
 
 	static scale(v: IPoint, k: number): Point { return new Point(k * v.x, k * v.y) }

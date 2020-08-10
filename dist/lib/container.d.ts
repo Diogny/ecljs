@@ -36,6 +36,11 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     get(id: string): T | Wire | undefined;
     get modified(): boolean;
     set modified(value: boolean);
+    /**
+     * @description sets the container modified flag, but doesn't rise a modified event to parent board
+     * @param value modified value
+     */
+    setModified(value: boolean): void;
     constructor(name: string);
     defaults(): IContainerProperties<T>;
     root(name: string): IBaseComponent | undefined;

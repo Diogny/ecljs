@@ -52,6 +52,14 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		this.registered && (this.board.modified = true)
 	}
 
+	/**
+	 * @description sets the container modified flag, but doesn't rise a modified event to parent board
+	 * @param value modified value
+	 */
+	public setModified(value: boolean) {
+		this.__s.modified = value;
+	}
+
 	constructor(name: string) {
 		super({
 			name: name

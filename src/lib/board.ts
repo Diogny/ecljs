@@ -28,25 +28,18 @@ export default class Board extends Base {
 
 	get zoom(): number { return this.__s.zoom }
 	set zoom(value: number) {
-		if (this.zoom != value && Board.validZoom(value)) {
+		if (!isNaN(value) && this.zoom != value) {
 			this.__s.zoom = value;
 			this.modified = true;
 			this.__s.onZoom && this.__s.onZoom(value)
 		}
 	}
 
-	public get modified(): boolean {
-		//check for any change in containers
-		if (!this.__s.modified && this.containers.some(c => c.modified))
-			this.__s.modified = true;
-		return this.__s.modified
-	}
+	public get modified(): boolean { return this.__s.modified }
 	public set modified(value: boolean) {
-		//trying to set to false with containers modified, is overrided by true
-		// all containers must have modified == false, to go through this
-		if (!value && this.containers.some(c => c.modified)) {
-			value = true
-		}
+		//brings uniformity to all containers
+		this.containers
+			.forEach(c => c.setModified(value));
 		this.__s.modified = value;
 		this.__s.onModified && this.__s.onModified(value);
 	}
@@ -55,8 +48,8 @@ export default class Board extends Base {
 		super(options);
 		if (options.viewPoint) {
 			//panning
-			this.viewBox.x = options.viewPoint.x;
-			this.viewBox.y = options.viewPoint.y
+			this.viewBox.x = options.viewPoint.x | 0;
+			this.viewBox.y = options.viewPoint.y | 0
 		}
 		let
 			names = this.containers.map(c => {
@@ -111,18 +104,5 @@ export default class Board extends Base {
 		}
 	}
 
-	public static get zoomMultipliers(): number[] {
-		return Array.from([8, 4, 2, 1, 0.75, 0.5, 0.33, 0.25, 0.166, 0.125]);
-	}
 
-	public static get zoomFactors(): string[] {
-		return Array.from(["1/8X", "1/4X", "1/2X", "1X", "1 1/2X", "2X", "3X", "4X", "6X", "8X"]);
-	}
-
-	public static validZoom(zoom: number): boolean {
-		return !(
-			isNaN(zoom)
-			|| !Board.zoomMultipliers.some(z => z == zoom)
-		)
-	}
 }

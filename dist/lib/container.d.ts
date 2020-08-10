@@ -32,6 +32,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     get all(): (T | Wire)[];
     get empty(): boolean;
     get size(): number;
+    get registered(): boolean;
     get(id: string): T | Wire | undefined;
     get modified(): boolean;
     set modified(value: boolean);

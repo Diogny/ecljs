@@ -38,6 +38,8 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	get empty(): boolean { return !(this.wireMap.size || this.itemMap.size) }
 	get size(): number { return this.itemMap.size + this.wireMap.size }
 
+	get registered(): boolean { return this.board != undefined }
+
 	public get(id: string): T | Wire | undefined {
 		return this.itemMap.get(id)?.t || this.wireMap.get(id)?.t
 	}
@@ -47,7 +49,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		if (value == this.modified)
 			return;
 		this.__s.modified = value;
-		this.board.modified = true
+		this.registered && (this.board.modified = true)
 	}
 
 	constructor(name: string) {

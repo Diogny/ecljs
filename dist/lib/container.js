@@ -81,6 +81,11 @@ var Container = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Container.prototype, "registered", {
+        get: function () { return this.board != undefined; },
+        enumerable: false,
+        configurable: true
+    });
     Container.prototype.get = function (id) {
         var _a, _b;
         return ((_a = this.itemMap.get(id)) === null || _a === void 0 ? void 0 : _a.t) || ((_b = this.wireMap.get(id)) === null || _b === void 0 ? void 0 : _b.t);
@@ -91,7 +96,7 @@ var Container = /** @class */ (function (_super) {
             if (value == this.modified)
                 return;
             this.__s.modified = value;
-            this.board.modified = true;
+            this.registered && (this.board.modified = true);
         },
         enumerable: false,
         configurable: true

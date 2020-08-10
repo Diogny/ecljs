@@ -5,7 +5,7 @@ import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 import Comp from "./components";
-import { Board } from "src";
+import Board from "./board";
 
 export default abstract class Container<T extends ItemBoard> extends Base {
 

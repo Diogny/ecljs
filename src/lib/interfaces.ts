@@ -54,6 +54,7 @@ export abstract class Base implements IBaseSettings {
 }
 
 export interface IBoardOptions {
+	version?: string;
 	name: string;
 	description?: string;
 	filePath?: string;

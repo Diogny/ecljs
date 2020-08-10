@@ -3,7 +3,7 @@ import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
-import { Board } from "src";
+import Board from "./board";
 export default abstract class Container<T extends ItemBoard> extends Base {
     protected __s: IContainerProperties<T>;
     get name(): string;

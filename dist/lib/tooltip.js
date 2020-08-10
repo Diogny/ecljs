@@ -23,7 +23,7 @@ var Tooltip = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Tooltip.prototype, "borderRadius", {
-        get: function () { return this.settings.borderRadius; },
+        get: function () { return this.__s.borderRadius; },
         enumerable: false,
         configurable: true
     });
@@ -53,7 +53,7 @@ var Tooltip = /** @class */ (function (_super) {
         return this;
     };
     Tooltip.prototype.setBorderRadius = function (value) {
-        this.settings.borderRadius = value | 0;
+        this.__s.borderRadius = value | 0;
         return this.build();
     };
     Tooltip.prototype.build = function () {
@@ -95,8 +95,8 @@ var Tooltip = /** @class */ (function (_super) {
         this.text = txtArray.join('\r\n');
         return this.build();
     };
-    Tooltip.prototype.propertyDefaults = function () {
-        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
+    Tooltip.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
             name: "tooltip",
             class: "tooltip",
             borderRadius: 4

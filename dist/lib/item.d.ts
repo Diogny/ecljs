@@ -1,7 +1,7 @@
-import { IType, ISize, IItemBaseOptions, Type, BaseSettings } from "./interfaces";
+import { IType, ISize, IItemBaseOptions, Type, Base } from "./interfaces";
 import Point from "./point";
-export default abstract class Item extends BaseSettings implements IType {
-    protected settings: IItemBaseOptions;
+export default abstract class Item extends Base implements IType {
+    protected __s: IItemBaseOptions;
     abstract get type(): Type;
     get name(): string;
     get id(): string;
@@ -17,5 +17,5 @@ export default abstract class Item extends BaseSettings implements IType {
     move(x: number, y: number): Item;
     movePoint(p: Point): Item;
     translate(dx: number, dy: number): Item;
-    propertyDefaults(): IItemBaseOptions;
+    defaults(): IItemBaseOptions;
 }

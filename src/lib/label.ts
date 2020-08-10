@@ -7,7 +7,7 @@ export default class Label extends ItemBase {
 
 	get type(): Type { return Type.LABEL }
 
-	protected settings: ITooltipSettings;
+	protected __s: ITooltipSettings;
 	protected t: SVGTextElement;
 	public text: string;
 
@@ -19,7 +19,7 @@ export default class Label extends ItemBase {
 		})
 	}
 
-	get fontSize(): number { return this.settings.fontSize }
+	get fontSize(): number { return this.__s.fontSize }
 
 	constructor(options: ILabelText) {
 		options.visible = false;
@@ -36,7 +36,7 @@ export default class Label extends ItemBase {
 	}
 
 	public setFontSize(value: number): Label {
-		this.settings.fontSize = value;
+		this.__s.fontSize = value;
 		return this.build()
 	}
 
@@ -54,8 +54,8 @@ export default class Label extends ItemBase {
 		return this.build()
 	}
 
-	public propertyDefaults(): ILabelText {
-		return extend(super.propertyDefaults(), {
+	public defaults(): ILabelText {
+		return extend(super.defaults(), {
 			name: "label",
 			class: "label",
 			fontSize: 50

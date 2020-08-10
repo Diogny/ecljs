@@ -9,43 +9,52 @@ var wire_1 = tslib_1.__importDefault(require("./wire"));
 var components_1 = tslib_1.__importDefault(require("./components"));
 var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
-    function Container(name) {
+    function Container(board, name) {
         return _super.call(this, {
-            name: name
+            name: name,
+            board: board
         }) || this;
     }
     Object.defineProperty(Container.prototype, "name", {
-        get: function () { return this.settings.name; },
-        set: function (value) { this.settings.name = value; },
+        get: function () { return this.__s.name; },
+        set: function (value) {
+            this.__s.name = value;
+            this.modified = true;
+        },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Container.prototype, "uniqueCounters", {
-        get: function () { return this.settings.uniqueCounters; },
+    Object.defineProperty(Container.prototype, "board", {
+        get: function () { return this.__s.board; },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Container.prototype, "componentTemplates", {
-        get: function () { return this.settings.componentTemplates; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Container.prototype, "itemMap", {
-        get: function () { return this.settings.itemMap; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Container.prototype, "wireMap", {
-        get: function () { return this.settings.wireMap; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Container.prototype, "selected", {
-        get: function () { return this.settings.selected; },
+    Object.defineProperty(Container.prototype, "counters", {
+        get: function () { return this.__s.counters; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "components", {
+        get: function () { return this.__s.components; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Container.prototype, "itemMap", {
+        get: function () { return this.__s.itemMap; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Container.prototype, "wireMap", {
+        get: function () { return this.__s.wireMap; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Container.prototype, "selected", {
+        get: function () { return this.__s.selected; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Container.prototype, "items", {
         get: function () { return Array.from(this.itemMap.values()).map(function (item) { return item.t; }); },
         enumerable: false,
         configurable: true
@@ -56,7 +65,7 @@ var Container = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Container.prototype, "all", {
-        get: function () { return this.components.concat(this.wires); },
+        get: function () { return this.items.concat(this.wires); },
         enumerable: false,
         configurable: true
     });
@@ -75,37 +84,39 @@ var Container = /** @class */ (function (_super) {
         return ((_a = this.itemMap.get(id)) === null || _a === void 0 ? void 0 : _a.t) || ((_b = this.wireMap.get(id)) === null || _b === void 0 ? void 0 : _b.t);
     };
     Object.defineProperty(Container.prototype, "modified", {
-        get: function () { return this.settings.modified; },
+        get: function () { return this.__s.modified; },
         set: function (value) {
             if (value == this.modified)
                 return;
-            this.settings.modified = value;
+            this.__s.modified = value;
+            this.board.modified = true;
         },
         enumerable: false,
         configurable: true
     });
-    Container.prototype.propertyDefaults = function () {
+    Container.prototype.defaults = function () {
         return {
             name: "",
-            uniqueCounters: {},
-            componentTemplates: new Map(),
+            board: void 0,
+            counters: {},
+            components: new Map(),
             itemMap: new Map(),
             wireMap: new Map(),
             selected: [],
             modified: false,
         };
     };
-    Container.prototype.rootComponent = function (name) {
-        return this.componentTemplates.get(name);
+    Container.prototype.root = function (name) {
+        return this.components.get(name);
     };
     Container.prototype.hasComponent = function (id) { return this.itemMap.has(id) || this.wireMap.has(id); };
     Container.prototype.selectAll = function (value) {
-        return this.settings.selected = this.all
+        return this.__s.selected = this.all
             .filter(function (comp) { return (comp.select(value), value); });
     };
     Container.prototype.toggleSelect = function (comp) {
         comp.select(!comp.selected);
-        this.settings.selected = this.all.filter(function (c) { return c.selected; });
+        this.__s.selected = this.all.filter(function (c) { return c.selected; });
     };
     Container.prototype.selectThis = function (comp) {
         return comp
@@ -113,10 +124,10 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.unselectThis = function (comp) {
         comp.select(false);
-        this.settings.selected = this.all.filter(function (c) { return c.selected; });
+        this.__s.selected = this.all.filter(function (c) { return c.selected; });
     };
     Container.prototype.selectRect = function (rect) {
-        (this.settings.selected = this.all.filter(function (item) {
+        (this.__s.selected = this.all.filter(function (item) {
             return rect.intersect(item.rect());
         }))
             .forEach(function (item) { return item.select(true); });
@@ -124,7 +135,7 @@ var Container = /** @class */ (function (_super) {
     Container.prototype.deleteSelected = function () {
         var _this = this;
         var deletedCount = 0;
-        this.settings.selected = this.selected.filter(function (c) {
+        this.__s.selected = this.selected.filter(function (c) {
             if (_this.delete(c)) {
                 deletedCount++;
                 return false;
@@ -135,10 +146,10 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.destroy = function () {
         var _this = this;
-        this.components.forEach(function (ec) { return _this.delete(ec); });
+        this.items.forEach(function (ec) { return _this.delete(ec); });
         this.wires.forEach(function (wire) { return _this.delete(wire); });
         //maps should be empty here
-        this.settings = void 0;
+        this.__s = void 0;
     };
     Container.prototype.boundariesRect = function () {
         var array = this.all, first = array.shift(), r = first ? first.rect() : rect_1.default.empty();
@@ -177,7 +188,8 @@ var Container = /** @class */ (function (_super) {
         if (!this.hasComponent(thisObj.id) || !this.hasComponent(ic.id))
             return false;
         return this.bondSingle(thisObj, thisNode, ic, icNode, true)
-            && this.bondSingle(ic, icNode, thisObj, thisNode, false);
+            && this.bondSingle(ic, icNode, thisObj, thisNode, false)
+            && (this.modified = true);
     };
     Container.prototype.bondSingle = function (thisObj, thisNode, ic, icNode, origin) {
         var item = getItem(this, thisObj.id), entry = item && item.b[thisNode];
@@ -253,7 +265,7 @@ var Container = /** @class */ (function (_super) {
         }
     };
     return Container;
-}(interfaces_1.BaseSettings));
+}(interfaces_1.Base));
 exports.default = Container;
 function unbond(container, id, node, toId, origin) {
     var item = getItem(container, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
@@ -263,13 +275,14 @@ function unbond(container, id, node, toId, origin) {
         if (origin) {
             unbond(container, toId, b.ndx, id, false);
         }
+        this.modified = true;
     }
 }
 function getItem(container, id) {
     return container.itemMap.get(id) || container.wireMap.get(id);
 }
 function createBoardItem(container, options) {
-    var regex = /(?:{([^}]+?)})+/g, name = options.name || "", base = container.rootComponent(name), newComp = !base, item = void 0;
+    var regex = /(?:{([^}]+?)})+/g, name = options.name || "", base = container.root(name), newComp = !base, item = void 0;
     !base && (base = {
         comp: components_1.default.find(name),
         count: 0
@@ -277,7 +290,7 @@ function createBoardItem(container, options) {
     if (!base.comp)
         throw "unregistered component: " + name;
     newComp
-        && (base.count = base.comp.meta.countStart | 0, container.componentTemplates.set(name, base));
+        && (base.count = base.comp.meta.countStart | 0, container.components.set(name, base));
     options.base = base.comp;
     if (!options.id) {
         options.id = name + "-" + base.count;
@@ -287,7 +300,7 @@ function createBoardItem(container, options) {
             //valid entry points
             switch (name) {
                 case "base": return base;
-                case "Container": return container.uniqueCounters;
+                case "Container": return container.counters;
             }
         }, rootName = arr.shift() || "", rootRef = getRoot(rootName), prop = arr.pop(), isUniqueCounter = function () { return rootName == "Container"; }, result;
         while (rootRef && arr.length)

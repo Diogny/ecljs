@@ -1,18 +1,20 @@
-import { IBaseComponent, IContainerProperties, BaseSettings } from "./interfaces";
+import { IBaseComponent, IContainerProperties, Base } from "./interfaces";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
-export default abstract class Container<T extends ItemBoard> extends BaseSettings {
+import { Board } from "src";
+export default abstract class Container<T extends ItemBoard> extends Base {
+    protected __s: IContainerProperties<T>;
     get name(): string;
     set name(value: string);
+    get board(): Board;
     abstract get library(): string;
-    abstract get directionalWires(): boolean;
-    protected settings: IContainerProperties<T>;
-    get uniqueCounters(): {
+    abstract get directional(): boolean;
+    get counters(): {
         [x: string]: any;
     };
-    get componentTemplates(): Map<string, IBaseComponent>;
+    get components(): Map<string, IBaseComponent>;
     get itemMap(): Map<string, {
         t: T;
         b: Bond[];
@@ -24,7 +26,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
         c: number;
     }>;
     get selected(): (T | Wire)[];
-    get components(): T[];
+    get items(): T[];
     get wires(): Wire[];
     get all(): (T | Wire)[];
     get empty(): boolean;
@@ -32,9 +34,9 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
     get(id: string): T | Wire | undefined;
     get modified(): boolean;
     set modified(value: boolean);
-    constructor(name: string);
-    propertyDefaults(): IContainerProperties<T>;
-    rootComponent(name: string): IBaseComponent | undefined;
+    constructor(board: Board, name: string);
+    defaults(): IContainerProperties<T>;
+    root(name: string): IBaseComponent | undefined;
     hasComponent(id: string): boolean;
     selectAll(value: boolean): (T | Wire)[];
     toggleSelect(comp: T): void;

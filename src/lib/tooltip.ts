@@ -5,12 +5,12 @@ import Label from './label';
 
 export default class Tooltip extends Label {
 
-	protected settings: ITooltipSettings;
+	protected __s: ITooltipSettings;
 	private svgRect: SVGRectElement;
 	private gap: number;
 	get type(): Type { return Type.TOOLTIP }
 
-	get borderRadius(): number { return this.settings.borderRadius }
+	get borderRadius(): number { return this.__s.borderRadius }
 
 	/*	DOESN'T WORK
 	set visible(value: boolean) {
@@ -47,7 +47,7 @@ export default class Tooltip extends Label {
 	}
 
 	public setBorderRadius(value: number): Tooltip {
-		this.settings.borderRadius = value | 0;
+		this.__s.borderRadius = value | 0;
 		return this.build()
 	}
 
@@ -97,8 +97,8 @@ export default class Tooltip extends Label {
 		return this.build()
 	}
 
-	public propertyDefaults(): ITooltipText {
-		return extend(super.propertyDefaults(), {
+	public defaults(): ITooltipText {
+		return extend(super.defaults(), {
 			name: "tooltip",
 			class: "tooltip",
 			borderRadius: 4

@@ -33,7 +33,7 @@ var Label = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Label.prototype, "fontSize", {
-        get: function () { return this.settings.fontSize; },
+        get: function () { return this.__s.fontSize; },
         enumerable: false,
         configurable: true
     });
@@ -43,7 +43,7 @@ var Label = /** @class */ (function (_super) {
         return this;
     };
     Label.prototype.setFontSize = function (value) {
-        this.settings.fontSize = value;
+        this.__s.fontSize = value;
         return this.build();
     };
     Label.prototype.build = function () {
@@ -58,8 +58,8 @@ var Label = /** @class */ (function (_super) {
         this.t.innerHTML = this.text = value;
         return this.build();
     };
-    Label.prototype.propertyDefaults = function () {
-        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
+    Label.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
             name: "label",
             class: "label",
             fontSize: 50

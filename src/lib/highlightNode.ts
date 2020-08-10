@@ -6,14 +6,14 @@ import ItemBase from "./itemsBase";
 
 export default class HighlightNode extends ItemBase {
 
-	protected settings: IHighlighNodeSettings;
+	protected __s: IHighlighNodeSettings;
 	protected mainNode: SVGCircleElement;
 
 	get type(): Type { return Type.HIGHLIGHT }
-	get radius(): number { return this.settings.radius }
+	get radius(): number { return this.__s.radius }
 
-	get selectedId(): string { return this.settings.selectedId }
-	get selectedNode(): number { return this.settings.selectedNode }
+	get selectedId(): string { return this.__s.selectedId }
+	get selectedNode(): number { return this.__s.selectedNode }
 
 	constructor(options: IHighlighNodeSettings) {
 		//override
@@ -30,7 +30,7 @@ export default class HighlightNode extends ItemBase {
 	}
 
 	public setRadius(value: number): HighlightNode {
-		this.mainNode.setAttribute("r", <any>(this.settings.radius = value <= 0 ? 5 : value));
+		this.mainNode.setAttribute("r", <any>(this.__s.radius = value <= 0 ? 5 : value));
 		return this;
 	}
 
@@ -48,9 +48,9 @@ export default class HighlightNode extends ItemBase {
 			cx: this.x,
 			cy: this.y,
 			//"node-x": <any>node,
-			"node": <any>(this.settings.selectedNode = node)
+			"node": <any>(this.__s.selectedNode = node)
 		});
-		this.settings.selectedId = id;
+		this.__s.selectedId = id;
 		this.g.classList.remove("hide");
 		return this;
 	}
@@ -71,8 +71,8 @@ export default class HighlightNode extends ItemBase {
 		return this
 	}
 
-	public propertyDefaults(): IHighlighNodeSettings {
-		return extend(super.propertyDefaults(), {
+	public defaults(): IHighlighNodeSettings {
+		return extend(super.defaults(), {
 			name: "h-node",
 			class: "h-node",
 			visible: false,

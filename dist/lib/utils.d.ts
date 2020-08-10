@@ -1,6 +1,9 @@
 export declare const templatesUrl: (url: string, obj?: {
     [key: string]: any;
 } | undefined) => Promise<any>;
+export declare const DOMTemplates: () => {
+    [key: string]: any;
+};
 export declare const templatesDOM: (query: string | string[]) => Promise<{
     [key: string]: any;
 }>;

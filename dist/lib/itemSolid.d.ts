@@ -4,7 +4,7 @@ import Point from "./point";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
 export default abstract class ItemSolid extends ItemBoard {
-    protected settings: IItemSolidProperties;
+    protected __s: IItemSolidProperties;
     get last(): number;
     get count(): number;
     constructor(container: Container<ItemBoard>, options: IItemSolidOptions);
@@ -13,7 +13,7 @@ export default abstract class ItemSolid extends ItemBoard {
     move(x: number, y: number): ItemSolid;
     rect(): Rect;
     valid(node: number): boolean;
-    nodeHighlightable(name: number): boolean;
+    hghlightable(name: number): boolean;
     findNode(p: Point): number;
     overNode(p: IPoint, ln: number): number;
     nodeRefresh(node: number): ItemSolid;

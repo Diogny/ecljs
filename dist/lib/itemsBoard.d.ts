@@ -5,7 +5,7 @@ import ItemBase from './itemsBase';
 import Container from './container';
 export default abstract class ItemBoard extends ItemBase {
     container: Container<ItemBoard>;
-    protected settings: IItemBoardProperties;
+    protected __s: IItemBoardProperties;
     get onProp(): Function;
     get selected(): boolean;
     get bonds(): Bond[] | undefined;
@@ -21,7 +21,7 @@ export default abstract class ItemBoard extends ItemBase {
     abstract setNode(node: number, p: IPoint): ItemBoard;
     abstract overNode(p: IPoint, ln: number): number;
     abstract findNode(p: Point): number;
-    abstract nodeHighlightable(node: number): boolean;
+    abstract hghlightable(node: number): boolean;
     constructor(container: Container<ItemBoard>, options: IItemBaseOptions);
     select(value: boolean): ItemBoard;
     move(x: number, y: number): ItemBoard;
@@ -31,5 +31,5 @@ export default abstract class ItemBoard extends ItemBase {
     unbond(node: number, id: string): void;
     unbondNode(node: number): void;
     disconnect(): void;
-    propertyDefaults(): IItemBoardProperties;
+    defaults(): IItemBoardProperties;
 }

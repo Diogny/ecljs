@@ -14,21 +14,21 @@ var ItemBase = /** @class */ (function (_super) {
         var base = components_1.default.find(_this.name);
         if (!base)
             throw "cannot create component";
-        _this.settings.props = dab_1.obj(base.props);
+        _this.__s.props = dab_1.obj(base.props);
         var classArr = dab_1.isStr(_this.class) ? _this.class.split(' ') : [];
-        !_this.settings.visible && (classArr.push("hide"));
-        _this.settings.g = utils_1.tag("g", _this.settings.id, {
-            class: (_this.settings.class = classArr.join(' '))
+        !_this.__s.visible && (classArr.push("hide"));
+        _this.__s.g = utils_1.tag("g", _this.__s.id, {
+            class: (_this.__s.class = classArr.join(' '))
         });
         return _this;
     }
     Object.defineProperty(ItemBase.prototype, "base", {
-        get: function () { return this.settings.base; },
+        get: function () { return this.__s.base; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ItemBase.prototype, "g", {
-        get: function () { return this.settings.g; },
+        get: function () { return this.__s.g; },
         enumerable: false,
         configurable: true
     });
@@ -70,7 +70,7 @@ var ItemBase = /** @class */ (function (_super) {
     };
     ItemBase.prototype.afterDOMinserted = function () { };
     ItemBase.prototype.prop = function (propName) {
-        return this.settings.props[propName];
+        return this.__s.props[propName];
     };
     return ItemBase;
 }(item_1.default));

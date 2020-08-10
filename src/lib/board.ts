@@ -1,46 +1,54 @@
-import { IBoardProperties, BaseSettings, IBoardOptions } from "./interfaces";
+import { IBoardProperties, Base, IBoardOptions } from "./interfaces";
 import Rect from "./rect";
 import Point from "./point";
 import Container from "./container";
-import FlowchartComponent from "./flowchartComponent";
+import FlowchartComp from "./flowchartComp";
 import EC from "./ec";
 import { unique } from "./dab";
 
-export default class Board extends BaseSettings {
+export default class Board extends Base {
 
-	protected settings: IBoardProperties;
+	protected __s: IBoardProperties;
 
-	get version(): string { return this.settings.version }
-	get name(): string { return this.settings.name }
-	set name(value: string) { this.settings.name = value }
-	get description(): string { return this.settings.description }
-	set description(value: string) { this.settings.description = value }
-	get filePath(): string { return this.settings.filePath }
-	get viewBox(): Rect { return this.settings.viewBox }
-	get containers(): Container<EC | FlowchartComponent>[] { return this.settings.containers }
+	//later find a way to detect a change in any property:  "name" "description"  "zoom"
+	get version(): string { return this.__s.version }
+	get name(): string { return this.__s.name }
+	set name(value: string) {
+		this.__s.name = value
+	}
+	get description(): string { return this.__s.description }
+	set description(value: string) {
+		this.__s.description = value
+	}
+	get filePath(): string { return this.__s.filePath }
+	get viewBox(): Rect { return this.__s.viewBox }
+	get containers(): Container<EC | FlowchartComp>[] { return this.__s.containers }
 
 	public static defaultZoom: number = 1;	// 1X
 
-	get zoom(): number { return this.settings.zoom }
+	get zoom(): number { return this.__s.zoom }
 	set zoom(value: number) {
 		if (this.zoom != value && Board.validZoom(value)) {
-			this.settings.zoom = value;
-			this.settings.onZoom && this.settings.onZoom(value)
+			this.__s.zoom = value;
+			this.modified = true;
+			this.__s.onZoom && this.__s.onZoom(value)
 		}
 	}
 
 	public get modified(): boolean {
 		//check for any change in containers
-		if (!this.settings.modified && this.containers.some(c => c.modified))
-			this.settings.modified = true;
-		return this.settings.modified
+		if (!this.__s.modified && this.containers.some(c => c.modified))
+			this.__s.modified = true;
+		return this.__s.modified
 	}
 	public set modified(value: boolean) {
 		//trying to set to false with containers modified, is overrided by true
+		// all containers must have modified == false, to go through this
 		if (!value && this.containers.some(c => c.modified)) {
 			value = true
 		}
-		this.settings.modified = value;
+		this.__s.modified = value;
+		this.__s.onModified && this.__s.onModified(value);
 	}
 
 	constructor(options: IBoardOptions) {
@@ -56,10 +64,11 @@ export default class Board extends BaseSettings {
 			throw `duplicated container names`;
 	}
 
-	public add(container: Container<EC | FlowchartComponent>) {
+	public add(container: Container<EC | FlowchartComp>) {
 		if (this.containers.some(c => c.name == container.name))
 			throw `duplicated container name: ${container.name}`;
-		this.containers.push(container)
+		this.containers.push(container);
+		this.modified = true;
 	}
 
 	public center(): Point {
@@ -69,21 +78,21 @@ export default class Board extends BaseSettings {
 		)
 	}
 
-	public get(name: string): Container<EC | FlowchartComponent> | undefined {
+	public get(name: string): Container<EC | FlowchartComp> | undefined {
 		return this.containers.find(c => c.name == name)
 	}
 
-	public libraries(library: string): Container<EC | FlowchartComponent>[] {
+	public libraries(library: string): Container<EC | FlowchartComp>[] {
 		return this.containers.filter(c => c.library == library)
 	}
 
 	public destroy() {
 		this.containers
 			.forEach(c => c.destroy());
-		this.settings = <any>void 0;
+		this.__s = <any>void 0;
 	}
 
-	public propertyDefaults(): IBoardProperties {
+	public defaults(): IBoardProperties {
 		return <IBoardProperties>{
 			version: "1.1.5",
 			name: "",
@@ -93,7 +102,8 @@ export default class Board extends BaseSettings {
 			zoom: 0,		//this way we must set zoom after creation to trigger event, 0 is an invalid zoom
 			containers: [],
 			modified: false,
-			onZoom: <any>void 0
+			onZoom: void 0,
+			onModified: void 0
 		}
 	}
 

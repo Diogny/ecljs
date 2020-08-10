@@ -14,8 +14,8 @@ var ItemSolid = /** @class */ (function (_super) {
         var _this = _super.call(this, container, options) || this;
         _this.g.innerHTML = _this.base.data;
         //I've to set new properties always, because super just copy defaults()
-        //later override method propertyDefaults()
-        _this.settings.rotation = point_1.default.validateRotation(options.rotation);
+        //later override method defaults()
+        _this.__s.rotation = point_1.default.validateRotation(options.rotation);
         var createText = function (attr, text) {
             var svgText = utils_1.tag("text", "", attr);
             return svgText.innerHTML = text, svgText;
@@ -43,14 +43,14 @@ var ItemSolid = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(ItemSolid.prototype, "rotation", {
-        get: function () { return this.settings.rotation; },
+        get: function () { return this.__s.rotation; },
         enumerable: false,
         configurable: true
     });
     ItemSolid.prototype.rotate = function (value) {
-        if (this.settings.rotation != (value = point_1.default.validateRotation(value))) {
+        if (this.__s.rotation != (value = point_1.default.validateRotation(value))) {
             //set new value
-            this.settings.rotation = value;
+            this.__s.rotation = value;
             //trigger property changed if applicable
             this.onProp && this.onProp({
                 id: "#" + this.id,
@@ -78,7 +78,7 @@ var ItemSolid = /** @class */ (function (_super) {
     ItemSolid.prototype.valid = function (node) {
         return !!this.getNode(node);
     };
-    ItemSolid.prototype.nodeHighlightable = function (name) {
+    ItemSolid.prototype.hghlightable = function (name) {
         return this.valid(name); //for now all valid nodes are highlightables
     };
     ItemSolid.prototype.findNode = function (p) {

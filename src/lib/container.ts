@@ -1,31 +1,36 @@
-import { Type, IBaseComponent, IBondLink, IContainerProperties, BaseSettings } from "./interfaces";
+import { Type, IBaseComponent, IBondLink, IContainerProperties, Base } from "./interfaces";
 import { isNum } from "./dab";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 import Comp from "./components";
+import { Board } from "src";
 
-export default abstract class Container<T extends ItemBoard> extends BaseSettings {
+export default abstract class Container<T extends ItemBoard> extends Base {
 
-	get name(): string { return this.settings.name }
-	set name(value: string) { this.settings.name = value }
+	protected __s: IContainerProperties<T>;
+
+	get name(): string { return this.__s.name }
+	set name(value: string) {
+		this.__s.name = value;
+		this.modified = true
+	}
+	get board(): Board { return this.__s.board }
 	abstract get library(): string;
-	abstract get directionalWires(): boolean;
+	abstract get directional(): boolean;
 
-	protected settings: IContainerProperties<T>;
+	get counters(): { [x: string]: any; } { return this.__s.counters }
+	get components(): Map<string, IBaseComponent> { return this.__s.components }
 
-	get uniqueCounters(): { [x: string]: any; } { return this.settings.uniqueCounters }
-	get componentTemplates(): Map<string, IBaseComponent> { return this.settings.componentTemplates }
+	get itemMap(): Map<string, { t: T, b: Bond[], c: number }> { return this.__s.itemMap }
+	get wireMap(): Map<string, { t: Wire, b: Bond[], c: number }> { return this.__s.wireMap }
 
-	get itemMap(): Map<string, { t: T, b: Bond[], c: number }> { return this.settings.itemMap }
-	get wireMap(): Map<string, { t: Wire, b: Bond[], c: number }> { return this.settings.wireMap }
+	get selected(): (T | Wire)[] { return this.__s.selected }
 
-	get selected(): (T | Wire)[] { return this.settings.selected }
-
-	get components(): T[] { return Array.from(this.itemMap.values()).map(item => item.t) }
+	get items(): T[] { return Array.from(this.itemMap.values()).map(item => item.t) }
 	get wires(): Wire[] { return Array.from(this.wireMap.values()).map(item => item.t) }
-	get all(): (T | Wire)[] { return (this.components as (T | Wire)[]).concat(this.wires) }
+	get all(): (T | Wire)[] { return (this.items as (T | Wire)[]).concat(this.wires) }
 
 	get empty(): boolean { return !(this.wireMap.size || this.itemMap.size) }
 	get size(): number { return this.itemMap.size + this.wireMap.size }
@@ -34,24 +39,27 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		return this.itemMap.get(id)?.t || this.wireMap.get(id)?.t
 	}
 
-	get modified(): boolean { return this.settings.modified }
+	get modified(): boolean { return this.__s.modified }
 	set modified(value: boolean) {
 		if (value == this.modified)
 			return;
-		this.settings.modified = value;
+		this.__s.modified = value;
+		this.board.modified = true
 	}
 
-	constructor(name: string) {
+	constructor(board: Board, name: string) {
 		super({
-			name: name
-		});
+			name: name,
+			board: board
+		})
 	}
 
-	public propertyDefaults(): IContainerProperties<T> {
+	public defaults(): IContainerProperties<T> {
 		return <IContainerProperties<T>>{
 			name: "",
-			uniqueCounters: {},
-			componentTemplates: new Map(),
+			board: <any>void 0,
+			counters: {},
+			components: new Map(),
 			itemMap: new Map(),
 			wireMap: new Map(),
 			selected: [],
@@ -59,20 +67,20 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 		}
 	}
 
-	public rootComponent(name: string): IBaseComponent | undefined {
-		return this.componentTemplates.get(name)
+	public root(name: string): IBaseComponent | undefined {
+		return this.components.get(name)
 	}
 
 	public hasComponent(id: string): boolean { return this.itemMap.has(id) || this.wireMap.has(id); }
 
 	public selectAll(value: boolean): (T | Wire)[] {
-		return this.settings.selected = this.all
+		return this.__s.selected = this.all
 			.filter(comp => (comp.select(value), value))
 	}
 
 	public toggleSelect(comp: T) {
 		comp.select(!comp.selected);
-		this.settings.selected = this.all.filter(c => c.selected);
+		this.__s.selected = this.all.filter(c => c.selected);
 	}
 
 	public selectThis(comp: T | Wire): boolean {
@@ -82,11 +90,11 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 
 	public unselectThis(comp: T) {
 		comp.select(false);
-		this.settings.selected = this.all.filter(c => c.selected);
+		this.__s.selected = this.all.filter(c => c.selected);
 	}
 
 	public selectRect(rect: Rect) {
-		(this.settings.selected = this.all.filter((item) => {
+		(this.__s.selected = this.all.filter((item) => {
 			return rect.intersect(item.rect())
 		}))
 			.forEach(item => item.select(true));
@@ -95,7 +103,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	public deleteSelected(): number {
 		let
 			deletedCount = 0;
-		this.settings.selected = this.selected.filter((c) => {
+		this.__s.selected = this.selected.filter((c) => {
 			if (this.delete(c)) {
 				deletedCount++;
 				return false;
@@ -106,10 +114,10 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 	}
 
 	public destroy() {
-		this.components.forEach(ec => this.delete(ec));
+		this.items.forEach(ec => this.delete(ec));
 		this.wires.forEach(wire => this.delete(wire));
 		//maps should be empty here
-		this.settings = <any>void 0;
+		this.__s = <any>void 0;
 	}
 
 	public boundariesRect(): Rect {
@@ -162,6 +170,7 @@ export default abstract class Container<T extends ItemBoard> extends BaseSetting
 			return false;
 		return this.bondSingle(thisObj, thisNode, ic, icNode, true)
 			&& this.bondSingle(ic, icNode, thisObj, thisNode, false)
+			&& (this.modified = true)
 	}
 
 	protected bondSingle(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean {
@@ -274,6 +283,7 @@ function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: 
 		if (origin) {
 			unbond(container, toId, b.ndx, id, false);
 		}
+		this.modified = true
 	}
 }
 
@@ -286,7 +296,7 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 	let
 		regex = /(?:{([^}]+?)})+/g,
 		name = options.name || "",
-		base = <IBaseComponent>container.rootComponent(name),
+		base = <IBaseComponent>container.root(name),
 		newComp = !base,
 		item: T | Wire = <any>void 0;
 	!base && (base = {
@@ -296,7 +306,7 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 	if (!base.comp)
 		throw `unregistered component: ${name}`;
 	newComp
-		&& (base.count = base.comp.meta.countStart | 0, container.componentTemplates.set(name, base));
+		&& (base.count = base.comp.meta.countStart | 0, container.components.set(name, base));
 	options.base = base.comp;
 	if (!options.id) {
 		options.id = `${name}-${base.count}`;
@@ -310,7 +320,7 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 						//valid entry points
 						switch (name) {
 							case "base": return base;
-							case "Container": return container.uniqueCounters;
+							case "Container": return container.counters;
 						}
 					},
 					rootName = arr.shift() || "",

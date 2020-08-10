@@ -28,22 +28,22 @@ var HighlightNode = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(HighlightNode.prototype, "radius", {
-        get: function () { return this.settings.radius; },
+        get: function () { return this.__s.radius; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(HighlightNode.prototype, "selectedId", {
-        get: function () { return this.settings.selectedId; },
+        get: function () { return this.__s.selectedId; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(HighlightNode.prototype, "selectedNode", {
-        get: function () { return this.settings.selectedNode; },
+        get: function () { return this.__s.selectedNode; },
         enumerable: false,
         configurable: true
     });
     HighlightNode.prototype.setRadius = function (value) {
-        this.mainNode.setAttribute("r", (this.settings.radius = value <= 0 ? 5 : value));
+        this.mainNode.setAttribute("r", (this.__s.radius = value <= 0 ? 5 : value));
         return this;
     };
     HighlightNode.prototype.hide = function () {
@@ -59,9 +59,9 @@ var HighlightNode = /** @class */ (function (_super) {
             cx: this.x,
             cy: this.y,
             //"node-x": <any>node,
-            "node": (this.settings.selectedNode = node)
+            "node": (this.__s.selectedNode = node)
         });
-        this.settings.selectedId = id;
+        this.__s.selectedId = id;
         this.g.classList.remove("hide");
         return this;
     };
@@ -80,8 +80,8 @@ var HighlightNode = /** @class */ (function (_super) {
         });
         return this;
     };
-    HighlightNode.prototype.propertyDefaults = function () {
-        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
+    HighlightNode.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
             name: "h-node",
             class: "h-node",
             visible: false,

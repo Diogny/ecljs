@@ -2,7 +2,7 @@ import { Type, ITooltipSettings, ISize, ILabelText } from "./interfaces";
 import ItemBase from "./itemsBase";
 export default class Label extends ItemBase {
     get type(): Type;
-    protected settings: ITooltipSettings;
+    protected __s: ITooltipSettings;
     protected t: SVGTextElement;
     text: string;
     get size(): ISize;
@@ -12,5 +12,5 @@ export default class Label extends ItemBase {
     setFontSize(value: number): Label;
     protected build(): Label;
     setText(value: string): Label;
-    propertyDefaults(): ILabelText;
+    defaults(): ILabelText;
 }

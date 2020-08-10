@@ -4,7 +4,7 @@ import Point from './point';
 import Item from './item';
 import Comp from './components';
 export default abstract class ItemBase extends Item {
-    protected settings: IItemBaseProperties;
+    protected __s: IItemBaseProperties;
     get base(): Comp;
     get g(): SVGElement;
     get ClientRect(): ISize;

@@ -5,17 +5,17 @@ var interfaces_1 = require("./interfaces");
 var dab_1 = require("./dab");
 var size_1 = tslib_1.__importDefault(require("./size"));
 var itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
-var FlowchartComponent = /** @class */ (function (_super) {
-    tslib_1.__extends(FlowchartComponent, _super);
-    function FlowchartComponent(container, options) {
+var FlowchartComp = /** @class */ (function (_super) {
+    tslib_1.__extends(FlowchartComp, _super);
+    function FlowchartComp(container, options) {
         return _super.call(this, container, options) || this;
     }
-    Object.defineProperty(FlowchartComponent.prototype, "type", {
+    Object.defineProperty(FlowchartComp.prototype, "type", {
         get: function () { return interfaces_1.Type.FLOWCHART; },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(FlowchartComponent.prototype, "size", {
+    Object.defineProperty(FlowchartComp.prototype, "size", {
         get: function () {
             var s = size_1.default.parse(this.prop("size"));
             if (s == undefined)
@@ -30,25 +30,25 @@ var FlowchartComponent = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(FlowchartComponent.prototype, "inputs", {
+    Object.defineProperty(FlowchartComp.prototype, "inputs", {
         get: function () { return this.prop("inputs"); },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(FlowchartComponent.prototype, "outputs", {
+    Object.defineProperty(FlowchartComp.prototype, "outputs", {
         get: function () { return this.prop("outputs"); },
         enumerable: false,
         configurable: true
     });
-    FlowchartComponent.prototype.setNode = function (node, p) {
+    FlowchartComp.prototype.setNode = function (node, p) {
         //Some code tries to call this, investigate later...
         throw 'somebody called me, not good!';
     };
-    FlowchartComponent.prototype.propertyDefaults = function () {
-        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
+    FlowchartComp.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
             directional: true,
         });
     };
-    return FlowchartComponent;
+    return FlowchartComp;
 }(itemSolid_1.default));
-exports.default = FlowchartComponent;
+exports.default = FlowchartComp;

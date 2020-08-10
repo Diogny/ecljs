@@ -6,18 +6,18 @@ import Point from "./point";
 
 export default class BoardCircle implements IHighlightable {
 
-	protected settings: IHighlightable;
+	protected __s: IHighlightable;
 
-	get visible(): boolean { return this.settings.visible }
-	get p(): Point { return this.settings.p }
-	get nodeName(): string { return this.settings.nodeName }
-	get nodeValue(): number { return this.settings.nodeValue }
-	get radius(): number { return this.settings.radius }
-	get g(): SVGCircleElement { return this.settings.g }
+	get visible(): boolean { return this.__s.visible }
+	get p(): Point { return this.__s.p }
+	get nodeName(): string { return this.__s.nodeName }
+	get nodeValue(): number { return this.__s.nodeValue }
+	get radius(): number { return this.__s.radius }
+	get g(): SVGCircleElement { return this.__s.g }
 
 	constructor(nodeName: string) {
 		//set initial default values
-		this.settings = <IHighlightable>{
+		this.__s = <IHighlightable>{
 			nodeName: nodeName || "node",
 			nodeValue: -1,
 			visible: false,
@@ -31,7 +31,7 @@ export default class BoardCircle implements IHighlightable {
 		tagAttrs["svg-type"] = this.nodeName;
 		tagAttrs[this.nodeName] = this.nodeValue;
 		//create SVG
-		this.settings.g = <SVGCircleElement>tag("circle", "", tagAttrs);
+		this.__s.g = <SVGCircleElement>tag("circle", "", tagAttrs);
 	}
 
 	public getDomRadius(): number {
@@ -39,26 +39,26 @@ export default class BoardCircle implements IHighlightable {
 	}
 
 	move(x: number, y: number): BoardCircle {
-		this.settings.p = new Point(x, y);
+		this.__s.p = new Point(x, y);
 		return this;
 	}
 
 	public setRadius(value: number): BoardCircle {
-		this.settings.radius = value <= 0 ? 5 : value;
+		this.__s.radius = value <= 0 ? 5 : value;
 		return this.refresh();
 	}
 
 	public hide(): BoardCircle {
-		this.settings.visible = false;
-		this.settings.p = Point.origin;
-		this.settings.nodeValue = -1;
+		this.__s.visible = false;
+		this.__s.p = Point.origin;
+		this.__s.nodeValue = -1;
 		return this.refresh();
 	}
 
 	public show(nodeValue: number): BoardCircle {
-		this.settings.visible = true;
+		this.__s.visible = true;
 		// this.p  moved first
-		this.settings.nodeValue = nodeValue;
+		this.__s.nodeValue = nodeValue;
 		return this.refresh();
 	}
 

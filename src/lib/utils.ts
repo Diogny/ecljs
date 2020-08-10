@@ -31,6 +31,18 @@ export const templatesUrl = (url: string, obj?: { [key: string]: any }) => ajaxp
 		return templates;
 	});
 
+export const DOMTemplates = (): { [key: string]: any } => {
+	let
+		templates: { [key: string]: any } = {};
+	Array.from(qSA('script[data-tmpl]')).forEach(((scr: HTMLScriptElement) => {
+		let
+			id = <string>scr.getAttribute('data-tmpl'),
+			src = scr.innerHTML.replace("<![CDATA[", "").replace("]]>", "").replace(/[\r\n\t]/g, "").trim();
+		templates[id] = src
+	}));
+	return templates;
+}
+
 export const templatesDOM = (query: string | string[]): Promise<{ [key: string]: any }> => {
 	return new Promise(function (resolve, reject) {
 		//query:string   id0|id1|id[n]

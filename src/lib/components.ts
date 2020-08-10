@@ -1,14 +1,14 @@
 import { IComponentOptions, IBaseStoreComponent, IComponentMetadata } from './interfaces';
 import { obj } from './dab';
 
-const defaultIdTemplate = "{base.comp.name}-{base.count}";
-const defaultComponent = (type: string, name: string): IBaseStoreComponent => (<any>{
+const tmpl = "{base.comp.name}-{base.count}";
+const defaults = (type: string, name: string): IBaseStoreComponent => (<any>{
 	name: name,
 	comp: {
 		type: type,
 		name: name,
 		meta: {
-			nameTmpl: defaultIdTemplate,
+			nameTmpl: tmpl,
 			nodes: []
 		},
 		properties: {}
@@ -17,49 +17,49 @@ const defaultComponent = (type: string, name: string): IBaseStoreComponent => (<
 
 export default class Comp {
 
-	private static baseComps: Map<string, Comp> =
-		Comp.initializeComponents([
-			defaultComponent("utils", "label"),
-			defaultComponent("utils", "tooltip"),
-			defaultComponent("utils", "h-node"),
-			defaultComponent("wire", "wire")
+	private static map: Map<string, Comp> =
+		Comp.init([
+			defaults("utils", "label"),
+			defaults("utils", "tooltip"),
+			defaults("utils", "h-node"),
+			defaults("wire", "wire")
 		]);
 
-	protected settings: IComponentOptions;
+	protected __s: IComponentOptions;
 
-	get name(): string { return this.settings.name }
-	get library(): string { return this.settings.library }
-	get type(): string { return this.settings.type }
-	get data(): string { return this.settings.data }
-	get props(): { [x: string]: any } { return this.settings.properties }
-	get meta(): IComponentMetadata { return this.settings.meta }
+	get name(): string { return this.__s.name }
+	get library(): string { return this.__s.library }
+	get type(): string { return this.__s.type }
+	get data(): string { return this.__s.data }
+	get props(): { [x: string]: any } { return this.__s.properties }
+	get meta(): IComponentMetadata { return this.__s.meta }
 
 	constructor(options: IComponentOptions) {
 		let
 			that = this,
 			template = options.tmpl;
 		delete options.tmpl;
-		this.settings = obj(options);
+		this.__s = obj(options);
 		if (template) {
 			let
 				base = <Comp>Comp.find(template.name);
-			this.settings.data = base.data;
-			this.settings.meta = JSON.parse(JSON.stringify(base.meta));
-			template.label && (this.settings.meta.label = obj(template.label));
+			this.__s.data = base.data;
+			this.__s.meta = JSON.parse(JSON.stringify(base.meta));
+			template.label && (this.__s.meta.label = obj(template.label));
 			template.nodeLabels.forEach((lbl, ndx) => {
-				that.settings.meta.nodes.list[ndx].label = lbl;
+				that.__s.meta.nodes.list[ndx].label = lbl;
 			})
 		}
-		!this.settings.meta.nameTmpl && (this.settings.meta.nameTmpl = defaultIdTemplate);
-		if (!Comp.store(this.settings.name, this))
-			throw `duplicated: ${this.settings.name}`;
+		!this.__s.meta.nameTmpl && (this.__s.meta.nameTmpl = tmpl);
+		if (!Comp.store(this.__s.name, this))
+			throw `duplicated: ${this.__s.name}`;
 	}
 
 	public static register = (options: IComponentOptions) => new Comp(options);
 
-	private static initializeComponents(list: IBaseStoreComponent[]): Map<string, Comp> {
+	private static init(list: IBaseStoreComponent[]): Map<string, Comp> {
 		let
-			set: Map<string, Comp> = Comp.baseComps;
+			set: Map<string, Comp> = Comp.map;
 		if (set == null) {
 			set = new Map();
 		}
@@ -70,16 +70,16 @@ export default class Comp {
 	}
 
 	public static store = (name: string, comp: Comp): boolean =>
-		Comp.baseComps.has(name) ?
+		Comp.map.has(name) ?
 			false :
-			(Comp.baseComps.set(name, comp), true);
+			(Comp.map.set(name, comp), true);
 
-	public static has = (name: string) => Comp.baseComps.has(name);
+	public static has = (name: string) => Comp.map.has(name);
 
 	public static find = (name: string): Comp | undefined => {
-		return Comp.baseComps.get(name);
+		return Comp.map.get(name);
 	}
 
-	public static get size(): number { return Comp.baseComps.size }
+	public static get size(): number { return Comp.map.size }
 
 }

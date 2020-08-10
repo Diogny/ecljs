@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BaseSettings = exports.Type = void 0;
+exports.Base = exports.Type = void 0;
 var dab_1 = require("./dab");
 //***************************************** Types ************************************//
 var Type;
@@ -16,16 +16,16 @@ var Type;
     Type[Type["FLOWCHART"] = 8] = "FLOWCHART";
 })(Type = exports.Type || (exports.Type = {}));
 ;
-var BaseSettings = /** @class */ (function () {
-    function BaseSettings(options) {
+var Base = /** @class */ (function () {
+    function Base(options) {
         this.clear(options);
     }
-    BaseSettings.prototype.clear = function (options) {
-        this.settings = dab_1.obj(dab_1.copy(this.propertyDefaults(), options || {}));
+    Base.prototype.clear = function (options) {
+        this.__s = dab_1.obj(dab_1.copy(this.defaults(), options || {}));
     };
-    BaseSettings.prototype.propertyDefaults = function () {
+    Base.prototype.defaults = function () {
         return {};
     };
-    return BaseSettings;
+    return Base;
 }());
-exports.BaseSettings = BaseSettings;
+exports.Base = Base;

@@ -11,7 +11,7 @@ import Container from "./container";
 //ItemBoard->ItemSolid->EC
 export default abstract class ItemSolid extends ItemBoard {
 
-	protected settings: IItemSolidProperties;
+	protected __s: IItemSolidProperties;
 
 	get last(): number { return this.base.meta.nodes.list.length - 1 }
 
@@ -24,8 +24,8 @@ export default abstract class ItemSolid extends ItemBoard {
 		this.g.innerHTML = this.base.data;
 
 		//I've to set new properties always, because super just copy defaults()
-		//later override method propertyDefaults()
-		this.settings.rotation = Point.validateRotation(options.rotation);
+		//later override method defaults()
+		this.__s.rotation = Point.validateRotation(options.rotation);
 		let
 			createText = (attr: any, text: string) => {
 				let
@@ -43,12 +43,12 @@ export default abstract class ItemSolid extends ItemBoard {
 		
 	}
 
-	get rotation(): number { return this.settings.rotation }
+	get rotation(): number { return this.__s.rotation }
 
 	public rotate(value: number): ItemSolid {
-		if (this.settings.rotation != (value = Point.validateRotation(value))) {
+		if (this.__s.rotation != (value = Point.validateRotation(value))) {
 			//set new value
-			this.settings.rotation = value;
+			this.__s.rotation = value;
 
 			//trigger property changed if applicable
 			this.onProp && this.onProp({
@@ -90,7 +90,7 @@ export default abstract class ItemSolid extends ItemBoard {
 		return !!this.getNode(node)
 	}
 
-	public nodeHighlightable(name: number): boolean {
+	public hghlightable(name: number): boolean {
 		return this.valid(name)	//for now all valid nodes are highlightables
 	}
 

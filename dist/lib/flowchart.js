@@ -14,7 +14,7 @@ var Flowchart = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Flowchart.prototype, "directionalWires", {
+    Object.defineProperty(Flowchart.prototype, "directional", {
         get: function () { return true; },
         enumerable: false,
         configurable: true

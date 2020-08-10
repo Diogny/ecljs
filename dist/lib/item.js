@@ -9,34 +9,34 @@ var Item = /** @class */ (function (_super) {
     function Item(options) {
         var _this = this;
         //merge defaults and deep copy
-        //all default properties must be refrenced from this or this.settings
+        //all default properties must be refrenced from this or this.__s
         // options is for custom options only
         var optionsClass = options.class || "";
         delete options.class;
         _this = _super.call(this, options) || this;
-        //this.settings = obj(copy(this.propertyDefaults(), options));
-        _this.settings.class = dab_1.unique((_this.class + " " + optionsClass).split(' ')).join(' ');
-        _this.settings.x = _this.settings.x || 0;
-        _this.settings.y = _this.settings.y || 0;
+        //this.__s = obj(copy(this.defaults(), options));
+        _this.__s.class = dab_1.unique((_this.class + " " + optionsClass).split(' ')).join(' ');
+        _this.__s.x = _this.__s.x || 0;
+        _this.__s.y = _this.__s.y || 0;
         return _this;
     }
     Object.defineProperty(Item.prototype, "name", {
-        get: function () { return this.settings.name; },
+        get: function () { return this.__s.name; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "id", {
-        get: function () { return this.settings.id; },
+        get: function () { return this.__s.id; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "x", {
-        get: function () { return this.settings.x; },
+        get: function () { return this.__s.x; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "y", {
-        get: function () { return this.settings.y; },
+        get: function () { return this.__s.y; },
         enumerable: false,
         configurable: true
     });
@@ -46,22 +46,22 @@ var Item = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Item.prototype, "class", {
-        get: function () { return this.settings.class; },
+        get: function () { return this.__s.class; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "visible", {
-        get: function () { return this.settings.visible; },
+        get: function () { return this.__s.visible; },
         enumerable: false,
         configurable: true
     });
     Item.prototype.setVisible = function (value) {
-        this.settings.visible = !!value;
+        this.__s.visible = !!value;
         return this;
     };
     Item.prototype.move = function (x, y) {
-        this.settings.x = x | 0;
-        this.settings.y = y | 0;
+        this.__s.x = x | 0;
+        this.__s.y = y | 0;
         return this;
     };
     Item.prototype.movePoint = function (p) {
@@ -70,7 +70,7 @@ var Item = /** @class */ (function (_super) {
     Item.prototype.translate = function (dx, dy) {
         return this.move(this.x + (dx | 0), this.y + (dy | 0));
     };
-    Item.prototype.propertyDefaults = function () {
+    Item.prototype.defaults = function () {
         return {
             id: "",
             name: "",
@@ -83,5 +83,5 @@ var Item = /** @class */ (function (_super) {
         };
     };
     return Item;
-}(interfaces_1.BaseSettings));
+}(interfaces_1.Base));
 exports.default = Item;

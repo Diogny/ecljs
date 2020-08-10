@@ -3,12 +3,13 @@ import Comp from "./components";
 import UIProp from "./props";
 import Label from "./label";
 import Container from "./container";
-import FlowchartComponent from "./flowchartComponent";
+import FlowchartComp from "./flowchartComp";
 import EC from "./ec";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import Rect from "./rect";
+import Board from "./board";
 export declare enum Type {
     UNDEFINED = 0,
     EC = 1,
@@ -24,12 +25,12 @@ export interface IType {
     type: Type;
 }
 export interface IBaseSettings {
-    propertyDefaults(): {
+    defaults(): {
         [x: string]: any;
     };
 }
-export declare abstract class BaseSettings implements IBaseSettings {
-    protected settings: {
+export declare abstract class Base implements IBaseSettings {
+    protected __s: {
         [x: string]: any;
     };
     constructor(options: {
@@ -38,7 +39,7 @@ export declare abstract class BaseSettings implements IBaseSettings {
     clear(options?: {
         [x: string]: any;
     }): void;
-    propertyDefaults(): {
+    defaults(): {
         [x: string]: any;
     };
 }
@@ -47,8 +48,9 @@ export interface IBoardOptions {
     description?: string;
     filePath?: string;
     viewPoint?: Point;
-    containers?: Container<EC | FlowchartComponent>[];
+    containers?: Container<EC | FlowchartComp>[];
     onZoom?: (zoom: number) => void;
+    onModified?: (value: boolean) => void;
 }
 export interface IBoardProperties {
     version: string;
@@ -58,15 +60,17 @@ export interface IBoardProperties {
     viewBox: Rect;
     zoom: number;
     modified: boolean;
-    containers: Container<EC | FlowchartComponent>[];
-    onZoom: (zoom: number) => void;
+    containers: Container<EC | FlowchartComp>[];
+    onZoom?: (zoom: number) => void;
+    onModified?: (value: boolean) => void;
 }
 export interface IContainerProperties<T extends ItemBoard> {
     name: string;
-    uniqueCounters: {
+    board: Board;
+    counters: {
         [x: string]: any;
     };
-    componentTemplates: Map<string, IBaseComponent>;
+    components: Map<string, IBaseComponent>;
     itemMap: Map<string, {
         t: T;
         b: Bond[];

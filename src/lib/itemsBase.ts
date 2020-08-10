@@ -8,10 +8,10 @@ import Comp from './components';
 
 export default abstract class ItemBase extends Item {
 
-	protected settings: IItemBaseProperties;
+	protected __s: IItemBaseProperties;
 
-	get base(): Comp { return this.settings.base }
-	get g(): SVGElement { return this.settings.g }
+	get base(): Comp { return this.__s.base }
+	get g(): SVGElement { return this.__s.g }
 
 	get ClientRect(): ISize {
 		let b = this.g.getBoundingClientRect();
@@ -45,12 +45,12 @@ export default abstract class ItemBase extends Item {
 			base = <Comp>Comp.find(this.name);
 		if (!base)
 			throw `cannot create component`;
-		this.settings.props = obj(base.props);
+		this.__s.props = obj(base.props);
 		let
 			classArr = isStr(this.class) ? this.class.split(' ') : [];
-		!this.settings.visible && (classArr.push("hide"));
-		this.settings.g = tag("g", this.settings.id, {
-			class: (this.settings.class = classArr.join(' '))
+		!this.__s.visible && (classArr.push("hide"));
+		this.__s.g = tag("g", this.__s.id, {
+			class: (this.__s.class = classArr.join(' '))
 		});
 	}
 
@@ -61,6 +61,6 @@ export default abstract class ItemBase extends Item {
 	public afterDOMinserted() { }
 
 	public prop(propName: string): ComponentPropertyType {
-		return this.settings.props[propName]
+		return this.__s.props[propName]
 	}
 }

@@ -8,13 +8,13 @@ import Container from './container';
 //ItemBoard->Wire
 export default abstract class ItemBoard extends ItemBase {
 
-	protected settings: IItemBoardProperties;
+	protected __s: IItemBoardProperties;
 
-	get onProp(): Function { return this.settings.onProp }
-	get selected(): boolean { return this.settings.selected }
+	get onProp(): Function { return this.__s.onProp }
+	get selected(): boolean { return this.__s.selected }
 	get bonds(): Bond[] | undefined { return this.container.itemBonds(this) }
-	get directional(): boolean { return this.settings.directional }
-	get label(): string { return this.settings.label }
+	get directional(): boolean { return this.__s.directional }
+	get label(): string { return this.__s.label }
 
 	abstract get count(): number;
 	abstract valid(node: number): boolean;
@@ -29,7 +29,7 @@ export default abstract class ItemBoard extends ItemBase {
 	abstract findNode(p: Point): number;
 
 	//this returns true for an EC, and any Wire node and that it is not a start|end bonded node
-	abstract nodeHighlightable(node: number): boolean;
+	abstract hghlightable(node: number): boolean;
 
 	constructor(public container: Container<ItemBoard>, options: IItemBaseOptions) {
 		super(options);
@@ -41,13 +41,13 @@ export default abstract class ItemBoard extends ItemBase {
 		})
 		//this still doesn't work to get all overridable properties ¿?
 		//properties still cannot access super value
-		//(<any>this.settings).__selected = dab.propDescriptor(this, "selected");
+		//(<any>this.__s).__selected = dab.propDescriptor(this, "selected");
 	}
 
 	public select(value: boolean): ItemBoard {
 		if (this.selected != value) {
 			//set new value
-			this.settings.selected = value;
+			this.__s.selected = value;
 			//add class if selected
 			condClass(this.g, "selected", this.selected);
 			//trigger property changed if applicable
@@ -77,35 +77,13 @@ export default abstract class ItemBoard extends ItemBase {
 	}
 
 	public setOnProp(value: Function): ItemBoard {
-		isFn(value) && (this.settings.onProp = value);
+		isFn(value) && (this.__s.onProp = value);
 		return this;
 	}
 
 	public bond(thisNode: number, ic: ItemBoard, icNode: number): boolean {
 		return this.container.bond(this, thisNode, ic, icNode)
 	}
-	// public bond(thisNode: number, ic: ItemBoard, icNode: number): boolean {
-	// 	let
-	// 		entry = this.nodeBonds(thisNode);
-	// 	if (!ic
-	// 		|| (entry && entry.has(ic.id))
-	// 		|| !ic.valid(icNode))
-	// 		return false;
-	// 	if (!entry) {
-	// 		//this's the origin of the bond
-	// 		(<any>this.settings.bonds)[thisNode] = entry = new Bond(this, ic, icNode, thisNode, true);
-	// 	} else if (!entry.add(ic, icNode)) {
-	// 		console.log('Oooopsie!')
-	// 	}
-	// 	this.settings.bondsCount++;
-	// 	this.nodeRefresh(thisNode);
-	// 	//check this below
-
-	// 	//this's the reverse direction from original bond
-	// 	return ic.bond(icNode, this, thisNode);
-	// 	//entry = ic.nodeBonds(icNode);
-	// 	//return (entry && entry.has(this.id)) ? true : ic.bond(icNode, this, thisNode);
-	// }
 
 	public nodeBonds(node: number): Bond | undefined {
 		return this.container.nodeBonds(this, node); // <Bond>(<any>this.bonds)[node]
@@ -123,94 +101,13 @@ export default abstract class ItemBoard extends ItemBase {
 		this.container.disconnect(this)
 	}
 
-	public propertyDefaults(): IItemBoardProperties {
-		return extend(super.propertyDefaults(), {
+	public defaults(): IItemBoardProperties {
+		return extend(super.defaults(), {
 			selected: false,
 			onProp: void 0,
 			directional: false,
 		})
 	}
-
-	// public static connectedWiresTo(ecList: EC[]): Wire[] {
-	// 	let
-	// 		wireList: Wire[] = [],
-	// 		ecIdList = ecList.map(ec => ec.id),
-	// 		circuit = ecList[0]?.circuit,
-	// 		secondTest: { wire: Wire, toId: string }[] = [],
-	// 		oppositeEdge = (node: number, last: number) => node == 0 ? last : (node == last ? 0 : node);
-	// 	if (circuit) {
-	// 		ecList.forEach(ec => {
-	// 			ec.bonds.forEach(bond => {
-	// 				bond.to
-	// 					.filter(b => !wireList.find(w => w.id == b.id))
-	// 					.forEach(b => {
-	// 						let
-	// 							wire = circuit.get(b.id) as Wire,
-	// 							toWireBond = wire.nodeBonds(oppositeEdge(b.ndx, wire.last));
-	// 						if (toWireBond.to[0].type == Type.EC) {
-	// 							ecIdList.includes(toWireBond.to[0].id)
-	// 								&& wireList.push(wire)
-	// 						} else {
-	// 							if (wireList.find(w => w.id == toWireBond.to[0].id)) {
-	// 								wireList.push(wire);
-	// 							} else {
-	// 								secondTest.push({
-	// 									wire: wire,
-	// 									toId: toWireBond.to[0].id
-	// 								})
-	// 							}
-	// 						}
-	// 					})
-	// 			})
-	// 		});
-	// 		secondTest
-	// 			.forEach(b => wireList.find(w => w.id == b.toId) && wireList.push(b.wire))
-	// 	}
-	// 	return wireList;
-	// }
-
-	// public static wireConnections(wire: Wire): { it: ItemBoard, p: Point, n: number }[] {
-	// 	let
-	// 		wireCollection: Wire[] = [wire],
-	// 		wiresFound: string[] = [],
-	// 		points: { it: ItemBoard, p: Point, n: number }[] = [],
-	// 		circuit = wire.circuit,
-	// 		findComponents = (bond: Bond) => {
-	// 			bond.to.forEach(b => {
-	// 				let
-	// 					w = circuit.get(b.id);
-	// 				if (!w)
-	// 					throw `Invalid bond connections`;			//shouldn't happen, but to catch wrong code
-	// 				switch (b.type) {
-	// 					case Type.WIRE:
-	// 						if (!wiresFound.some(id => id == b.id)) {
-	// 							wiresFound.push(w.id);
-	// 							wireCollection.push(w as Wire);
-	// 							points.push({
-	// 								it: w,
-	// 								p: Point.create(w.getNode(b.ndx)),
-	// 								n: b.ndx
-	// 							});
-	// 						}
-	// 						break;
-	// 					case Type.EC:
-	// 						points.push({
-	// 							it: w,
-	// 							p: (w as EC).getNodeRealXY(b.ndx),
-	// 							n: b.ndx
-	// 						});
-	// 						break;
-	// 				}
-	// 			})
-	// 		};
-	// 	while (wireCollection.length) {
-	// 		let
-	// 			w = <Wire>wireCollection.shift();
-	// 		wiresFound.push(w.id);
-	// 		w.bonds.forEach(findComponents);
-	// 	}
-	// 	return points
-	// }
 
 }
 

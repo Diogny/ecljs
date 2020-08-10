@@ -1,11 +1,11 @@
-import { IBoardProperties, BaseSettings, IBoardOptions } from "./interfaces";
+import { IBoardProperties, Base, IBoardOptions } from "./interfaces";
 import Rect from "./rect";
 import Point from "./point";
 import Container from "./container";
-import FlowchartComponent from "./flowchartComponent";
+import FlowchartComp from "./flowchartComp";
 import EC from "./ec";
-export default class Board extends BaseSettings {
-    protected settings: IBoardProperties;
+export default class Board extends Base {
+    protected __s: IBoardProperties;
     get version(): string;
     get name(): string;
     set name(value: string);
@@ -13,19 +13,19 @@ export default class Board extends BaseSettings {
     set description(value: string);
     get filePath(): string;
     get viewBox(): Rect;
-    get containers(): Container<EC | FlowchartComponent>[];
+    get containers(): Container<EC | FlowchartComp>[];
     static defaultZoom: number;
     get zoom(): number;
     set zoom(value: number);
     get modified(): boolean;
     set modified(value: boolean);
     constructor(options: IBoardOptions);
-    add(container: Container<EC | FlowchartComponent>): void;
+    add(container: Container<EC | FlowchartComp>): void;
     center(): Point;
-    get(name: string): Container<EC | FlowchartComponent> | undefined;
-    libraries(library: string): Container<EC | FlowchartComponent>[];
+    get(name: string): Container<EC | FlowchartComp> | undefined;
+    libraries(library: string): Container<EC | FlowchartComp>[];
     destroy(): void;
-    propertyDefaults(): IBoardProperties;
+    defaults(): IBoardProperties;
     static get zoomMultipliers(): number[];
     static get zoomFactors(): string[];
     static validZoom(zoom: number): boolean;

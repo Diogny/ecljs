@@ -1,5 +1,5 @@
 export default class Unit {
-    protected settings: {
+    protected __s: {
         unit: number;
         prefix: number;
         value: number;

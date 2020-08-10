@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var dab_1 = require("./dab");
-var defaultIdTemplate = "{base.comp.name}-{base.count}";
-var defaultComponent = function (type, name) { return ({
+var tmpl = "{base.comp.name}-{base.count}";
+var defaults = function (type, name) { return ({
     name: name,
     comp: {
         type: type,
         name: name,
         meta: {
-            nameTmpl: defaultIdTemplate,
+            nameTmpl: tmpl,
             nodes: []
         },
         properties: {}
@@ -18,52 +18,52 @@ var Comp = /** @class */ (function () {
     function Comp(options) {
         var that = this, template = options.tmpl;
         delete options.tmpl;
-        this.settings = dab_1.obj(options);
+        this.__s = dab_1.obj(options);
         if (template) {
             var base = Comp.find(template.name);
-            this.settings.data = base.data;
-            this.settings.meta = JSON.parse(JSON.stringify(base.meta));
-            template.label && (this.settings.meta.label = dab_1.obj(template.label));
+            this.__s.data = base.data;
+            this.__s.meta = JSON.parse(JSON.stringify(base.meta));
+            template.label && (this.__s.meta.label = dab_1.obj(template.label));
             template.nodeLabels.forEach(function (lbl, ndx) {
-                that.settings.meta.nodes.list[ndx].label = lbl;
+                that.__s.meta.nodes.list[ndx].label = lbl;
             });
         }
-        !this.settings.meta.nameTmpl && (this.settings.meta.nameTmpl = defaultIdTemplate);
-        if (!Comp.store(this.settings.name, this))
-            throw "duplicated: " + this.settings.name;
+        !this.__s.meta.nameTmpl && (this.__s.meta.nameTmpl = tmpl);
+        if (!Comp.store(this.__s.name, this))
+            throw "duplicated: " + this.__s.name;
     }
     Object.defineProperty(Comp.prototype, "name", {
-        get: function () { return this.settings.name; },
+        get: function () { return this.__s.name; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "library", {
-        get: function () { return this.settings.library; },
+        get: function () { return this.__s.library; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "type", {
-        get: function () { return this.settings.type; },
+        get: function () { return this.__s.type; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "data", {
-        get: function () { return this.settings.data; },
+        get: function () { return this.__s.data; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "props", {
-        get: function () { return this.settings.properties; },
+        get: function () { return this.__s.properties; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "meta", {
-        get: function () { return this.settings.meta; },
+        get: function () { return this.__s.meta; },
         enumerable: false,
         configurable: true
     });
-    Comp.initializeComponents = function (list) {
-        var set = Comp.baseComps;
+    Comp.init = function (list) {
+        var set = Comp.map;
         if (set == null) {
             set = new Map();
         }
@@ -73,25 +73,25 @@ var Comp = /** @class */ (function () {
         return set;
     };
     Object.defineProperty(Comp, "size", {
-        get: function () { return Comp.baseComps.size; },
+        get: function () { return Comp.map.size; },
         enumerable: false,
         configurable: true
     });
-    Comp.baseComps = Comp.initializeComponents([
-        defaultComponent("utils", "label"),
-        defaultComponent("utils", "tooltip"),
-        defaultComponent("utils", "h-node"),
-        defaultComponent("wire", "wire")
+    Comp.map = Comp.init([
+        defaults("utils", "label"),
+        defaults("utils", "tooltip"),
+        defaults("utils", "h-node"),
+        defaults("wire", "wire")
     ]);
     Comp.register = function (options) { return new Comp(options); };
     Comp.store = function (name, comp) {
-        return Comp.baseComps.has(name) ?
+        return Comp.map.has(name) ?
             false :
-            (Comp.baseComps.set(name, comp), true);
+            (Comp.map.set(name, comp), true);
     };
-    Comp.has = function (name) { return Comp.baseComps.has(name); };
+    Comp.has = function (name) { return Comp.map.has(name); };
     Comp.find = function (name) {
-        return Comp.baseComps.get(name);
+        return Comp.map.get(name);
     };
     return Comp;
 }());

@@ -4,12 +4,13 @@ import Comp from "./components";
 import UIProp from "./props";
 import Label from "./label";
 import Container from "./container";
-import FlowchartComponent from "./flowchartComponent";
+import FlowchartComp from "./flowchartComp";
 import EC from "./ec";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import Rect from "./rect";
+import Board from "./board";
 
 
 //***************************************** Types ************************************//
@@ -31,22 +32,22 @@ export interface IType {
 }
 
 export interface IBaseSettings {
-	propertyDefaults(): { [x: string]: any };
+	defaults(): { [x: string]: any };
 }
 
-export abstract class BaseSettings implements IBaseSettings {
+export abstract class Base implements IBaseSettings {
 
-	protected settings: { [x: string]: any };
+	protected __s: { [x: string]: any };
 
 	constructor(options: { [x: string]: any; }) {
 		this.clear(options);
 	}
 
 	public clear(options?: { [x: string]: any; }): void {
-		this.settings = obj(copy(this.propertyDefaults(), options || {}));
+		this.__s = obj(copy(this.defaults(), options || {}));
 	}
 
-	propertyDefaults(): { [x: string]: any; } {
+	defaults(): { [x: string]: any; } {
 		return {}
 	}
 
@@ -57,8 +58,9 @@ export interface IBoardOptions {
 	description?: string;
 	filePath?: string;
 	viewPoint?: Point;
-	containers?: Container<EC | FlowchartComponent>[];
+	containers?: Container<EC | FlowchartComp>[];
 	onZoom?: (zoom: number) => void;
+	onModified?: (value: boolean) => void;
 }
 
 export interface IBoardProperties {
@@ -69,14 +71,16 @@ export interface IBoardProperties {
 	viewBox: Rect;
 	zoom: number;
 	modified: boolean;
-	containers: Container<EC | FlowchartComponent>[];
-	onZoom: (zoom: number) => void;
+	containers: Container<EC | FlowchartComp>[];
+	onZoom?: (zoom: number) => void;
+	onModified?: (value: boolean) => void;
 }
 
 export interface IContainerProperties<T extends ItemBoard> {
 	name: string;
-	uniqueCounters: { [x: string]: any; };
-	componentTemplates: Map<string, IBaseComponent>;
+	board: Board;
+	counters: { [x: string]: any; };
+	components: Map<string, IBaseComponent>;
 	itemMap: Map<string, { t: T, b: Bond[], c: number }>;
 	wireMap: Map<string, { t: Wire, b: Bond[], c: number }>;
 	selected: (T | Wire)[];

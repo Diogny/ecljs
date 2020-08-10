@@ -1,7 +1,7 @@
 import { Type, ITooltipText, ISize, ITooltipSettings } from "./interfaces";
 import Label from './label';
 export default class Tooltip extends Label {
-    protected settings: ITooltipSettings;
+    protected __s: ITooltipSettings;
     private svgRect;
     private gap;
     get type(): Type;
@@ -12,5 +12,5 @@ export default class Tooltip extends Label {
     setBorderRadius(value: number): Tooltip;
     protected build(): Tooltip;
     setText(value: string | any[]): Tooltip;
-    propertyDefaults(): ITooltipText;
+    defaults(): ITooltipText;
 }

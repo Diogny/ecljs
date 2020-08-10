@@ -18,15 +18,15 @@ var ItemBoard = /** @class */ (function (_super) {
         return _this;
         //this still doesn't work to get all overridable properties ¿?
         //properties still cannot access super value
-        //(<any>this.settings).__selected = dab.propDescriptor(this, "selected");
+        //(<any>this.__s).__selected = dab.propDescriptor(this, "selected");
     }
     Object.defineProperty(ItemBoard.prototype, "onProp", {
-        get: function () { return this.settings.onProp; },
+        get: function () { return this.__s.onProp; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ItemBoard.prototype, "selected", {
-        get: function () { return this.settings.selected; },
+        get: function () { return this.__s.selected; },
         enumerable: false,
         configurable: true
     });
@@ -36,19 +36,19 @@ var ItemBoard = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(ItemBoard.prototype, "directional", {
-        get: function () { return this.settings.directional; },
+        get: function () { return this.__s.directional; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ItemBoard.prototype, "label", {
-        get: function () { return this.settings.label; },
+        get: function () { return this.__s.label; },
         enumerable: false,
         configurable: true
     });
     ItemBoard.prototype.select = function (value) {
         if (this.selected != value) {
             //set new value
-            this.settings.selected = value;
+            this.__s.selected = value;
             //add class if selected
             dab_1.condClass(this.g, "selected", this.selected);
             //trigger property changed if applicable
@@ -76,33 +76,12 @@ var ItemBoard = /** @class */ (function (_super) {
         return this;
     };
     ItemBoard.prototype.setOnProp = function (value) {
-        dab_1.isFn(value) && (this.settings.onProp = value);
+        dab_1.isFn(value) && (this.__s.onProp = value);
         return this;
     };
     ItemBoard.prototype.bond = function (thisNode, ic, icNode) {
         return this.container.bond(this, thisNode, ic, icNode);
     };
-    // public bond(thisNode: number, ic: ItemBoard, icNode: number): boolean {
-    // 	let
-    // 		entry = this.nodeBonds(thisNode);
-    // 	if (!ic
-    // 		|| (entry && entry.has(ic.id))
-    // 		|| !ic.valid(icNode))
-    // 		return false;
-    // 	if (!entry) {
-    // 		//this's the origin of the bond
-    // 		(<any>this.settings.bonds)[thisNode] = entry = new Bond(this, ic, icNode, thisNode, true);
-    // 	} else if (!entry.add(ic, icNode)) {
-    // 		console.log('Oooopsie!')
-    // 	}
-    // 	this.settings.bondsCount++;
-    // 	this.nodeRefresh(thisNode);
-    // 	//check this below
-    // 	//this's the reverse direction from original bond
-    // 	return ic.bond(icNode, this, thisNode);
-    // 	//entry = ic.nodeBonds(icNode);
-    // 	//return (entry && entry.has(this.id)) ? true : ic.bond(icNode, this, thisNode);
-    // }
     ItemBoard.prototype.nodeBonds = function (node) {
         return this.container.nodeBonds(this, node); // <Bond>(<any>this.bonds)[node]
     };
@@ -115,8 +94,8 @@ var ItemBoard = /** @class */ (function (_super) {
     ItemBoard.prototype.disconnect = function () {
         this.container.disconnect(this);
     };
-    ItemBoard.prototype.propertyDefaults = function () {
-        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
+    ItemBoard.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
             selected: false,
             onProp: void 0,
             directional: false,

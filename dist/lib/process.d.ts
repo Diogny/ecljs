@@ -1,7 +1,7 @@
 import Point from "./point";
 import Size from "./size";
-import FlowchartComponent from "./flowchartComponent";
-export default class FlowProcess extends FlowchartComponent {
+import FlowchartComp from "./flowchartComp";
+export default class FlowProcess extends FlowchartComp {
     get fontSize(): number;
     get text(): string;
     setText(value: string): FlowProcess;

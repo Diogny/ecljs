@@ -12,13 +12,13 @@ var Wire = /** @class */ (function (_super) {
     function Wire(container, options) {
         var _a;
         var _this = _super.call(this, container, options) || this;
-        _this.settings.directional = container.directionalWires;
-        _this.settings.polyline = utils_1.tag("polyline", "", {
+        _this.__s.directional = container.directional;
+        _this.__s.polyline = utils_1.tag("polyline", "", {
             "svg-type": "line",
             line: "0",
             points: "",
         });
-        _this.g.append(_this.settings.polyline);
+        _this.g.append(_this.__s.polyline);
         _this.setPoints(options.points);
         moveToStart(_this);
         _this.onProp && _this.onProp({
@@ -28,7 +28,7 @@ var Wire = /** @class */ (function (_super) {
                 name: _this.name,
                 x: _this.x,
                 y: _this.y,
-                points: _this.settings.points,
+                points: _this.__s.points,
                 bonds: '[' + ((_a = _this.bonds) === null || _a === void 0 ? void 0 : _a.map(function (b) { return b.link; }).join(', ')) + ']'
             },
             method: 'create',
@@ -42,17 +42,17 @@ var Wire = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Wire.prototype, "count", {
-        get: function () { return this.settings.points.length; },
+        get: function () { return this.__s.points.length; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Wire.prototype, "last", {
-        get: function () { return this.settings.points.length - 1; },
+        get: function () { return this.__s.points.length - 1; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Wire.prototype, "lastLine", {
-        get: function () { return this.editMode ? this.settings.lines.length : 0; },
+        get: function () { return this.editMode ? this.__s.lines.length : 0; },
         enumerable: false,
         configurable: true
     });
@@ -63,12 +63,12 @@ var Wire = /** @class */ (function (_super) {
     });
     Wire.prototype.rect = function () { return rect_1.default.create(this.box); };
     Object.defineProperty(Wire.prototype, "points", {
-        get: function () { return Array.from(this.settings.points); },
+        get: function () { return Array.from(this.__s.points); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Wire.prototype, "editMode", {
-        get: function () { return this.settings.edit; },
+        get: function () { return this.__s.edit; },
         set: function (value) {
             var _this = this;
             if (this.editMode == value)
@@ -76,22 +76,22 @@ var Wire = /** @class */ (function (_super) {
             if (this.editMode) {
                 //	will change to false
                 //		.destroy lines
-                this.settings.lines = this.settings.lines.filter(function (ln) {
+                this.__s.lines = this.__s.lines.filter(function (ln) {
                     _this.g.removeChild(ln);
                     return false;
                 });
                 //		.recreate polyline
                 this.refresh();
                 //		.show polyline
-                dab_1.removeClass(this.settings.polyline, "hide");
+                dab_1.removeClass(this.__s.polyline, "hide");
             }
             else {
                 //	will change to true
                 //		.hide polyline
-                dab_1.addClass(this.settings.polyline, "hide");
+                dab_1.addClass(this.__s.polyline, "hide");
                 //		.create lines
-                for (var i = 0, a = this.settings.points[0], cnt = this.last; i < cnt; i++) {
-                    var b = this.settings.points[i + 1], ln = utils_1.tag("line", "", {
+                for (var i = 0, a = this.__s.points[0], cnt = this.last; i < cnt; i++) {
+                    var b = this.__s.points[i + 1], ln = utils_1.tag("line", "", {
                         "svg-type": "line",
                         line: (i + 1),
                         x1: a.x,
@@ -99,34 +99,34 @@ var Wire = /** @class */ (function (_super) {
                         x2: b.x,
                         y2: b.y
                     });
-                    this.settings.lines.push(ln);
-                    this.g.insertBefore(ln, this.settings.polyline);
+                    this.__s.lines.push(ln);
+                    this.g.insertBefore(ln, this.__s.polyline);
                     a = b;
                 }
             }
-            this.settings.edit = value;
+            this.__s.edit = value;
         },
         enumerable: false,
         configurable: true
     });
     Wire.prototype.refresh = function () {
-        dab_1.attr(this.settings.polyline, {
-            points: this.settings.points.map(function (p) { return p.x + ", " + p.y; }).join(' ')
+        dab_1.attr(this.__s.polyline, {
+            points: this.__s.points.map(function (p) { return p.x + ", " + p.y; }).join(' ')
         });
         return this;
     };
     Wire.prototype.nodeRefresh = function (node) {
         var _this = this;
         if (this.editMode) {
-            var ln = void 0, p = this.settings.points[node];
-            (ln = this.settings.lines[node - 1]) && dab_1.attr(ln, { x2: p.x, y2: p.y });
-            (ln = this.settings.lines[node]) && dab_1.attr(ln, { x1: p.x, y1: p.y });
+            var ln = void 0, p = this.__s.points[node];
+            (ln = this.__s.lines[node - 1]) && dab_1.attr(ln, { x2: p.x, y2: p.y });
+            (ln = this.__s.lines[node]) && dab_1.attr(ln, { x1: p.x, y1: p.y });
         }
         else {
             this.refresh();
         }
         if (!(node == 0 || node == this.last)) {
-            var bond = this.nodeBonds(node), p_1 = this.settings.points[node];
+            var bond = this.nodeBonds(node), p_1 = this.__s.points[node];
             bond && bond.to.forEach(function (b) {
                 var _a;
                 (_a = _this.container.get(b.id)) === null || _a === void 0 ? void 0 : _a.setNode(b.ndx, p_1);
@@ -139,7 +139,7 @@ var Wire = /** @class */ (function (_super) {
         //don't translate bonded end points because it should have been|will be moved by bonded EC or Wire
         var savedEditMode = this.editMode;
         this.editMode = false;
-        for (var i = 0, p = this.settings.points[i], end = this.last; i <= end; p = this.settings.points[++i]) {
+        for (var i = 0, p = this.__s.points[i], end = this.last; i <= end; p = this.__s.points[++i]) {
             if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.nodeBonds(i))) {
                 this.setNode(i, point_1.default.translateBy(p, dx, dy));
             }
@@ -164,7 +164,7 @@ var Wire = /** @class */ (function (_super) {
             && node <= this.last; // NOW ACCEPTS  -1
     };
     Wire.prototype.getNode = function (node) {
-        var p = this.settings.points[node];
+        var p = this.__s.points[node];
         return (p && { x: p.x, y: p.y });
     };
     Wire.prototype.getNodeRealXY = function (node) {
@@ -172,15 +172,15 @@ var Wire = /** @class */ (function (_super) {
         return p && point_1.default.create(p);
     };
     Wire.prototype.appendNode = function (p) {
-        return !this.editMode && (this.settings.points.push(p), this.refresh(), true);
+        return !this.editMode && (this.__s.points.push(p), this.refresh(), true);
     };
     Wire.prototype.setNode = function (node, p) {
-        this.settings.points[node].x = p.x | 0;
-        this.settings.points[node].y = p.y | 0;
+        this.__s.points[node].x = p.x | 0;
+        this.__s.points[node].y = p.y | 0;
         moveToStart(this);
         return this.nodeRefresh(node);
     };
-    Wire.prototype.nodeHighlightable = function (node) {
+    Wire.prototype.hghlightable = function (node) {
         //any Wire node and that it is not a start|end bonded node
         return this.valid(node) //&& this.editMode
             && (!(this.nodeBonds(node) && (node == 0 || node == this.last)));
@@ -190,41 +190,41 @@ var Wire = /** @class */ (function (_super) {
             || points.length < 2)
             throw 'Poliwire min 2 points';
         if (!this.editMode) {
-            this.settings.points = points.map(function (p) { return new point_1.default(p.x | 0, p.y | 0); });
+            this.__s.points = points.map(function (p) { return new point_1.default(p.x | 0, p.y | 0); });
             moveToStart(this);
-            this.settings.lines = [];
+            this.__s.lines = [];
             this.refresh();
         }
         return this;
     };
     Wire.prototype.overNode = function (p, ln) {
         var _this = this;
-        var endPoint = ln, lineCount = this.settings.lines.length, isLine = function (ln) { return ln && (ln <= lineCount); }, isAround = function (p, x, y) {
-            return (x >= p.x - _this.settings.pad) &&
-                (x <= p.x + _this.settings.pad) &&
-                (y >= p.y - _this.settings.pad) &&
-                (y <= p.y + _this.settings.pad);
+        var endPoint = ln, lineCount = this.__s.lines.length, isLine = function (ln) { return ln && (ln <= lineCount); }, isAround = function (p, x, y) {
+            return (x >= p.x - _this.__s.pad) &&
+                (x <= p.x + _this.__s.pad) &&
+                (y >= p.y - _this.__s.pad) &&
+                (y <= p.y + _this.__s.pad);
         };
         //if not in editMode, then ln will be 0, so reset to 1, and last point is the last
         !this.editMode && (ln = 1, endPoint = this.last, lineCount = 1);
         if (isLine(ln)) {
-            return isAround(this.settings.points[ln - 1], p.x, p.y) ?
+            return isAround(this.__s.points[ln - 1], p.x, p.y) ?
                 ln - 1 :
-                (isAround(this.settings.points[endPoint], p.x, p.y) ? endPoint : -1);
+                (isAround(this.__s.points[endPoint], p.x, p.y) ? endPoint : -1);
         }
         return -1;
     };
     Wire.prototype.findLineNode = function (p, line) {
         var fn = function (np) { return (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= 25; };
         ((line <= 0 || line >= this.last) && (line = this.findNode(p), 1))
-            || fn(this.settings.points[line])
-            || fn(this.settings.points[--line])
+            || fn(this.__s.points[line])
+            || fn(this.__s.points[--line])
             || (line = -1);
         return line;
     };
     //don't care if wire is in editMode or not
     Wire.prototype.findNode = function (p) {
-        for (var i = 0, thisP = this.settings.points[i], len = this.settings.points.length; i < len; thisP = this.settings.points[++i]) {
+        for (var i = 0, thisP = this.__s.points[i], len = this.__s.points.length; i < len; thisP = this.__s.points[++i]) {
             //radius 5 =>  5^2 = 25
             if ((Math.pow(p.x - thisP.x, 2) + Math.pow(p.y - thisP.y, 2)) <= 25)
                 return i;
@@ -261,7 +261,7 @@ var Wire = /** @class */ (function (_super) {
         for (var n = this.last; n >= node; n--) {
             this.container.moveBond(this.id, n, n + 1);
         }
-        this.settings.points.splice(node, 0, p);
+        this.__s.points.splice(node, 0, p);
         this.editMode = savedEditMode;
         return true;
     };
@@ -275,8 +275,8 @@ var Wire = /** @class */ (function (_super) {
             return node == -1 ? this.last : node;
         return -1;
     };
-    Wire.prototype.propertyDefaults = function () {
-        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
+    Wire.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
             name: "wire",
             class: "wire",
             pad: 5,
@@ -287,7 +287,7 @@ var Wire = /** @class */ (function (_super) {
 }(itemsBoard_1.default));
 exports.default = Wire;
 function moveToStart(wire) {
-    wire.move(wire.settings.points[0].x, wire.settings.points[0].y);
+    wire.move(wire.__s.points[0].x, wire.__s.points[0].y);
 }
 function deleteWireNode(wire, node) {
     var last = wire.last;
@@ -296,5 +296,5 @@ function deleteWireNode(wire, node) {
         return;
     wire.unbondNode(node);
     wire.container.moveBond(wire.id, last, last - 1);
-    return wire.settings.points.splice(node, 1)[0];
+    return wire.__s.points.splice(node, 1)[0];
 }

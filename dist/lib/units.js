@@ -13,57 +13,57 @@ var Unit = /** @class */ (function () {
             throw "number " + n + " must be a not empty string";
         var ndx = n.length - 1, error = function () { return "invalid number: " + n; }, indexOf = function (s, x, u) { return s.indexOf(u ? x.toUpperCase() : x); };
         //defaults
-        this.settings = {
+        this.__s = {
             unit: -1,
             prefix: -1,
             value: NaN
         };
         //extract unit
         //start with full name first
-        if ((this.settings.unit = Unit.unitNames.findIndex(function (u) { return n.toUpperCase().endsWith(u.toUpperCase()); })) >= 0) {
-            ndx -= Unit.unitNames[this.settings.unit].length;
+        if ((this.__s.unit = Unit.unitNames.findIndex(function (u) { return n.toUpperCase().endsWith(u.toUpperCase()); })) >= 0) {
+            ndx -= Unit.unitNames[this.__s.unit].length;
             //now try with unit symbols as is, and then uppercased
         }
-        else if ((this.settings.unit = indexOf(Unit.unitSymbols, n[ndx], 0)) >= 0 ||
-            (this.settings.unit = indexOf(Unit.unitSymbols, n[ndx], 1)) >= 0) {
+        else if ((this.__s.unit = indexOf(Unit.unitSymbols, n[ndx], 0)) >= 0 ||
+            (this.__s.unit = indexOf(Unit.unitSymbols, n[ndx], 1)) >= 0) {
             ndx--;
         }
         else
             throw error();
         //extract unit prefix
-        if ((this.settings.prefix = Unit.prefixSymbols.indexOf(n[ndx])) == -1) {
-            this.settings.prefix = 10; // position of symbol and name: '', exponent: 0
+        if ((this.__s.prefix = Unit.prefixSymbols.indexOf(n[ndx])) == -1) {
+            this.__s.prefix = 10; // position of symbol and name: '', exponent: 0
             ndx++;
         }
         //last char has to be a number
         if (isNaN(parseInt(n[ndx - 1])))
             throw error();
         //extract number
-        this.settings.value = parseFloat(n.substr(0, ndx));
+        this.__s.value = parseFloat(n.substr(0, ndx));
     }
     Object.defineProperty(Unit.prototype, "name", {
         //get unit name and symbol
-        get: function () { return Unit.unitNames[this.settings.unit]; },
+        get: function () { return Unit.unitNames[this.__s.unit]; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Unit.prototype, "unit", {
-        get: function () { return Unit.unitSymbols[this.settings.unit]; },
+        get: function () { return Unit.unitSymbols[this.__s.unit]; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Unit.prototype, "prefix", {
-        get: function () { return Unit.prefixSymbols[this.settings.prefix]; },
+        get: function () { return Unit.prefixSymbols[this.__s.prefix]; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Unit.prototype, "exponent", {
-        get: function () { return Math.pow(10, Unit.prefixExponents[this.settings.prefix]); },
+        get: function () { return Math.pow(10, Unit.prefixExponents[this.__s.prefix]); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Unit.prototype, "value", {
-        get: function () { return this.settings.value; },
+        get: function () { return this.__s.value; },
         enumerable: false,
         configurable: true
     });

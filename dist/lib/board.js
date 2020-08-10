@@ -20,43 +20,49 @@ var Board = /** @class */ (function (_super) {
         return _this;
     }
     Object.defineProperty(Board.prototype, "version", {
-        get: function () { return this.settings.version; },
+        //later find a way to detect a change in any property:  "name" "description"  "zoom"
+        get: function () { return this.__s.version; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Board.prototype, "name", {
-        get: function () { return this.settings.name; },
-        set: function (value) { this.settings.name = value; },
+        get: function () { return this.__s.name; },
+        set: function (value) {
+            this.__s.name = value;
+        },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Board.prototype, "description", {
-        get: function () { return this.settings.description; },
-        set: function (value) { this.settings.description = value; },
+        get: function () { return this.__s.description; },
+        set: function (value) {
+            this.__s.description = value;
+        },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Board.prototype, "filePath", {
-        get: function () { return this.settings.filePath; },
+        get: function () { return this.__s.filePath; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Board.prototype, "viewBox", {
-        get: function () { return this.settings.viewBox; },
+        get: function () { return this.__s.viewBox; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Board.prototype, "containers", {
-        get: function () { return this.settings.containers; },
+        get: function () { return this.__s.containers; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Board.prototype, "zoom", {
-        get: function () { return this.settings.zoom; },
+        get: function () { return this.__s.zoom; },
         set: function (value) {
             if (this.zoom != value && Board.validZoom(value)) {
-                this.settings.zoom = value;
-                this.settings.onZoom && this.settings.onZoom(value);
+                this.__s.zoom = value;
+                this.modified = true;
+                this.__s.onZoom && this.__s.onZoom(value);
             }
         },
         enumerable: false,
@@ -65,16 +71,18 @@ var Board = /** @class */ (function (_super) {
     Object.defineProperty(Board.prototype, "modified", {
         get: function () {
             //check for any change in containers
-            if (!this.settings.modified && this.containers.some(function (c) { return c.modified; }))
-                this.settings.modified = true;
-            return this.settings.modified;
+            if (!this.__s.modified && this.containers.some(function (c) { return c.modified; }))
+                this.__s.modified = true;
+            return this.__s.modified;
         },
         set: function (value) {
             //trying to set to false with containers modified, is overrided by true
+            // all containers must have modified == false, to go through this
             if (!value && this.containers.some(function (c) { return c.modified; })) {
                 value = true;
             }
-            this.settings.modified = value;
+            this.__s.modified = value;
+            this.__s.onModified && this.__s.onModified(value);
         },
         enumerable: false,
         configurable: true
@@ -83,6 +91,7 @@ var Board = /** @class */ (function (_super) {
         if (this.containers.some(function (c) { return c.name == container.name; }))
             throw "duplicated container name: " + container.name;
         this.containers.push(container);
+        this.modified = true;
     };
     Board.prototype.center = function () {
         return new point_1.default(Math.round(this.viewBox.x + this.viewBox.width / 2 | 0), Math.round(this.viewBox.y + this.viewBox.height / 2 | 0));
@@ -96,9 +105,9 @@ var Board = /** @class */ (function (_super) {
     Board.prototype.destroy = function () {
         this.containers
             .forEach(function (c) { return c.destroy(); });
-        this.settings = void 0;
+        this.__s = void 0;
     };
-    Board.prototype.propertyDefaults = function () {
+    Board.prototype.defaults = function () {
         return {
             version: "1.1.5",
             name: "",
@@ -108,7 +117,8 @@ var Board = /** @class */ (function (_super) {
             zoom: 0,
             containers: [],
             modified: false,
-            onZoom: void 0
+            onZoom: void 0,
+            onModified: void 0
         };
     };
     Object.defineProperty(Board, "zoomMultipliers", {
@@ -131,5 +141,5 @@ var Board = /** @class */ (function (_super) {
     };
     Board.defaultZoom = 1; // 1X
     return Board;
-}(interfaces_1.BaseSettings));
+}(interfaces_1.Base));
 exports.default = Board;

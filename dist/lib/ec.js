@@ -24,7 +24,7 @@ var EC = /** @class */ (function (_super) {
         }
         //create label if defined
         if (_this.base.meta.labelId) {
-            _this.settings.boardLabel = new label_1.default({
+            _this.__s.boardLabel = new label_1.default({
                 fontSize: 15,
                 x: _this.base.meta.labelId.x,
                 y: _this.base.meta.labelId.y
@@ -53,7 +53,7 @@ var EC = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(EC.prototype, "boardLabel", {
-        get: function () { return this.settings.boardLabel; },
+        get: function () { return this.__s.boardLabel; },
         enumerable: false,
         configurable: true
     });
@@ -87,8 +87,8 @@ var EC = /** @class */ (function (_super) {
     EC.prototype.afterDOMinserted = function () {
         this.boardLabel && (this.g.insertAdjacentElement("afterend", this.boardLabel.g), this.boardLabel.setVisible(true));
     };
-    EC.prototype.propertyDefaults = function () {
-        return dab_1.extend(_super.prototype.propertyDefaults.call(this), {
+    EC.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
             class: "ec",
             boardLabel: void 0
         });

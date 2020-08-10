@@ -1,7 +1,7 @@
 //Color class is adapted from:
 //https://github.com/Microsoft/TypeScriptSamples/blob/master/raytracer/raytracer.ts
 
-export class Color {
+export default class Color {
 	constructor(
 		public r: number,
 		public g: number,
@@ -23,30 +23,5 @@ export class Color {
 			b: Math.floor(legalize(c.b) * 255)
 		}
 	}
-	static List: Colors;
-	static getcolor(text: string, defaultColor?: Colors): string {
-		let
-			color = text && (<any>Colors)[text.trim().toLowerCase()];
-		//default to green
-		return Colors[color !== undefined ? color : (defaultColor !== undefined) ? defaultColor : '']
-	}
 
-}
-
-//supported colors for a board component
-export enum Colors {
-	white,
-	black,
-	green,
-	red,
-	blue,
-	yellow,
-	orange,
-	purple,
-	brown,
-	aqua,
-	bisque,
-	navy,
-	teal,
-	violet
 }

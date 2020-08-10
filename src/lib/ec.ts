@@ -8,11 +8,11 @@ import Circuit from './circuit';
 
 export default class EC extends ItemSolid {
 
-	protected settings: IECProperties;
+	protected __s: IECProperties;
 
 	get type(): Type { return Type.EC }
 
-	get boardLabel(): Label { return this.settings.boardLabel }
+	get boardLabel(): Label { return this.__s.boardLabel }
 
 	constructor(circuit: Circuit, options: IItemSolidOptions) {
 		super(circuit, options);
@@ -32,7 +32,7 @@ export default class EC extends ItemSolid {
 		}
 		//create label if defined
 		if (this.base.meta.labelId) {
-			this.settings.boardLabel = new Label(<any>{
+			this.__s.boardLabel = new Label(<any>{
 				fontSize: 15,
 				x: this.base.meta.labelId.x,
 				y: this.base.meta.labelId.y
@@ -94,8 +94,8 @@ export default class EC extends ItemSolid {
 		this.boardLabel && (this.g.insertAdjacentElement("afterend", this.boardLabel.g), this.boardLabel.setVisible(true))
 	}
 
-	public propertyDefaults(): IECProperties {
-		return extend(super.propertyDefaults(), {
+	public defaults(): IECProperties {
+		return extend(super.defaults(), {
 			class: "ec",
 			boardLabel: void 0
 		})

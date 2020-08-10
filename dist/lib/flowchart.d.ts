@@ -1,11 +1,11 @@
 import Container from "./container";
-import FlowchartComponent from "./flowchartComponent";
+import FlowchartComp from "./flowchartComp";
 import Wire from "./wire";
-export default class Flowchart extends Container<FlowchartComponent> {
+export default class Flowchart extends Container<FlowchartComp> {
     get library(): string;
-    get directionalWires(): boolean;
+    get directional(): boolean;
     createItem(options: {
         [x: string]: any;
-    }): FlowchartComponent;
-    bond(thisObj: FlowchartComponent | Wire, thisNode: number, ic: FlowchartComponent | Wire, icNode: number): boolean;
+    }): FlowchartComp;
+    bond(thisObj: FlowchartComp | Wire, thisNode: number, ic: FlowchartComp | Wire, icNode: number): boolean;
 }

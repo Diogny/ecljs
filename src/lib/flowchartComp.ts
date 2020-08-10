@@ -4,7 +4,7 @@ import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Container from "./container";
 
-export default abstract class FlowchartComponent extends ItemSolid {
+export default abstract class FlowchartComp extends ItemSolid {
 
 	get type(): Type { return Type.FLOWCHART }
 
@@ -25,17 +25,17 @@ export default abstract class FlowchartComponent extends ItemSolid {
 	get inputs(): number { return <number>this.prop("inputs") }
 	get outputs(): number { return <number>this.prop("outputs") }
 
-	constructor(container: Container<FlowchartComponent>, options: IItemSolidOptions) {
+	constructor(container: Container<FlowchartComp>, options: IItemSolidOptions) {
 		super(container, options);
 	}
 
-	public setNode(node: number, p: IPoint): FlowchartComponent {
+	public setNode(node: number, p: IPoint): FlowchartComp {
 		//Some code tries to call this, investigate later...
 		throw 'somebody called me, not good!';
 	}
 	
-	public propertyDefaults(): IItemBoardProperties {
-		return extend(super.propertyDefaults(), {
+	public defaults(): IItemBoardProperties {
+		return extend(super.defaults(), {
 			directional: true,
 		})
 	}

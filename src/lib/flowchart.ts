@@ -1,15 +1,15 @@
 import Container from "./container";
-import FlowchartComponent from "./flowchartComponent";
+import FlowchartComp from "./flowchartComp";
 import FlowProcess from "./process";
 import Wire from "./wire";
 import FlowConditional from "./conditional";
 
-export default class Flowchart extends Container<FlowchartComponent>{
+export default class Flowchart extends Container<FlowchartComp>{
 
 	get library(): string { return "flowchart" }
-	get directionalWires(): boolean { return true }
+	get directional(): boolean { return true }
 
-	public createItem(options: { [x: string]: any; }): FlowchartComponent {
+	public createItem(options: { [x: string]: any; }): FlowchartComp {
 		switch (options.name) {
 			case "process":
 				return new FlowProcess(this, <any>options);
@@ -20,7 +20,7 @@ export default class Flowchart extends Container<FlowchartComponent>{
 		}
 	}
 
-	public bond(thisObj: FlowchartComponent | Wire, thisNode: number, ic: FlowchartComponent | Wire, icNode: number): boolean {
+	public bond(thisObj: FlowchartComp | Wire, thisNode: number, ic: FlowchartComp | Wire, icNode: number): boolean {
 		if (!this.hasComponent(thisObj.id) || !this.hasComponent(ic.id))
 			return false;
 		//directional components can only be connected to other directional components or wires

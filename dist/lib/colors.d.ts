@@ -1,4 +1,4 @@
-export declare class Color {
+export default class Color {
     r: number;
     g: number;
     b: number;
@@ -16,22 +16,4 @@ export declare class Color {
         g: number;
         b: number;
     };
-    static List: Colors;
-    static getcolor(text: string, defaultColor?: Colors): string;
-}
-export declare enum Colors {
-    white = 0,
-    black = 1,
-    green = 2,
-    red = 3,
-    blue = 4,
-    yellow = 5,
-    orange = 6,
-    purple = 7,
-    brown = 8,
-    aqua = 9,
-    bisque = 10,
-    navy = 11,
-    teal = 12,
-    violet = 13
 }

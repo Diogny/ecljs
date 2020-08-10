@@ -3,7 +3,7 @@ import * as dab from "./lib/dab";
 import * as utils from "./lib/utils";
 import * as Interfaces from "./lib/interfaces";
 
-import { Color, Colors } from "./lib/colors";
+import Color from "./lib/colors";
 import Point from "./lib/point";
 import Rect from "./lib/rect";
 import Size from "./lib/size";
@@ -32,7 +32,7 @@ import Flowchart from "./lib/flowchart";
 import EC from "./lib/ec";
 import Wire from "./lib/wire";
 
-import FlowchartComponent from "./lib/flowchartComponent";
+import FlowchartComp from "./lib/flowchartComp";
 import FlowProcess from "./lib/process";
 import FlowConditional from "./lib/conditional";
 
@@ -42,7 +42,6 @@ export {
 	utils,
 
 	Color,
-	Colors,
 	Point,
 	Rect,
 	Size,
@@ -74,7 +73,7 @@ export {
 	EC,
 	Wire,
 
-	FlowchartComponent,
+	FlowchartComp,
 	FlowProcess,
 	FlowConditional,
 

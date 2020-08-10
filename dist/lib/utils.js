@@ -1,7 +1,7 @@
 "use strict";
 //... still in progress ...
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.templatesDOM = exports.templatesUrl = void 0;
+exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.templatesDOM = exports.DOMTemplates = exports.templatesUrl = void 0;
 var tslib_1 = require("tslib");
 var ajaxp_1 = tslib_1.__importDefault(require("./ajaxp"));
 var dab_1 = require("./dab");
@@ -29,6 +29,14 @@ exports.templatesUrl = function (url, obj) { return ajaxp_1.default.get(url, obj
     //return scriptContent(data.matches['stockSymbol'].text);		
     return templates;
 }); };
+exports.DOMTemplates = function () {
+    var templates = {};
+    Array.from(exports.qSA('script[data-tmpl]')).forEach((function (scr) {
+        var id = scr.getAttribute('data-tmpl'), src = scr.innerHTML.replace("<![CDATA[", "").replace("]]>", "").replace(/[\r\n\t]/g, "").trim();
+        templates[id] = src;
+    }));
+    return templates;
+};
 exports.templatesDOM = function (query) {
     return new Promise(function (resolve, reject) {
         //query:string   id0|id1|id[n]

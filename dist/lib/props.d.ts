@@ -1,6 +1,6 @@
 import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty } from './interfaces';
 export default class UIProp implements IUIProperty {
-    protected settings: IUIPropertySettings;
+    protected __s: IUIPropertySettings;
     get id(): string;
     get type(): string;
     get name(): string;

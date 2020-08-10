@@ -4,7 +4,7 @@ import Rect from './rect';
 import ItemBoard from './itemsBoard';
 import Container from './container';
 export default class Wire extends ItemBoard {
-    protected settings: IWireProperties;
+    protected __s: IWireProperties;
     get type(): Type;
     get count(): number;
     get last(): number;
@@ -30,7 +30,7 @@ export default class Wire extends ItemBoard {
     getNodeRealXY(node: number): Point;
     appendNode(p: Point): boolean;
     setNode(node: number, p: IPoint): Wire;
-    nodeHighlightable(node: number): boolean;
+    hghlightable(node: number): boolean;
     setPoints(points: IPoint[]): Wire;
     overNode(p: IPoint, ln: number): number;
     findLineNode(p: Point, line: number): number;
@@ -44,5 +44,5 @@ export default class Wire extends ItemBoard {
      * @returns {number} -1 for wrong node or standarized node number, where -1 == last, otherwise node
      */
     standarizeNode(node: number): number;
-    propertyDefaults(): IWireProperties;
+    defaults(): IWireProperties;
 }

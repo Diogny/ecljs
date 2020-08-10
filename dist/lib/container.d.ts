@@ -9,6 +9,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     get name(): string;
     set name(value: string);
     get board(): Board;
+    set board(board: Board);
     abstract get library(): string;
     abstract get directional(): boolean;
     get counters(): {
@@ -34,7 +35,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     get(id: string): T | Wire | undefined;
     get modified(): boolean;
     set modified(value: boolean);
-    constructor(board: Board, name: string);
+    constructor(name: string);
     defaults(): IContainerProperties<T>;
     root(name: string): IBaseComponent | undefined;
     hasComponent(id: string): boolean;

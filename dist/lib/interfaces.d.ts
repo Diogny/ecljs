@@ -47,23 +47,18 @@ export interface IBoardOptions {
     version?: string;
     name: string;
     description?: string;
+    zoom: number;
     filePath?: string;
     viewPoint?: Point;
     containers?: Container<EC | FlowchartComp>[];
     onZoom?: (zoom: number) => void;
     onModified?: (value: boolean) => void;
 }
-export interface IBoardProperties {
+export interface IBoardProperties extends IBoardOptions {
     version: string;
-    name: string;
-    description: string;
-    filePath: string;
     viewBox: Rect;
-    zoom: number;
     modified: boolean;
     containers: Container<EC | FlowchartComp>[];
-    onZoom?: (zoom: number) => void;
-    onModified?: (value: boolean) => void;
 }
 export interface IContainerProperties<T extends ItemBoard> {
     name: string;

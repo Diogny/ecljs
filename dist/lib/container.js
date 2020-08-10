@@ -9,10 +9,9 @@ var wire_1 = tslib_1.__importDefault(require("./wire"));
 var components_1 = tslib_1.__importDefault(require("./components"));
 var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
-    function Container(board, name) {
+    function Container(name) {
         return _super.call(this, {
-            name: name,
-            board: board
+            name: name
         }) || this;
     }
     Object.defineProperty(Container.prototype, "name", {
@@ -26,6 +25,9 @@ var Container = /** @class */ (function (_super) {
     });
     Object.defineProperty(Container.prototype, "board", {
         get: function () { return this.__s.board; },
+        set: function (board) {
+            this.__s.board = board;
+        },
         enumerable: false,
         configurable: true
     });

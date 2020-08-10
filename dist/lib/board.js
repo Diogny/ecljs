@@ -14,7 +14,10 @@ var Board = /** @class */ (function (_super) {
             _this.viewBox.x = options.viewPoint.x;
             _this.viewBox.y = options.viewPoint.y;
         }
-        var names = _this.containers.map(function (c) { return c.name; });
+        var names = _this.containers.map(function (c) {
+            c.board = _this;
+            return c.name;
+        });
         if (names.length != dab_1.unique(names).length)
             throw "duplicated container names";
         return _this;
@@ -91,6 +94,7 @@ var Board = /** @class */ (function (_super) {
         if (this.containers.some(function (c) { return c.name == container.name; }))
             throw "duplicated container name: " + container.name;
         this.containers.push(container);
+        container.board = this;
         this.modified = true;
     };
     Board.prototype.center = function () {

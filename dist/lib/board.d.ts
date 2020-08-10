@@ -9,9 +9,9 @@ export default class Board extends Base {
     get version(): string;
     get name(): string;
     set name(value: string);
-    get description(): string;
-    set description(value: string);
-    get filePath(): string;
+    get description(): string | undefined;
+    set description(value: string | undefined);
+    get filePath(): string | undefined;
     get viewBox(): Rect;
     get containers(): Container<EC | FlowchartComp>[];
     static defaultZoom: number;

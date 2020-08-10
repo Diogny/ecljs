@@ -17,6 +17,9 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		this.modified = true
 	}
 	get board(): Board { return this.__s.board }
+	set board(board: Board) {
+		this.__s.board = board
+	}
 	abstract get library(): string;
 	abstract get directional(): boolean;
 
@@ -47,10 +50,9 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		this.board.modified = true
 	}
 
-	constructor(board: Board, name: string) {
+	constructor(name: string) {
 		super({
-			name: name,
-			board: board
+			name: name
 		})
 	}
 

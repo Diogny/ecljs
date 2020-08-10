@@ -16,11 +16,11 @@ export default class Board extends Base {
 	set name(value: string) {
 		this.__s.name = value
 	}
-	get description(): string { return this.__s.description }
-	set description(value: string) {
+	get description(): string | undefined { return this.__s.description }
+	set description(value: string | undefined) {
 		this.__s.description = value
 	}
-	get filePath(): string { return this.__s.filePath }
+	get filePath(): string | undefined { return this.__s.filePath }
 	get viewBox(): Rect { return this.__s.viewBox }
 	get containers(): Container<EC | FlowchartComp>[] { return this.__s.containers }
 
@@ -59,7 +59,10 @@ export default class Board extends Base {
 			this.viewBox.y = options.viewPoint.y
 		}
 		let
-			names = this.containers.map(c => c.name);
+			names = this.containers.map(c => {
+				c.board = this;
+				return c.name
+			});
 		if (names.length != unique(names).length)
 			throw `duplicated container names`;
 	}
@@ -68,6 +71,7 @@ export default class Board extends Base {
 		if (this.containers.some(c => c.name == container.name))
 			throw `duplicated container name: ${container.name}`;
 		this.containers.push(container);
+		container.board = this;
 		this.modified = true;
 	}
 

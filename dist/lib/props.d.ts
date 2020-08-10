@@ -7,6 +7,9 @@ export default class UIProp implements IUIProperty {
     get tag(): string | Element;
     get html(): HTMLElement;
     get editable(): boolean;
+    get data(): {
+        [id: string]: any;
+    };
     get nodeName(): string;
     get onChange(): IUIPropertyCallback | undefined;
     set onChange(fn: IUIPropertyCallback | undefined);

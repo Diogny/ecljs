@@ -65,7 +65,7 @@ export interface IBoardOptions {
 	onModified?: (value: boolean) => void;
 }
 
-export interface IBoardProperties extends IBoardOptions{
+export interface IBoardProperties extends IBoardOptions {
 	version: string;
 	viewBox: Rect;
 	modified: boolean;
@@ -127,6 +127,7 @@ export interface IUIPropertyOptions {
 	tag: string | Element;
 	onChange?: IUIPropertyCallback | undefined;
 	toStringFn?: () => string;
+	data?: { [id: string]: any };
 }
 
 export interface IUIProperty extends IUIPropertyOptions {
@@ -137,6 +138,7 @@ export interface IUIProperty extends IUIPropertyOptions {
 	editable: boolean;
 	nodeName: string;
 	value: number | boolean | string | string[];
+	data: { [id: string]: any };
 }
 
 export interface IUIPropertySettings extends IUIProperty {

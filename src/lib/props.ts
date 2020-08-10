@@ -13,6 +13,7 @@ export default class UIProp implements IUIProperty {
 	get tag(): string | Element { return this.__s.tag }
 	get html(): HTMLElement { return this.__s.html }
 	get editable(): boolean { return this.__s.editable }
+	get data(): { [id: string]: any } { return this.__s.data }
 
 	get nodeName(): string { return this.html.nodeName.toLowerCase() }
 
@@ -82,12 +83,14 @@ export default class UIProp implements IUIProperty {
 			getter: "value",
 			htmlSelect: false,
 			selectCount: 1,
-			selectMultiple: false
+			selectMultiple: false,
 		};
 		if (!options
 			|| !(this.__s.html = <HTMLElement>(isElement(options.tag) ? (options.tag) : qS(<string>options.tag)))
 		)
 			throw 'wrong options';
+		//this's useful, p.theme.value during initialization to have a local needed value
+		this.__s.data = options.data || {};
 		//set event handler if any, this uses setter for type checking
 		this.onChange = options.onChange;
 		//copy toString function

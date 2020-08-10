@@ -14,11 +14,13 @@ var UIProp = /** @class */ (function () {
             getter: "value",
             htmlSelect: false,
             selectCount: 1,
-            selectMultiple: false
+            selectMultiple: false,
         };
         if (!options
             || !(this.__s.html = (dab_1.isElement(options.tag) ? (options.tag) : utils_1.qS(options.tag))))
             throw 'wrong options';
+        //this's useful, p.theme.value during initialization to have a local needed value
+        this.__s.data = options.data || {};
         //set event handler if any, this uses setter for type checking
         this.onChange = options.onChange;
         //copy toString function
@@ -125,6 +127,11 @@ var UIProp = /** @class */ (function () {
     });
     Object.defineProperty(UIProp.prototype, "editable", {
         get: function () { return this.__s.editable; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIProp.prototype, "data", {
+        get: function () { return this.__s.data; },
         enumerable: false,
         configurable: true
     });

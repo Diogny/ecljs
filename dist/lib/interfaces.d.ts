@@ -110,6 +110,9 @@ export interface IUIPropertyOptions {
     tag: string | Element;
     onChange?: IUIPropertyCallback | undefined;
     toStringFn?: () => string;
+    data?: {
+        [id: string]: any;
+    };
 }
 export interface IUIProperty extends IUIPropertyOptions {
     id: string;
@@ -119,6 +122,9 @@ export interface IUIProperty extends IUIPropertyOptions {
     editable: boolean;
     nodeName: string;
     value: number | boolean | string | string[];
+    data: {
+        [id: string]: any;
+    };
 }
 export interface IUIPropertySettings extends IUIProperty {
     getter: string;

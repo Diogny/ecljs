@@ -97,7 +97,7 @@ export const inherit = (parent: any, child: any) => {
  * @description returns true if an element if an HTML or SVG DOM element
  * @param e {any} an element
  */
-export const isElement = (e: any) => e instanceof Element || e instanceof HTMLDocument;
+export const isElement = (e: any) => e instanceof window.HTMLElement || e instanceof window.HTMLDocument;
 
 /* this generates a function "inherit" and later assigns it to the namespace "dab"
 	export function inherit(parent: any, child: any) {

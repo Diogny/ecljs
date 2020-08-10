@@ -275,7 +275,7 @@ function unbond(container, id, node, toId, origin) {
         if (origin) {
             unbond(container, toId, b.ndx, id, false);
         }
-        this.modified = true;
+        container.modified = true;
     }
 }
 function getItem(container, id) {

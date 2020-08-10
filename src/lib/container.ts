@@ -283,7 +283,7 @@ function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: 
 		if (origin) {
 			unbond(container, toId, b.ndx, id, false);
 		}
-		this.modified = true
+		container.modified = true
 	}
 }
 

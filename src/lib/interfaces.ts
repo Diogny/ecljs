@@ -120,7 +120,7 @@ export type ComponentPropertyType = string | number | IComponentProperty;
 //***************************************** UIProperty ************************************//
 
 export interface IUIPropertyCallback {
-	(value: number | boolean | string | string[], where: number, prop: UIProp, e: any): void;
+	(value: number | boolean | string | string[], where: number, prop: UIProp, e: any): number | boolean | string | string[] | void;
 }
 
 export interface IUIPropertyOptions {

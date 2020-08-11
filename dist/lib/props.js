@@ -75,8 +75,9 @@ var UIProp = /** @class */ (function (_super) {
                 _this.__s.getter = 'innerHTML';
         }
         ;
-        //text-only UI props only set it's UI value when setting prop.value = anything
-        _this.html.addEventListener('change', _this.trigger);
+        //this's set only if it's an editable property
+        _this.editable
+            && _this.html.addEventListener('change', _this.trigger);
         return _this;
     }
     Object.defineProperty(UIProp.prototype, "type", {
@@ -134,6 +135,12 @@ var UIProp = /** @class */ (function (_super) {
                 return this.html.options[val].value;
         },
         set: function (val) {
+            if (!this.editable) {
+                //call onchange to get UI value
+                var newValue = this.onChange && this.onChange(val, 2, this, void 0);
+                this.html[this.__s.getter] = (newValue == undefined) ? val : newValue;
+                return;
+            }
             if (!this.__s.htmlSelect) {
                 var valtype = dab_1.typeOf(val);
                 if ((this.type == "text" && valtype == "string") ||
@@ -162,7 +169,8 @@ var UIProp = /** @class */ (function (_super) {
         configurable: true
     });
     UIProp.prototype.destroy = function () {
-        this.html.removeEventListener('change', this.trigger);
+        this.editable
+            && this.html.removeEventListener('change', this.trigger);
     };
     UIProp.prototype.trigger = function (e) {
         //when comming from UI, this is the DOM Element

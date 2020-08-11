@@ -104,7 +104,7 @@ export interface IComponentProperty {
 }
 export declare type ComponentPropertyType = string | number | IComponentProperty;
 export interface IUIPropertyCallback {
-    (value: number | boolean | string | string[], where: number, prop: UIProp, e: any): void;
+    (value: number | boolean | string | string[], where: number, prop: UIProp, e: any): number | boolean | string | string[] | void;
 }
 export interface IUIPropertyOptions {
     tag: string | Element;

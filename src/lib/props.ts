@@ -34,6 +34,13 @@ export class UIProp extends Base implements IUIProperty {
 	}
 
 	set value(val: number | boolean | string | string[]) {
+		if (!this.editable) {
+			//call onchange to get UI value
+			let
+				newValue = this.onChange && this.onChange(val, 2, this, <any>void 0);
+			(<any>this.html)[this.__s.getter] = (newValue == undefined) ? val : newValue
+			return
+		}
 		if (!this.__s.htmlSelect) {
 			let
 				valtype = typeOf(val);
@@ -62,7 +69,7 @@ export class UIProp extends Base implements IUIProperty {
 				(<HTMLSelectElement>this.html).selectedIndex = <number>val | 0
 			}
 		}
-		this.trigger(null);
+		this.trigger(null)
 	}
 
 	constructor(options: IUIPropertyOptions) {
@@ -134,12 +141,14 @@ export class UIProp extends Base implements IUIProperty {
 				//later check this for all text HTMLElements
 				this.__s.getter = 'innerHTML'
 		};
-		//text-only UI props only set it's UI value when setting prop.value = anything
-		this.html.addEventListener('change', this.trigger);
+		//this's set only if it's an editable property
+		this.editable
+			&& this.html.addEventListener('change', this.trigger);
 	}
 
 	public destroy() {
-		this.html.removeEventListener('change', this.trigger);
+		this.editable
+			&& this.html.removeEventListener('change', this.trigger);
 	}
 
 	private trigger(e: any): void {

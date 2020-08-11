@@ -81,9 +81,6 @@ var ItemSolid = /** @class */ (function (_super) {
     ItemSolid.prototype.hghlightable = function (name) {
         return this.valid(name); //for now all valid nodes are highlightables
     };
-    ItemSolid.prototype.findNode = function (p) {
-        return this.overNode(p, 0);
-    };
     ItemSolid.prototype.overNode = function (p, ln) {
         for (var i = 0, len = this.count; i < len; i++) {
             var node = this.getNode(i);
@@ -111,6 +108,7 @@ var ItemSolid = /** @class */ (function (_super) {
             attrs.transform += " rotate(" + this.rotation + " " + center.x + " " + center.y + ")";
         }
         dab_1.attr(this.g, attrs);
+        //check below
         utils_1.each(this.bonds, function (b, key) {
             _this.nodeRefresh(key);
         });

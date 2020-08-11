@@ -1,4 +1,4 @@
-import {Type, IHighlighNodeSettings } from "./interfaces";
+import { Type, IHighlighNodeSettings } from "./interfaces";
 import { extend, attr } from "./dab";
 import { tag } from "./utils";
 import Point from "./point";
@@ -72,7 +72,7 @@ export default class HighlightNode extends ItemBase {
 	}
 
 	public defaults(): IHighlighNodeSettings {
-		return extend(super.defaults(), {
+		return <IHighlighNodeSettings>extend(super.defaults(), {
 			name: "h-node",
 			class: "h-node",
 			visible: false,

@@ -1,34 +1,7 @@
 "use strict";
-//... still in progress ...
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.templatesDOM = exports.DOMTemplates = exports.templatesUrl = void 0;
-var tslib_1 = require("tslib");
-var ajaxp_1 = tslib_1.__importDefault(require("./ajaxp"));
+exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.DOMTemplates = void 0;
 var dab_1 = require("./dab");
-function scriptContent(key, text) {
-    var regexSingle = /<script[^\>]*>([\s\S]*?)<\/script>/gi, //regex are not reusable
-    match = regexSingle.exec(text);
-    //window[key] = text;
-    return match ? match[1].replace(/\r|\n/g, "").trim() : "";
-}
-;
-//ajaxp.get(`${base}api/1.0/templates/circuits/stockSymbol,gate_card`, { 'responseType': 'json' })
-exports.templatesUrl = function (url, obj) { return ajaxp_1.default.get(url, obj || { 'responseType': 'json' })
-    .then(function (data) {
-    var regex = /<script.*?id\s*=\s*['"]([^'|^"]*)['"].*?>([\s\S]*?)<\/script>/gmi, templates = {}, match;
-    if (dab_1.isObj(data)) {
-        exports.each(data.result, function (d, k) {
-            templates[k] = scriptContent(k, d.text);
-        });
-    }
-    else {
-        while ((match = regex.exec(data)))
-            // full match is in match[0], whereas captured groups are in ...[1], ...[2], etc.
-            templates[match[1]] = match[2].replace(/\r|\n/g, "").trim();
-    }
-    //return scriptContent(data.matches['stockSymbol'].text);		
-    return templates;
-}); };
 exports.DOMTemplates = function () {
     var templates = {};
     Array.from(exports.qSA('script[data-tmpl]')).forEach((function (scr) {
@@ -36,17 +9,6 @@ exports.DOMTemplates = function () {
         templates[id] = src;
     }));
     return templates;
-};
-exports.templatesDOM = function (query) {
-    return new Promise(function (resolve, reject) {
-        //query:string   id0|id1|id[n]
-        var templates = {}, count = 0, idList = Array.isArray(query) ? query : query.split('|');
-        idList.forEach(function (id) {
-            var tmpl = exports.qS("#" + id), src = tmpl ? tmpl.innerHTML.replace(/\r|\n/g, "").trim() : undefined;
-            tmpl && (count++, templates[id] = src);
-        });
-        resolve(templates);
-    });
 };
 //used for string & numbers
 exports.pad = function (t, e, ch) {
@@ -110,13 +72,8 @@ exports.prop = function (o, path, value) {
     for (var i = 0; !!o && i < r.length; i++) {
         o = o[r[i]];
     }
-    result = o && last && o[last];
-    if (value == undefined) {
-        return result;
-    }
-    else {
-        return (result != undefined) && (o[last] = value, true);
-    }
+    result = o && o[last];
+    return value ? ((result != undefined) && (o[last] = value, true)) : result;
 };
 exports.ready = function (fn) {
     if (!dab_1.isFn(fn)) {

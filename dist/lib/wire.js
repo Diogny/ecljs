@@ -20,7 +20,6 @@ var Wire = /** @class */ (function (_super) {
         });
         _this.g.append(_this.__s.polyline);
         _this.setPoints(options.points);
-        moveToStart(_this);
         _this.onProp && _this.onProp({
             id: "#" + _this.id,
             args: {
@@ -163,17 +162,13 @@ var Wire = /** @class */ (function (_super) {
         return node >= -1 //String(Number(node)) == node
             && node <= this.last; // NOW ACCEPTS  -1
     };
-    Wire.prototype.getNode = function (node, onlyPoint) {
-        var p = this.__s.points[node];
-        return p && { x: p.x, y: p.y, label: this.id };
-    };
     Wire.prototype.appendNode = function (p) {
         return !this.editMode && (this.__s.points.push(p), this.refresh(), true);
     };
     Wire.prototype.setNode = function (node, p) {
         this.__s.points[node].x = p.x | 0;
         this.__s.points[node].y = p.y | 0;
-        moveToStart(this);
+        (node == 0) && moveToStart(this);
         return this.nodeRefresh(node);
     };
     Wire.prototype.hghlightable = function (node) {
@@ -193,27 +188,27 @@ var Wire = /** @class */ (function (_super) {
         }
         return this;
     };
+    Wire.prototype.getNode = function (node, onlyPoint) {
+        var p = this.__s.points[node];
+        return p && { x: p.x, y: p.y, label: "node::" + node };
+    };
     Wire.prototype.overNode = function (p, ln) {
-        var p0 = this.__s.points[ln - 1], p1 = this.__s.points[ln], inside = function (point) { return (Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2)) <= Wire.nodeArea; };
-        return (!p0 || !p1) ? -1 :
-            inside(p0) ? ln - 1 : inside(p1) ? ln : -1;
-    };
-    Wire.prototype.findLineNode = function (p, line) {
-        var fn = function (np) { return (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea; };
-        ((line <= 0 || line >= this.last) && (line = this.findNode(p), 1))
-            || fn(this.__s.points[line])
-            || fn(this.__s.points[--line])
-            || (line = -1);
-        return line;
-    };
-    //don't care if wire is in editMode or not
-    Wire.prototype.findNode = function (p) {
-        for (var i = 0, thisP = this.__s.points[i], len = this.__s.points.length; i < len; thisP = this.__s.points[++i]) {
-            //radius 5 =>  5^2 = 25
-            if ((Math.pow(p.x - thisP.x, 2) + Math.pow(p.y - thisP.y, 2)) <= Wire.nodeArea)
-                return i;
+        var inside = function (np) { return (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea; };
+        if (ln) {
+            //the fast way
+            //lines are 1-based
+            var p0 = this.__s.points[ln - 1], p1 = this.__s.points[ln];
+            return (!p0 || !p1) ? -1 : inside(p0) ? ln - 1 : inside(p1) ? ln : -1;
         }
-        return -1;
+        else {
+            //the long way
+            for (var i = 0, np = this.__s.points[i], len = this.__s.points.length; i < len; np = this.__s.points[++i]) {
+                //radius 5 =>  5^2 = 25
+                if (inside(np))
+                    return i;
+            }
+            return -1;
+        }
     };
     Wire.prototype.deleteLine = function (line) {
         //cannot delete first or last line
@@ -223,7 +218,6 @@ var Wire = /** @class */ (function (_super) {
         this.editMode = false;
         deleteWireNode(this, line);
         deleteWireNode(this, line - 1);
-        moveToStart(this);
         this.editMode = savedEditMode;
         return true;
     };
@@ -231,7 +225,6 @@ var Wire = /** @class */ (function (_super) {
         var savedEditMode = this.editMode, p;
         this.editMode = false;
         p = deleteWireNode(this, node);
-        moveToStart(this);
         this.editMode = savedEditMode;
         return p;
     };

@@ -55,7 +55,7 @@ export default class Label extends ItemBase {
 	}
 
 	public defaults(): ILabelText {
-		return extend(super.defaults(), {
+		return <ILabelText>extend(super.defaults(), {
 			name: "label",
 			class: "label",
 			fontSize: 50

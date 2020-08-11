@@ -24,8 +24,6 @@ export default abstract class ItemBoard extends ItemBase {
 	abstract getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
 	abstract setNode(node: number, p: IPoint): ItemBoard;
 	abstract overNode(p: IPoint, ln?: number): number;
-	//finds a matching point, faster
-	abstract findNode(p: Point): number;
 
 	//this returns true for an EC, and any Wire node and that it is not a start|end bonded node
 	abstract hghlightable(node: number): boolean;
@@ -101,7 +99,7 @@ export default abstract class ItemBoard extends ItemBase {
 	}
 
 	public defaults(): IItemBoardProperties {
-		return extend(super.defaults(), {
+		return <IItemBoardProperties>extend(super.defaults(), {
 			selected: false,
 			onProp: void 0,
 			directional: false,

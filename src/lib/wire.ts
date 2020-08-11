@@ -74,7 +74,6 @@ export default class Wire extends ItemBoard {
 		});
 		this.g.append(this.__s.polyline);
 		this.setPoints(options.points);
-		moveToStart(this);
 		this.onProp && this.onProp({
 			id: `#${this.id}`,
 			args: {
@@ -150,12 +149,6 @@ export default class Wire extends ItemBoard {
 			&& node <= this.last;	// NOW ACCEPTS  -1
 	}
 
-	public getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined {
-		let
-			p: Point = this.__s.points[node];
-		return p && { x: p.x, y: p.y, label: this.id }
-	}
-
 	public appendNode(p: Point): boolean {
 		return !this.editMode && (this.__s.points.push(p), this.refresh(), true)
 	}
@@ -163,7 +156,7 @@ export default class Wire extends ItemBoard {
 	public setNode(node: number, p: IPoint): Wire {
 		this.__s.points[node].x = p.x | 0;
 		this.__s.points[node].y = p.y | 0;
-		moveToStart(this);
+		(node == 0) && moveToStart(this);
 		return this.nodeRefresh(node);
 	}
 
@@ -186,36 +179,35 @@ export default class Wire extends ItemBoard {
 		return this
 	}
 
+	public getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined {
+		let
+			p: Point = this.__s.points[node];
+		return p && { x: p.x, y: p.y, label: `node::${node}` }
+	}
+
 	public static nodeArea = 25;
 
-	public overNode(p: IPoint, ln: number): number {
+	public overNode(p: IPoint, ln?: number): number {
 		let
-			p0 = this.__s.points[ln - 1],
-			p1 = this.__s.points[ln],
-			inside = (point: IPoint): boolean => (Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2)) <= Wire.nodeArea;
-		return (!p0 || !p1) ? -1 :
-			inside(p0) ? ln - 1 : inside(p1) ? ln : -1
-	}
-
-	public findLineNode(p: Point, line: number): number {
-		let
-			fn = (np: Point) => (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea;
-		((line <= 0 || line >= this.last) && (line = this.findNode(p), 1))
-			|| fn(this.__s.points[line])
-			|| fn(this.__s.points[--line])
-			|| (line = -1);
-		return line;
-	}
-
-	//don't care if wire is in editMode or not
-	public findNode(p: Point): number {
-		for (let i = 0, thisP = this.__s.points[i], len = this.__s.points.length;
-			i < len; thisP = this.__s.points[++i]) {
-			//radius 5 =>  5^2 = 25
-			if ((Math.pow(p.x - thisP.x, 2) + Math.pow(p.y - thisP.y, 2)) <= Wire.nodeArea)
-				return i;
+			inside = (np: IPoint): boolean => (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea;
+		if (ln) {
+			//the fast way
+			//lines are 1-based
+			let
+				p0 = this.__s.points[ln - 1],
+				p1 = this.__s.points[ln]
+			return (!p0 || !p1) ? -1 : inside(p0) ? ln - 1 : inside(p1) ? ln : -1
 		}
-		return -1;
+		else {
+			//the long way
+			for (let i = 0, np = this.__s.points[i], len = this.__s.points.length;
+				i < len; np = this.__s.points[++i]) {
+				//radius 5 =>  5^2 = 25
+				if (inside(np))
+					return i;
+			}
+			return -1
+		}
 	}
 
 	public deleteLine(line: number): boolean {
@@ -227,7 +219,6 @@ export default class Wire extends ItemBoard {
 		this.editMode = false;
 		deleteWireNode(this, line);
 		deleteWireNode(this, line - 1);
-		moveToStart(this);
 		this.editMode = savedEditMode;
 		return true;
 	}
@@ -238,7 +229,6 @@ export default class Wire extends ItemBoard {
 			p;
 		this.editMode = false;
 		p = deleteWireNode(this, node);
-		moveToStart(this);
 		this.editMode = savedEditMode;
 		return p;
 	}
@@ -271,7 +261,7 @@ export default class Wire extends ItemBoard {
 	}
 
 	public defaults(): IWireProperties {
-		return extend(super.defaults(), {
+		return <IWireProperties>extend(super.defaults(), {
 			name: "wire",
 			class: "wire",
 			edit: false

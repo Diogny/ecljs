@@ -1,45 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UIHook = exports.UIProp = void 0;
+var tslib_1 = require("tslib");
+var interfaces_1 = require("./interfaces");
 var dab_1 = require("./dab");
 var utils_1 = require("./utils");
-//... in progress...
-var UIProp = /** @class */ (function () {
+var UIProp = /** @class */ (function (_super) {
+    tslib_1.__extends(UIProp, _super);
     function UIProp(options) {
-        var _this = this;
-        //set default values
-        this.__s = {
-            type: "text",
-            selected: false,
-            editable: false,
-            getter: "value",
-            htmlSelect: false,
-            selectCount: 1,
-            selectMultiple: false,
-        };
-        if (!options
-            || !(this.__s.html = (dab_1.isDOM(options.tag) ? (options.tag) : utils_1.qS(options.tag))))
+        var _this = _super.call(this, options) || this;
+        if (!(_this.__s.html = (dab_1.isDOM(options.tag) ? (options.tag) : utils_1.qS(options.tag))))
             throw 'wrong options';
-        //this's useful, p.theme.value during initialization to have a local needed value
-        this.__s.data = options.data || {};
-        //set event handler if any, this uses setter for type checking
-        this.onChange = options.onChange;
-        //copy toString function
-        this.__s.toStringFn = options.toStringFn;
-        //self contain inside the html dom object for onchange event
-        this.html.dab = this;
-        //set properties
-        this.__s.tag = options.tag;
-        this.__s.name = this.html.getAttribute("name");
-        this.__s.id = this.html.id || dab_1.attr(this.html, "prop-id") || ('property' + UIProp._propId++);
-        switch (this.nodeName) {
+        _this.html.dab = _this;
+        switch (_this.nodeName) {
             case 'input':
-                this.__s.type = this.html.type.toLowerCase();
-                this.__s.editable = true;
-                switch (this.type) {
+                _this.__s.type = _this.html.type.toLowerCase();
+                _this.__s.editable = true;
+                switch (_this.type) {
                     case 'radio':
                     case 'checkbox':
-                        this.__s.type = "boolean";
-                        this.__s.getter = 'checked';
+                        _this.__s.type = "boolean";
+                        _this.__s.getter = 'checked';
                         break;
                     case 'submit':
                     case 'button':
@@ -53,65 +34,53 @@ var UIProp = /** @class */ (function () {
                     default:
                         //•color	•date	•datetime	•datetime-local	•email	•month	•number	•range	•search
                         //•tel	•time	•url	•week
-                        this.__s.type = 'text';
+                        _this.__s.type = 'text';
                 }
                 break;
             case 'textarea':
-                this.__s.type = 'text';
-                this.__s.editable = true;
+                _this.__s.type = 'text';
+                _this.__s.editable = true;
                 break;
             case 'select':
-                this.__s.htmlSelect = true;
-                switch (this.html.type.toLowerCase()) {
+                _this.__s.htmlSelect = true;
+                switch (_this.html.type.toLowerCase()) {
                     case 'select-one':
-                        this.__s.getter = "selectedIndex"; //'<any>null';
+                        _this.__s.getter = "selectedIndex"; //'<any>null';
                         break;
                     case 'select-multiple':
-                        this.__s.getter = "selectedOptions"; //'<any>null'
-                        this.__s.selectMultiple = true;
+                        _this.__s.getter = "selectedOptions"; //'<any>null'
+                        _this.__s.selectMultiple = true;
                         break;
                 }
-                this.__s.type = "integer";
+                _this.__s.type = "integer";
                 //define properties for 'SELECT'
                 var index_1 = -1;
-                this.__s.selectCount = this.html.length;
+                _this.__s.selectCount = _this.html.length;
                 //later return an array for select multiple
-                dab_1.dP(this, "index", {
+                dab_1.dP(_this, "index", {
                     get: function () { return index_1; },
                     set: function (value) {
                         (value >= 0 && value < this.__s.selectCount) && // this.options.length
                             ((index_1 != -1) && (this.html.options[index_1].selected = !1),
                                 this.html.options[index_1 = value].selected = !0,
-                                this.selectionUiChanged());
+                                this.trigger());
                     }
                 });
-                dab_1.dP(this, "selectedOption", {
+                dab_1.dP(_this, "selectedOption", {
                     get: function () { return _this.html.options[_this.html.selectedIndex]; }
                 });
                 break;
             default:
-                if (UIProp.textOnly.indexOf(this.nodeName) >= 0) {
-                    this.__s.getter = 'innerText';
-                }
-                else
-                    throw "Unsupported HTML tag: " + this.nodeName;
+                //later check this for all text HTMLElements
+                _this.__s.getter = 'innerHTML';
         }
         ;
-        //later see how can I register change event only for editable properties
-        this.html.addEventListener('change', this.selectionUiChanged);
+        //text-only UI props only set it's UI value when setting prop.value = anything
+        _this.html.addEventListener('change', _this.trigger);
+        return _this;
     }
-    Object.defineProperty(UIProp.prototype, "id", {
-        get: function () { return this.__s.id; },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(UIProp.prototype, "type", {
         get: function () { return this.__s.type; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(UIProp.prototype, "name", {
-        get: function () { return this.__s.name; },
         enumerable: false,
         configurable: true
     });
@@ -142,9 +111,7 @@ var UIProp = /** @class */ (function () {
     });
     Object.defineProperty(UIProp.prototype, "onChange", {
         get: function () { return this.__s.onChange; },
-        set: function (fn) {
-            dab_1.isFn(fn) && (this.__s.onChange = fn);
-        },
+        set: function (fn) { this.__s.onChange = fn; },
         enumerable: false,
         configurable: true
     });
@@ -176,7 +143,6 @@ var UIProp = /** @class */ (function () {
                     this.html[this.__s.getter] = val;
             }
             else {
-                //this.getsetSelect(<HTMLSelectElement>this.html, 'selectedIndex', splat(val));
                 if (this.__s.selectMultiple) {
                     var values_1 = dab_1.splat(val).map(function (num) { return num + ''; });
                     [].forEach.call(this.html.options, function (option) {
@@ -190,30 +156,60 @@ var UIProp = /** @class */ (function () {
                     this.html.selectedIndex = val | 0;
                 }
             }
-            //trigger the property change event
-            this.selectionUiChanged(null);
+            this.trigger(null);
         },
         enumerable: false,
         configurable: true
     });
-    UIProp.prototype.toString = function () {
-        return this.__s.toStringFn ? this.__s.toStringFn() : this.id + ": " + this.value;
+    UIProp.prototype.destroy = function () {
+        this.html.removeEventListener('change', this.trigger);
     };
-    UIProp.prototype.selectionUiChanged = function (e) {
+    UIProp.prototype.trigger = function (e) {
         //when comming from UI, this is the DOM Element
         // 	otherwise it's the property
         var prop = this instanceof UIProp ? this : this.dab;
-        if (prop && prop.onChange) {
-            prop.html.blur();
-            prop.onChange(prop.value, //this cache current value
-            (e) ? 1 : 2, // 1 == 'ui' : 2 == 'prop'
-            prop, //not needed, but just in case
-            e //event if UI triggered
-            );
-        }
+        if (!prop || !prop.onChange)
+            return;
+        prop.html.blur();
+        prop.onChange(prop.value, //this cache current value
+        (e) ? 1 : 2, // 1 == 'ui' : 2 == 'prop'
+        prop, //not needed, but just in case
+        e //event if UI triggered
+        );
     };
-    UIProp.textOnly = "a|abbr|acronym|b|bdo|big|cite|code|dfn|em|i|kbd|label|legend|li|q|samp|small|span|strong|sub|sup|td|th|tt|var".split('|');
-    UIProp._propId = 1;
+    UIProp.prototype.defaults = function () {
+        return {
+            tag: "",
+            onChange: void 0,
+            data: {},
+            html: void 0,
+            type: "text",
+            selected: false,
+            editable: false,
+            getter: "value",
+            htmlSelect: false,
+            selectCount: 1,
+            selectMultiple: false,
+        };
+    };
+    UIProp.container = function (props) {
+        var root = {};
+        utils_1.each(props, function (p, key) { return root[key] = new UIHook(new UIProp(p)); });
+        return root;
+    };
     return UIProp;
+}(interfaces_1.Base));
+exports.UIProp = UIProp;
+var UIHook = /** @class */ (function () {
+    function UIHook(prop) {
+        this.prop = prop;
+    }
+    Object.defineProperty(UIHook.prototype, "value", {
+        get: function () { return this.prop.value; },
+        set: function (value) { this.prop.value = value; },
+        enumerable: false,
+        configurable: true
+    });
+    return UIHook;
 }());
-exports.default = UIProp;
+exports.UIHook = UIHook;

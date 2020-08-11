@@ -94,10 +94,6 @@ export default abstract class ItemSolid extends ItemBoard {
 		return this.valid(name)	//for now all valid nodes are highlightables
 	}
 
-	public findNode(p: Point): number {
-		return this.overNode(p, 0)
-	}
-
 	public static nodeArea = 81;
 
 	public overNode(p: IPoint, ln?: number): number {
@@ -133,6 +129,7 @@ export default abstract class ItemSolid extends ItemBoard {
 			attrs.transform += ` rotate(${this.rotation} ${center.x} ${center.y})`
 		}
 		attr(this.g, attrs);
+		//check below
 		each(this.bonds, (b: Bond, key: any) => {
 			this.nodeRefresh(key);
 		});

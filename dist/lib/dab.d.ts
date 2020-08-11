@@ -15,18 +15,28 @@ export declare const pInt: (s: string, mag?: number | undefined) => number;
 export declare const clamp: (v: number, min: number, max: number) => number;
 export declare const round: (v: number, decimals: number) => number;
 export declare const splat: <T>(o: any) => T[];
-export declare const extend: (obj: any, src: any) => any;
-export declare const copy: (obj: any, src: any) => any;
+export declare const extend: (obj: {
+    [id: string]: any;
+}, src: {
+    [id: string]: any;
+}) => {
+    [id: string]: any;
+};
+export declare const copy: (obj: {
+    [id: string]: any;
+}, src: {
+    [id: string]: any;
+}) => {
+    [id: string]: any;
+};
 export declare const inherit: (parent: any, child: any) => void;
 /**
  * @description returns true if an element if an HTML or SVG DOM element
  * @param e {any} an element
  */
 export declare const isDOM: (e: any) => boolean;
-declare const pojo: (arg: any) => boolean;
-export { pojo };
-declare const obj: (o: any) => any;
-export { obj };
+export declare const pojo: (arg: any) => boolean;
+export declare const obj: (o: any) => any;
 export declare const clone: <T>(o: T) => T;
 export declare const defEnum: (e: any) => any;
 export declare const css: (el: any, styles: any) => any;
@@ -87,11 +97,9 @@ export declare const rCl: (el: Element, className: string) => void;
  * @returns true if present, false if not
  */
 export declare const tCl: (el: Element, className: string, force?: boolean | undefined) => boolean;
-export declare const getParentAttr: (p: HTMLElement, attr: string) => HTMLElement;
 export declare const range: (s: number, e: number) => number[];
 export declare const unique: (x: any[]) => any[];
 export declare const union: (x: any[], y: any[]) => any[];
 export declare const aClx: (el: Element, className: string) => Element;
-export declare const createClass: (baseClass: string, newClass: string) => string;
 export declare const selectMany: <TIn, TOut>(input: TIn[], selectListFn: (t: TIn) => TOut[]) => TOut[];
 export declare const toBool: (val: any) => boolean;

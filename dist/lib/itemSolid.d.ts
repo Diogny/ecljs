@@ -1,6 +1,5 @@
 import { IItemSolidOptions, IItemSolidProperties, IPoint, INodeInfo } from "./interfaces";
 import Rect from "./rect";
-import Point from "./point";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
 export default abstract class ItemSolid extends ItemBoard {
@@ -14,7 +13,6 @@ export default abstract class ItemSolid extends ItemBoard {
     rect(): Rect;
     valid(node: number): boolean;
     hghlightable(name: number): boolean;
-    findNode(p: Point): number;
     static nodeArea: number;
     overNode(p: IPoint, ln?: number): number;
     nodeRefresh(node: number): ItemSolid;

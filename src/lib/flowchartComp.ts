@@ -1,4 +1,4 @@
-import {Type, IComponentProperty, IItemSolidOptions, IPoint, IItemBoardProperties } from "./interfaces";
+import { Type, IComponentProperty, IItemSolidOptions, IPoint, IItemBoardProperties } from "./interfaces";
 import { extend } from "./dab";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
@@ -33,9 +33,9 @@ export default abstract class FlowchartComp extends ItemSolid {
 		//Some code tries to call this, investigate later...
 		throw 'somebody called me, not good!';
 	}
-	
+
 	public defaults(): IItemBoardProperties {
-		return extend(super.defaults(), {
+		return <IItemBoardProperties>extend(super.defaults(), {
 			directional: true,
 		})
 	}

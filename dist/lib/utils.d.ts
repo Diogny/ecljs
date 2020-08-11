@@ -1,12 +1,6 @@
-export declare const templatesUrl: (url: string, obj?: {
-    [key: string]: any;
-} | undefined) => Promise<any>;
 export declare const DOMTemplates: () => {
     [key: string]: any;
 };
-export declare const templatesDOM: (query: string | string[]) => Promise<{
-    [key: string]: any;
-}>;
 export declare const pad: (t: string, e: number, ch?: any) => string;
 export declare const fillChar: (ch: string, len: number) => string;
 export declare const padStr: (s: string, width: number) => string;

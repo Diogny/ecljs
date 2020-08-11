@@ -1,9 +1,7 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty } from './interfaces';
-export default class UIProp implements IUIProperty {
+import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base } from './interfaces';
+export declare class UIProp extends Base implements IUIProperty {
     protected __s: IUIPropertySettings;
-    get id(): string;
     get type(): string;
-    get name(): string;
     get tag(): string | Element;
     get html(): HTMLElement;
     get editable(): boolean;
@@ -13,11 +11,21 @@ export default class UIProp implements IUIProperty {
     get nodeName(): string;
     get onChange(): IUIPropertyCallback | undefined;
     set onChange(fn: IUIPropertyCallback | undefined);
-    get value(): number | string | string[];
-    set value(val: number | string | string[]);
+    get value(): number | boolean | string | string[];
+    set value(val: number | boolean | string | string[]);
     constructor(options: IUIPropertyOptions);
-    toString(): string;
-    private selectionUiChanged;
-    private static textOnly;
-    private static _propId;
+    destroy(): void;
+    private trigger;
+    defaults(): IUIPropertySettings;
+    static container(props: {
+        [id: string]: IUIPropertyOptions;
+    }): {
+        [id: string]: UIHook;
+    };
+}
+export declare class UIHook {
+    prop: UIProp;
+    constructor(prop: UIProp);
+    get value(): number | boolean | string | string[];
+    set value(value: number | boolean | string | string[]);
 }

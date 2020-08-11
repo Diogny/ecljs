@@ -1,6 +1,6 @@
 import Point from './point';
 import Comp from "./components";
-import UIProp from "./props";
+import { UIProp } from "./props";
 import Label from "./label";
 import Container from "./container";
 import FlowchartComp from "./flowchartComp";
@@ -109,19 +109,14 @@ export interface IUIPropertyCallback {
 export interface IUIPropertyOptions {
     tag: string | Element;
     onChange?: IUIPropertyCallback | undefined;
-    toStringFn?: () => string;
     data?: {
         [id: string]: any;
     };
 }
 export interface IUIProperty extends IUIPropertyOptions {
-    id: string;
-    name: string;
     type: string;
     html: HTMLElement;
     editable: boolean;
-    nodeName: string;
-    value: number | boolean | string | string[];
     data: {
         [id: string]: any;
     };

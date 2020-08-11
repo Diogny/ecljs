@@ -1,35 +1,4 @@
-//... still in progress ...
-
-import ajaxp from './ajaxp';
-import { isObj, isFn, attr, aEL, consts as _, pojo } from './dab';
-
-function scriptContent(key: string, text: string) {
-	let
-		regexSingle = /<script[^\>]*>([\s\S]*?)<\/script>/gi, //regex are not reusable
-		match = regexSingle.exec(text);
-	//window[key] = text;
-	return match ? match[1].replace(/\r|\n/g, "").trim() : "";
-};
-
-//ajaxp.get(`${base}api/1.0/templates/circuits/stockSymbol,gate_card`, { 'responseType': 'json' })
-export const templatesUrl = (url: string, obj?: { [key: string]: any }) => ajaxp.get(url, obj || { 'responseType': 'json' })
-	.then((data: any) => {
-		let
-			regex = /<script.*?id\s*=\s*['"]([^'|^"]*)['"].*?>([\s\S]*?)<\/script>/gmi,
-			templates: any = {},
-			match;
-		if (isObj(data)) {
-			each(data.result, (d: any, k: string) => {
-				templates[k] = scriptContent(k, d.text);
-			});
-		} else {
-			while ((match = regex.exec(data)))
-				// full match is in match[0], whereas captured groups are in ...[1], ...[2], etc.
-				templates[match[1]] = match[2].replace(/\r|\n/g, "").trim();
-		}
-		//return scriptContent(data.matches['stockSymbol'].text);		
-		return templates;
-	});
+import { isFn, attr, aEL, consts as _, pojo } from './dab';
 
 export const DOMTemplates = (): { [key: string]: any } => {
 	let
@@ -41,23 +10,6 @@ export const DOMTemplates = (): { [key: string]: any } => {
 		templates[id] = src
 	}));
 	return templates;
-}
-
-export const templatesDOM = (query: string | string[]): Promise<{ [key: string]: any }> => {
-	return new Promise(function (resolve, reject) {
-		//query:string   id0|id1|id[n]
-		let
-			templates: { [key: string]: any } = {},
-			count = 0,
-			idList = Array.isArray(query) ? query : query.split('|');
-		idList.forEach((id: string) => {
-			let
-				tmpl = qS(`#${id}`),
-				src = tmpl ? tmpl.innerHTML.replace(/\r|\n/g, "").trim() : undefined;
-			tmpl && (count++, templates[id] = src);
-		});
-		resolve(templates)
-	})
 }
 
 //used for string & numbers
@@ -131,17 +83,13 @@ export const filterArray = (obj: any, fn: (value: any, key: string, ndx: number)
 export const prop = function (o: any, path: string, value?: any) {
 	let
 		r = path.split('.').map(s => s.trim()),
-		last = r.pop(),
+		last = <string>r.pop(),
 		result = <any>void 0;
 	for (let i = 0; !!o && i < r.length; i++) {
 		o = o[r[i]]
 	}
-	result = o && last && o[last];
-	if (value == undefined) {
-		return result
-	} else {
-		return (result != undefined) && (o[<string>last] = value, true)
-	}
+	result = o && o[last];
+	return value ? ((result != undefined) && (o[<string>last] = value, true)) : result
 };
 
 export const ready = (fn: Function) => { //https://plainjs.com/javascript/events/running-code-when-the-document-is-ready-15/

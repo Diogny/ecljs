@@ -65,7 +65,7 @@ export const round = (v: number, decimals: number) => {
 export const splat = <T>(o: any): T[] => isArr(o) ? o : (dfnd(o) ? [o] : []);
 
 //copy all properties in src to obj, and returns obj
-export const extend = (obj: any, src: any) => { //no support for IE 8 https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/
+export const extend = (obj: { [id: string]: any }, src: { [id: string]: any }) => { //no support for IE 8 https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/
 	//!obj && (obj = {});
 	//const returnedTarget = Object.assign(target, source); doesn't throw error if source is undefined
 	//		but target has to be an object
@@ -74,7 +74,7 @@ export const extend = (obj: any, src: any) => { //no support for IE 8 https://pl
 }
 
 //copy properties in src that exists only in obj, and returns obj
-export const copy = (obj: any, src: any) => {
+export const copy = (obj: { [id: string]: any }, src: { [id: string]: any }) => {
 	pojo(src) && Object.keys(obj).forEach((key) => {
 		let
 			k = src[key];
@@ -94,13 +94,7 @@ export const inherit = (parent: any, child: any) => {
  */
 export const isDOM = (e: any) => e instanceof window.HTMLElement || e instanceof window.HTMLDocument;
 
-/* this generates a function "inherit" and later assigns it to the namespace "dab"
-	export function inherit(parent: any, child: any) {
-		child.prototype = Object.create(parent.prototype);
-		child.prototype.constructor = child;
-	}
-	 */
-const pojo = (arg: any) => {	// plainObj   Plain Old JavaScript Object (POJO)		{}
+export const pojo = (arg: any): boolean => {	// plainObj   Plain Old JavaScript Object (POJO)		{}
 	if (arg == null || typeof arg !== 'object') {
 		return false;
 	}
@@ -113,9 +107,8 @@ const pojo = (arg: any) => {	// plainObj   Plain Old JavaScript Object (POJO)		{
 	//Object.getPrototypeOf({}).constructor.name == "Object"
 	//Object.getPrototypeOf(Object.create(null)) == null
 }
-export { pojo };
 
-const obj = (o: any) => {			//deep copy
+export const obj = (o: any) => {			//deep copy
 	if (!pojo(o)) {
 		return o;
 	}
@@ -129,7 +122,6 @@ const obj = (o: any) => {			//deep copy
 		}
 	return result;
 }
-export { obj }
 
 export const clone = <T>(o: T): T => <T>JSON.parse(JSON.stringify(o));
 
@@ -223,13 +215,6 @@ export const tCl = (el: Element, className: string, force?: boolean): boolean =>
 //https://plainjs.com/javascript/traversing/match-element-selector-52/
 //https://plainjs.com/javascript/traversing/get-siblings-of-an-element-40/
 
-
-export const getParentAttr = function (p: HTMLElement, attr: string) {
-	while (p && !p.hasAttribute(attr))
-		p = <HTMLElement>p.parentElement;
-	return p;
-}
-
 export const range = (s: number, e: number) => Array.from('x'.repeat(e - s), (_, i) => s + i);
 
 //Sets
@@ -240,16 +225,6 @@ export const union = (x: any[], y: any[]): any[] => unique(x.concat(y));
 export const aClx = (el: Element, className: string): Element => {
 	el.classList.add(...(className || "").split(' ').filter((v: string) => !empty(v)))
 	return el
-}
-
-//this.win.classList.add(...(this.settings.class || "").split(' '));
-
-export const createClass = (baseClass: string, newClass: string): string => {
-	let
-		split = (s: string) => s.split(' '),
-		baseArr = split(baseClass || ""),
-		newArr = split(newClass || "");
-	return union(baseArr, newArr).join(' ')
 }
 
 export const selectMany = <TIn, TOut>(input: TIn[], selectListFn: (t: TIn) => TOut[]): TOut[] =>

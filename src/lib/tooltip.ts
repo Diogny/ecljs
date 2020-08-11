@@ -98,7 +98,7 @@ export default class Tooltip extends Label {
 	}
 
 	public defaults(): ITooltipText {
-		return extend(super.defaults(), {
+		return <ITooltipText>extend(super.defaults(), {
 			name: "tooltip",
 			class: "tooltip",
 			borderRadius: 4

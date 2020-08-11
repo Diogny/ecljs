@@ -1,7 +1,7 @@
 "use strict";
 //still in progress...
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toBool = exports.selectMany = exports.createClass = exports.aClx = exports.union = exports.unique = exports.range = exports.getParentAttr = exports.tCl = exports.rCl = exports.aCl = exports.hCl = exports.aChld = exports.dP = exports.rEL = exports.aEL = exports.attr = exports.css = exports.defEnum = exports.clone = exports.obj = exports.pojo = exports.isDOM = exports.inherit = exports.copy = exports.extend = exports.splat = exports.round = exports.clamp = exports.pInt = exports.isInt = exports.isNumeric = exports.isNum = exports.isArr = exports.isObj = exports.isStr = exports.dfnd = exports.isFn = exports.typeOf = exports.empty = exports.ts = exports.consts = void 0;
+exports.toBool = exports.selectMany = exports.aClx = exports.union = exports.unique = exports.range = exports.tCl = exports.rCl = exports.aCl = exports.hCl = exports.aChld = exports.dP = exports.rEL = exports.aEL = exports.attr = exports.css = exports.defEnum = exports.clone = exports.obj = exports.pojo = exports.isDOM = exports.inherit = exports.copy = exports.extend = exports.splat = exports.round = exports.clamp = exports.pInt = exports.isInt = exports.isNumeric = exports.isNum = exports.isArr = exports.isObj = exports.isStr = exports.dfnd = exports.isFn = exports.typeOf = exports.empty = exports.ts = exports.consts = void 0;
 var tslib_1 = require("tslib");
 var c = {
     s: "string",
@@ -55,12 +55,12 @@ exports.extend = function (obj, src) {
     //!obj && (obj = {});
     //const returnedTarget = Object.assign(target, source); doesn't throw error if source is undefined
     //		but target has to be an object
-    pojo(src) && Object.keys(src).forEach(function (key) { obj[key] = src[key]; });
+    exports.pojo(src) && Object.keys(src).forEach(function (key) { obj[key] = src[key]; });
     return obj;
 };
 //copy properties in src that exists only in obj, and returns obj
 exports.copy = function (obj, src) {
-    pojo(src) && Object.keys(obj).forEach(function (key) {
+    exports.pojo(src) && Object.keys(obj).forEach(function (key) {
         var k = src[key];
         exports.dfnd(k) && (obj[key] = k);
     });
@@ -75,13 +75,7 @@ exports.inherit = function (parent, child) {
  * @param e {any} an element
  */
 exports.isDOM = function (e) { return e instanceof window.HTMLElement || e instanceof window.HTMLDocument; };
-/* this generates a function "inherit" and later assigns it to the namespace "dab"
-    export function inherit(parent: any, child: any) {
-        child.prototype = Object.create(parent.prototype);
-        child.prototype.constructor = child;
-    }
-     */
-var pojo = function (arg) {
+exports.pojo = function (arg) {
     if (arg == null || typeof arg !== 'object') {
         return false;
     }
@@ -94,20 +88,18 @@ var pojo = function (arg) {
     //Object.getPrototypeOf({}).constructor.name == "Object"
     //Object.getPrototypeOf(Object.create(null)) == null
 };
-exports.pojo = pojo;
-var obj = function (o) {
-    if (!pojo(o)) {
+exports.obj = function (o) {
+    if (!exports.pojo(o)) {
         return o;
     }
     var result = Object.create(null);
     for (var k in o)
         if (!o.hasOwnProperty || o.hasOwnProperty(k)) {
             var prop = o[k];
-            result[k] = pojo(prop) ? obj(prop) : prop;
+            result[k] = exports.pojo(prop) ? exports.obj(prop) : prop;
         }
     return result;
 };
-exports.obj = obj;
 exports.clone = function (o) { return JSON.parse(JSON.stringify(o)); };
 exports.defEnum = function (e) {
     for (var key in e) { //let item = e[key];
@@ -187,11 +179,6 @@ exports.rCl = function (el, className) { return el.classList.remove(className); 
 exports.tCl = function (el, className, force) { return el.classList.toggle(className, force); };
 //https://plainjs.com/javascript/traversing/match-element-selector-52/
 //https://plainjs.com/javascript/traversing/get-siblings-of-an-element-40/
-exports.getParentAttr = function (p, attr) {
-    while (p && !p.hasAttribute(attr))
-        p = p.parentElement;
-    return p;
-};
 exports.range = function (s, e) { return Array.from('x'.repeat(e - s), function (_, i) { return s + i; }); };
 //Sets
 exports.unique = function (x) { return x.filter(function (elem, index) { return x.indexOf(elem) === index; }); };
@@ -200,11 +187,6 @@ exports.aClx = function (el, className) {
     var _a;
     (_a = el.classList).add.apply(_a, tslib_1.__spread((className || "").split(' ').filter(function (v) { return !exports.empty(v); })));
     return el;
-};
-//this.win.classList.add(...(this.settings.class || "").split(' '));
-exports.createClass = function (baseClass, newClass) {
-    var split = function (s) { return s.split(' '); }, baseArr = split(baseClass || ""), newArr = split(newClass || "");
-    return exports.union(baseArr, newArr).join(' ');
 };
 exports.selectMany = function (input, selectListFn) {
     return input.reduce(function (out, inx) {

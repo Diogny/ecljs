@@ -26,15 +26,13 @@ export default class Wire extends ItemBoard {
      * @returns {boolean} true if point is valid
      */
     valid(node: number): boolean;
-    getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
     appendNode(p: Point): boolean;
     setNode(node: number, p: IPoint): Wire;
     hghlightable(node: number): boolean;
     setPoints(points: IPoint[]): Wire;
+    getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
     static nodeArea: number;
-    overNode(p: IPoint, ln: number): number;
-    findLineNode(p: Point, line: number): number;
-    findNode(p: Point): number;
+    overNode(p: IPoint, ln?: number): number;
     deleteLine(line: number): boolean;
     deleteNode(node: number): Point | undefined;
     insertNode(node: number, p: Point): boolean;

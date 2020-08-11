@@ -1,29 +1,22 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty } from './interfaces';
-import { attr, isFn, dP, typeOf, isInt, splat, isDOM, isStr, isNumeric } from './dab';
-import { qS } from './utils';
+import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base } from './interfaces';
+import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric } from './dab';
+import { qS, each } from './utils';
 
-//... in progress...
-export default class UIProp implements IUIProperty {
+export class UIProp extends Base implements IUIProperty {
 
 	protected __s: IUIPropertySettings;
 
-	get id(): string { return this.__s.id }
 	get type(): string { return this.__s.type }
-	get name(): string { return this.__s.name }
 	get tag(): string | Element { return this.__s.tag }
 	get html(): HTMLElement { return this.__s.html }
 	get editable(): boolean { return this.__s.editable }
 	get data(): { [id: string]: any } { return this.__s.data }
-
 	get nodeName(): string { return this.html.nodeName.toLowerCase() }
 
 	get onChange(): IUIPropertyCallback | undefined { return this.__s.onChange }
+	set onChange(fn: IUIPropertyCallback | undefined) { this.__s.onChange = fn }
 
-	set onChange(fn: IUIPropertyCallback | undefined) {
-		isFn(fn) && (this.__s.onChange = fn)
-	}
-
-	get value(): number | string | string[] {
+	get value(): number | boolean | string | string[] {
 		let
 			val = (<any>this.html)[this.__s.getter];	//select.selectedOptions
 		if (!this.__s.htmlSelect) {
@@ -40,7 +33,7 @@ export default class UIProp implements IUIProperty {
 			return (<HTMLSelectElement>this.html).options[val].value
 	}
 
-	set value(val: number | string | string[]) {
+	set value(val: number | boolean | string | string[]) {
 		if (!this.__s.htmlSelect) {
 			let
 				valtype = typeOf(val);
@@ -53,7 +46,6 @@ export default class UIProp implements IUIProperty {
 				(<any>this.html)[this.__s.getter] = val;
 		}
 		else {
-			//this.getsetSelect(<HTMLSelectElement>this.html, 'selectedIndex', splat(val));
 			if (this.__s.selectMultiple) {
 				let
 					values = splat(val).map((num: any) => num + '');
@@ -70,38 +62,14 @@ export default class UIProp implements IUIProperty {
 				(<HTMLSelectElement>this.html).selectedIndex = <number>val | 0
 			}
 		}
-		//trigger the property change event
-		this.selectionUiChanged(null);
+		this.trigger(null);
 	}
 
 	constructor(options: IUIPropertyOptions) {
-		//set default values
-		this.__s = <IUIPropertySettings><unknown>{
-			type: "text",
-			selected: false,
-			editable: false,
-			getter: "value",
-			htmlSelect: false,
-			selectCount: 1,
-			selectMultiple: false,
-		};
-		if (!options
-			|| !(this.__s.html = <HTMLElement>(isDOM(options.tag) ? (options.tag) : qS(<string>options.tag)))
-		)
+		super(options);
+		if (!(this.__s.html = <HTMLElement>(isDOM(options.tag) ? (options.tag) : qS(<string>options.tag))))
 			throw 'wrong options';
-		//this's useful, p.theme.value during initialization to have a local needed value
-		this.__s.data = options.data || {};
-		//set event handler if any, this uses setter for type checking
-		this.onChange = options.onChange;
-		//copy toString function
-		this.__s.toStringFn = options.toStringFn;
-		//self contain inside the html dom object for onchange event
 		(<any>this.html).dab = this;
-		//set properties
-		this.__s.tag = options.tag;
-		this.__s.name = <string>this.html.getAttribute("name");
-		this.__s.id = this.html.id || attr(this.html, "prop-id") || ('property' + UIProp._propId++);
-
 		switch (this.nodeName) {
 			case 'input':
 				this.__s.type = (<HTMLInputElement>this.html).type.toLowerCase();
@@ -154,46 +122,72 @@ export default class UIProp implements IUIProperty {
 						(value >= 0 && value < this.__s.selectCount) &&	// this.options.length
 							((index != -1) && (this.html.options[index].selected = !1),
 								this.html.options[index = value].selected = !0,
-								this.selectionUiChanged());
+								this.trigger());
 					}
 				});
 
 				dP(this, "selectedOption", {
 					get: () => (<any>this.html).options[(<any>this.html).selectedIndex]
 				});
-
 				break;
 			default:
-				if (UIProp.textOnly.indexOf(this.nodeName) >= 0) {
-					this.__s.getter = 'innerText';
-				} else
-					throw `Unsupported HTML tag: ${this.nodeName}`;
+				//later check this for all text HTMLElements
+				this.__s.getter = 'innerHTML'
 		};
-		//later see how can I register change event only for editable properties
-		this.html.addEventListener('change', this.selectionUiChanged);
+		//text-only UI props only set it's UI value when setting prop.value = anything
+		this.html.addEventListener('change', this.trigger);
 	}
 
-	public toString(): string {
-		return this.__s.toStringFn ? this.__s.toStringFn() : `${this.id}: ${this.value}`
+	public destroy() {
+		this.html.removeEventListener('change', this.trigger);
 	}
 
-	private selectionUiChanged(e: any): void {
+	private trigger(e: any): void {
 		//when comming from UI, this is the DOM Element
 		// 	otherwise it's the property
 		let
 			prop: UIProp | null = this instanceof UIProp ? this : (<any>this).dab;
-		if (prop && prop.onChange) {
-			prop.html.blur();
-			prop.onChange(
-				prop.value,			//this cache current value
-				(e) ? 1 : 2,		// 1 == 'ui' : 2 == 'prop'
-				prop,				//not needed, but just in case
-				e					//event if UI triggered
-			)
+		if (!prop || !prop.onChange)
+			return;
+		prop.html.blur();
+		prop.onChange(
+			prop.value,			//this cache current value
+			(e) ? 1 : 2,		// 1 == 'ui' : 2 == 'prop'
+			prop,				//not needed, but just in case
+			e					//event if UI triggered
+		)
+	}
+
+	public defaults(): IUIPropertySettings {
+		return <IUIPropertySettings>{
+			tag: "",
+			onChange: void 0,
+			data: {},
+			html: <any>void 0,
+			type: "text",
+			selected: false,
+			editable: false,
+			getter: "value",
+			htmlSelect: false,
+			selectCount: 1,
+			selectMultiple: false,
 		}
 	}
 
-	private static textOnly = "a|abbr|acronym|b|bdo|big|cite|code|dfn|em|i|kbd|label|legend|li|q|samp|small|span|strong|sub|sup|td|th|tt|var".split('|');
-	private static _propId = 1;
+	static container(props: { [id: string]: IUIPropertyOptions }): { [id: string]: UIHook } {
+		let
+			root: { [id: string]: UIHook } = {};
+		each(props, (p: IUIPropertyOptions, key: string) => root[key] = new UIHook(new UIProp(p)));
+		return root
+	}
+
+}
+
+export class UIHook {
+
+	constructor(public prop: UIProp) { }
+
+	get value(): number | boolean | string | string[] { return this.prop.value }
+	set value(value: number | boolean | string | string[]) { this.prop.value = value }
 
 }

@@ -95,7 +95,7 @@ export default class EC extends ItemSolid {
 	}
 
 	public defaults(): IECProperties {
-		return extend(super.defaults(), {
+		return <IECProperties>extend(super.defaults(), {
 			class: "ec",
 			boardLabel: void 0
 		})

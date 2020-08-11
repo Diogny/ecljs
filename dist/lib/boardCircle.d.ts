@@ -9,11 +9,11 @@ export default class BoardCircle implements IHighlightable {
     get radius(): number;
     get g(): SVGCircleElement;
     constructor(nodeName: string);
-    getDomRadius(): number;
+    domRadius(): number;
     move(x: number, y: number): BoardCircle;
     setRadius(value: number): BoardCircle;
     hide(): BoardCircle;
     show(nodeValue: number): BoardCircle;
-    private getObjectSettings;
+    private settings;
     refresh(): BoardCircle;
 }

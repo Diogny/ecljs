@@ -175,15 +175,11 @@ export interface IMetadataNodes {
 	//length: number;
 	//size: ISize;
 	createLabels: boolean;
-	list: IMetadataNodeInfo[];
+	list: INodeInfo[];
 }
 
-export interface IMetadataNodeInfo extends IPoint {
+export interface INodeInfo extends IPoint {
 	label: string;
-}
-
-export interface IItemNode extends IMetadataNodeInfo {
-	rot: IPoint;
 }
 
 export interface IMetadataLogic {
@@ -280,7 +276,6 @@ export interface IWireProperties extends IItemBoardProperties {
 	points: Point[];
 	polyline: SVGElement;
 	lines: SVGElement[];		//used on edit-mode only
-	pad: number;
 	edit: boolean;
 }
 

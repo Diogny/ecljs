@@ -61,7 +61,7 @@ var ItemBase = /** @class */ (function (_super) {
     };
     ItemBase.prototype.setVisible = function (value) {
         _super.prototype.setVisible.call(this, value);
-        this.visible ? dab_1.removeClass(this.g, "hide") : dab_1.addClass(this.g, "hide");
+        this.visible ? dab_1.rCl(this.g, "hide") : dab_1.aCl(this.g, "hide");
         return this;
     };
     ItemBase.prototype.remove = function () {

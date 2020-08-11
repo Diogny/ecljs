@@ -12,6 +12,9 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     set board(board: Board);
     abstract get library(): string;
     abstract get directional(): boolean;
+    abstract createItem(options: {
+        [x: string]: any;
+    }): T;
     get counters(): {
         [x: string]: any;
     };
@@ -44,7 +47,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     constructor(name: string);
     defaults(): IContainerProperties<T>;
     root(name: string): IBaseComponent | undefined;
-    hasComponent(id: string): boolean;
+    hasItem(id: string): boolean;
     selectAll(value: boolean): (T | Wire)[];
     toggleSelect(comp: T): void;
     selectThis(comp: T | Wire): boolean;
@@ -53,9 +56,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     deleteSelected(): number;
     destroy(): void;
     boundariesRect(): Rect;
-    abstract createItem(options: {
-        [x: string]: any;
-    }): T;
     add(options: {
         [x: string]: any;
     }): T | Wire;
@@ -63,7 +63,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     itemBonds(item: T | Wire): Bond[] | undefined;
     nodeBonds(item: T | Wire, node: number): Bond | undefined;
     bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean;
-    protected bondSingle(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean;
+    protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean;
     unbond(thisObj: T | Wire, node: number, id: string): void;
     unbondNode(thisObj: T | Wire, node: number): void;
     disconnect(thisObj: T | Wire): void;

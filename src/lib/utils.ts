@@ -160,10 +160,22 @@ export const ready = (fn: Function) => { //https://plainjs.com/javascript/events
 	return !0;
 };
 
-const qS = (s: string): HTMLElement => <HTMLElement>document.querySelector(s);
-export { qS }
+/**
+ * @description document.querySelector shortcut
+ * @param s query
+ */
+export const qS = (s: string): HTMLElement => <HTMLElement>document.querySelector(s);
 
+/**
+ * @description document.querySelectorAll shortcut
+ * @param s query
+ */
 export const qSA = (s: string) => document.querySelectorAll(s);
+
+/**
+ * @description document.getElementById shortcut
+ * @param s #id
+ */
 export const gEId = (id: string) => document.getElementById(id);
 
 export const basePath = () => {
@@ -172,5 +184,11 @@ export const basePath = () => {
 	return meta ? meta.getAttribute('content') : "";
 }
 
+/**
+ * @description creates a NxN matrix
+ * @param rows amount of rows
+ * @param cols amount of columns
+ * @param filler cell filler
+ */
 export const matrix = <T>(rows: number, cols: number, filler: T): T[][] =>
 	Array.from({ length: rows }, () => new Array(cols).fill(filler));

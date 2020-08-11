@@ -154,13 +154,10 @@ export interface IComponentMetadata {
 }
 export interface IMetadataNodes {
     createLabels: boolean;
-    list: IMetadataNodeInfo[];
+    list: INodeInfo[];
 }
-export interface IMetadataNodeInfo extends IPoint {
+export interface INodeInfo extends IPoint {
     label: string;
-}
-export interface IItemNode extends IMetadataNodeInfo {
-    rot: IPoint;
 }
 export interface IMetadataLogic {
     header: string[];
@@ -235,7 +232,6 @@ export interface IWireProperties extends IItemBoardProperties {
     points: Point[];
     polyline: SVGElement;
     lines: SVGElement[];
-    pad: number;
     edit: boolean;
 }
 export interface IECProperties extends IItemSolidProperties {

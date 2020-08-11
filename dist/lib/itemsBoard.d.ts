@@ -1,4 +1,4 @@
-import { IPoint, IItemNode, IItemBoardProperties, IItemBaseOptions } from './interfaces';
+import { IPoint, IItemBoardProperties, IItemBaseOptions, INodeInfo } from './interfaces';
 import Point from './point';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
@@ -16,10 +16,9 @@ export default abstract class ItemBoard extends ItemBase {
     abstract get last(): number;
     abstract refresh(): ItemBoard;
     abstract nodeRefresh(node: number): ItemBoard;
-    abstract getNode(node: number): IItemNode;
-    abstract getNodeRealXY(node: number): Point;
+    abstract getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
     abstract setNode(node: number, p: IPoint): ItemBoard;
-    abstract overNode(p: IPoint, ln: number): number;
+    abstract overNode(p: IPoint, ln?: number): number;
     abstract findNode(p: Point): number;
     abstract hghlightable(node: number): boolean;
     constructor(container: Container<ItemBoard>, options: IItemBaseOptions);

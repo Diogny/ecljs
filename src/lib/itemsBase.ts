@@ -1,5 +1,5 @@
 import { IItemBaseProperties, IItemBaseOptions, ISize, ComponentPropertyType } from './interfaces';
-import { obj, addClass, removeClass, isStr } from './dab';
+import { obj, aCl, rCl, isStr } from './dab';
 import { tag } from './utils';
 import Rect from './rect';
 import Point from './point';
@@ -35,7 +35,7 @@ export default abstract class ItemBase extends Item {
 
 	public setVisible(value: boolean): ItemBase {
 		super.setVisible(value);
-		this.visible ? removeClass(this.g, "hide") : addClass(this.g, "hide")
+		this.visible ? rCl(this.g, "hide") : aCl(this.g, "hide")
 		return this;
 	}
 

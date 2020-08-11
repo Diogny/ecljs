@@ -1,5 +1,5 @@
-import { IItemSolidOptions, IItemSolidProperties, IPoint, IItemNode } from "./interfaces";
-import { attr, obj, aCld } from "./dab";
+import { IItemSolidOptions, IItemSolidProperties, IPoint, INodeInfo } from "./interfaces";
+import { attr, aChld } from "./dab";
 import { each, tag } from "./utils";
 import Rect from "./rect";
 import Size from "./size";
@@ -34,13 +34,13 @@ export default abstract class ItemSolid extends ItemBoard {
 			}
 		//for labels in N555, 7408, Atmega168
 		if (this.base.meta.label) {
-			aCld(this.g, createText({
+			aChld(this.g, createText({
 				x: this.base.meta.label.x,
 				y: this.base.meta.label.y,
 				"class": this.base.meta.label.class
 			}, this.base.meta.label.text))
 		}
-		
+
 	}
 
 	get rotation(): number { return this.__s.rotation }
@@ -75,13 +75,13 @@ export default abstract class ItemSolid extends ItemBoard {
 			let
 				origin = this.origin,
 				angle = -this.rotation,
-				points = [[0, 0], [size.width, 0], [0, size.height], [size.width, size.height]]
-					.map(p => new Point(p[0], p[1]).rotateBy(origin.x, origin.y, angle)),
+				points = [[p.x, p.y], [p.x + size.width, p.y], [p.x, p.y + size.height], [p.x + size.width, p.y + size.height]]
+					.map(p => Point.rotateBy(p[0], p[1], origin.x, origin.y, angle)),
 				x = Math.min.apply(Math, points.map(a => a.x)),
 				y = Math.min.apply(Math, points.map(a => a.y)),
 				w = Math.max.apply(Math, points.map(a => a.x)),
 				h = Math.max.apply(Math, points.map(a => a.y));
-			return new Rect(Math.round(p.x + x), Math.round(p.y + y), Math.round(w - x), Math.round(h - y))
+			return new Rect(Math.round(x), Math.round(y), Math.round(w - x), Math.round(h - y))
 		}
 		return new Rect(p.x, p.y, size.width, size.height)
 	}
@@ -95,34 +95,17 @@ export default abstract class ItemSolid extends ItemBoard {
 	}
 
 	public findNode(p: Point): number {
-		let
-			dx = p.x - this.x,
-			dy = p.y - this.y,
-			rotation = -this.rotation,
-			origin = this.origin;
-		for (let i = 0, list = this.base.meta.nodes.list, meta = list[i], len = list.length;
-			i < len; meta = list[++i]) {
-			let
-				nodePoint = this.rotation
-					? Point.prototype.rotateBy.call(meta, origin.x, origin.y, rotation)
-					: meta;
-			//radius 5 =>  5^2 = 25
-			if ((Math.pow(dx - nodePoint.x, 2) + Math.pow(dy - nodePoint.y, 2)) <= 81)
-				return i;
-		}
-		return -1;
+		return this.overNode(p, 0)
 	}
 
-	public overNode(p: IPoint, ln: number): number {
+	public static nodeArea = 81;
+
+	public overNode(p: IPoint, ln?: number): number {
 		for (let i = 0, len = this.count; i < len; i++) {
 			let
-				pin = this.getNode(i);
-			if (this.rotation) {
-				pin.x = Math.round(pin.rot.x);
-				pin.y = Math.round(pin.rot.y);
-			}
+				node = <INodeInfo>this.getNode(i);
 			//radius 5 =>  5^2 = 25
-			if ((Math.pow((p.x - this.x) - pin.x, 2) + Math.pow((p.y - this.y) - pin.y, 2)) <= 81)
+			if ((Math.pow((p.x) - node.x, 2) + Math.pow((p.y) - node.y, 2)) <= ItemSolid.nodeArea)
 				return i;
 		}
 		return -1;
@@ -131,12 +114,11 @@ export default abstract class ItemSolid extends ItemBoard {
 	public nodeRefresh(node: number): ItemSolid {
 		let
 			bond = this.nodeBonds(node),
-			pos = this.getNode(node);
-		pos && bond && bond.to.forEach((d) => {
+			p = this.getNode(node);
+		p && bond && bond.to.forEach((d) => {
 			let
-				ic = this.container.get(d.id),
-				p = Point.plus(this.p, this.rotation ? pos.rot : pos);
-			ic && ic.setNode(d.ndx, p)	//no transform
+				ic = this.container.get(d.id);
+			ic && ic.setNode(d.ndx, <IPoint>p)
 		});
 		return this;
 	}
@@ -158,26 +140,37 @@ export default abstract class ItemSolid extends ItemBoard {
 	}
 
 	//this returns (x, y) relative to the EC location
-	public getNode(pinNode: number): IItemNode {
+	/**
+	 * 
+	 * @param pinNode pin/node number
+	 * @param onlyPoint true to get internal rotated point only without transformations
+	 */
+	public getNode(pinNode: number, onlyPoint?: boolean): INodeInfo | undefined {
 		let
-			pin: IItemNode = <IItemNode>this.base.meta.nodes.list[pinNode],
-			rotate = (obj: Point, rotation: number, center: Point): Point => {
-				if (!rotation)
-					return obj;
-				let
-					rot = obj.rotateBy(center.x, center.y, -rotation);
-				return new Point(rot.x, rot.y)
-			};
+			pin = <INodeInfo>pinInfo(this, pinNode);
 		if (!pin)
 			return <any>null;
-		pin.rot = rotate(new Point(pin.x, pin.y), this.rotation, this.origin);
-		//
-		return obj(pin);
+		if (this.rotation) {
+			let
+				center = this.origin,
+				rot = Point.rotateBy(pin.x, pin.y, center.x, center.y, -this.rotation);
+			pin.x = rot.x;
+			pin.y = rot.y
+		}
+		if (!onlyPoint) {
+			pin.x += this.x;
+			pin.y += this.y;
+		}
+		return pin
 	}
 
-	public getNodeRealXY(node: number): Point {
-		let
-			pos = this.getNode(node);
-		return pos ? Point.plus(this.p, this.rotation ? pos.rot : pos) : <any>null;
+}
+function pinInfo(that: ItemSolid, node: number): INodeInfo | undefined {
+	let
+		pin = <INodeInfo>that.base.meta.nodes.list[node];
+	return pin && {
+		x: pin.x,
+		y: pin.y,
+		label: pin.label
 	}
 }

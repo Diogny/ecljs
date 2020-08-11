@@ -49,8 +49,8 @@ var ItemBoard = /** @class */ (function (_super) {
         if (this.selected != value) {
             //set new value
             this.__s.selected = value;
-            //add class if selected
-            dab_1.condClass(this.g, "selected", this.selected);
+            //add class if selected, otherwise removes it
+            dab_1.tCl(this.g, "selected", this.selected);
             //trigger property changed if applicable
             this.onProp && this.onProp({
                 id: "#" + this.id,

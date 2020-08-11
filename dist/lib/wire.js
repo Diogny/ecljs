@@ -83,12 +83,12 @@ var Wire = /** @class */ (function (_super) {
                 //		.recreate polyline
                 this.refresh();
                 //		.show polyline
-                dab_1.removeClass(this.__s.polyline, "hide");
+                dab_1.rCl(this.__s.polyline, "hide");
             }
             else {
                 //	will change to true
                 //		.hide polyline
-                dab_1.addClass(this.__s.polyline, "hide");
+                dab_1.aCl(this.__s.polyline, "hide");
                 //		.create lines
                 for (var i = 0, a = this.__s.points[0], cnt = this.last; i < cnt; i++) {
                     var b = this.__s.points[i + 1], ln = utils_1.tag("line", "", {
@@ -163,13 +163,9 @@ var Wire = /** @class */ (function (_super) {
         return node >= -1 //String(Number(node)) == node
             && node <= this.last; // NOW ACCEPTS  -1
     };
-    Wire.prototype.getNode = function (node) {
+    Wire.prototype.getNode = function (node, onlyPoint) {
         var p = this.__s.points[node];
-        return (p && { x: p.x, y: p.y });
-    };
-    Wire.prototype.getNodeRealXY = function (node) {
-        var p = this.getNode(node);
-        return p && point_1.default.create(p);
+        return p && { x: p.x, y: p.y, label: this.id };
     };
     Wire.prototype.appendNode = function (p) {
         return !this.editMode && (this.__s.points.push(p), this.refresh(), true);
@@ -198,24 +194,12 @@ var Wire = /** @class */ (function (_super) {
         return this;
     };
     Wire.prototype.overNode = function (p, ln) {
-        var _this = this;
-        var endPoint = ln, lineCount = this.__s.lines.length, isLine = function (ln) { return ln && (ln <= lineCount); }, isAround = function (p, x, y) {
-            return (x >= p.x - _this.__s.pad) &&
-                (x <= p.x + _this.__s.pad) &&
-                (y >= p.y - _this.__s.pad) &&
-                (y <= p.y + _this.__s.pad);
-        };
-        //if not in editMode, then ln will be 0, so reset to 1, and last point is the last
-        !this.editMode && (ln = 1, endPoint = this.last, lineCount = 1);
-        if (isLine(ln)) {
-            return isAround(this.__s.points[ln - 1], p.x, p.y) ?
-                ln - 1 :
-                (isAround(this.__s.points[endPoint], p.x, p.y) ? endPoint : -1);
-        }
-        return -1;
+        var p0 = this.__s.points[ln - 1], p1 = this.__s.points[ln], inside = function (point) { return (Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2)) <= Wire.nodeArea; };
+        return (!p0 || !p1) ? -1 :
+            inside(p0) ? ln - 1 : inside(p1) ? ln : -1;
     };
     Wire.prototype.findLineNode = function (p, line) {
-        var fn = function (np) { return (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= 25; };
+        var fn = function (np) { return (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea; };
         ((line <= 0 || line >= this.last) && (line = this.findNode(p), 1))
             || fn(this.__s.points[line])
             || fn(this.__s.points[--line])
@@ -226,7 +210,7 @@ var Wire = /** @class */ (function (_super) {
     Wire.prototype.findNode = function (p) {
         for (var i = 0, thisP = this.__s.points[i], len = this.__s.points.length; i < len; thisP = this.__s.points[++i]) {
             //radius 5 =>  5^2 = 25
-            if ((Math.pow(p.x - thisP.x, 2) + Math.pow(p.y - thisP.y, 2)) <= 25)
+            if ((Math.pow(p.x - thisP.x, 2) + Math.pow(p.y - thisP.y, 2)) <= Wire.nodeArea)
                 return i;
         }
         return -1;
@@ -279,10 +263,10 @@ var Wire = /** @class */ (function (_super) {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             name: "wire",
             class: "wire",
-            pad: 5,
             edit: false
         });
     };
+    Wire.nodeArea = 25;
     return Wire;
 }(itemsBoard_1.default));
 exports.default = Wire;

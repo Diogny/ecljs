@@ -1,4 +1,4 @@
-import { IItemSolidOptions, IItemSolidProperties, IPoint, IItemNode } from "./interfaces";
+import { IItemSolidOptions, IItemSolidProperties, IPoint, INodeInfo } from "./interfaces";
 import Rect from "./rect";
 import Point from "./point";
 import ItemBoard from "./itemsBoard";
@@ -15,9 +15,14 @@ export default abstract class ItemSolid extends ItemBoard {
     valid(node: number): boolean;
     hghlightable(name: number): boolean;
     findNode(p: Point): number;
-    overNode(p: IPoint, ln: number): number;
+    static nodeArea: number;
+    overNode(p: IPoint, ln?: number): number;
     nodeRefresh(node: number): ItemSolid;
     refresh(): ItemSolid;
-    getNode(pinNode: number): IItemNode;
-    getNodeRealXY(node: number): Point;
+    /**
+     *
+     * @param pinNode pin/node number
+     * @param onlyPoint true to get internal rotated point only without transformations
+     */
+    getNode(pinNode: number, onlyPoint?: boolean): INodeInfo | undefined;
 }

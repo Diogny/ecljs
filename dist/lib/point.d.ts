@@ -21,12 +21,14 @@ export default class Point implements IPoint {
      */
     get quadrant(): number;
     /**
-     * @description rotate (x,y) through center (x,y) by an angle
-     * @param {number} cx center x
-     * @param {number} cy center y
+     * @description rotatea a point (x,y) through center (x,y) by an angle
+     * @param {number} x x to rotate
+     * @param {number} y y to rotate
+     * @param {number} cx thru center x
+     * @param {number} cy thru center y
      * @param {number} angle angle to rotate
      */
-    rotateBy(cx: number, cy: number, angle: number): Point;
+    static rotateBy(x: number, y: number, cx: number, cy: number, angle: number): IPoint;
     static validateRotation(val: number): number;
     static get origin(): Point;
     static create(p: IPoint): Point;

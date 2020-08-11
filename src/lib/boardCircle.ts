@@ -26,7 +26,7 @@ export default class BoardCircle implements IHighlightable {
 		}
 		//create SVG DOM Element
 		let
-			tagAttrs: any = this.getObjectSettings();
+			tagAttrs: any = this.settings();
 		//set svg-type and nodeName value for 'node'
 		tagAttrs["svg-type"] = this.nodeName;
 		tagAttrs[this.nodeName] = this.nodeValue;
@@ -34,7 +34,7 @@ export default class BoardCircle implements IHighlightable {
 		this.__s.g = <SVGCircleElement>tag("circle", "", tagAttrs);
 	}
 
-	public getDomRadius(): number {
+	public domRadius(): number {
 		return parseInt(attr(this.g, "r"))
 	}
 
@@ -62,7 +62,7 @@ export default class BoardCircle implements IHighlightable {
 		return this.refresh();
 	}
 
-	private getObjectSettings(): any {
+	private settings(): any {
 		let
 			o: any = {
 				cx: this.p.x,
@@ -75,7 +75,7 @@ export default class BoardCircle implements IHighlightable {
 	}
 
 	public refresh(): BoardCircle {
-		return (attr(this.g, this.getObjectSettings()), this)
+		return (attr(this.g, this.settings()), this)
 	}
 
 }

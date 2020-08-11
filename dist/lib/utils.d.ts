@@ -25,9 +25,26 @@ export declare const filter: (obj: any, fn: (value: any, key: string, ndx: numbe
 export declare const filterArray: (obj: any, fn: (value: any, key: string, ndx: number) => any) => any[];
 export declare const prop: (o: any, path: string, value?: any) => any;
 export declare const ready: (fn: Function) => boolean;
-declare const qS: (s: string) => HTMLElement;
-export { qS };
+/**
+ * @description document.querySelector shortcut
+ * @param s query
+ */
+export declare const qS: (s: string) => HTMLElement;
+/**
+ * @description document.querySelectorAll shortcut
+ * @param s query
+ */
 export declare const qSA: (s: string) => NodeListOf<Element>;
+/**
+ * @description document.getElementById shortcut
+ * @param s #id
+ */
 export declare const gEId: (id: string) => HTMLElement | null;
 export declare const basePath: () => string | null;
+/**
+ * @description creates a NxN matrix
+ * @param rows amount of rows
+ * @param cols amount of columns
+ * @param filler cell filler
+ */
 export declare const matrix: <T>(rows: number, cols: number, filler: T) => T[][];

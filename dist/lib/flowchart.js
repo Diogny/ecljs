@@ -30,12 +30,12 @@ var Flowchart = /** @class */ (function (_super) {
         }
     };
     Flowchart.prototype.bond = function (thisObj, thisNode, ic, icNode) {
-        if (!this.hasComponent(thisObj.id) || !this.hasComponent(ic.id))
+        if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
             return false;
         //directional components can only be connected to other directional components or wires
         //directional components have only ONE origin|destination bond in any node
-        return this.bondSingle(thisObj, thisNode, ic, icNode, true)
-            && this.bondSingle(ic, icNode, thisObj, thisNode, false);
+        return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
+            && this.bondOneWay(ic, icNode, thisObj, thisNode, false);
     };
     return Flowchart;
 }(container_1.default));

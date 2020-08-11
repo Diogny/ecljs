@@ -42,7 +42,7 @@ exports.templatesDOM = function (query) {
         //query:string   id0|id1|id[n]
         var templates = {}, count = 0, idList = Array.isArray(query) ? query : query.split('|');
         idList.forEach(function (id) {
-            var tmpl = qS("#" + id), src = tmpl ? tmpl.innerHTML.replace(/\r|\n/g, "").trim() : undefined;
+            var tmpl = exports.qS("#" + id), src = tmpl ? tmpl.innerHTML.replace(/\r|\n/g, "").trim() : undefined;
             tmpl && (count++, templates[id] = src);
         });
         resolve(templates);
@@ -133,14 +133,31 @@ exports.ready = function (fn) {
         });
     return !0;
 };
-var qS = function (s) { return document.querySelector(s); };
-exports.qS = qS;
+/**
+ * @description document.querySelector shortcut
+ * @param s query
+ */
+exports.qS = function (s) { return document.querySelector(s); };
+/**
+ * @description document.querySelectorAll shortcut
+ * @param s query
+ */
 exports.qSA = function (s) { return document.querySelectorAll(s); };
+/**
+ * @description document.getElementById shortcut
+ * @param s #id
+ */
 exports.gEId = function (id) { return document.getElementById(id); };
 exports.basePath = function () {
-    var meta = qS('meta[name="base"]');
+    var meta = exports.qS('meta[name="base"]');
     return meta ? meta.getAttribute('content') : "";
 };
+/**
+ * @description creates a NxN matrix
+ * @param rows amount of rows
+ * @param cols amount of columns
+ * @param filler cell filler
+ */
 exports.matrix = function (rows, cols, filler) {
     return Array.from({ length: rows }, function () { return new Array(cols).fill(filler); });
 };

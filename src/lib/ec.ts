@@ -1,5 +1,5 @@
 import { Type, IItemSolidOptions, IPoint, IECProperties } from './interfaces';
-import { attr, extend, aCld } from './dab';
+import { attr, extend, aChld } from './dab';
 import { tag } from './utils';
 import Point from './point';
 import ItemSolid from './itemSolid';
@@ -28,7 +28,7 @@ export default class EC extends ItemSolid {
 				pins = (this as unknown as EC).count / 2;
 			for (let y = 55, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
 				for (let col = 0; col < pins; col++, i++, x += factor)
-					aCld(this.g, createText({ x: x, y: y }, i + ""));
+					aChld(this.g, createText({ x: x, y: y }, i + ""));
 		}
 		//create label if defined
 		if (this.base.meta.labelId) {

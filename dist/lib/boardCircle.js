@@ -15,7 +15,7 @@ var BoardCircle = /** @class */ (function () {
             p: point_1.default.origin
         };
         //create SVG DOM Element
-        var tagAttrs = this.getObjectSettings();
+        var tagAttrs = this.settings();
         //set svg-type and nodeName value for 'node'
         tagAttrs["svg-type"] = this.nodeName;
         tagAttrs[this.nodeName] = this.nodeValue;
@@ -52,7 +52,7 @@ var BoardCircle = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    BoardCircle.prototype.getDomRadius = function () {
+    BoardCircle.prototype.domRadius = function () {
         return parseInt(dab_1.attr(this.g, "r"));
     };
     BoardCircle.prototype.move = function (x, y) {
@@ -75,7 +75,7 @@ var BoardCircle = /** @class */ (function () {
         this.__s.nodeValue = nodeValue;
         return this.refresh();
     };
-    BoardCircle.prototype.getObjectSettings = function () {
+    BoardCircle.prototype.settings = function () {
         var o = {
             cx: this.p.x,
             cy: this.p.y,
@@ -86,7 +86,7 @@ var BoardCircle = /** @class */ (function () {
         return o;
     };
     BoardCircle.prototype.refresh = function () {
-        return (dab_1.attr(this.g, this.getObjectSettings()), this);
+        return (dab_1.attr(this.g, this.settings()), this);
     };
     return BoardCircle;
 }());

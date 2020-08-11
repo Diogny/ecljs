@@ -17,7 +17,7 @@ var UIProp = /** @class */ (function () {
             selectMultiple: false,
         };
         if (!options
-            || !(this.__s.html = (dab_1.isElement(options.tag) ? (options.tag) : utils_1.qS(options.tag))))
+            || !(this.__s.html = (dab_1.isDOM(options.tag) ? (options.tag) : utils_1.qS(options.tag))))
             throw 'wrong options';
         //this's useful, p.theme.value during initialization to have a local needed value
         this.__s.data = options.data || {};
@@ -203,12 +203,14 @@ var UIProp = /** @class */ (function () {
         //when comming from UI, this is the DOM Element
         // 	otherwise it's the property
         var prop = this instanceof UIProp ? this : this.dab;
-        if (prop && prop.onChange)
+        if (prop && prop.onChange) {
+            prop.html.blur();
             prop.onChange(prop.value, //this cache current value
             (e) ? 1 : 2, // 1 == 'ui' : 2 == 'prop'
             prop, //not needed, but just in case
             e //event if UI triggered
             );
+        }
     };
     UIProp.textOnly = "a|abbr|acronym|b|bdo|big|cite|code|dfn|em|i|kbd|label|legend|li|q|samp|small|span|strong|sub|sup|td|th|tt|var".split('|');
     UIProp._propId = 1;

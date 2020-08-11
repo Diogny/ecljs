@@ -22,6 +22,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	}
 	abstract get library(): string;
 	abstract get directional(): boolean;
+	abstract createItem(options: { [x: string]: any; }): T;
 
 	get counters(): { [x: string]: any; } { return this.__s.counters }
 	get components(): Map<string, IBaseComponent> { return this.__s.components }
@@ -83,7 +84,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return this.components.get(name)
 	}
 
-	public hasComponent(id: string): boolean { return this.itemMap.has(id) || this.wireMap.has(id); }
+	public hasItem(id: string): boolean { return this.itemMap.has(id) || this.wireMap.has(id); }
 
 	public selectAll(value: boolean): (T | Wire)[] {
 		return this.__s.selected = this.all
@@ -142,8 +143,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return r;
 	}
 
-	abstract createItem(options: { [x: string]: any; }): T;
-
 	public add(options: { [x: string]: any; }): T | Wire {
 		let
 			comp: T | Wire = createBoardItem(this, options);
@@ -178,14 +177,14 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	}
 
 	public bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean {
-		if (!this.hasComponent(thisObj.id) || !this.hasComponent(ic.id))
+		if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
 			return false;
-		return this.bondSingle(thisObj, thisNode, ic, icNode, true)
-			&& this.bondSingle(ic, icNode, thisObj, thisNode, false)
+		return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
+			&& this.bondOneWay(ic, icNode, thisObj, thisNode, false)
 			&& (this.modified = true)
 	}
 
-	protected bondSingle(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean {
+	protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean {
 		let
 			item = getItem(this, thisObj.id),
 			entry = item && item.b[thisNode];
@@ -196,11 +195,11 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			|| !ic.valid(icNode))
 			return false;
 		if (entry) {
-			if (!entry.add(ic, icNode))
+			if (!entry.add(<ItemBoard>ic, icNode))
 				throw `duplicated bond`;
 		} else {
 			//this's the origin of the bond
-			entry = new Bond(thisObj, thisNode, ic, icNode, origin);
+			entry = new Bond(<ItemBoard>thisObj, thisNode, <ItemBoard>ic, icNode, origin);
 			item.b[thisNode] = entry;
 		}
 		item.c++;

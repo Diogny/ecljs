@@ -1,4 +1,4 @@
-import { Type, IItemWireOptions, IItemNode, IPoint, IWireProperties } from './interfaces';
+import { Type, IItemWireOptions, IPoint, IWireProperties, INodeInfo } from './interfaces';
 import Point from './point';
 import Rect from './rect';
 import ItemBoard from './itemsBoard';
@@ -26,12 +26,12 @@ export default class Wire extends ItemBoard {
      * @returns {boolean} true if point is valid
      */
     valid(node: number): boolean;
-    getNode(node: number): IItemNode;
-    getNodeRealXY(node: number): Point;
+    getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
     appendNode(p: Point): boolean;
     setNode(node: number, p: IPoint): Wire;
     hghlightable(node: number): boolean;
     setPoints(points: IPoint[]): Wire;
+    static nodeArea: number;
     overNode(p: IPoint, ln: number): number;
     findLineNode(p: Point, line: number): number;
     findNode(p: Point): number;

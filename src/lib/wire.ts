@@ -1,5 +1,5 @@
-import { Type, IItemWireOptions, IItemNode, IPoint, IWireProperties } from './interfaces';
-import { addClass, removeClass, attr, isArr, extend } from './dab';
+import { Type, IItemWireOptions, IPoint, IWireProperties, INodeInfo } from './interfaces';
+import { aCl, rCl, attr, isArr, extend } from './dab';
 import { tag } from './utils';
 import Point from './point';
 import Rect from './rect';
@@ -39,11 +39,11 @@ export default class Wire extends ItemBoard {
 			//		.recreate polyline
 			this.refresh();
 			//		.show polyline
-			removeClass(this.__s.polyline, "hide")
+			rCl(this.__s.polyline, "hide")
 		} else {
 			//	will change to true
 			//		.hide polyline
-			addClass(this.__s.polyline, "hide");
+			aCl(this.__s.polyline, "hide");
 			//		.create lines
 			for (let i = 0, a = this.__s.points[0], cnt = this.last; i < cnt; i++) {
 				let
@@ -150,16 +150,10 @@ export default class Wire extends ItemBoard {
 			&& node <= this.last;	// NOW ACCEPTS  -1
 	}
 
-	public getNode(node: number): IItemNode {
+	public getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined {
 		let
 			p: Point = this.__s.points[node];
-		return <IItemNode>(p && { x: p.x, y: p.y })
-	}
-
-	public getNodeRealXY(node: number): Point {
-		let
-			p = this.getNode(node);
-		return p && Point.create(p)
+		return p && { x: p.x, y: p.y, label: this.id }
 	}
 
 	public appendNode(p: Point): boolean {
@@ -192,29 +186,20 @@ export default class Wire extends ItemBoard {
 		return this
 	}
 
+	public static nodeArea = 25;
+
 	public overNode(p: IPoint, ln: number): number {
 		let
-			endPoint = ln,
-			lineCount = this.__s.lines.length,
-			isLine = (ln: number) => ln && (ln <= lineCount),
-			isAround = (p: IPoint, x: number, y: number) =>
-				(x >= p.x - this.__s.pad) &&
-				(x <= p.x + this.__s.pad) &&
-				(y >= p.y - this.__s.pad) &&
-				(y <= p.y + this.__s.pad);
-		//if not in editMode, then ln will be 0, so reset to 1, and last point is the last
-		!this.editMode && (ln = 1, endPoint = this.last, lineCount = 1);
-		if (isLine(ln)) {
-			return isAround(this.__s.points[ln - 1], p.x, p.y) ?
-				ln - 1 :
-				(isAround(this.__s.points[endPoint], p.x, p.y) ? endPoint : -1);
-		}
-		return -1;
+			p0 = this.__s.points[ln - 1],
+			p1 = this.__s.points[ln],
+			inside = (point: IPoint): boolean => (Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2)) <= Wire.nodeArea;
+		return (!p0 || !p1) ? -1 :
+			inside(p0) ? ln - 1 : inside(p1) ? ln : -1
 	}
 
 	public findLineNode(p: Point, line: number): number {
 		let
-			fn = (np: Point) => (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= 25;
+			fn = (np: Point) => (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea;
 		((line <= 0 || line >= this.last) && (line = this.findNode(p), 1))
 			|| fn(this.__s.points[line])
 			|| fn(this.__s.points[--line])
@@ -227,7 +212,7 @@ export default class Wire extends ItemBoard {
 		for (let i = 0, thisP = this.__s.points[i], len = this.__s.points.length;
 			i < len; thisP = this.__s.points[++i]) {
 			//radius 5 =>  5^2 = 25
-			if ((Math.pow(p.x - thisP.x, 2) + Math.pow(p.y - thisP.y, 2)) <= 25)
+			if ((Math.pow(p.x - thisP.x, 2) + Math.pow(p.y - thisP.y, 2)) <= Wire.nodeArea)
 				return i;
 		}
 		return -1;
@@ -289,7 +274,6 @@ export default class Wire extends ItemBoard {
 		return extend(super.defaults(), {
 			name: "wire",
 			class: "wire",
-			pad: 5,
 			edit: false
 		})
 	}

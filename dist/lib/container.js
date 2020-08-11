@@ -123,7 +123,7 @@ var Container = /** @class */ (function (_super) {
     Container.prototype.root = function (name) {
         return this.components.get(name);
     };
-    Container.prototype.hasComponent = function (id) { return this.itemMap.has(id) || this.wireMap.has(id); };
+    Container.prototype.hasItem = function (id) { return this.itemMap.has(id) || this.wireMap.has(id); };
     Container.prototype.selectAll = function (value) {
         return this.__s.selected = this.all
             .filter(function (comp) { return (comp.select(value), value); });
@@ -199,13 +199,13 @@ var Container = /** @class */ (function (_super) {
         return bonds && bonds[node];
     };
     Container.prototype.bond = function (thisObj, thisNode, ic, icNode) {
-        if (!this.hasComponent(thisObj.id) || !this.hasComponent(ic.id))
+        if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
             return false;
-        return this.bondSingle(thisObj, thisNode, ic, icNode, true)
-            && this.bondSingle(ic, icNode, thisObj, thisNode, false)
+        return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
+            && this.bondOneWay(ic, icNode, thisObj, thisNode, false)
             && (this.modified = true);
     };
-    Container.prototype.bondSingle = function (thisObj, thisNode, ic, icNode, origin) {
+    Container.prototype.bondOneWay = function (thisObj, thisNode, ic, icNode, origin) {
         var item = getItem(this, thisObj.id), entry = item && item.b[thisNode];
         if (!item)
             return false;

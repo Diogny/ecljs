@@ -1,7 +1,7 @@
 "use strict";
 //still in progress...
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toBool = exports.selectMany = exports.createClass = exports.addClassX = exports.union = exports.unique = exports.range = exports.getParentAttr = exports.condClass = exports.toggleClass = exports.removeClass = exports.addClass = exports.hasClass = exports.aCld = exports.dP = exports.rEL = exports.aEL = exports.propDescriptor = exports.attr = exports.css = exports.defEnum = exports.clone = exports.obj = exports.pojo = exports.isElement = exports.inherit = exports.copy = exports.extend = exports.splat = exports.round = exports.clamp = exports.pInt = exports.isInt = exports.isNumeric = exports.isNum = exports.isArr = exports.isObj = exports.isStr = exports.dfnd = exports.isFn = exports.typeOf = exports.empty = exports.ts = exports.consts = void 0;
+exports.toBool = exports.selectMany = exports.createClass = exports.aClx = exports.union = exports.unique = exports.range = exports.getParentAttr = exports.tCl = exports.rCl = exports.aCl = exports.hCl = exports.aChld = exports.dP = exports.rEL = exports.aEL = exports.attr = exports.css = exports.defEnum = exports.clone = exports.obj = exports.pojo = exports.isDOM = exports.inherit = exports.copy = exports.extend = exports.splat = exports.round = exports.clamp = exports.pInt = exports.isInt = exports.isNumeric = exports.isNum = exports.isArr = exports.isObj = exports.isStr = exports.dfnd = exports.isFn = exports.typeOf = exports.empty = exports.ts = exports.consts = void 0;
 var tslib_1 = require("tslib");
 var c = {
     s: "string",
@@ -20,26 +20,21 @@ var c = {
     svgNs: "http://www.w3.org/2000/svg"
 };
 exports.consts = c;
-var ts = function (t) { return ({}).toString.call(t); };
-exports.ts = ts;
+exports.ts = function (t) { return ({}).toString.call(t); };
 //it can be extended later to array [] and object {}
-var empty = function (s) { return typeof s == void 0 || !s || (isStr(s) && s.match(/^ *$/) !== null); };
-exports.empty = empty;
+exports.empty = function (s) { return typeof s == void 0 || !s || (exports.isStr(s) && s.match(/^ *$/) !== null); };
 //returned values: array, date,	function, number, object, regexp, string, undefined  	global,	JSON, null
-exports.typeOf = function (o) { return ts(o).slice(8, -1).toLowerCase(); };
+exports.typeOf = function (o) { return exports.ts(o).slice(8, -1).toLowerCase(); };
 //nullOrWhiteSpace(s) {
 //	return !s || s.match(/^ *$/) !== null;
 //},
 exports.isFn = function (f) { return typeof f === c.fn; };
 //defined			undefined === void 0
-var dfnd = function (t) { return t !== void 0 && t !== null; };
-exports.dfnd = dfnd;
-var isStr = function (s) { return typeof s === c.s; };
-exports.isStr = isStr;
+exports.dfnd = function (t) { return t !== void 0 && t !== null; };
+exports.isStr = function (s) { return typeof s === c.s; };
 //true for Array, pojo retruns true only for a plain old object {}
 exports.isObj = function (t) { return typeof t === c.o; };
-var isArr = function (t) { return Array.isArray(t); }; // typeOf(t) === c.a;
-exports.isArr = isArr;
+exports.isArr = function (t) { return Array.isArray(t); }; // typeOf(t) === c.a;
 //has to be a number ("1") == false
 exports.isNum = function (n) { return typeof n === c.n; };
 // ("1") == true
@@ -54,7 +49,7 @@ exports.round = function (v, decimals) {
     //https://expertcodeblog.wordpress.com/2018/02/12/typescript-javascript-round-number-by-decimal-pecision/
     return (decimals = decimals | 0, Number(Math.round(Number(v + "e" + decimals)) + "e-" + decimals));
 }; //force toArray
-exports.splat = function (o) { return isArr(o) ? o : (dfnd(o) ? [o] : []); };
+exports.splat = function (o) { return exports.isArr(o) ? o : (exports.dfnd(o) ? [o] : []); };
 //copy all properties in src to obj, and returns obj
 exports.extend = function (obj, src) {
     //!obj && (obj = {});
@@ -67,7 +62,7 @@ exports.extend = function (obj, src) {
 exports.copy = function (obj, src) {
     pojo(src) && Object.keys(obj).forEach(function (key) {
         var k = src[key];
-        dfnd(k) && (obj[key] = k);
+        exports.dfnd(k) && (obj[key] = k);
     });
     return obj;
 };
@@ -79,7 +74,7 @@ exports.inherit = function (parent, child) {
  * @description returns true if an element if an HTML or SVG DOM element
  * @param e {any} an element
  */
-exports.isElement = function (e) { return e instanceof window.HTMLElement || e instanceof window.HTMLDocument; };
+exports.isDOM = function (e) { return e instanceof window.HTMLElement || e instanceof window.HTMLDocument; };
 /* this generates a function "inherit" and later assigns it to the namespace "dab"
     export function inherit(parent: any, child: any) {
         child.prototype = Object.create(parent.prototype);
@@ -121,42 +116,75 @@ exports.defEnum = function (e) {
     return e;
 };
 exports.css = function (el, styles) {
-    if (isStr(styles))
+    if (exports.isStr(styles))
         return el.style[styles];
     for (var prop in styles)
         el.style[prop] = styles[prop];
     return el;
 };
 exports.attr = function (el, attrs) {
-    if (isStr(attrs))
+    if (exports.isStr(attrs))
         return el.getAttribute(attrs);
     for (var attr_1 in attrs)
         el.setAttribute(attr_1, attrs[attr_1]);
     return el;
 };
-exports.propDescriptor = function (obj, prop) {
-    //Object.getOwnPropertyDescriptor(obj, prop);
-    var desc;
-    do {
-        desc = Object.getOwnPropertyDescriptor(obj, prop);
-    } while (!desc && (obj = Object.getPrototypeOf(obj)));
-    return desc;
-};
+/**
+ * @description adds an event listener to an element
+ * @param el element
+ * @param eventName event name
+ * @param fn
+ * @param b
+ */
 exports.aEL = function (el, eventName, fn, b) { return el.addEventListener(eventName, fn, b); };
+/**
+ * @description removes an event listener to an element
+ * @param el element
+ * @param eventName event name
+ * @param fn
+ * @param b
+ */
 exports.rEL = function (el, eventName, fn, b) { return el.removeEventListener(eventName, fn, b); };
+/**
+ * @description defines a new object property
+ * @param obj object
+ * @param propName property name
+ * @param attrs attributes
+ */
 exports.dP = function (obj, propName, attrs) { return Object.defineProperty(obj, propName, attrs); };
-exports.aCld = function (parent, child) { return parent.appendChild(child); };
-exports.hasClass = function (el, className) { return el.classList.contains(className); };
-//className cannot contain spaces
-var addClass = function (el, className) { return el.classList.add(className); };
-exports.addClass = addClass;
-var removeClass = function (el, className) { return el.classList.remove(className); };
-exports.removeClass = removeClass;
-exports.toggleClass = function (el, className) { return el.classList.toggle(className); };
-//https://www.kirupa.com/html5/using_the_classlist_api.htm
-// d.addmany
-// [b] true -> addClass, [b] false -> removeClass
-exports.condClass = function (el, className, b) { return (b && (addClass(el, className), 1)) || removeClass(el, className); };
+/**
+ * @description appends a child element to it's new parent
+ * @param parent parent element
+ * @param child child element
+ */
+exports.aChld = function (parent, child) { return parent.appendChild(child); };
+/**
+ * @description test for class
+ * @param el Element
+ * @param className className cannot contain spaces
+ * @returns true if present, false otherwise
+ */
+exports.hCl = function (el, className) { return el.classList.contains(className); };
+/**
+ * @description adds a class to an Element
+ * @param el Element
+ * @param className className cannot contain spaces
+ */
+exports.aCl = function (el, className) { return el.classList.add(className); };
+/**
+ * @description removes a class from an Element
+ * @param el Element
+ * @param className className cannot contain spaces
+ */
+exports.rCl = function (el, className) { return el.classList.remove(className); };
+/**
+ * @description toggles a class from an Element
+ * @param el Element
+ * @param className className cannot contain spaces
+ * @param force undefined is toggle, true is add, false is remove
+ * @returns true if present, false if not
+ */
+exports.tCl = function (el, className, force) { return el.classList.toggle(className, force); };
 //https://plainjs.com/javascript/traversing/match-element-selector-52/
 //https://plainjs.com/javascript/traversing/get-siblings-of-an-element-40/
 exports.getParentAttr = function (p, attr) {
@@ -166,19 +194,17 @@ exports.getParentAttr = function (p, attr) {
 };
 exports.range = function (s, e) { return Array.from('x'.repeat(e - s), function (_, i) { return s + i; }); };
 //Sets
-var unique = function (x) { return x.filter(function (elem, index) { return x.indexOf(elem) === index; }); };
-exports.unique = unique;
-var union = function (x, y) { return unique(x.concat(y)); };
-exports.union = union;
-exports.addClassX = function (el, className) {
+exports.unique = function (x) { return x.filter(function (elem, index) { return x.indexOf(elem) === index; }); };
+exports.union = function (x, y) { return exports.unique(x.concat(y)); };
+exports.aClx = function (el, className) {
     var _a;
-    (_a = el.classList).add.apply(_a, tslib_1.__spread((className || "").split(' ').filter(function (v) { return !empty(v); })));
+    (_a = el.classList).add.apply(_a, tslib_1.__spread((className || "").split(' ').filter(function (v) { return !exports.empty(v); })));
     return el;
 };
 //this.win.classList.add(...(this.settings.class || "").split(' '));
 exports.createClass = function (baseClass, newClass) {
     var split = function (s) { return s.split(' '); }, baseArr = split(baseClass || ""), newArr = split(newClass || "");
-    return union(baseArr, newArr).join(' ');
+    return exports.union(baseArr, newArr).join(' ');
 };
 exports.selectMany = function (input, selectListFn) {
     return input.reduce(function (out, inx) {

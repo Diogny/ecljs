@@ -13,7 +13,7 @@ var Label = /** @class */ (function (_super) {
         _this = _super.call(this, options) || this;
         _this.text = '';
         _this.t = utils_1.tag("text", "", {});
-        dab_1.aCld(_this.g, _this.t);
+        dab_1.aChld(_this.g, _this.t);
         return _this;
     }
     Object.defineProperty(Label.prototype, "type", {

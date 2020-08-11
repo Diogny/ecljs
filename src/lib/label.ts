@@ -1,5 +1,5 @@
 import { Type, ITooltipSettings, ISize, ILabelText } from "./interfaces";
-import { obj, aCld, attr, extend } from "./dab";
+import { obj, aChld, attr, extend } from "./dab";
 import { tag } from "./utils";
 import ItemBase from "./itemsBase";
 
@@ -26,7 +26,7 @@ export default class Label extends ItemBase {
 		super(options);
 		this.text = '';
 		this.t = <SVGTextElement>tag("text", "", {});
-		aCld(this.g, this.t);
+		aChld(this.g, this.t);
 	}
 
 	public move(x: number, y: number): Label {

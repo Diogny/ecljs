@@ -55,18 +55,20 @@ export default class Point implements IPoint {
 	//get positive(): boolean { return this.x >= 0 && this.y >= 0 }
 
 	/**
-	 * @description rotate (x,y) through center (x,y) by an angle
-	 * @param {number} cx center x
-	 * @param {number} cy center y
+	 * @description rotatea a point (x,y) through center (x,y) by an angle
+	 * @param {number} x x to rotate
+	 * @param {number} y y to rotate
+	 * @param {number} cx thru center x
+	 * @param {number} cy thru center y
 	 * @param {number} angle angle to rotate
 	 */
-	public rotateBy(cx: number, cy: number, angle: number): Point {
+	static rotateBy(x: number, y: number, cx: number, cy: number, angle: number): IPoint {
 		var radians = (Math.PI / 180) * angle,
 			cos = Math.cos(radians),
 			sin = Math.sin(radians),
-			nx = (cos * (this.x - cx)) + (sin * (this.y - cy)) + cx,
-			ny = (cos * (this.y - cy)) - (sin * (this.x - cx)) + cy;
-		return new Point(nx, ny)	//round(nx, 3), round(ny, 3)
+			nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+			ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+		return { x: nx | 0, y: ny | 0 }	//round(nx, 3), round(ny, 3)
 	}
 
 	//static

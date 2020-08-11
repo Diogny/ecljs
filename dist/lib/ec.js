@@ -20,7 +20,7 @@ var EC = /** @class */ (function (_super) {
             var pins = _this.count / 2;
             for (var y = 55, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
                 for (var col = 0; col < pins; col++, i++, x += factor)
-                    dab_1.aCld(_this.g, createText({ x: x, y: y }, i + ""));
+                    dab_1.aChld(_this.g, createText({ x: x, y: y }, i + ""));
         }
         //create label if defined
         if (_this.base.meta.labelId) {

@@ -19,12 +19,10 @@ const c: any = {
 
 export { c as consts };
 
-const ts = (t: any) => ({}).toString.call(t);
-export { ts }
+export const ts = (t: any) => ({}).toString.call(t);
 
 //it can be extended later to array [] and object {}
-const empty = (s: any): boolean => typeof s == void 0 || !s || (isStr(s) && s.match(/^ *$/) !== null);
-export { empty }
+export const empty = (s: any): boolean => typeof s == void 0 || !s || (isStr(s) && s.match(/^ *$/) !== null);
 
 //returned values: array, date,	function, number, object, regexp, string, undefined  	global,	JSON, null
 export const typeOf = (o: any) => ts(o).slice(8, -1).toLowerCase();
@@ -35,17 +33,14 @@ export const typeOf = (o: any) => ts(o).slice(8, -1).toLowerCase();
 export const isFn = (f: any) => typeof f === c.fn;
 
 //defined			undefined === void 0
-const dfnd = (t: any) => t !== void 0 && t !== null;
-export { dfnd }
+export const dfnd = (t: any) => t !== void 0 && t !== null;
 
-const isStr = (s: any) => typeof s === c.s;
-export { isStr }
+export const isStr = (s: any) => typeof s === c.s;
 
 //true for Array, pojo retruns true only for a plain old object {}
 export const isObj = (t: any) => typeof t === c.o;
 
-const isArr = (t: any) => Array.isArray(t); // typeOf(t) === c.a;
-export { isArr }
+export const isArr = (t: any) => Array.isArray(t); // typeOf(t) === c.a;
 
 //has to be a number ("1") == false
 export const isNum = (n: any) => typeof n === c.n;
@@ -97,7 +92,7 @@ export const inherit = (parent: any, child: any) => {
  * @description returns true if an element if an HTML or SVG DOM element
  * @param e {any} an element
  */
-export const isElement = (e: any) => e instanceof window.HTMLElement || e instanceof window.HTMLDocument;
+export const isDOM = (e: any) => e instanceof window.HTMLElement || e instanceof window.HTMLDocument;
 
 /* this generates a function "inherit" and later assigns it to the namespace "dab"
 	export function inherit(parent: any, child: any) {
@@ -161,35 +156,69 @@ export const attr = function (el: any, attrs: any) {
 	return el;
 }
 
-export const propDescriptor = function (obj: any, prop: string): PropertyDescriptor {
-	//Object.getOwnPropertyDescriptor(obj, prop);
-	let desc: PropertyDescriptor;
-	do {
-		desc = <PropertyDescriptor>Object.getOwnPropertyDescriptor(obj, prop);
-	} while (!desc && (obj = Object.getPrototypeOf(obj)));
-	return desc;
-}
-
+/**
+ * @description adds an event listener to an element
+ * @param el element
+ * @param eventName event name
+ * @param fn 
+ * @param b 
+ */
 export const aEL = (el: HTMLElement, eventName: string, fn: Function, b?: boolean | AddEventListenerOptions | undefined): void => el.addEventListener(<any>eventName, <any>fn, b);
+
+/**
+ * @description removes an event listener to an element
+ * @param el element
+ * @param eventName event name
+ * @param fn 
+ * @param b 
+ */
 export const rEL = (el: HTMLElement, eventName: string, fn: Function, b?: boolean | AddEventListenerOptions | undefined): void => el.removeEventListener(<any>eventName, <any>fn, b);
+
+/**
+ * @description defines a new object property
+ * @param obj object
+ * @param propName property name
+ * @param attrs attributes
+ */
 export const dP = (obj: any, propName: string, attrs: object) => Object.defineProperty(obj, propName, attrs);
-export const aCld = (parent: any, child: any) => parent.appendChild(child);
 
-export const hasClass = (el: Element, className: string) => el.classList.contains(className);
+/**
+ * @description appends a child element to it's new parent
+ * @param parent parent element
+ * @param child child element
+ */
+export const aChld = (parent: any, child: any) => parent.appendChild(child);
 
-//className cannot contain spaces
-const addClass = (el: Element, className: string) => el.classList.add(className);
-export { addClass }
+/**
+ * @description test for class
+ * @param el Element
+ * @param className className cannot contain spaces
+ * @returns true if present, false otherwise
+ */
+export const hCl = (el: Element, className: string): boolean => el.classList.contains(className);
 
-const removeClass = (el: Element, className: string) => el.classList.remove(className);
-export { removeClass }
+/**
+ * @description adds a class to an Element
+ * @param el Element
+ * @param className className cannot contain spaces
+ */
+export const aCl = (el: Element, className: string) => el.classList.add(className);
 
-export const toggleClass = (el: Element, className: string) => el.classList.toggle(className);
+/**
+ * @description removes a class from an Element
+ * @param el Element
+ * @param className className cannot contain spaces
+ */
+export const rCl = (el: Element, className: string) => el.classList.remove(className);
 
-//https://www.kirupa.com/html5/using_the_classlist_api.htm
-// d.addmany
-// [b] true -> addClass, [b] false -> removeClass
-export const condClass = (el: any, className: string, b: boolean) => (b && (addClass(el, className), 1)) || removeClass(el, className);
+/**
+ * @description toggles a class from an Element
+ * @param el Element
+ * @param className className cannot contain spaces
+ * @param force undefined is toggle, true is add, false is remove
+ * @returns true if present, false if not
+ */
+export const tCl = (el: Element, className: string, force?: boolean): boolean => el.classList.toggle(className, force);
 
 //https://plainjs.com/javascript/traversing/match-element-selector-52/
 //https://plainjs.com/javascript/traversing/get-siblings-of-an-element-40/
@@ -204,13 +233,11 @@ export const getParentAttr = function (p: HTMLElement, attr: string) {
 export const range = (s: number, e: number) => Array.from('x'.repeat(e - s), (_, i) => s + i);
 
 //Sets
-const unique = (x: any[]): any[] => x.filter((elem, index) => x.indexOf(elem) === index);
-export { unique }
+export const unique = (x: any[]): any[] => x.filter((elem, index) => x.indexOf(elem) === index);
 
-const union = (x: any[], y: any[]): any[] => unique(x.concat(y));
-export { union }
+export const union = (x: any[], y: any[]): any[] => unique(x.concat(y));
 
-export const addClassX = (el: Element, className: string): Element => {
+export const aClx = (el: Element, className: string): Element => {
 	el.classList.add(...(className || "").split(' ').filter((v: string) => !empty(v)))
 	return el
 }

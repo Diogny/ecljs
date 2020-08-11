@@ -1,5 +1,5 @@
 import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty } from './interfaces';
-import { attr, isFn, dP, typeOf, isInt, splat, isElement, isStr, isNumeric } from './dab';
+import { attr, isFn, dP, typeOf, isInt, splat, isDOM, isStr, isNumeric } from './dab';
 import { qS } from './utils';
 
 //... in progress...
@@ -86,7 +86,7 @@ export default class UIProp implements IUIProperty {
 			selectMultiple: false,
 		};
 		if (!options
-			|| !(this.__s.html = <HTMLElement>(isElement(options.tag) ? (options.tag) : qS(<string>options.tag)))
+			|| !(this.__s.html = <HTMLElement>(isDOM(options.tag) ? (options.tag) : qS(<string>options.tag)))
 		)
 			throw 'wrong options';
 		//this's useful, p.theme.value during initialization to have a local needed value
@@ -182,13 +182,15 @@ export default class UIProp implements IUIProperty {
 		// 	otherwise it's the property
 		let
 			prop: UIProp | null = this instanceof UIProp ? this : (<any>this).dab;
-		if (prop && prop.onChange)
+		if (prop && prop.onChange) {
+			prop.html.blur();
 			prop.onChange(
 				prop.value,			//this cache current value
 				(e) ? 1 : 2,		// 1 == 'ui' : 2 == 'prop'
 				prop,				//not needed, but just in case
 				e					//event if UI triggered
 			)
+		}
 	}
 
 	private static textOnly = "a|abbr|acronym|b|bdo|big|cite|code|dfn|em|i|kbd|label|legend|li|q|samp|small|span|strong|sub|sup|td|th|tt|var".split('|');

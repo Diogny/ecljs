@@ -76,7 +76,7 @@ var UIProp = /** @class */ (function (_super) {
         }
         ;
         //this's set only if it's an editable property
-        _this.editable
+        _this.react
             && _this.html.addEventListener('change', _this.trigger);
         return _this;
     }
@@ -110,6 +110,11 @@ var UIProp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(UIProp.prototype, "react", {
+        get: function () { return this.editable || this.__s.htmlSelect; },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(UIProp.prototype, "onChange", {
         get: function () { return this.__s.onChange; },
         set: function (fn) { this.__s.onChange = fn; },
@@ -135,7 +140,7 @@ var UIProp = /** @class */ (function (_super) {
                 return this.html.options[val].value;
         },
         set: function (val) {
-            if (!this.editable) {
+            if (!this.react) {
                 //call onchange to get UI value
                 var newValue = this.onChange && this.onChange(val, 2, this, void 0);
                 this.html[this.__s.getter] = (newValue == undefined) ? val : newValue;
@@ -169,7 +174,7 @@ var UIProp = /** @class */ (function (_super) {
         configurable: true
     });
     UIProp.prototype.destroy = function () {
-        this.editable
+        this.react
             && this.html.removeEventListener('change', this.trigger);
     };
     UIProp.prototype.trigger = function (e) {

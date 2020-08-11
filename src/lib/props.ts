@@ -12,6 +12,7 @@ export class UIProp extends Base implements IUIProperty {
 	get editable(): boolean { return this.__s.editable }
 	get data(): { [id: string]: any } { return this.__s.data }
 	get nodeName(): string { return this.html.nodeName.toLowerCase() }
+	get react(): boolean { return this.editable || this.__s.htmlSelect }
 
 	get onChange(): IUIPropertyCallback | undefined { return this.__s.onChange }
 	set onChange(fn: IUIPropertyCallback | undefined) { this.__s.onChange = fn }
@@ -34,7 +35,7 @@ export class UIProp extends Base implements IUIProperty {
 	}
 
 	set value(val: number | boolean | string | string[]) {
-		if (!this.editable) {
+		if (!this.react) {
 			//call onchange to get UI value
 			let
 				newValue = this.onChange && this.onChange(val, 2, this, <any>void 0);
@@ -142,12 +143,12 @@ export class UIProp extends Base implements IUIProperty {
 				this.__s.getter = 'innerHTML'
 		};
 		//this's set only if it's an editable property
-		this.editable
+		this.react
 			&& this.html.addEventListener('change', this.trigger);
 	}
 
 	public destroy() {
-		this.editable
+		this.react
 			&& this.html.removeEventListener('change', this.trigger);
 	}
 

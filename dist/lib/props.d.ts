@@ -9,6 +9,7 @@ export declare class UIProp extends Base implements IUIProperty {
         [id: string]: any;
     };
     get nodeName(): string;
+    get react(): boolean;
     get onChange(): IUIPropertyCallback | undefined;
     set onChange(fn: IUIPropertyCallback | undefined);
     get value(): number | boolean | string | string[];

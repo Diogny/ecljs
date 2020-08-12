@@ -1,4 +1,4 @@
-import { IItemSolidOptions, IItemSolidProperties, IPoint, INodeInfo } from "./interfaces";
+import { IItemSolidDefaults, IPoint, INodeInfo } from "./interfaces";
 import { attr, aChld } from "./dab";
 import { each, tag } from "./utils";
 import Rect from "./rect";
@@ -11,7 +11,7 @@ import Container from "./container";
 //ItemBoard->ItemSolid->EC
 export default abstract class ItemSolid extends ItemBoard {
 
-	protected __s: IItemSolidProperties;
+	protected __s: IItemSolidDefaults;
 
 	get last(): number { return this.base.meta.nodes.list.length - 1 }
 
@@ -19,13 +19,10 @@ export default abstract class ItemSolid extends ItemBoard {
 		return this.base.meta.nodes.list.length
 	}
 
-	constructor(container: Container<ItemBoard>, options: IItemSolidOptions) {
+	constructor(container: Container<ItemBoard>, options: { [x: string]: any; }) {
+		options.rotation = Point.validateRotation(options.rotation);
 		super(container, options);
 		this.g.innerHTML = this.base.data;
-
-		//I've to set new properties always, because super just copy defaults()
-		//later override method defaults()
-		this.__s.rotation = Point.validateRotation(options.rotation);
 		let
 			createText = (attr: any, text: string) => {
 				let

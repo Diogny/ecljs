@@ -1,4 +1,4 @@
-import { IItemBaseProperties, IItemBaseOptions, ISize, ComponentPropertyType } from './interfaces';
+import { IItemBaseDefaults, ISize } from './interfaces';
 import { obj, aCl, rCl, isStr } from './dab';
 import { tag } from './utils';
 import Rect from './rect';
@@ -8,7 +8,7 @@ import Comp from './components';
 
 export default abstract class ItemBase extends Item {
 
-	protected __s: IItemBaseProperties;
+	protected __s: IItemBaseDefaults;
 
 	get base(): Comp { return this.__s.base }
 	get g(): SVGElement { return this.__s.g }
@@ -39,13 +39,8 @@ export default abstract class ItemBase extends Item {
 		return this;
 	}
 
-	constructor(options: IItemBaseOptions) {
+	constructor(options: { [x: string]: any; }) {
 		super(options);
-		let
-			base = <Comp>Comp.find(this.name);
-		if (!base)
-			throw `cannot create component`;
-		this.__s.props = obj(base.props);
 		let
 			classArr = isStr(this.class) ? this.class.split(' ') : [];
 		!this.__s.visible && (classArr.push("hide"));
@@ -60,7 +55,4 @@ export default abstract class ItemBase extends Item {
 
 	public afterDOMinserted() { }
 
-	public prop(propName: string): ComponentPropertyType {
-		return this.__s.props[propName]
-	}
 }

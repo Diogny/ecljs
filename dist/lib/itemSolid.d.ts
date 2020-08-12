@@ -1,12 +1,14 @@
-import { IItemSolidOptions, IItemSolidProperties, IPoint, INodeInfo } from "./interfaces";
+import { IItemSolidDefaults, IPoint, INodeInfo } from "./interfaces";
 import Rect from "./rect";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
 export default abstract class ItemSolid extends ItemBoard {
-    protected __s: IItemSolidProperties;
+    protected __s: IItemSolidDefaults;
     get last(): number;
     get count(): number;
-    constructor(container: Container<ItemBoard>, options: IItemSolidOptions);
+    constructor(container: Container<ItemBoard>, options: {
+        [x: string]: any;
+    });
     get rotation(): number;
     rotate(value: number): ItemSolid;
     move(x: number, y: number): ItemSolid;

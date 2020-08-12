@@ -9,12 +9,11 @@ var Tooltip = /** @class */ (function (_super) {
     tslib_1.__extends(Tooltip, _super);
     function Tooltip(options) {
         var _this = _super.call(this, options) || this;
-        _this.svgRect = utils_1.tag("rect", "", {
+        _this.g.insertBefore(_this.__s.svgrect = utils_1.tag("rect", "", {
             x: 0,
             y: 0,
             rx: _this.borderRadius
-        });
-        _this.g.insertBefore(_this.svgRect, _this.t);
+        }), _this.__s.svgtext);
         return _this;
     }
     Object.defineProperty(Tooltip.prototype, "type", {
@@ -35,10 +34,10 @@ var Tooltip = /** @class */ (function (_super) {
         }
         */
         get: function () {
-            var b = this.t.getBBox();
+            var b = this.__s.svgtext.getBBox();
             return dab_1.obj({
                 width: Math.round(b.width) + 10,
-                height: Math.round(b.height) + this.gap
+                height: Math.round(b.height) + this.__s.gap
             });
         },
         enumerable: false,
@@ -49,7 +48,7 @@ var Tooltip = /** @class */ (function (_super) {
         //clear values
         //because Firefox give DOM not loaded on g.getBox() because it's not visible yet
         // so I've to display tooltip in DOM and then continue setting text, move, font-size,...
-        this.text = this.t.innerHTML = '';
+        this.__s.text = this.__s.svgtext.innerHTML = '';
         return this;
     };
     Tooltip.prototype.setBorderRadius = function (value) {
@@ -57,14 +56,14 @@ var Tooltip = /** @class */ (function (_super) {
         return this.build();
     };
     Tooltip.prototype.build = function () {
-        this.gap = Math.round(this.fontSize / 2) + 1;
-        dab_1.attr(this.t, {
+        this.__s.gap = Math.round(this.fontSize / 2) + 1;
+        dab_1.attr(this.__s.svgtext, {
             "font-size": this.fontSize,
-            x: Math.round(this.gap / 2),
+            x: Math.round(this.__s.gap / 2),
             y: this.fontSize //+ 8
         });
         var s = this.size;
-        dab_1.attr(this.svgRect, {
+        dab_1.attr(this.__s.svgrect, {
             width: s.width,
             height: s.height,
             rx: this.borderRadius
@@ -79,7 +78,7 @@ var Tooltip = /** @class */ (function (_super) {
         //if (!Array.isArray(arr)) {
         //	console.log("ooooh")
         //}
-        this.t.innerHTML = arr.map(function (value, ndx) {
+        this.__s.svgtext.innerHTML = arr.map(function (value, ndx) {
             var txt = '', attrs = '';
             if (dab_1.isStr(value)) {
                 txt = value;
@@ -92,7 +91,7 @@ var Tooltip = /** @class */ (function (_super) {
             return "<tspan x=\"5\" dy=\"" + ndx + ".1em\"" + attrs + ">" + txt + "</tspan>";
         }).join('');
         //set text
-        this.text = txtArray.join('\r\n');
+        this.__s.text = txtArray.join('\r\n');
         return this.build();
     };
     Tooltip.prototype.defaults = function () {

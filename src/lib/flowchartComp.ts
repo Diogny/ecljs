@@ -1,4 +1,4 @@
-import { Type, IComponentProperty, IItemSolidOptions, IPoint, IItemBoardProperties } from "./interfaces";
+import { Type, IComponentProperty, IPoint, IItemBoardDefaults } from "./interfaces";
 import { extend } from "./dab";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
@@ -25,7 +25,7 @@ export default abstract class FlowchartComp extends ItemSolid {
 	get inputs(): number { return <number>this.prop("inputs") }
 	get outputs(): number { return <number>this.prop("outputs") }
 
-	constructor(container: Container<FlowchartComp>, options: IItemSolidOptions) {
+	constructor(container: Container<FlowchartComp>, options: { [x: string]: any; }) {
 		super(container, options);
 	}
 
@@ -34,8 +34,8 @@ export default abstract class FlowchartComp extends ItemSolid {
 		throw 'somebody called me, not good!';
 	}
 
-	public defaults(): IItemBoardProperties {
-		return <IItemBoardProperties>extend(super.defaults(), {
+	public defaults(): IItemBoardDefaults {
+		return <IItemBoardDefaults>extend(super.defaults(), {
 			directional: true,
 		})
 	}

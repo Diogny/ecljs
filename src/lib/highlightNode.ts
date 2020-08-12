@@ -1,4 +1,4 @@
-import { Type, IHighlighNodeSettings } from "./interfaces";
+import { Type, IHighlighNodeDefaults } from "./interfaces";
 import { extend, attr } from "./dab";
 import { tag } from "./utils";
 import Point from "./point";
@@ -6,8 +6,7 @@ import ItemBase from "./itemsBase";
 
 export default class HighlightNode extends ItemBase {
 
-	protected __s: IHighlighNodeSettings;
-	protected mainNode: SVGCircleElement;
+	protected __s: IHighlighNodeDefaults;
 
 	get type(): Type { return Type.HIGHLIGHT }
 	get radius(): number { return this.__s.radius }
@@ -15,36 +14,36 @@ export default class HighlightNode extends ItemBase {
 	get selectedId(): string { return this.__s.selectedId }
 	get selectedNode(): number { return this.__s.selectedNode }
 
-	constructor(options: IHighlighNodeSettings) {
+	constructor(options: { [x: string]: any; }) {
 		//override
 		options.selectedNode = -1;
 		options.selectedId = "";
 		options.id = "highlighNode";
 		super(options);
 		this.g.setAttribute("svg-comp", "h-node");
-		this.mainNode = <SVGCircleElement>tag("circle", "", {
+		this.__s.mainNode = <SVGCircleElement>tag("circle", "", {
 			"svg-type": "node",	// "node-x",
 			r: this.radius
 		});
-		this.g.append(this.mainNode);
+		this.g.append(this.__s.mainNode);
 	}
 
 	public setRadius(value: number): HighlightNode {
-		this.mainNode.setAttribute("r", <any>(this.__s.radius = value <= 0 ? 5 : value));
+		this.__s.mainNode.setAttribute("r", <any>(this.__s.radius = value <= 0 ? 5 : value));
 		return this;
 	}
 
 	public hide(): HighlightNode {
 		this.g.classList.add("hide");
-		this.mainNode.classList.remove("hide");
+		this.__s.mainNode.classList.remove("hide");
 		this.g.innerHTML = "";
-		this.g.append(this.mainNode);
+		this.g.append(this.__s.mainNode);
 		return this;
 	}
 
 	public show(x: number, y: number, id: string, node: number): HighlightNode {
 		this.move(x, y);
-		attr(this.mainNode, {
+		attr(this.__s.mainNode, {
 			cx: this.x,
 			cy: this.y,
 			//"node-x": <any>node,
@@ -56,7 +55,7 @@ export default class HighlightNode extends ItemBase {
 	}
 
 	public showConnections(nodes: Point[]): HighlightNode {
-		this.mainNode.classList.add("hide");
+		this.__s.mainNode.classList.add("hide");
 		this.g.classList.remove("hide");
 		nodes.forEach(p => {
 			let
@@ -71,8 +70,8 @@ export default class HighlightNode extends ItemBase {
 		return this
 	}
 
-	public defaults(): IHighlighNodeSettings {
-		return <IHighlighNodeSettings>extend(super.defaults(), {
+	public defaults(): IHighlighNodeDefaults {
+		return <IHighlighNodeDefaults>extend(super.defaults(), {
 			name: "h-node",
 			class: "h-node",
 			visible: false,

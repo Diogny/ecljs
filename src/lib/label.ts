@@ -1,4 +1,4 @@
-import { Type, ITooltipSettings, ISize, ILabelText } from "./interfaces";
+import { Type, ISize, ILabelDefaults } from "./interfaces";
 import { obj, aChld, attr, extend } from "./dab";
 import { tag } from "./utils";
 import ItemBase from "./itemsBase";
@@ -7,12 +7,11 @@ export default class Label extends ItemBase {
 
 	get type(): Type { return Type.LABEL }
 
-	protected __s: ITooltipSettings;
-	protected t: SVGTextElement;
-	public text: string;
+	protected __s: ILabelDefaults;
+	get text(): string { return this.__s.text }
 
 	get size(): ISize {
-		let b = this.t.getBBox();
+		let b = this.__s.svgtext.getBBox();
 		return obj({
 			width: Math.round(b.width),
 			height: Math.round(b.height)
@@ -21,12 +20,12 @@ export default class Label extends ItemBase {
 
 	get fontSize(): number { return this.__s.fontSize }
 
-	constructor(options: ILabelText) {
+	constructor(options: { [x: string]: any; }) {
 		options.visible = false;
 		super(options);
-		this.text = '';
-		this.t = <SVGTextElement>tag("text", "", {});
-		aChld(this.g, this.t);
+		this.__s.text = '';
+		this.__s.svgtext = <SVGTextElement>tag("text", "", {});
+		aChld(this.g, this.__s.svgtext);
 	}
 
 	public move(x: number, y: number): Label {
@@ -41,7 +40,7 @@ export default class Label extends ItemBase {
 	}
 
 	protected build(): Label {
-		attr(this.t, {
+		attr(this.__s.svgtext, {
 			"font-size": this.fontSize,
 			x: 0,
 			y: 0
@@ -50,12 +49,12 @@ export default class Label extends ItemBase {
 	}
 
 	public setText(value: string): Label {
-		this.t.innerHTML = this.text = value;
+		this.__s.svgtext.innerHTML = this.__s.text = value;
 		return this.build()
 	}
 
-	public defaults(): ILabelText {
-		return <ILabelText>extend(super.defaults(), {
+	public defaults(): ILabelDefaults {
+		return <ILabelDefaults>extend(super.defaults(), {
 			name: "label",
 			class: "label",
 			fontSize: 50

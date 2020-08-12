@@ -1,4 +1,4 @@
-import { Type, IItemWireOptions, IPoint, IWireProperties, INodeInfo } from './interfaces';
+import { Type, IPoint, IWireDefaults, INodeInfo } from './interfaces';
 import { aCl, rCl, attr, isArr, extend } from './dab';
 import { tag } from './utils';
 import Point from './point';
@@ -8,7 +8,7 @@ import Container from './container';
 
 export default class Wire extends ItemBoard {
 
-	protected __s: IWireProperties;
+	protected __s: IWireDefaults;
 
 	get type(): Type { return Type.WIRE }
 
@@ -64,7 +64,7 @@ export default class Wire extends ItemBoard {
 		this.__s.edit = value
 	}
 
-	constructor(container: Container<ItemBoard>, options: IItemWireOptions) {
+	constructor(container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(container, options);
 		this.__s.directional = container.directional;
 		this.__s.polyline = tag("polyline", "", {
@@ -260,8 +260,8 @@ export default class Wire extends ItemBoard {
 		return -1;
 	}
 
-	public defaults(): IWireProperties {
-		return <IWireProperties>extend(super.defaults(), {
+	public defaults(): IWireDefaults {
+		return <IWireDefaults>extend(super.defaults(), {
 			name: "wire",
 			class: "wire",
 			edit: false

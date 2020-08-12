@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var interfaces_1 = require("./interfaces");
-var dab_1 = require("./dab");
 var point_1 = tslib_1.__importDefault(require("./point"));
 var Item = /** @class */ (function (_super) {
     tslib_1.__extends(Item, _super);
@@ -11,11 +10,10 @@ var Item = /** @class */ (function (_super) {
         //merge defaults and deep copy
         //all default properties must be refrenced from this or this.__s
         // options is for custom options only
-        var optionsClass = options.class || "";
+        var optionsClass = options.class;
         delete options.class;
         _this = _super.call(this, options) || this;
-        //this.__s = obj(copy(this.defaults(), options));
-        _this.__s.class = dab_1.unique((_this.class + " " + optionsClass).split(' ')).join(' ');
+        optionsClass && (_this.__s.class = _this.__s.class ? ' ' : '' + optionsClass); // unique((this.class + " " + optionsClass).split(' ')).join(' '));
         _this.__s.x = _this.__s.x || 0;
         _this.__s.y = _this.__s.y || 0;
         return _this;
@@ -78,8 +76,8 @@ var Item = /** @class */ (function (_super) {
             y: 0,
             class: "",
             visible: true,
-            base: void 0,
-            label: ""
+            label: "",
+            base: void 0 //this comes from createItem by default
         };
     };
     return Item;

@@ -11,11 +11,10 @@ var itemsBoard_1 = tslib_1.__importDefault(require("./itemsBoard"));
 var ItemSolid = /** @class */ (function (_super) {
     tslib_1.__extends(ItemSolid, _super);
     function ItemSolid(container, options) {
-        var _this = _super.call(this, container, options) || this;
+        var _this = this;
+        options.rotation = point_1.default.validateRotation(options.rotation);
+        _this = _super.call(this, container, options) || this;
         _this.g.innerHTML = _this.base.data;
-        //I've to set new properties always, because super just copy defaults()
-        //later override method defaults()
-        _this.__s.rotation = point_1.default.validateRotation(options.rotation);
         var createText = function (attr, text) {
             var svgText = utils_1.tag("text", "", attr);
             return svgText.innerHTML = text, svgText;

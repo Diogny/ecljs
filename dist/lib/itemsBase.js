@@ -6,15 +6,10 @@ var utils_1 = require("./utils");
 var rect_1 = tslib_1.__importDefault(require("./rect"));
 var point_1 = tslib_1.__importDefault(require("./point"));
 var item_1 = tslib_1.__importDefault(require("./item"));
-var components_1 = tslib_1.__importDefault(require("./components"));
 var ItemBase = /** @class */ (function (_super) {
     tslib_1.__extends(ItemBase, _super);
     function ItemBase(options) {
         var _this = _super.call(this, options) || this;
-        var base = components_1.default.find(_this.name);
-        if (!base)
-            throw "cannot create component";
-        _this.__s.props = dab_1.obj(base.props);
         var classArr = dab_1.isStr(_this.class) ? _this.class.split(' ') : [];
         !_this.__s.visible && (classArr.push("hide"));
         _this.__s.g = utils_1.tag("g", _this.__s.id, {
@@ -69,9 +64,6 @@ var ItemBase = /** @class */ (function (_super) {
         (_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.g);
     };
     ItemBase.prototype.afterDOMinserted = function () { };
-    ItemBase.prototype.prop = function (propName) {
-        return this.__s.props[propName];
-    };
     return ItemBase;
 }(item_1.default));
 exports.default = ItemBase;

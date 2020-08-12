@@ -28,4 +28,6 @@ import Wire from "./lib/wire";
 import FlowchartComp from "./lib/flowchartComp";
 import FlowProcess from "./lib/process";
 import FlowConditional from "./lib/conditional";
-export { ajaxp, dab, utils, Color, Point, Rect, Size, Templates, XML, Units, UIProp, Interfaces, Bonds, BoardCircle, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Board, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowchartComp, FlowProcess, FlowConditional, };
+import FlowStart from "./lib/flowstart";
+import FlowEnd from "./lib/flowend";
+export { ajaxp, dab, utils, Color, Point, Rect, Size, Templates, XML, Units, UIProp, Interfaces, Bonds, BoardCircle, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Board, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowchartComp, FlowProcess, FlowConditional, FlowStart, FlowEnd, };

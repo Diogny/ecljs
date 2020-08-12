@@ -1,6 +1,5 @@
-import { IPoint, IItemBoardProperties, IItemBaseOptions, INodeInfo } from './interfaces';
-import { tCl, attr, extend, isFn } from './dab';
-import Point from './point';
+import { IPoint, IItemBoardDefaults, INodeInfo, ComponentPropertyType } from './interfaces';
+import { tCl, attr, extend, isFn, obj } from './dab';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
@@ -8,7 +7,7 @@ import Container from './container';
 //ItemBoard->Wire
 export default abstract class ItemBoard extends ItemBase {
 
-	protected __s: IItemBoardProperties;
+	protected __s: IItemBoardDefaults;
 
 	get onProp(): Function { return this.__s.onProp }
 	get selected(): boolean { return this.__s.selected }
@@ -28,10 +27,11 @@ export default abstract class ItemBoard extends ItemBase {
 	//this returns true for an EC, and any Wire node and that it is not a start|end bonded node
 	abstract hghlightable(node: number): boolean;
 
-	constructor(public container: Container<ItemBoard>, options: IItemBaseOptions) {
+	constructor(public container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(options);
 		if (!container)
-			throw `component without container`;
+			throw `missing container`;
+		this.__s.props = obj(this.base.props);
 		attr(this.g, {
 			id: this.id,
 			"svg-comp": this.base.type,
@@ -98,8 +98,12 @@ export default abstract class ItemBoard extends ItemBase {
 		this.container.disconnect(this)
 	}
 
-	public defaults(): IItemBoardProperties {
-		return <IItemBoardProperties>extend(super.defaults(), {
+	public prop(propName: string): ComponentPropertyType {
+		return this.__s.props[propName]
+	}
+	
+	public defaults(): IItemBoardDefaults {
+		return <IItemBoardDefaults>extend(super.defaults(), {
 			selected: false,
 			onProp: void 0,
 			directional: false,

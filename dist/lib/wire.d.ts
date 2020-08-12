@@ -1,10 +1,10 @@
-import { Type, IItemWireOptions, IPoint, IWireProperties, INodeInfo } from './interfaces';
+import { Type, IPoint, IWireDefaults, INodeInfo } from './interfaces';
 import Point from './point';
 import Rect from './rect';
 import ItemBoard from './itemsBoard';
 import Container from './container';
 export default class Wire extends ItemBoard {
-    protected __s: IWireProperties;
+    protected __s: IWireDefaults;
     get type(): Type;
     get count(): number;
     get last(): number;
@@ -14,7 +14,9 @@ export default class Wire extends ItemBoard {
     get points(): Point[];
     get editMode(): boolean;
     set editMode(value: boolean);
-    constructor(container: Container<ItemBoard>, options: IItemWireOptions);
+    constructor(container: Container<ItemBoard>, options: {
+        [x: string]: any;
+    });
     refresh(): Wire;
     nodeRefresh(node: number): Wire;
     translate(dx: number, dy: number): Wire;
@@ -42,5 +44,5 @@ export default class Wire extends ItemBoard {
      * @returns {number} -1 for wrong node or standarized node number, where -1 == last, otherwise node
      */
     standarizeNode(node: number): number;
-    defaults(): IWireProperties;
+    defaults(): IWireDefaults;
 }

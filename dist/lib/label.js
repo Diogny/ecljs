@@ -11,9 +11,9 @@ var Label = /** @class */ (function (_super) {
         var _this = this;
         options.visible = false;
         _this = _super.call(this, options) || this;
-        _this.text = '';
-        _this.t = utils_1.tag("text", "", {});
-        dab_1.aChld(_this.g, _this.t);
+        _this.__s.text = '';
+        _this.__s.svgtext = utils_1.tag("text", "", {});
+        dab_1.aChld(_this.g, _this.__s.svgtext);
         return _this;
     }
     Object.defineProperty(Label.prototype, "type", {
@@ -21,9 +21,14 @@ var Label = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Label.prototype, "text", {
+        get: function () { return this.__s.text; },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Label.prototype, "size", {
         get: function () {
-            var b = this.t.getBBox();
+            var b = this.__s.svgtext.getBBox();
             return dab_1.obj({
                 width: Math.round(b.width),
                 height: Math.round(b.height)
@@ -47,7 +52,7 @@ var Label = /** @class */ (function (_super) {
         return this.build();
     };
     Label.prototype.build = function () {
-        dab_1.attr(this.t, {
+        dab_1.attr(this.__s.svgtext, {
             "font-size": this.fontSize,
             x: 0,
             y: 0
@@ -55,7 +60,7 @@ var Label = /** @class */ (function (_super) {
         return this;
     };
     Label.prototype.setText = function (value) {
-        this.t.innerHTML = this.text = value;
+        this.__s.svgtext.innerHTML = this.__s.text = value;
         return this.build();
     };
     Label.prototype.defaults = function () {

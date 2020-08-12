@@ -1,10 +1,10 @@
-import { IPoint, IItemBoardProperties, IItemBaseOptions, INodeInfo } from './interfaces';
+import { IPoint, IItemBoardDefaults, INodeInfo, ComponentPropertyType } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
 export default abstract class ItemBoard extends ItemBase {
     container: Container<ItemBoard>;
-    protected __s: IItemBoardProperties;
+    protected __s: IItemBoardDefaults;
     get onProp(): Function;
     get selected(): boolean;
     get bonds(): Bond[] | undefined;
@@ -19,7 +19,9 @@ export default abstract class ItemBoard extends ItemBase {
     abstract setNode(node: number, p: IPoint): ItemBoard;
     abstract overNode(p: IPoint, ln?: number): number;
     abstract hghlightable(node: number): boolean;
-    constructor(container: Container<ItemBoard>, options: IItemBaseOptions);
+    constructor(container: Container<ItemBoard>, options: {
+        [x: string]: any;
+    });
     select(value: boolean): ItemBoard;
     move(x: number, y: number): ItemBoard;
     setOnProp(value: Function): ItemBoard;
@@ -28,5 +30,6 @@ export default abstract class ItemBoard extends ItemBase {
     unbond(node: number, id: string): void;
     unbondNode(node: number): void;
     disconnect(): void;
-    defaults(): IItemBoardProperties;
+    prop(propName: string): ComponentPropertyType;
+    defaults(): IItemBoardDefaults;
 }

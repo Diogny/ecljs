@@ -15,11 +15,11 @@ var HighlightNode = /** @class */ (function (_super) {
         options.id = "highlighNode";
         _this = _super.call(this, options) || this;
         _this.g.setAttribute("svg-comp", "h-node");
-        _this.mainNode = utils_1.tag("circle", "", {
+        _this.__s.mainNode = utils_1.tag("circle", "", {
             "svg-type": "node",
             r: _this.radius
         });
-        _this.g.append(_this.mainNode);
+        _this.g.append(_this.__s.mainNode);
         return _this;
     }
     Object.defineProperty(HighlightNode.prototype, "type", {
@@ -43,19 +43,19 @@ var HighlightNode = /** @class */ (function (_super) {
         configurable: true
     });
     HighlightNode.prototype.setRadius = function (value) {
-        this.mainNode.setAttribute("r", (this.__s.radius = value <= 0 ? 5 : value));
+        this.__s.mainNode.setAttribute("r", (this.__s.radius = value <= 0 ? 5 : value));
         return this;
     };
     HighlightNode.prototype.hide = function () {
         this.g.classList.add("hide");
-        this.mainNode.classList.remove("hide");
+        this.__s.mainNode.classList.remove("hide");
         this.g.innerHTML = "";
-        this.g.append(this.mainNode);
+        this.g.append(this.__s.mainNode);
         return this;
     };
     HighlightNode.prototype.show = function (x, y, id, node) {
         this.move(x, y);
-        dab_1.attr(this.mainNode, {
+        dab_1.attr(this.__s.mainNode, {
             cx: this.x,
             cy: this.y,
             //"node-x": <any>node,
@@ -67,7 +67,7 @@ var HighlightNode = /** @class */ (function (_super) {
     };
     HighlightNode.prototype.showConnections = function (nodes) {
         var _this = this;
-        this.mainNode.classList.add("hide");
+        this.__s.mainNode.classList.add("hide");
         this.g.classList.remove("hide");
         nodes.forEach(function (p) {
             var circle = utils_1.tag("circle", "", {

@@ -9,7 +9,6 @@ import EC from "./ec";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
-import Rect from "./rect";
 import Board from "./board";
 
 
@@ -39,7 +38,7 @@ export abstract class Base implements IBaseSettings {
 
 	protected __s: { [x: string]: any };
 
-	constructor(options: { [x: string]: any; }) {
+	constructor(options?: { [x: string]: any; }) {
 		this.clear(options);
 	}
 
@@ -47,27 +46,16 @@ export abstract class Base implements IBaseSettings {
 		this.__s = obj(copy(this.defaults(), options || {}));
 	}
 
-	defaults(): { [x: string]: any; } {
-		return {}
-	}
+	abstract defaults(): { [x: string]: any; };
 
 }
 
 export interface IBoardOptions {
-	version?: string;
-	name: string;
-	description?: string;
-	zoom: number;
-	filePath?: string;
-	viewPoint?: Point;
 	containers?: Container<EC | FlowchartComp>[];
-	onZoom?: (zoom: number) => void;
 	onModified?: (value: boolean) => void;
 }
 
 export interface IBoardProperties extends IBoardOptions {
-	version: string;
-	viewBox: Rect;
 	modified: boolean;
 	containers: Container<EC | FlowchartComp>[];
 }
@@ -222,7 +210,7 @@ export interface IBaseComponent {
 //***************************************** Item ************************************//
 
 //Item, BoardItem, Wire, ED, Label,...
-export interface IItemBaseOptions {
+export interface IItemDefaults {
 	id: string;
 	name: string;
 	x: number;
@@ -231,64 +219,58 @@ export interface IItemBaseOptions {
 	visible: boolean;
 	label: string;
 	base: Comp;
-	//color: string;
-}
 
-export interface IItemWireOptions extends IItemBaseOptions {
-	points: IPoint[];
 }
-
-export interface IItemSolidOptions extends IItemBaseOptions {
-	rotation: number;
-	onProp: Function;
-}
-
-export interface ILabelText extends IItemBaseOptions {
-	fontSize: number;
-}
-
-export interface ITooltipText extends ILabelText {
-	borderRadius: number;
-}
-
-//the object item base has all properties, but restricted in the constructor
-export interface IItemBaseProperties extends IItemBaseOptions {
-	props: { [x: string]: any };
+export interface IItemBaseDefaults extends IItemDefaults {
 	g: SVGElement;
 }
 
-export interface ITooltipSettings extends IItemBaseProperties {
+export interface IBaseLabelDefaults extends IItemBaseDefaults {
 	fontSize: number;
-	borderRadius: number;
 }
 
-export interface IHighlighNodeSettings extends IItemBaseProperties {
+export interface ILabelDefaults extends IBaseLabelDefaults {
+	svgtext: SVGTextElement;
+	text: string;
+}
+
+export interface ITooltipDefaults extends ILabelDefaults {
+	borderRadius: number;
+	svgrect: SVGRectElement;
+	gap: number;
+}
+
+export interface IHighlighNodeDefaults extends IItemBaseDefaults {
 	radius: number;
+	mainNode: SVGCircleElement;
 	//these're the current selected node properties
 	selectedId: string;
 	selectedNode: number;
 }
 
-export interface IItemBoardProperties extends IItemBaseProperties {
+export interface IItemBoardDefaults extends IItemBaseDefaults {
+	props: { [x: string]: any };
 	selected: boolean;
 	onProp: Function;
 	directional: boolean;
 }
 
-export interface IItemSolidProperties extends IItemBoardProperties {
+export interface IItemSolidDefaults extends IItemBoardDefaults {
 	rotation: number;
 }
 
-export interface IWireProperties extends IItemBoardProperties {
+export interface IWireDefaults extends IItemBoardDefaults {
 	points: Point[];
 	polyline: SVGElement;
 	lines: SVGElement[];		//used on edit-mode only
 	edit: boolean;
 }
 
-export interface IECProperties extends IItemSolidProperties {
+export interface IECDefaults extends IItemSolidDefaults {
 	boardLabel: Label;
 }
+
+
 
 export interface IHighlightable {
 	visible: boolean;

@@ -1,11 +1,10 @@
-import { IType, ISize, IItemBaseOptions, Type, Base } from "./interfaces";
-import { unique } from "./dab";
+import { IType, ISize, IItemDefaults, Type, Base } from "./interfaces";
 import Point from "./point";
 
 export default abstract class Item extends Base implements IType {
 
 	//thi's until we can get real private variables
-	protected __s: IItemBaseOptions;
+	protected __s: IItemDefaults;
 
 	abstract get type(): Type;
 
@@ -20,16 +19,15 @@ export default abstract class Item extends Base implements IType {
 	abstract get ClientRect(): ISize;
 	abstract get box(): any;
 
-	constructor(options: IItemBaseOptions) {
+	constructor(options: { [x: string]: any; }) {
 		//merge defaults and deep copy
 		//all default properties must be refrenced from this or this.__s
 		// options is for custom options only
 		let
-			optionsClass = options.class || "";
+			optionsClass = options.class;
 		delete options.class;
 		super(options);
-		//this.__s = obj(copy(this.defaults(), options));
-		this.__s.class = unique((this.class + " " + optionsClass).split(' ')).join(' ');
+		optionsClass && (this.__s.class = this.__s.class ? ' ' : '' + optionsClass); // unique((this.class + " " + optionsClass).split(' ')).join(' '));
 		this.__s.x = this.__s.x || 0;
 		this.__s.y = this.__s.y || 0;
 	}
@@ -53,16 +51,16 @@ export default abstract class Item extends Base implements IType {
 		return this.move(this.x + (dx | 0), this.y + (dy | 0));
 	}
 
-	public defaults(): IItemBaseOptions {
-		return <IItemBaseOptions>{
+	public defaults(): IItemDefaults {
+		return <IItemDefaults>{
 			id: "",
 			name: "",
 			x: 0,
 			y: 0,
 			class: "",
 			visible: true,		//defaults is visible
-			base: <any>void 0,
-			label: ""
+			label: "",
+			base: <any>void 0	//this comes from createItem by default
 		}
 	}
 }

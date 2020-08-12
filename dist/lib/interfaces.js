@@ -23,9 +23,6 @@ var Base = /** @class */ (function () {
     Base.prototype.clear = function (options) {
         this.__s = dab_1.obj(dab_1.copy(this.defaults(), options || {}));
     };
-    Base.prototype.defaults = function () {
-        return {};
-    };
     return Base;
 }());
 exports.Base = Base;

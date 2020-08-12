@@ -10,7 +10,8 @@ var ItemBoard = /** @class */ (function (_super) {
         var _this = _super.call(this, options) || this;
         _this.container = container;
         if (!container)
-            throw "component without container";
+            throw "missing container";
+        _this.__s.props = dab_1.obj(_this.base.props);
         dab_1.attr(_this.g, {
             id: _this.id,
             "svg-comp": _this.base.type,
@@ -93,6 +94,9 @@ var ItemBoard = /** @class */ (function (_super) {
     };
     ItemBoard.prototype.disconnect = function () {
         this.container.disconnect(this);
+    };
+    ItemBoard.prototype.prop = function (propName) {
+        return this.__s.props[propName];
     };
     ItemBoard.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {

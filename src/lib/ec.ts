@@ -1,4 +1,4 @@
-import { Type, IItemSolidOptions, IPoint, IECProperties } from './interfaces';
+import { Type, IPoint, IECDefaults } from './interfaces';
 import { attr, extend, aChld } from './dab';
 import { tag } from './utils';
 import Point from './point';
@@ -8,13 +8,13 @@ import Circuit from './circuit';
 
 export default class EC extends ItemSolid {
 
-	protected __s: IECProperties;
+	protected __s: IECDefaults;
 
 	get type(): Type { return Type.EC }
 
 	get boardLabel(): Label { return this.__s.boardLabel }
 
-	constructor(circuit: Circuit, options: IItemSolidOptions) {
+	constructor(circuit: Circuit, options: { [x: string]: any; }) {
 		super(circuit, options);
 		let
 			createText = (attr: any, text: string) => {
@@ -94,8 +94,8 @@ export default class EC extends ItemSolid {
 		this.boardLabel && (this.g.insertAdjacentElement("afterend", this.boardLabel.g), this.boardLabel.setVisible(true))
 	}
 
-	public defaults(): IECProperties {
-		return <IECProperties>extend(super.defaults(), {
+	public defaults(): IECDefaults {
+		return <IECDefaults>extend(super.defaults(), {
 			class: "ec",
 			boardLabel: void 0
 		})

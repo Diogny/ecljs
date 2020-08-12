@@ -1,10 +1,10 @@
-import { IItemBaseProperties, IItemBaseOptions, ISize, ComponentPropertyType } from './interfaces';
+import { IItemBaseDefaults, ISize } from './interfaces';
 import Rect from './rect';
 import Point from './point';
 import Item from './item';
 import Comp from './components';
 export default abstract class ItemBase extends Item {
-    protected __s: IItemBaseProperties;
+    protected __s: IItemBaseDefaults;
     get base(): Comp;
     get g(): SVGElement;
     get ClientRect(): ISize;
@@ -12,8 +12,9 @@ export default abstract class ItemBase extends Item {
     get origin(): Point;
     rect(): Rect;
     setVisible(value: boolean): ItemBase;
-    constructor(options: IItemBaseOptions);
+    constructor(options: {
+        [x: string]: any;
+    });
     remove(): void;
     afterDOMinserted(): void;
-    prop(propName: string): ComponentPropertyType;
 }

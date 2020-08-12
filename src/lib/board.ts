@@ -1,26 +1,16 @@
-import { IBoardDefaults, Base, IBoardOptions } from "./interfaces";
 import Container from "./container";
 import FlowchartComp from "./flowchartComp";
 import EC from "./ec";
 import { unique } from "./dab";
 
-export default class Board extends Base {
+export default class Board {
 
-	protected __s: IBoardDefaults;
+	protected __s: Container<EC | FlowchartComp>[];
 
-	get containers(): Container<EC | FlowchartComp>[] { return this.__s.containers }
+	get containers(): Container<EC | FlowchartComp>[] { return this.__s }
 
-	public get modified(): boolean { return this.__s.modified }
-	public set modified(value: boolean) {
-		//brings uniformity to all containers
-		this.containers
-			.forEach(c => c.setModified(value));
-		this.__s.modified = value;
-		this.__s.onModified && this.__s.onModified(value);
-	}
-
-	constructor(options: IBoardOptions) {
-		super(options);
+	constructor(containers?: Container<EC | FlowchartComp>[]) {
+		this.__s = containers || [];
 		let
 			names = this.containers.map(c => {
 				c.board = this;
@@ -35,7 +25,6 @@ export default class Board extends Base {
 			throw `duplicated container name: ${container.name}`;
 		this.containers.push(container);
 		container.board = this;
-		this.modified = true;
 	}
 
 	public delete(name: string): Container<EC | FlowchartComp> | undefined {
@@ -56,14 +45,6 @@ export default class Board extends Base {
 		this.containers
 			.forEach(c => c.destroy());
 		this.__s = <any>void 0;
-	}
-
-	public defaults(): IBoardDefaults {
-		return {
-			containers: [],
-			modified: false,
-			onModified: void 0
-		}
 	}
 
 }

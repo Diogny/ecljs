@@ -13,8 +13,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 
 	get name(): string { return this.__s.name }
 	set name(value: string) {
-		this.__s.name = value;
-		this.modified = true
+		this.__s.name = value
 	}
 	get board(): Board { return this.__s.board }
 	set board(board: Board) {
@@ -45,22 +44,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return this.itemMap.get(id)?.t || this.wireMap.get(id)?.t
 	}
 
-	get modified(): boolean { return this.__s.modified }
-	set modified(value: boolean) {
-		if (value == this.modified)
-			return;
-		this.__s.modified = value;
-		this.registered && (this.board.modified = true)
-	}
-
-	/**
-	 * @description sets the container modified flag, but doesn't rise a modified event to parent board
-	 * @param value modified value
-	 */
-	public setModified(value: boolean) {
-		this.__s.modified = value;
-	}
-
 	constructor(name: string) {
 		super({
 			name: name
@@ -76,7 +59,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			itemMap: new Map(),
 			wireMap: new Map(),
 			selected: [],
-			modified: false,
 		}
 	}
 
@@ -148,7 +130,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			comp: T | Wire = createBoardItem(this, options);
 		if (comp.type != Type.WIRE && comp.base.library != this.library)
 			throw `component incompatible type`;
-		this.modified = true;
 		return comp
 	}
 
@@ -157,7 +138,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			return false;
 		comp.disconnect();
 		comp.remove();
-		this.modified = true;
 		return (comp.type == Type.WIRE) ?
 			this.wireMap.delete(comp.id) :
 			this.itemMap.delete(comp.id)
@@ -181,7 +161,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			return false;
 		return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
 			&& this.bondOneWay(ic, icNode, thisObj, thisNode, false)
-			&& (this.modified = true)
 	}
 
 	protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean {
@@ -294,7 +273,6 @@ function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: 
 		if (origin) {
 			unbond(container, toId, b.ndx, id, false);
 		}
-		container.modified = true
 	}
 }
 

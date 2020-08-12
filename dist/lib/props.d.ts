@@ -1,4 +1,4 @@
-import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp } from './interfaces';
+import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp, IPropHook } from './interfaces';
 export declare class ReactProp extends Base implements IReactProp {
     protected __s: IReactPropDefaults;
     get data(): {
@@ -33,11 +33,7 @@ export declare class UIProp extends ReactProp {
 export declare class PropContainer extends Base {
     protected __s: IPropContainerDefaults;
     get root(): {
-        [id: string]: {
-            value: any;
-            prop: ReactProp;
-            modified: boolean;
-        };
+        [id: string]: IPropHook;
     };
     get modified(): boolean;
     set modified(value: boolean);

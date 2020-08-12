@@ -238,7 +238,7 @@ var PropContainer = /** @class */ (function (_super) {
     tslib_1.__extends(PropContainer, _super);
     function PropContainer(props) {
         var _this = _super.call(this, {}) || this;
-        utils_1.each(props, function (options, key) { return _this.root[key] = hook(_this, options); });
+        utils_1.each(props, function (options, key) { return _this.root[key] = hook(_this, key, options); });
         return _this;
     }
     Object.defineProperty(PropContainer.prototype, "root", {
@@ -261,7 +261,7 @@ var PropContainer = /** @class */ (function (_super) {
     return PropContainer;
 }(interfaces_1.Base));
 exports.PropContainer = PropContainer;
-function hook(parent, options) {
+function hook(parent, name, options) {
     var 
     //defaults to "true" if not defined
     onModify = options.onModify == undefined ? true : options.onModify, p = (options.tag) ? new UIProp(options) : new ReactProp(options), modified = false, prop = {};
@@ -276,15 +276,8 @@ function hook(parent, options) {
             onModify && (parent.__s.modified = true);
         }
     });
-    dab_1.dP(prop, "prop", {
-        get: function () {
-            return p;
-        }
-    });
-    dab_1.dP(prop, "modified", {
-        get: function () {
-            return modified;
-        }
-    });
+    dab_1.dP(prop, "name", { get: function () { return name; } });
+    dab_1.dP(prop, "prop", { get: function () { return p; } });
+    dab_1.dP(prop, "modified", { get: function () { return modified; } });
     return prop;
 }

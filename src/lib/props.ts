@@ -1,4 +1,4 @@
-import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp } from './interfaces';
+import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp, IPropHook } from './interfaces';
 import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric, isFn } from './dab';
 import { qS, each } from './utils';
 
@@ -219,19 +219,18 @@ export class UIProp extends ReactProp {
 
 }
 
-
 export class PropContainer extends Base {
 
 	protected __s: IPropContainerDefaults;
 
-	get root(): { [id: string]: { value: any, prop: ReactProp, modified: boolean } } { return this.__s.root }
+	get root(): { [id: string]: IPropHook } { return this.__s.root }
 
 	get modified(): boolean { return this.__s.modified }
 	set modified(value: boolean) { this.__s.modified = value }
 
 	constructor(props: { [id: string]: { [id: string]: any } }) {
 		super({});
-		each(props, (options: { [id: string]: any }, key: string) => this.root[key] = hook(this, options))
+		each(props, (options: { [id: string]: any }, key: string) => this.root[key] = hook(this, key, options))
 	}
 
 	public defaults(): IPropContainerDefaults {
@@ -242,7 +241,7 @@ export class PropContainer extends Base {
 	}
 }
 
-function hook(parent: PropContainer, options: { [id: string]: any }): { value: any, prop: ReactProp, modified: boolean } {
+function hook(parent: PropContainer, name: string, options: { [id: string]: any }): IPropHook {
 	var
 		//defaults to "true" if not defined
 		onModify = options.onModify == undefined ? true : options.onModify,
@@ -260,15 +259,9 @@ function hook(parent: PropContainer, options: { [id: string]: any }): { value: a
 			onModify && ((<any>parent).__s.modified = true)
 		}
 	});
-	dP(prop, "prop", {
-		get(): ReactProp {
-			return p
-		}
-	});
-	dP(prop, "modified", {
-		get(): boolean {
-			return modified
-		}
-	});
+	dP(prop, "name", { get(): string { return name } });
+	dP(prop, "prop", { get(): ReactProp { return p } });
+	dP(prop, "modified", { get(): boolean { return modified } });
+
 	return <any>prop
 }

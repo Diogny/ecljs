@@ -18,7 +18,6 @@ var Container = /** @class */ (function (_super) {
         get: function () { return this.__s.name; },
         set: function (value) {
             this.__s.name = value;
-            this.modified = true;
         },
         enumerable: false,
         configurable: true
@@ -90,24 +89,6 @@ var Container = /** @class */ (function (_super) {
         var _a, _b;
         return ((_a = this.itemMap.get(id)) === null || _a === void 0 ? void 0 : _a.t) || ((_b = this.wireMap.get(id)) === null || _b === void 0 ? void 0 : _b.t);
     };
-    Object.defineProperty(Container.prototype, "modified", {
-        get: function () { return this.__s.modified; },
-        set: function (value) {
-            if (value == this.modified)
-                return;
-            this.__s.modified = value;
-            this.registered && (this.board.modified = true);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    /**
-     * @description sets the container modified flag, but doesn't rise a modified event to parent board
-     * @param value modified value
-     */
-    Container.prototype.setModified = function (value) {
-        this.__s.modified = value;
-    };
     Container.prototype.defaults = function () {
         return {
             name: "",
@@ -117,7 +98,6 @@ var Container = /** @class */ (function (_super) {
             itemMap: new Map(),
             wireMap: new Map(),
             selected: [],
-            modified: false,
         };
     };
     Container.prototype.root = function (name) {
@@ -175,7 +155,6 @@ var Container = /** @class */ (function (_super) {
         var comp = createBoardItem(this, options);
         if (comp.type != interfaces_1.Type.WIRE && comp.base.library != this.library)
             throw "component incompatible type";
-        this.modified = true;
         return comp;
     };
     Container.prototype.delete = function (comp) {
@@ -183,7 +162,6 @@ var Container = /** @class */ (function (_super) {
             return false;
         comp.disconnect();
         comp.remove();
-        this.modified = true;
         return (comp.type == interfaces_1.Type.WIRE) ?
             this.wireMap.delete(comp.id) :
             this.itemMap.delete(comp.id);
@@ -202,8 +180,7 @@ var Container = /** @class */ (function (_super) {
         if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
             return false;
         return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
-            && this.bondOneWay(ic, icNode, thisObj, thisNode, false)
-            && (this.modified = true);
+            && this.bondOneWay(ic, icNode, thisObj, thisNode, false);
     };
     Container.prototype.bondOneWay = function (thisObj, thisNode, ic, icNode, origin) {
         var item = getItem(this, thisObj.id), entry = item && item.b[thisNode];
@@ -289,7 +266,6 @@ function unbond(container, id, node, toId, origin) {
         if (origin) {
             unbond(container, toId, b.ndx, id, false);
         }
-        container.modified = true;
     }
 }
 function getItem(container, id) {

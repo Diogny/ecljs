@@ -1,10 +1,7 @@
 import Point from './point';
 import Comp from "./components";
-import { UIProp } from "./props";
+import { ReactProp } from "./props";
 import Label from "./label";
-import Container from "./container";
-import FlowchartComp from "./flowchartComp";
-import EC from "./ec";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
@@ -42,14 +39,6 @@ export declare abstract class Base implements IBase {
         [x: string]: any;
     };
 }
-export interface IBoardOptions {
-    containers?: Container<EC | FlowchartComp>[];
-    onModified?: (value: boolean) => void;
-}
-export interface IBoardDefaults extends IBoardOptions {
-    modified: boolean;
-    containers: Container<EC | FlowchartComp>[];
-}
 export interface IContainerDefaults<T extends ItemBoard> {
     name: string;
     board: Board;
@@ -68,7 +57,6 @@ export interface IContainerDefaults<T extends ItemBoard> {
         c: number;
     }>;
     selected: (T | Wire)[];
-    modified: boolean;
 }
 export interface IPoint {
     x: number;
@@ -106,6 +94,12 @@ export interface IReactProp extends IDisposable {
 export interface IUIPropertyCallback {
     (value: any, where: number, prop: IReactProp, e: any): any | void;
 }
+export interface IPropHook {
+    name: string;
+    value: any;
+    prop: ReactProp;
+    modified: boolean;
+}
 export interface IReactPropDefaults {
     data: {
         [id: string]: any;
@@ -124,11 +118,7 @@ export interface IUIPropertyDefaults extends IReactPropDefaults {
 }
 export interface IPropContainerDefaults {
     root: {
-        [id: string]: {
-            value: any;
-            prop: UIProp;
-            modified: boolean;
-        };
+        [id: string]: IPropHook;
     };
     modified: boolean;
 }

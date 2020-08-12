@@ -1,34 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tslib_1 = require("tslib");
-var interfaces_1 = require("./interfaces");
 var dab_1 = require("./dab");
-var Board = /** @class */ (function (_super) {
-    tslib_1.__extends(Board, _super);
-    function Board(options) {
-        var _this = _super.call(this, options) || this;
-        var names = _this.containers.map(function (c) {
+var Board = /** @class */ (function () {
+    function Board(containers) {
+        var _this = this;
+        this.__s = containers || [];
+        var names = this.containers.map(function (c) {
             c.board = _this;
             return c.name;
         });
         if (names.length != dab_1.unique(names).length)
             throw "duplicated container names";
-        return _this;
     }
     Object.defineProperty(Board.prototype, "containers", {
-        get: function () { return this.__s.containers; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Board.prototype, "modified", {
-        get: function () { return this.__s.modified; },
-        set: function (value) {
-            //brings uniformity to all containers
-            this.containers
-                .forEach(function (c) { return c.setModified(value); });
-            this.__s.modified = value;
-            this.__s.onModified && this.__s.onModified(value);
-        },
+        get: function () { return this.__s; },
         enumerable: false,
         configurable: true
     });
@@ -37,7 +22,6 @@ var Board = /** @class */ (function (_super) {
             throw "duplicated container name: " + container.name;
         this.containers.push(container);
         container.board = this;
-        this.modified = true;
     };
     Board.prototype.delete = function (name) {
         var ndx = index(this, name);
@@ -54,15 +38,8 @@ var Board = /** @class */ (function (_super) {
             .forEach(function (c) { return c.destroy(); });
         this.__s = void 0;
     };
-    Board.prototype.defaults = function () {
-        return {
-            containers: [],
-            modified: false,
-            onModified: void 0
-        };
-    };
     return Board;
-}(interfaces_1.Base));
+}());
 exports.default = Board;
 function index(board, name) {
     return board.containers.findIndex(function (c) { return c.name == name; });

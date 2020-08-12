@@ -1,36 +1,50 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties, IHookOptions } from './interfaces';
-export declare class UIProp extends Base implements IUIProperty {
-    protected __s: IUIPropertySettings;
-    get type(): string;
-    get tag(): string | Element;
-    get html(): HTMLElement;
-    get editable(): boolean;
+import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp } from './interfaces';
+export declare class ReactProp extends Base implements IReactProp {
+    protected __s: IReactPropDefaults;
     get data(): {
         [id: string]: any;
     };
-    get nodeName(): string;
-    get react(): boolean;
-    get onChange(): IUIPropertyCallback | undefined;
-    set onChange(fn: IUIPropertyCallback | undefined);
     get value(): any;
     set value(val: any);
-    constructor(options: IUIPropertyOptions);
-    destroy(): void;
+    constructor(options: {
+        [id: string]: any;
+    });
+    dispose(): void;
+    onChange: IUIPropertyCallback | undefined;
+    defaults(): IReactPropDefaults;
+}
+export declare class UIProp extends ReactProp {
+    protected __s: IUIPropertyDefaults;
+    get type(): string;
+    get html(): HTMLElement;
+    get editable(): boolean;
+    get tag(): string | Element;
+    get nodeName(): string;
+    get react(): boolean;
+    get value(): any;
+    set value(val: any);
+    constructor(options: {
+        [id: string]: any;
+    });
+    dispose(): void;
     private trigger;
-    defaults(): IUIPropertySettings;
+    defaults(): IUIPropertyDefaults;
 }
 export declare class PropContainer extends Base {
-    protected __s: IPropContainerProperties;
+    protected __s: IPropContainerDefaults;
     get root(): {
         [id: string]: {
             value: any;
-            prop: UIProp;
+            prop: ReactProp;
             modified: boolean;
         };
     };
     get modified(): boolean;
+    set modified(value: boolean);
     constructor(props: {
-        [id: string]: IHookOptions;
+        [id: string]: {
+            [id: string]: any;
+        };
     });
-    defaults(): IPropContainerProperties;
+    defaults(): IPropContainerDefaults;
 }

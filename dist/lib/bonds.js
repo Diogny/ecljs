@@ -61,7 +61,7 @@ var Bond = /** @class */ (function () {
     /**
      * @description removes a bond connection from this component item
      * @param {String} id id name of the destination bond
-     * @returns {IBondLink} removed bond item or null if none
+     * @returns {IBondNode} removed bond item or null if none
      */
     Bond.prototype.remove = function (id) {
         var ndx = this.to.findIndex(function (b) { return b.id == id; }), b = (ndx == -1) ? null : this.to[ndx];

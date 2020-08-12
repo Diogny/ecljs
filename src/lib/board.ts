@@ -1,4 +1,4 @@
-import { IBoardProperties, Base, IBoardOptions } from "./interfaces";
+import { IBoardDefaults, Base, IBoardOptions } from "./interfaces";
 import Container from "./container";
 import FlowchartComp from "./flowchartComp";
 import EC from "./ec";
@@ -6,7 +6,7 @@ import { unique } from "./dab";
 
 export default class Board extends Base {
 
-	protected __s: IBoardProperties;
+	protected __s: IBoardDefaults;
 
 	get containers(): Container<EC | FlowchartComp>[] { return this.__s.containers }
 
@@ -58,8 +58,8 @@ export default class Board extends Base {
 		this.__s = <any>void 0;
 	}
 
-	public defaults(): IBoardProperties {
-		return <IBoardProperties>{
+	public defaults(): IBoardDefaults {
+		return {
 			containers: [],
 			modified: false,
 			onModified: void 0

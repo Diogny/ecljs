@@ -1,11 +1,11 @@
-import { IBaseComponent, IContainerProperties, Base } from "./interfaces";
+import { IBaseComponent, IContainerDefaults, Base } from "./interfaces";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 import Board from "./board";
 export default abstract class Container<T extends ItemBoard> extends Base {
-    protected __s: IContainerProperties<T>;
+    protected __s: IContainerDefaults<T>;
     get name(): string;
     set name(value: string);
     get board(): Board;
@@ -45,7 +45,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
      */
     setModified(value: boolean): void;
     constructor(name: string);
-    defaults(): IContainerProperties<T>;
+    defaults(): IContainerDefaults<T>;
     root(name: string): IBaseComponent | undefined;
     hasItem(id: string): boolean;
     selectAll(value: boolean): (T | Wire)[];

@@ -1,10 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PropContainer = exports.UIProp = void 0;
+exports.PropContainer = exports.UIProp = exports.ReactProp = void 0;
 var tslib_1 = require("tslib");
 var interfaces_1 = require("./interfaces");
 var dab_1 = require("./dab");
 var utils_1 = require("./utils");
+var ReactProp = /** @class */ (function (_super) {
+    tslib_1.__extends(ReactProp, _super);
+    function ReactProp(options) {
+        var _this = _super.call(this, options) || this;
+        dab_1.isFn(options.onChange) && (_this.onChange = options.onChange);
+        return _this;
+    }
+    Object.defineProperty(ReactProp.prototype, "data", {
+        get: function () { return this.__s.data; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReactProp.prototype, "value", {
+        get: function () { return this.__s.value; },
+        set: function (val) {
+            this.onChange && this.onChange(val, 2, this, void 0);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    ReactProp.prototype.dispose = function () { };
+    ReactProp.prototype.defaults = function () {
+        return {
+            data: {},
+            value: void 0
+        };
+    };
+    return ReactProp;
+}(interfaces_1.Base));
+exports.ReactProp = ReactProp;
 var UIProp = /** @class */ (function (_super) {
     tslib_1.__extends(UIProp, _super);
     function UIProp(options) {
@@ -85,11 +115,6 @@ var UIProp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(UIProp.prototype, "tag", {
-        get: function () { return this.__s.tag; },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(UIProp.prototype, "html", {
         get: function () { return this.__s.html; },
         enumerable: false,
@@ -100,8 +125,8 @@ var UIProp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(UIProp.prototype, "data", {
-        get: function () { return this.__s.data; },
+    Object.defineProperty(UIProp.prototype, "tag", {
+        get: function () { return this.__s.tag; },
         enumerable: false,
         configurable: true
     });
@@ -112,12 +137,6 @@ var UIProp = /** @class */ (function (_super) {
     });
     Object.defineProperty(UIProp.prototype, "react", {
         get: function () { return this.editable || this.__s.htmlSelect; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(UIProp.prototype, "onChange", {
-        get: function () { return this.__s.onChange; },
-        set: function (fn) { this.__s.onChange = fn; },
         enumerable: false,
         configurable: true
     });
@@ -178,7 +197,7 @@ var UIProp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    UIProp.prototype.destroy = function () {
+    UIProp.prototype.dispose = function () {
         this.react
             && this.html.removeEventListener('change', this.trigger);
     };
@@ -212,7 +231,7 @@ var UIProp = /** @class */ (function (_super) {
         };
     };
     return UIProp;
-}(interfaces_1.Base));
+}(ReactProp));
 exports.UIProp = UIProp;
 var PropContainer = /** @class */ (function (_super) {
     tslib_1.__extends(PropContainer, _super);
@@ -228,6 +247,7 @@ var PropContainer = /** @class */ (function (_super) {
     });
     Object.defineProperty(PropContainer.prototype, "modified", {
         get: function () { return this.__s.modified; },
+        set: function (value) { this.__s.modified = value; },
         enumerable: false,
         configurable: true
     });
@@ -243,7 +263,7 @@ exports.PropContainer = PropContainer;
 function hook(parent, options) {
     var 
     //defaults to "true" if not defined
-    onModify = options.onModify == undefined ? true : options.onModify, p = new UIProp(options), modified = false, prop = {};
+    onModify = options.onModify == undefined ? true : options.onModify, p = (options.tag) ? new UIProp(options) : new ReactProp(options), modified = false, prop = {};
     dab_1.dP(prop, "value", {
         get: function () {
             return p.value;

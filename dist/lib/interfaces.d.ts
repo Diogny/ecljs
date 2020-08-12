@@ -23,12 +23,12 @@ export declare enum Type {
 export interface IType {
     type: Type;
 }
-export interface IBaseSettings {
+export interface IBase {
     defaults(): {
         [x: string]: any;
     };
 }
-export declare abstract class Base implements IBaseSettings {
+export declare abstract class Base implements IBase {
     protected __s: {
         [x: string]: any;
     };
@@ -46,11 +46,11 @@ export interface IBoardOptions {
     containers?: Container<EC | FlowchartComp>[];
     onModified?: (value: boolean) => void;
 }
-export interface IBoardProperties extends IBoardOptions {
+export interface IBoardDefaults extends IBoardOptions {
     modified: boolean;
     containers: Container<EC | FlowchartComp>[];
 }
-export interface IContainerProperties<T extends ItemBoard> {
+export interface IContainerDefaults<T extends ItemBoard> {
     name: string;
     board: Board;
     counters: {
@@ -93,33 +93,36 @@ export interface IComponentProperty {
     setValue(val: string): boolean;
 }
 export declare type ComponentPropertyType = string | number | IComponentProperty;
-export interface IUIPropertyCallback {
-    (value: any, where: number, prop: UIProp, e: any): any | void;
+export interface IDisposable {
+    dispose(): void;
 }
-export interface IUIPropertyOptions {
-    tag: string | Element;
+export interface IReactProp extends IDisposable {
+    value: any;
     onChange?: IUIPropertyCallback | undefined;
-    data?: {
-        [id: string]: any;
-    };
-    value?: any;
-}
-export interface IUIProperty extends IUIPropertyOptions {
-    type: string;
-    html: HTMLElement;
-    editable: boolean;
     data: {
         [id: string]: any;
     };
 }
-export interface IUIPropertySettings extends IUIProperty {
+export interface IUIPropertyCallback {
+    (value: any, where: number, prop: IReactProp, e: any): any | void;
+}
+export interface IReactPropDefaults {
+    data: {
+        [id: string]: any;
+    };
+    value: any;
+}
+export interface IUIPropertyDefaults extends IReactPropDefaults {
+    tag: string | Element;
+    type: string;
+    html: HTMLElement;
+    editable: boolean;
     getter: string;
     htmlSelect: boolean;
     selectCount: number;
     selectMultiple: boolean;
-    value: any;
 }
-export interface IPropContainerProperties {
+export interface IPropContainerDefaults {
     root: {
         [id: string]: {
             value: any;
@@ -128,9 +131,6 @@ export interface IPropContainerProperties {
         };
     };
     modified: boolean;
-}
-export interface IHookOptions extends IUIPropertyOptions {
-    onModify?: boolean;
 }
 export interface IComponentOptions {
     library: string;
@@ -246,7 +246,7 @@ export interface IHighlightable {
     refresh(): void;
     setRadius(value: number): IHighlightable;
 }
-export interface IBondLink {
+export interface IBondNode {
     id: string;
     type: Type;
     ndx: number;

@@ -1,9 +1,9 @@
-import { IBoardProperties, Base, IBoardOptions } from "./interfaces";
+import { IBoardDefaults, Base, IBoardOptions } from "./interfaces";
 import Container from "./container";
 import FlowchartComp from "./flowchartComp";
 import EC from "./ec";
 export default class Board extends Base {
-    protected __s: IBoardProperties;
+    protected __s: IBoardDefaults;
     get containers(): Container<EC | FlowchartComp>[];
     get modified(): boolean;
     set modified(value: boolean);
@@ -13,5 +13,5 @@ export default class Board extends Base {
     get(name: string): Container<EC | FlowchartComp> | undefined;
     libraries(library: string): Container<EC | FlowchartComp>[];
     destroy(): void;
-    defaults(): IBoardProperties;
+    defaults(): IBoardDefaults;
 }

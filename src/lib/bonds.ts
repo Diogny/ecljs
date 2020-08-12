@@ -1,11 +1,11 @@
-import { IType, IBondLink, Type } from './interfaces';
+import { IType, IBondNode, Type } from './interfaces';
 import { obj } from './dab';
 import ItemBoard from './itemsBoard';
 
 export default class Bond implements IType {
 
-	public from: IBondLink;
-	public to: IBondLink[];
+	public from: IBondNode;
+	public to: IBondNode[];
 
 	get type(): Type { return Type.BOND }
 
@@ -31,21 +31,21 @@ export default class Bond implements IType {
 
 	public has(id: string): boolean { return this.to.some((b) => id == b.id) }
 
-	public get(id: string): IBondLink | undefined {
+	public get(id: string): IBondNode | undefined {
 		return this.to.find((b) => id == b.id)
 	}
 
 	public add(t: ItemBoard, ndx: number): boolean {
 		if (t && !this.has(t.id)) {
 			let
-				b: IBondLink = this.create(t, ndx);
+				b: IBondNode = this.create(t, ndx);
 			this.to.push(b);
 			return true;
 		}
 		return false;
 	}
 
-	private create(ec: ItemBoard, ndx: number): IBondLink {
+	private create(ec: ItemBoard, ndx: number): IBondNode {
 		return obj({
 			id: ec.id,
 			type: ec.type,
@@ -56,19 +56,19 @@ export default class Bond implements IType {
 	/**
 	 * @description removes a bond connection from this component item
 	 * @param {String} id id name of the destination bond
-	 * @returns {IBondLink} removed bond item or null if none
+	 * @returns {IBondNode} removed bond item or null if none
 	 */
-	public remove(id: string): IBondLink | null {
+	public remove(id: string): IBondNode | null {
 		let
 			ndx = this.to.findIndex((b) => b.id == id),
-			b: IBondLink | null = (ndx == -1) ? null : this.to[ndx];
+			b: IBondNode | null = (ndx == -1) ? null : this.to[ndx];
 		(b != null) && this.to.splice(ndx, 1);
 		return b;
 	}
 
 	public toString = (): string => {
 		let
-			fn = (o: IBondLink) => `#${o.id} [${o.ndx}]`,
+			fn = (o: IBondNode) => `#${o.id} [${o.ndx}]`,
 			toStr = this.to.map((b) => fn(b)).join(', ');
 		return `from ${fn(this.from)} to ${toStr}`
 	}

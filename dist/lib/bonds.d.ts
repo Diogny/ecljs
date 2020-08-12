@@ -1,9 +1,9 @@
-import { IType, IBondLink, Type } from './interfaces';
+import { IType, IBondNode, Type } from './interfaces';
 import ItemBoard from './itemsBoard';
 export default class Bond implements IType {
     origin: boolean;
-    from: IBondLink;
-    to: IBondLink[];
+    from: IBondNode;
+    to: IBondNode[];
     get type(): Type;
     get count(): number;
     get link(): string;
@@ -16,15 +16,15 @@ export default class Bond implements IType {
      */
     constructor(from: ItemBoard, fromPin: number, to: ItemBoard, toNode: number, origin: boolean);
     has(id: string): boolean;
-    get(id: string): IBondLink | undefined;
+    get(id: string): IBondNode | undefined;
     add(t: ItemBoard, ndx: number): boolean;
     private create;
     /**
      * @description removes a bond connection from this component item
      * @param {String} id id name of the destination bond
-     * @returns {IBondLink} removed bond item or null if none
+     * @returns {IBondNode} removed bond item or null if none
      */
-    remove(id: string): IBondLink | null;
+    remove(id: string): IBondNode | null;
     toString: () => string;
     static display: (arr: Bond[] | undefined) => string[];
 }

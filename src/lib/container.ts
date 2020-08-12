@@ -1,15 +1,15 @@
-import { Type, IBaseComponent, IBondLink, IContainerProperties, Base } from "./interfaces";
+import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base } from "./interfaces";
 import { isNum } from "./dab";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
-import Comp from "./components"; 
+import Comp from "./components";
 import Board from "./board";
 
 export default abstract class Container<T extends ItemBoard> extends Base {
 
-	protected __s: IContainerProperties<T>;
+	protected __s: IContainerDefaults<T>;
 
 	get name(): string { return this.__s.name }
 	set name(value: string) {
@@ -67,8 +67,8 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		})
 	}
 
-	public defaults(): IContainerProperties<T> {
-		return <IContainerProperties<T>>{
+	public defaults(): IContainerDefaults<T> {
+		return {
 			name: "",
 			board: <any>void 0,
 			counters: {},
@@ -215,7 +215,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		let
 			item = getItem(this, thisObj.id),
 			bond = item && item.b[node],
-			link: IBondLink = <any>void 0;
+			link: IBondNode = <any>void 0;
 		if (!bond || !item)
 			return;
 		//try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed

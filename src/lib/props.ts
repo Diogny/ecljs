@@ -1,21 +1,48 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties, IHookOptions } from './interfaces';
-import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric } from './dab';
+import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp } from './interfaces';
+import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric, isFn } from './dab';
 import { qS, each } from './utils';
 
-export class UIProp extends Base implements IUIProperty {
+export class ReactProp extends Base implements IReactProp {
 
-	protected __s: IUIPropertySettings;
+	protected __s: IReactPropDefaults;
+
+	get data(): { [id: string]: any } { return this.__s.data }
+
+	get value(): any { return this.__s.value }
+
+	set value(val: any) {
+		this.onChange && this.onChange(val, 2, this, <any>void 0)
+	}
+
+	constructor(options: { [id: string]: any }) {
+		super(options);
+		isFn(options.onChange) && (this.onChange = options.onChange);
+	}
+
+	dispose(): void { }
+
+	onChange: IUIPropertyCallback | undefined;
+
+	public defaults(): IReactPropDefaults {
+		return {
+			data: {},
+			value: void 0
+		}
+	}
+}
+
+export class UIProp extends ReactProp {
+
+	protected __s: IUIPropertyDefaults;
 
 	get type(): string { return this.__s.type }
-	get tag(): string | Element { return this.__s.tag }
+
 	get html(): HTMLElement { return this.__s.html }
 	get editable(): boolean { return this.__s.editable }
-	get data(): { [id: string]: any } { return this.__s.data }
+
+	get tag(): string | Element { return this.__s.tag }
 	get nodeName(): string { return this.html.nodeName.toLowerCase() }
 	get react(): boolean { return this.editable || this.__s.htmlSelect }
-
-	get onChange(): IUIPropertyCallback | undefined { return this.__s.onChange }
-	set onChange(fn: IUIPropertyCallback | undefined) { this.__s.onChange = fn }
 
 	get value(): any {
 		if (!this.react) {
@@ -78,7 +105,7 @@ export class UIProp extends Base implements IUIProperty {
 		this.trigger(null)
 	}
 
-	constructor(options: IUIPropertyOptions) {
+	constructor(options: { [id: string]: any }) {
 		super(options);
 		if (!(this.__s.html = <HTMLElement>(isDOM(options.tag) ? (options.tag) : qS(<string>options.tag))))
 			throw 'wrong options';
@@ -151,7 +178,7 @@ export class UIProp extends Base implements IUIProperty {
 			&& this.html.addEventListener('change', this.trigger);
 	}
 
-	public destroy() {
+	public dispose() {
 		this.react
 			&& this.html.removeEventListener('change', this.trigger);
 	}
@@ -172,8 +199,8 @@ export class UIProp extends Base implements IUIProperty {
 		)
 	}
 
-	public defaults(): IUIPropertySettings {
-		return <IUIPropertySettings>{
+	public defaults(): IUIPropertyDefaults {
+		return <IUIPropertyDefaults>{
 			tag: "",
 			onChange: void 0,
 			data: {},
@@ -191,32 +218,34 @@ export class UIProp extends Base implements IUIProperty {
 
 }
 
+
 export class PropContainer extends Base {
 
-	protected __s: IPropContainerProperties;
+	protected __s: IPropContainerDefaults;
 
-	get root(): { [id: string]: { value: any, prop: UIProp, modified: boolean } } { return this.__s.root }
+	get root(): { [id: string]: { value: any, prop: ReactProp, modified: boolean } } { return this.__s.root }
 
 	get modified(): boolean { return this.__s.modified }
+	set modified(value: boolean) { this.__s.modified = value }
 
-	constructor(props: { [id: string]: IHookOptions }) {
+	constructor(props: { [id: string]: { [id: string]: any } }) {
 		super({});
-		each(props, (options: IHookOptions, key: string) => this.root[key] = hook(this, options))
+		each(props, (options: { [id: string]: any }, key: string) => this.root[key] = hook(this, options))
 	}
 
-	public defaults(): IPropContainerProperties {
-		return <IPropContainerProperties>{
+	public defaults(): IPropContainerDefaults {
+		return <IPropContainerDefaults>{
 			root: {},
 			modified: false
 		}
 	}
 }
 
-function hook(parent: PropContainer, options: IHookOptions): { value: any, prop: UIProp, modified: boolean } {
+function hook(parent: PropContainer, options: { [id: string]: any }): { value: any, prop: ReactProp, modified: boolean } {
 	var
 		//defaults to "true" if not defined
 		onModify = options.onModify == undefined ? true : options.onModify,
-		p = new UIProp(options),
+		p = (options.tag) ? new UIProp(options) : new ReactProp(options),
 		modified = false,
 		prop: { [id: string]: any } = {};
 	dP(prop, "value", {
@@ -230,7 +259,7 @@ function hook(parent: PropContainer, options: IHookOptions): { value: any, prop:
 		}
 	});
 	dP(prop, "prop", {
-		get(): UIProp {
+		get(): ReactProp {
 			return p
 		}
 	});

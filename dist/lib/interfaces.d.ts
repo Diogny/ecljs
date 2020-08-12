@@ -139,6 +139,9 @@ export interface IPropContainerProperties {
     };
     modified: boolean;
 }
+export interface IHookOptions extends IUIPropertyOptions {
+    onModify?: boolean;
+}
 export interface IComponentOptions {
     library: string;
     type: string;

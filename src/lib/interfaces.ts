@@ -150,6 +150,11 @@ export interface IPropContainerProperties {
 	modified: boolean;
 }
 
+export interface IHookOptions extends IUIPropertyOptions {
+	//sets parent modify or not, defaults to "true"
+	onModify?: boolean;
+}
+
 //***************************************** Component ************************************//
 export interface IComponentOptions {
 	library: string;

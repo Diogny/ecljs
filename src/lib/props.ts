@@ -1,4 +1,4 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties } from './interfaces';
+import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties, IHookOptions } from './interfaces';
 import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric } from './dab';
 import { qS, each } from './utils';
 
@@ -199,9 +199,9 @@ export class PropContainer extends Base {
 
 	get modified(): boolean { return this.__s.modified }
 
-	constructor(props: { [id: string]: IUIPropertyOptions }) {
+	constructor(props: { [id: string]: IHookOptions }) {
 		super({});
-		each(props, (p: IUIPropertyOptions, key: string) => this.root[key] = hook(this, new UIProp(p)))
+		each(props, (options: IHookOptions, key: string) => this.root[key] = hook(this, options))
 	}
 
 	public defaults(): IPropContainerProperties {
@@ -212,8 +212,11 @@ export class PropContainer extends Base {
 	}
 }
 
-function hook(parent: PropContainer, p: UIProp): { value: any, prop: UIProp, modified: boolean } {
+function hook(parent: PropContainer, options: IHookOptions): { value: any, prop: UIProp, modified: boolean } {
 	var
+		//defaults to "true" if not defined
+		onModify = options.onModify == undefined ? true : options.onModify,
+		p = new UIProp(options),
 		modified = false,
 		prop: { [id: string]: any } = {};
 	dP(prop, "value", {
@@ -221,7 +224,8 @@ function hook(parent: PropContainer, p: UIProp): { value: any, prop: UIProp, mod
 			return p.value
 		},
 		set(value: any) {
-			(prop.value != value) && (modified = true, (<any>parent).__s.modified = true);
+			//trigger father's modified only if defined, defaults to "true"
+			(prop.value != value) && (modified = true, onModify && ((<any>parent).__s.modified = true));
 			p.value = value
 		}
 	});

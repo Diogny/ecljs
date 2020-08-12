@@ -1,4 +1,4 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties } from './interfaces';
+import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties, IHookOptions } from './interfaces';
 export declare class UIProp extends Base implements IUIProperty {
     protected __s: IUIPropertySettings;
     get type(): string;
@@ -30,7 +30,7 @@ export declare class PropContainer extends Base {
     };
     get modified(): boolean;
     constructor(props: {
-        [id: string]: IUIPropertyOptions;
+        [id: string]: IHookOptions;
     });
     defaults(): IPropContainerProperties;
 }

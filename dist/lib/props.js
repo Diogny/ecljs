@@ -218,7 +218,7 @@ var PropContainer = /** @class */ (function (_super) {
     tslib_1.__extends(PropContainer, _super);
     function PropContainer(props) {
         var _this = _super.call(this, {}) || this;
-        utils_1.each(props, function (p, key) { return _this.root[key] = hook(_this, new UIProp(p)); });
+        utils_1.each(props, function (options, key) { return _this.root[key] = hook(_this, options); });
         return _this;
     }
     Object.defineProperty(PropContainer.prototype, "root", {
@@ -240,14 +240,17 @@ var PropContainer = /** @class */ (function (_super) {
     return PropContainer;
 }(interfaces_1.Base));
 exports.PropContainer = PropContainer;
-function hook(parent, p) {
-    var modified = false, prop = {};
+function hook(parent, options) {
+    var 
+    //defaults to "true" if not defined
+    onModify = options.onModify == undefined ? true : options.onModify, p = new UIProp(options), modified = false, prop = {};
     dab_1.dP(prop, "value", {
         get: function () {
             return p.value;
         },
         set: function (value) {
-            (prop.value != value) && (modified = true, parent.__s.modified = true);
+            //trigger father's modified only if defined, defaults to "true"
+            (prop.value != value) && (modified = true, onModify && (parent.__s.modified = true));
             p.value = value;
         }
     });

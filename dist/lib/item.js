@@ -13,7 +13,7 @@ var Item = /** @class */ (function (_super) {
         var optionsClass = options.class;
         delete options.class;
         _this = _super.call(this, options) || this;
-        optionsClass && (_this.__s.class = (_this.__s.class ? ' ' : '') + optionsClass);
+        optionsClass && (_this.__s.class += " " + optionsClass);
         _this.__s.x = _this.__s.x || 0;
         _this.__s.y = _this.__s.y || 0;
         return _this;

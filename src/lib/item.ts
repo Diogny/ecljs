@@ -27,7 +27,7 @@ export default abstract class Item extends Base implements IType {
 			optionsClass = options.class;
 		delete options.class;
 		super(options);
-		optionsClass && (this.__s.class = this.__s.class ? ' ' : '' + optionsClass); // unique((this.class + " " + optionsClass).split(' ')).join(' '));
+		optionsClass && (this.__s.class = (this.__s.class ? ' ' : '') + optionsClass);
 		this.__s.x = this.__s.x || 0;
 		this.__s.y = this.__s.y || 0;
 	}

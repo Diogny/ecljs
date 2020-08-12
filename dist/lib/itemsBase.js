@@ -10,11 +10,8 @@ var ItemBase = /** @class */ (function (_super) {
     tslib_1.__extends(ItemBase, _super);
     function ItemBase(options) {
         var _this = _super.call(this, options) || this;
-        var classArr = dab_1.isStr(_this.class) ? _this.class.split(' ') : [];
-        !_this.__s.visible && (classArr.push("hide"));
-        _this.__s.g = utils_1.tag("g", _this.__s.id, {
-            class: (_this.__s.class = classArr.join(' '))
-        });
+        _this.__s.g = utils_1.tag("g", _this.__s.id, {});
+        _this.setVisible(_this.visible);
         return _this;
     }
     Object.defineProperty(ItemBase.prototype, "base", {
@@ -55,9 +52,7 @@ var ItemBase = /** @class */ (function (_super) {
         return new rect_1.default(this.p.x, this.p.y, this.box.width, this.box.height);
     };
     ItemBase.prototype.setVisible = function (value) {
-        _super.prototype.setVisible.call(this, value);
-        this.visible ? dab_1.rCl(this.g, "hide") : dab_1.aCl(this.g, "hide");
-        return this;
+        return dab_1.tCl(this.g, "hide", !_super.prototype.setVisible.call(this, value).visible), this;
     };
     ItemBase.prototype.remove = function () {
         var _a;

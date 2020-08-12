@@ -1,5 +1,5 @@
 import { IItemBaseDefaults, ISize } from './interfaces';
-import { obj, aCl, rCl, isStr } from './dab';
+import { obj, tCl } from './dab';
 import { tag } from './utils';
 import Rect from './rect';
 import Point from './point';
@@ -34,19 +34,13 @@ export default abstract class ItemBase extends Item {
 	}
 
 	public setVisible(value: boolean): ItemBase {
-		super.setVisible(value);
-		this.visible ? rCl(this.g, "hide") : aCl(this.g, "hide")
-		return this;
+		return tCl(this.g, "hide", !super.setVisible(value).visible), this
 	}
 
 	constructor(options: { [x: string]: any; }) {
 		super(options);
-		let
-			classArr = isStr(this.class) ? this.class.split(' ') : [];
-		!this.__s.visible && (classArr.push("hide"));
-		this.__s.g = tag("g", this.__s.id, {
-			class: (this.__s.class = classArr.join(' '))
-		});
+		this.__s.g = tag("g", this.__s.id, {});
+		this.setVisible(this.visible)
 	}
 
 	public remove() {

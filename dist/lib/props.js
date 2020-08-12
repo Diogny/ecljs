@@ -20,6 +20,7 @@ var ReactProp = /** @class */ (function (_super) {
     Object.defineProperty(ReactProp.prototype, "value", {
         get: function () { return this.__s.value; },
         set: function (val) {
+            this.__s.value = val;
             this.onChange && this.onChange(val, 2, this, void 0);
         },
         enumerable: false,
@@ -163,11 +164,11 @@ var UIProp = /** @class */ (function (_super) {
         },
         set: function (val) {
             if (!this.react) {
-                //call onchange to get UI value
-                var newValue = this.onChange && this.onChange(val, 2, this, void 0);
                 this.__s.value = val;
-                //write to DOM transformed value
-                this.html[this.__s.getter] = (newValue == undefined) ? val : newValue;
+                //call onchange to get UI value
+                var transfValue = this.onChange && this.onChange(val, 2, this, void 0);
+                //write to DOM transformed value, if undefined write "val"
+                this.html[this.__s.getter] = (transfValue == undefined) ? val : transfValue;
                 return;
             }
             if (!this.__s.htmlSelect) {
@@ -269,9 +270,10 @@ function hook(parent, options) {
             return p.value;
         },
         set: function (value) {
-            //trigger father's modified only if defined, defaults to "true"
-            (prop.value != value) && (modified = true, onModify && (parent.__s.modified = true));
             p.value = value;
+            //trigger father's modified only if defined, defaults to "true"
+            modified = true;
+            onModify && (parent.__s.modified = true);
         }
     });
     dab_1.dP(prop, "prop", {

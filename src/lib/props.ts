@@ -11,6 +11,7 @@ export class ReactProp extends Base implements IReactProp {
 	get value(): any { return this.__s.value }
 
 	set value(val: any) {
+		this.__s.value = val;
 		this.onChange && this.onChange(val, 2, this, <any>void 0)
 	}
 
@@ -66,12 +67,12 @@ export class UIProp extends ReactProp {
 
 	set value(val: any) {
 		if (!this.react) {
+			this.__s.value = val;
 			//call onchange to get UI value
 			let
-				newValue = this.onChange && this.onChange(val, 2, this, <any>void 0);
-			this.__s.value = val;
-			//write to DOM transformed value
-			(<any>this.html)[this.__s.getter] = (newValue == undefined) ? val : newValue
+				transfValue = this.onChange && this.onChange(val, 2, this, <any>void 0);
+			//write to DOM transformed value, if undefined write "val"
+			(<any>this.html)[this.__s.getter] = (transfValue == undefined) ? val : transfValue
 			return
 		}
 		if (!this.__s.htmlSelect) {
@@ -253,9 +254,10 @@ function hook(parent: PropContainer, options: { [id: string]: any }): { value: a
 			return p.value
 		},
 		set(value: any) {
+			p.value = value;
 			//trigger father's modified only if defined, defaults to "true"
-			(prop.value != value) && (modified = true, onModify && ((<any>parent).__s.modified = true));
-			p.value = value
+			modified = true;
+			onModify && ((<any>parent).__s.modified = true)
 		}
 	});
 	dP(prop, "prop", {

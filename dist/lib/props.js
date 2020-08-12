@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIHook = exports.UIProp = void 0;
+exports.PropContainer = exports.UIProp = void 0;
 var tslib_1 = require("tslib");
 var interfaces_1 = require("./interfaces");
 var dab_1 = require("./dab");
@@ -123,6 +123,9 @@ var UIProp = /** @class */ (function (_super) {
     });
     Object.defineProperty(UIProp.prototype, "value", {
         get: function () {
+            if (!this.react) {
+                return this.__s.value;
+            }
             var val = this.html[this.__s.getter]; //select.selectedOptions
             if (!this.__s.htmlSelect) {
                 switch (this.type) {
@@ -143,6 +146,8 @@ var UIProp = /** @class */ (function (_super) {
             if (!this.react) {
                 //call onchange to get UI value
                 var newValue = this.onChange && this.onChange(val, 2, this, void 0);
+                this.__s.value = val;
+                //write to DOM transformed value
                 this.html[this.__s.getter] = (newValue == undefined) ? val : newValue;
                 return;
             }
@@ -203,26 +208,58 @@ var UIProp = /** @class */ (function (_super) {
             htmlSelect: false,
             selectCount: 1,
             selectMultiple: false,
+            value: void 0
         };
-    };
-    UIProp.container = function (props) {
-        var root = {};
-        utils_1.each(props, function (p, key) { return root[key] = new UIHook(new UIProp(p)); });
-        return root;
     };
     return UIProp;
 }(interfaces_1.Base));
 exports.UIProp = UIProp;
-var UIHook = /** @class */ (function () {
-    function UIHook(prop) {
-        this.prop = prop;
+var PropContainer = /** @class */ (function (_super) {
+    tslib_1.__extends(PropContainer, _super);
+    function PropContainer(props) {
+        var _this = _super.call(this, {}) || this;
+        utils_1.each(props, function (p, key) { return _this.root[key] = hook(_this, new UIProp(p)); });
+        return _this;
     }
-    Object.defineProperty(UIHook.prototype, "value", {
-        get: function () { return this.prop.value; },
-        set: function (value) { this.prop.value = value; },
+    Object.defineProperty(PropContainer.prototype, "root", {
+        get: function () { return this.__s.root; },
         enumerable: false,
         configurable: true
     });
-    return UIHook;
-}());
-exports.UIHook = UIHook;
+    Object.defineProperty(PropContainer.prototype, "modified", {
+        get: function () { return this.__s.modified; },
+        enumerable: false,
+        configurable: true
+    });
+    PropContainer.prototype.defaults = function () {
+        return {
+            root: {},
+            modified: false
+        };
+    };
+    return PropContainer;
+}(interfaces_1.Base));
+exports.PropContainer = PropContainer;
+function hook(parent, p) {
+    var modified = false, prop = {};
+    dab_1.dP(prop, "value", {
+        get: function () {
+            return p.value;
+        },
+        set: function (value) {
+            (prop.value != value) && (modified = true, parent.__s.modified = true);
+            p.value = value;
+        }
+    });
+    dab_1.dP(prop, "prop", {
+        get: function () {
+            return p;
+        }
+    });
+    dab_1.dP(prop, "modified", {
+        get: function () {
+            return modified;
+        }
+    });
+    return prop;
+}

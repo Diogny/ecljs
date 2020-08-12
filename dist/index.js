@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FlowConditional = exports.FlowProcess = exports.FlowchartComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.Board = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.BoardCircle = exports.Bonds = exports.Interfaces = exports.UIHook = exports.UIProp = exports.Units = exports.XML = exports.Templates = exports.Size = exports.Rect = exports.Point = exports.Color = exports.utils = exports.dab = exports.ajaxp = void 0;
+exports.FlowConditional = exports.FlowProcess = exports.FlowchartComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.Board = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.BoardCircle = exports.Bonds = exports.Interfaces = exports.UIProp = exports.Units = exports.XML = exports.Templates = exports.Size = exports.Rect = exports.Point = exports.Color = exports.utils = exports.dab = exports.ajaxp = void 0;
 var tslib_1 = require("tslib");
 var ajaxp_1 = tslib_1.__importDefault(require("./lib/ajaxp"));
 exports.ajaxp = ajaxp_1.default;
@@ -23,7 +23,6 @@ Object.defineProperty(exports, "Templates", { enumerable: true, get: function ()
 Object.defineProperty(exports, "XML", { enumerable: true, get: function () { return templates_1.XML; } });
 var props_1 = require("./lib/props");
 Object.defineProperty(exports, "UIProp", { enumerable: true, get: function () { return props_1.UIProp; } });
-Object.defineProperty(exports, "UIHook", { enumerable: true, get: function () { return props_1.UIHook; } });
 var units_1 = tslib_1.__importDefault(require("./lib/units"));
 exports.Units = units_1.default;
 var bonds_1 = tslib_1.__importDefault(require("./lib/bonds"));

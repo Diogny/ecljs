@@ -13,15 +13,15 @@ export default class Board extends Base {
     set description(value: string | undefined);
     get filePath(): string | undefined;
     get viewBox(): Rect;
-    get containers(): Container<EC | FlowchartComp>[];
     static defaultZoom: number;
     get zoom(): number;
     set zoom(value: number);
+    center(): Point;
+    get containers(): Container<EC | FlowchartComp>[];
     get modified(): boolean;
     set modified(value: boolean);
     constructor(options: IBoardOptions);
     add(container: Container<EC | FlowchartComp>): void;
-    center(): Point;
     get(name: string): Container<EC | FlowchartComp> | undefined;
     libraries(library: string): Container<EC | FlowchartComp>[];
     destroy(): void;

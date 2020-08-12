@@ -22,7 +22,6 @@ export default class Board extends Base {
 	}
 	get filePath(): string | undefined { return this.__s.filePath }
 	get viewBox(): Rect { return this.__s.viewBox }
-	get containers(): Container<EC | FlowchartComp>[] { return this.__s.containers }
 
 	public static defaultZoom: number = 1;	// 1X
 
@@ -34,6 +33,18 @@ export default class Board extends Base {
 			this.__s.onZoom && this.__s.onZoom(value)
 		}
 	}
+
+	public center(): Point {
+		return new Point(
+			Math.round(this.viewBox.x + this.viewBox.width / 2 | 0),
+			Math.round(this.viewBox.y + this.viewBox.height / 2 | 0)
+		)
+	}
+
+
+
+
+	get containers(): Container<EC | FlowchartComp>[] { return this.__s.containers }
 
 	public get modified(): boolean { return this.__s.modified }
 	public set modified(value: boolean) {
@@ -66,13 +77,6 @@ export default class Board extends Base {
 		this.containers.push(container);
 		container.board = this;
 		this.modified = true;
-	}
-
-	public center(): Point {
-		return new Point(
-			Math.round(this.viewBox.x + this.viewBox.width / 2 | 0),
-			Math.round(this.viewBox.y + this.viewBox.height / 2 | 0)
-		)
 	}
 
 	public get(name: string): Container<EC | FlowchartComp> | undefined {

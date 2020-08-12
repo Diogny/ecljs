@@ -54,11 +54,6 @@ var Board = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Board.prototype, "containers", {
-        get: function () { return this.__s.containers; },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Board.prototype, "zoom", {
         get: function () { return this.__s.zoom; },
         set: function (value) {
@@ -68,6 +63,14 @@ var Board = /** @class */ (function (_super) {
                 this.__s.onZoom && this.__s.onZoom(value);
             }
         },
+        enumerable: false,
+        configurable: true
+    });
+    Board.prototype.center = function () {
+        return new point_1.default(Math.round(this.viewBox.x + this.viewBox.width / 2 | 0), Math.round(this.viewBox.y + this.viewBox.height / 2 | 0));
+    };
+    Object.defineProperty(Board.prototype, "containers", {
+        get: function () { return this.__s.containers; },
         enumerable: false,
         configurable: true
     });
@@ -89,9 +92,6 @@ var Board = /** @class */ (function (_super) {
         this.containers.push(container);
         container.board = this;
         this.modified = true;
-    };
-    Board.prototype.center = function () {
-        return new point_1.default(Math.round(this.viewBox.x + this.viewBox.width / 2 | 0), Math.round(this.viewBox.y + this.viewBox.height / 2 | 0));
     };
     Board.prototype.get = function (name) {
         return this.containers.find(function (c) { return c.name == name; });

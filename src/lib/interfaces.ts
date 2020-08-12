@@ -120,13 +120,14 @@ export type ComponentPropertyType = string | number | IComponentProperty;
 //***************************************** UIProperty ************************************//
 
 export interface IUIPropertyCallback {
-	(value: number | boolean | string | string[], where: number, prop: UIProp, e: any): number | boolean | string | string[] | void;
+	(value: any, where: number, prop: UIProp, e: any): any | void;
 }
 
 export interface IUIPropertyOptions {
 	tag: string | Element;
 	onChange?: IUIPropertyCallback | undefined;
 	data?: { [id: string]: any };
+	value?: any;
 }
 
 export interface IUIProperty extends IUIPropertyOptions {
@@ -141,6 +142,12 @@ export interface IUIPropertySettings extends IUIProperty {
 	htmlSelect: boolean;
 	selectCount: number;
 	selectMultiple: boolean;
+	value: any;
+}
+
+export interface IPropContainerProperties {
+	root: { [id: string]: { value: any, prop: UIProp, modified: boolean } };
+	modified: boolean;
 }
 
 //***************************************** Component ************************************//

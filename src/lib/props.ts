@@ -1,4 +1,4 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base } from './interfaces';
+import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties } from './interfaces';
 import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric } from './dab';
 import { qS, each } from './utils';
 
@@ -17,7 +17,10 @@ export class UIProp extends Base implements IUIProperty {
 	get onChange(): IUIPropertyCallback | undefined { return this.__s.onChange }
 	set onChange(fn: IUIPropertyCallback | undefined) { this.__s.onChange = fn }
 
-	get value(): number | boolean | string | string[] {
+	get value(): any {
+		if (!this.react) {
+			return this.__s.value
+		}
 		let
 			val = (<any>this.html)[this.__s.getter];	//select.selectedOptions
 		if (!this.__s.htmlSelect) {
@@ -34,11 +37,13 @@ export class UIProp extends Base implements IUIProperty {
 			return (<HTMLSelectElement>this.html).options[val].value
 	}
 
-	set value(val: number | boolean | string | string[]) {
+	set value(val: any) {
 		if (!this.react) {
 			//call onchange to get UI value
 			let
 				newValue = this.onChange && this.onChange(val, 2, this, <any>void 0);
+			this.__s.value = val;
+			//write to DOM transformed value
 			(<any>this.html)[this.__s.getter] = (newValue == undefined) ? val : newValue
 			return
 		}
@@ -133,7 +138,6 @@ export class UIProp extends Base implements IUIProperty {
 								this.trigger());
 					}
 				});
-
 				dP(this, "selectedOption", {
 					get: () => (<any>this.html).options[(<any>this.html).selectedIndex]
 				});
@@ -181,23 +185,55 @@ export class UIProp extends Base implements IUIProperty {
 			htmlSelect: false,
 			selectCount: 1,
 			selectMultiple: false,
+			value: void 0
 		}
-	}
-
-	static container(props: { [id: string]: IUIPropertyOptions }): { [id: string]: UIHook } {
-		let
-			root: { [id: string]: UIHook } = {};
-		each(props, (p: IUIPropertyOptions, key: string) => root[key] = new UIHook(new UIProp(p)));
-		return root
 	}
 
 }
 
-export class UIHook {
+export class PropContainer extends Base {
 
-	constructor(public prop: UIProp) { }
+	protected __s: IPropContainerProperties;
 
-	get value(): number | boolean | string | string[] { return this.prop.value }
-	set value(value: number | boolean | string | string[]) { this.prop.value = value }
+	get root(): { [id: string]: { value: any, prop: UIProp, modified: boolean } } { return this.__s.root }
 
+	get modified(): boolean { return this.__s.modified }
+
+	constructor(props: { [id: string]: IUIPropertyOptions }) {
+		super({});
+		each(props, (p: IUIPropertyOptions, key: string) => this.root[key] = hook(this, new UIProp(p)))
+	}
+
+	public defaults(): IPropContainerProperties {
+		return <IPropContainerProperties>{
+			root: {},
+			modified: false
+		}
+	}
+}
+
+function hook(parent: PropContainer, p: UIProp): { value: any, prop: UIProp, modified: boolean } {
+	var
+		modified = false,
+		prop: { [id: string]: any } = {};
+	dP(prop, "value", {
+		get(): any {
+			return p.value
+		},
+		set(value: any) {
+			(prop.value != value) && (modified = true, (<any>parent).__s.modified = true);
+			p.value = value
+		}
+	});
+	dP(prop, "prop", {
+		get(): UIProp {
+			return p
+		}
+	});
+	dP(prop, "modified", {
+		get(): boolean {
+			return modified
+		}
+	});
+	return <any>prop
 }

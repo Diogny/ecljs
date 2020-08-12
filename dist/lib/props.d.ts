@@ -1,4 +1,4 @@
-import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base } from './interfaces';
+import { IUIPropertyOptions, IUIPropertySettings, IUIPropertyCallback, IUIProperty, Base, IPropContainerProperties } from './interfaces';
 export declare class UIProp extends Base implements IUIProperty {
     protected __s: IUIPropertySettings;
     get type(): string;
@@ -12,21 +12,25 @@ export declare class UIProp extends Base implements IUIProperty {
     get react(): boolean;
     get onChange(): IUIPropertyCallback | undefined;
     set onChange(fn: IUIPropertyCallback | undefined);
-    get value(): number | boolean | string | string[];
-    set value(val: number | boolean | string | string[]);
+    get value(): any;
+    set value(val: any);
     constructor(options: IUIPropertyOptions);
     destroy(): void;
     private trigger;
     defaults(): IUIPropertySettings;
-    static container(props: {
-        [id: string]: IUIPropertyOptions;
-    }): {
-        [id: string]: UIHook;
-    };
 }
-export declare class UIHook {
-    prop: UIProp;
-    constructor(prop: UIProp);
-    get value(): number | boolean | string | string[];
-    set value(value: number | boolean | string | string[]);
+export declare class PropContainer extends Base {
+    protected __s: IPropContainerProperties;
+    get root(): {
+        [id: string]: {
+            value: any;
+            prop: UIProp;
+            modified: boolean;
+        };
+    };
+    get modified(): boolean;
+    constructor(props: {
+        [id: string]: IUIPropertyOptions;
+    });
+    defaults(): IPropContainerProperties;
 }

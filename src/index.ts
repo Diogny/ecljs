@@ -8,7 +8,7 @@ import Point from "./lib/point";
 import Rect from "./lib/rect";
 import Size from "./lib/size";
 import { Templates, XML } from "./lib/templates";
-import { UIProp, UIHook } from "./lib/props";
+import { UIProp } from "./lib/props";
 import Units from "./lib/units";
 import Bonds from "./lib/bonds";
 
@@ -49,8 +49,7 @@ export {
 	XML,
 	Units,
 	UIProp,
-	UIHook,
-	
+
 	Interfaces,
 
 	Bonds,

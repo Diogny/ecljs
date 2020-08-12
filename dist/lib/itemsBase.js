@@ -10,8 +10,9 @@ var ItemBase = /** @class */ (function (_super) {
     tslib_1.__extends(ItemBase, _super);
     function ItemBase(options) {
         var _this = _super.call(this, options) || this;
-        _this.__s.g = utils_1.tag("g", _this.__s.id, {});
-        _this.setVisible(_this.visible);
+        _this.__s.g = utils_1.tag("g", _this.__s.id, {
+            class: _this.class + (_this.visible ? '' : ' hide')
+        });
         return _this;
     }
     Object.defineProperty(ItemBase.prototype, "base", {

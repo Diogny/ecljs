@@ -39,8 +39,9 @@ export default abstract class ItemBase extends Item {
 
 	constructor(options: { [x: string]: any; }) {
 		super(options);
-		this.__s.g = tag("g", this.__s.id, {});
-		this.setVisible(this.visible)
+		this.__s.g = tag("g", this.__s.id, {
+			class: this.class + (this.visible ? '' : ' hide')
+		});
 	}
 
 	public remove() {

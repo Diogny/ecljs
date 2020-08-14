@@ -26,15 +26,33 @@ export interface IBase {
     };
 }
 export declare abstract class Base implements IBase {
+    /**
+     * internal property object. hides somehow from outside so I don't get a huge amount of properties visible
+     */
     protected $: {
         [x: string]: any;
     };
+    /**
+     *
+     * @param options [key]::value object with default values
+     *
+     * note:
+     *
+     * Only keys inside defaults() object will be copied to the internal object
+     */
     constructor(options?: {
         [x: string]: any;
     });
-    clear(options?: {
+    /**
+     *
+     * @param options [key]::value options to be copied internally
+     */
+    protected clear(options?: {
         [x: string]: any;
     }): void;
+    /**
+     * @description class property defaults. Only these keys are copied internally
+     */
     abstract defaults(): {
         [x: string]: any;
     };
@@ -99,6 +117,9 @@ export interface IPropHook {
     value: any;
     prop: ReactProp;
     modified: boolean;
+    _: {
+        [id: string]: any;
+    };
 }
 export interface IReactPropDefaults {
     _: {
@@ -223,8 +244,8 @@ export interface IItemSolidDefaults extends IItemBoardDefaults {
 }
 export interface IWireDefaults extends IItemBoardDefaults {
     points: Point[];
-    polyline: SVGElement;
-    lines: SVGElement[];
+    polyline: SVGPolylineElement;
+    lines: SVGLineElement[];
     edit: boolean;
 }
 export interface IECDefaults extends IItemSolidDefaults {

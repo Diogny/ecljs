@@ -17,9 +17,21 @@ var Type;
 })(Type = exports.Type || (exports.Type = {}));
 ;
 var Base = /** @class */ (function () {
+    /**
+     *
+     * @param options [key]::value object with default values
+     *
+     * note:
+     *
+     * Only keys inside defaults() object will be copied to the internal object
+     */
     function Base(options) {
         this.clear(options);
     }
+    /**
+     *
+     * @param options [key]::value options to be copied internally
+     */
     Base.prototype.clear = function (options) {
         this.$ = dab_1.obj(dab_1.copy(this.defaults(), options || {}));
     };

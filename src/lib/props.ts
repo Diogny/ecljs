@@ -6,15 +6,33 @@ export class ReactProp extends Base implements IReactProp {
 
 	protected $: IReactPropDefaults;
 
+	/**	
+	 * @description returns an object [key]::any with the property inside data
+	 */
 	get _(): { [id: string]: any } { return this.$._ }
 
+	/**
+	 * @description get/set the value of the react property
+	 */
 	get value(): any { return this.$.value }
 
+	/**	
+	 * @param {any} val setters new value
+	 */
 	set value(val: any) {
 		this.$.value = val;
 		this.onChange && this.onChange(val, 2, this, <any>void 0)
 	}
 
+	/**
+	 * @description creates a react property
+	 * @param options [key]::value object as description
+	 * 
+	 * valid [options] are:
+	 * - value: property default value, default is undefined.
+	 * - _: [key]::value object with internal data
+	 * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+	 */
 	constructor(options: { [id: string]: any }) {
 		super(options);
 		isFn(options.onChange) && (this.onChange = options.onChange);
@@ -22,10 +40,17 @@ export class ReactProp extends Base implements IReactProp {
 
 	dispose(): void { }
 
+	/**	
+	 * @description onchange event (value: any, where: number, prop: IReactProp, e: any): any | void
+	 * 
+	 */
 	onChange: IUIPropertyCallback | undefined;
 
+	/**
+	 * @description class property defaults. Only these keys are copied internally
+	 */
 	public defaults(): IReactPropDefaults {
-		return {
+		return <IReactPropDefaults>{
 			_: {},
 			value: void 0
 		}
@@ -45,6 +70,16 @@ export class UIProp extends ReactProp {
 	get nodeName(): string { return this.html.nodeName.toLowerCase() }
 	get react(): boolean { return this.editable || this.$.htmlSelect }
 
+	/**
+	 * @description creates a react UI property
+	 * @param options [key]::value object as description
+	 * 
+	 * valid [options] are:
+	 * - tag: this's required as a valid DOM selector query
+	 * - value: property default value, default is undefined.
+	 * - _: [key]::value object with internal data
+	 * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+	 */
 	constructor(options: { [id: string]: any }) {
 		super(options);
 		if (!(this.$.html = <HTMLElement>(isDOM(options.tag) ? (options.tag) : qS(<string>options.tag))))
@@ -189,10 +224,10 @@ export class UIProp extends ReactProp {
 		// 	otherwise it's the property
 		let
 			prop: UIProp | null = this instanceof UIProp ? this : (<any>this).dab;
-		if (!prop || !prop.onChange)
+		if (!prop)
 			return;
 		prop.html.blur();
-		prop.onChange(
+		prop.onChange && prop.onChange(
 			prop.value,			//this cache current value
 			(e) ? 1 : 2,		// 1 == 'ui' : 2 == 'prop'
 			prop,				//not needed, but just in case
@@ -200,11 +235,14 @@ export class UIProp extends ReactProp {
 		)
 	}
 
+	/**
+	 * @description class property defaults. Only these keys are copied internally
+	 */
 	public defaults(): IUIPropertyDefaults {
 		return <IUIPropertyDefaults>{
-			tag: "",
-			onChange: void 0,
 			_: {},
+			value: void 0,
+			tag: "",
 			html: <any>void 0,
 			type: "text",
 			selected: false,
@@ -213,7 +251,6 @@ export class UIProp extends ReactProp {
 			htmlSelect: false,
 			selectCount: 1,
 			selectMultiple: false,
-			value: void 0
 		}
 	}
 
@@ -228,11 +265,24 @@ export class PropContainer extends Base {
 	get modified(): boolean { return this.$.modified }
 	set modified(value: boolean) { this.$.modified = value }
 
+	/**
+	 * @description creates a property container
+	 * @param props [key]::value object
+	 * 
+	 * [key] is property name, ::value is valid prop [options]:
+	 * - value: set prop default value.
+	 * - _: [key]::value object with internal data
+	 * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+	 * - modify: triggers container modified, default to true
+	 */
 	constructor(props: { [id: string]: { [id: string]: any } }) {
 		super();
 		each(props, (options: { [id: string]: any }, key: string) => this.$._[key] = hook(this, key, options))
 	}
 
+	/**
+	 * @description class property defaults. Only these keys are copied internally
+	 */
 	public defaults(): IPropContainerDefaults {
 		return <IPropContainerDefaults>{
 			_: {},
@@ -241,10 +291,23 @@ export class PropContainer extends Base {
 	}
 }
 
+/**
+ * @description creates a property hook to container properties
+ * @param parent container
+ * @param name hook/prop name
+ * @param options [key]::value options
+ * 
+ * valid [options] are:
+ * - value: property default value, default is undefined.
+ * - _: [key]::value object with internal data
+ * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+ * - modify: triggers container modified, default to true
+ * - label --experiment to use shorter names
+ */
 function hook(parent: PropContainer, name: string, options: { [id: string]: any }): IPropHook {
 	var
 		//defaults to "true" if not defined
-		onModify = options.onModify == undefined ? true : options.onModify,
+		onModify = options.modify == undefined ? true : options.modify,
 		p = (options.tag) ? new UIProp(options) : new ReactProp(options),
 		modified = false,
 		prop: { [id: string]: any } = {};
@@ -260,8 +323,10 @@ function hook(parent: PropContainer, name: string, options: { [id: string]: any 
 		}
 	});
 	dP(prop, "name", { get(): string { return name } });
-	dP(prop, "prop", { get(): ReactProp { return p } });
 	dP(prop, "modified", { get(): boolean { return modified } });
-
+	dP(prop, "prop", { get(): ReactProp { return p } });
+	//shortcut returns the data of the property
+	dP(prop, "_", { get(): { [id: string]: any } { return p._ } });
+	Object.freeze(prop);
 	return <any>prop
 }

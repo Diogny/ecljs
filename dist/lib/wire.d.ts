@@ -19,6 +19,7 @@ export default class Wire extends ItemBoard {
     });
     refresh(): Wire;
     nodeRefresh(node: number): Wire;
+    setNode(node: number, p: IPoint): Wire;
     translate(dx: number, dy: number): Wire;
     /**
      * @description returns true if a point is valid
@@ -29,7 +30,6 @@ export default class Wire extends ItemBoard {
      */
     valid(node: number): boolean;
     appendNode(p: Point): boolean;
-    setNode(node: number, p: IPoint): Wire;
     hghlightable(node: number): boolean;
     setPoints(points: IPoint[]): Wire;
     getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;

@@ -7,18 +7,36 @@ var dab_1 = require("./dab");
 var utils_1 = require("./utils");
 var ReactProp = /** @class */ (function (_super) {
     tslib_1.__extends(ReactProp, _super);
+    /**
+     * @description creates a react property
+     * @param options [key]::value object as description
+     *
+     * valid [options] are:
+     * - value: property default value, default is undefined.
+     * - _: [key]::value object with internal data
+     * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+     */
     function ReactProp(options) {
         var _this = _super.call(this, options) || this;
         dab_1.isFn(options.onChange) && (_this.onChange = options.onChange);
         return _this;
     }
     Object.defineProperty(ReactProp.prototype, "_", {
+        /**
+         * @description returns an object [key]::any with the property inside data
+         */
         get: function () { return this.$._; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ReactProp.prototype, "value", {
+        /**
+         * @description get/set the value of the react property
+         */
         get: function () { return this.$.value; },
+        /**
+         * @param {any} val setters new value
+         */
         set: function (val) {
             this.$.value = val;
             this.onChange && this.onChange(val, 2, this, void 0);
@@ -27,6 +45,9 @@ var ReactProp = /** @class */ (function (_super) {
         configurable: true
     });
     ReactProp.prototype.dispose = function () { };
+    /**
+     * @description class property defaults. Only these keys are copied internally
+     */
     ReactProp.prototype.defaults = function () {
         return {
             _: {},
@@ -38,6 +59,16 @@ var ReactProp = /** @class */ (function (_super) {
 exports.ReactProp = ReactProp;
 var UIProp = /** @class */ (function (_super) {
     tslib_1.__extends(UIProp, _super);
+    /**
+     * @description creates a react UI property
+     * @param options [key]::value object as description
+     *
+     * valid [options] are:
+     * - tag: this's required as a valid DOM selector query
+     * - value: property default value, default is undefined.
+     * - _: [key]::value object with internal data
+     * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+     */
     function UIProp(options) {
         var _this = _super.call(this, options) || this;
         if (!(_this.$.html = (dab_1.isDOM(options.tag) ? (options.tag) : utils_1.qS(options.tag))))
@@ -206,20 +237,23 @@ var UIProp = /** @class */ (function (_super) {
         //when comming from UI, this is the DOM Element
         // 	otherwise it's the property
         var prop = this instanceof UIProp ? this : this.dab;
-        if (!prop || !prop.onChange)
+        if (!prop)
             return;
         prop.html.blur();
-        prop.onChange(prop.value, //this cache current value
+        prop.onChange && prop.onChange(prop.value, //this cache current value
         (e) ? 1 : 2, // 1 == 'ui' : 2 == 'prop'
         prop, //not needed, but just in case
         e //event if UI triggered
         );
     };
+    /**
+     * @description class property defaults. Only these keys are copied internally
+     */
     UIProp.prototype.defaults = function () {
         return {
-            tag: "",
-            onChange: void 0,
             _: {},
+            value: void 0,
+            tag: "",
             html: void 0,
             type: "text",
             selected: false,
@@ -228,7 +262,6 @@ var UIProp = /** @class */ (function (_super) {
             htmlSelect: false,
             selectCount: 1,
             selectMultiple: false,
-            value: void 0
         };
     };
     return UIProp;
@@ -236,6 +269,16 @@ var UIProp = /** @class */ (function (_super) {
 exports.UIProp = UIProp;
 var PropContainer = /** @class */ (function (_super) {
     tslib_1.__extends(PropContainer, _super);
+    /**
+     * @description creates a property container
+     * @param props [key]::value object
+     *
+     * [key] is property name, ::value is valid prop [options]:
+     * - value: set prop default value.
+     * - _: [key]::value object with internal data
+     * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+     * - modify: triggers container modified, default to true
+     */
     function PropContainer(props) {
         var _this = _super.call(this) || this;
         utils_1.each(props, function (options, key) { return _this.$._[key] = hook(_this, key, options); });
@@ -252,6 +295,9 @@ var PropContainer = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    /**
+     * @description class property defaults. Only these keys are copied internally
+     */
     PropContainer.prototype.defaults = function () {
         return {
             _: {},
@@ -261,10 +307,23 @@ var PropContainer = /** @class */ (function (_super) {
     return PropContainer;
 }(interfaces_1.Base));
 exports.PropContainer = PropContainer;
+/**
+ * @description creates a property hook to container properties
+ * @param parent container
+ * @param name hook/prop name
+ * @param options [key]::value options
+ *
+ * valid [options] are:
+ * - value: property default value, default is undefined.
+ * - _: [key]::value object with internal data
+ * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+ * - modify: triggers container modified, default to true
+ * - label --experiment to use shorter names
+ */
 function hook(parent, name, options) {
     var 
     //defaults to "true" if not defined
-    onModify = options.onModify == undefined ? true : options.onModify, p = (options.tag) ? new UIProp(options) : new ReactProp(options), modified = false, prop = {};
+    onModify = options.modify == undefined ? true : options.modify, p = (options.tag) ? new UIProp(options) : new ReactProp(options), modified = false, prop = {};
     dab_1.dP(prop, "value", {
         get: function () {
             return p.value;
@@ -277,7 +336,10 @@ function hook(parent, name, options) {
         }
     });
     dab_1.dP(prop, "name", { get: function () { return name; } });
-    dab_1.dP(prop, "prop", { get: function () { return p; } });
     dab_1.dP(prop, "modified", { get: function () { return modified; } });
+    dab_1.dP(prop, "prop", { get: function () { return p; } });
+    //shortcut returns the data of the property
+    dab_1.dP(prop, "_", { get: function () { return p._; } });
+    Object.freeze(prop);
     return prop;
 }

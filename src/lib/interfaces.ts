@@ -1,11 +1,8 @@
 import { obj, copy } from "./dab";
 import Point from './point';
 import Comp from "./components";
-import { UIProp, ReactProp } from "./props";
+import { ReactProp } from "./props";
 import Label from "./label";
-import Container from "./container";
-import FlowchartComp from "./flowchartComp";
-import EC from "./ec";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
@@ -36,16 +33,34 @@ export interface IBase {
 
 export abstract class Base implements IBase {
 
+	/**
+	 * internal property object. hides somehow from outside so I don't get a huge amount of properties visible
+	 */
 	protected $: { [x: string]: any };
 
+	/**
+	 * 
+	 * @param options [key]::value object with default values
+	 * 
+	 * note:
+	 * 
+	 * Only keys inside defaults() object will be copied to the internal object
+	 */
 	constructor(options?: { [x: string]: any; }) {
 		this.clear(options);
 	}
 
-	public clear(options?: { [x: string]: any; }): void {
+	/**
+	 * 
+	 * @param options [key]::value options to be copied internally
+	 */
+	protected clear(options?: { [x: string]: any; }): void {
 		this.$ = obj(copy(this.defaults(), options || {}));
 	}
 
+	/**
+	 * @description class property defaults. Only these keys are copied internally
+	 */
 	abstract defaults(): { [x: string]: any; };
 
 }
@@ -115,6 +130,7 @@ export interface IPropHook {
 	value: any;
 	prop: ReactProp;
 	modified: boolean;
+	_: { [id: string]: any };
 }
 export interface IReactPropDefaults {
 	_: { [id: string]: any };
@@ -263,8 +279,8 @@ export interface IItemSolidDefaults extends IItemBoardDefaults {
 
 export interface IWireDefaults extends IItemBoardDefaults {
 	points: Point[];
-	polyline: SVGElement;
-	lines: SVGElement[];		//used on edit-mode only
+	polyline: SVGPolylineElement;
+	lines: SVGLineElement[];		//used on edit-mode only
 	edit: boolean;
 }
 

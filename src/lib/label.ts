@@ -7,25 +7,25 @@ export default class Label extends ItemBase {
 
 	get type(): Type { return Type.LABEL }
 
-	protected __s: ILabelDefaults;
-	get text(): string { return this.__s.text }
+	protected $: ILabelDefaults;
+	get text(): string { return this.$.text }
 
 	get size(): ISize {
-		let b = this.__s.svgtext.getBBox();
+		let b = this.$.svgtext.getBBox();
 		return obj({
 			width: Math.round(b.width),
 			height: Math.round(b.height)
 		})
 	}
 
-	get fontSize(): number { return this.__s.fontSize }
+	get fontSize(): number { return this.$.fontSize }
 
 	constructor(options: { [x: string]: any; }) {
 		options.visible = false;
 		super(options);
-		this.__s.text = '';
-		this.__s.svgtext = <SVGTextElement>tag("text", "", {});
-		aChld(this.g, this.__s.svgtext);
+		this.$.text = '';
+		this.$.svgtext = <SVGTextElement>tag("text", "", {});
+		aChld(this.g, this.$.svgtext);
 	}
 
 	public move(x: number, y: number): Label {
@@ -35,12 +35,12 @@ export default class Label extends ItemBase {
 	}
 
 	public setFontSize(value: number): Label {
-		this.__s.fontSize = value;
+		this.$.fontSize = value;
 		return this.build()
 	}
 
 	protected build(): Label {
-		attr(this.__s.svgtext, {
+		attr(this.$.svgtext, {
 			"font-size": this.fontSize,
 			x: 0,
 			y: 0
@@ -49,7 +49,7 @@ export default class Label extends ItemBase {
 	}
 
 	public setText(value: string): Label {
-		this.__s.svgtext.innerHTML = this.__s.text = value;
+		this.$.svgtext.innerHTML = this.$.text = value;
 		return this.build()
 	}
 

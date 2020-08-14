@@ -2,7 +2,7 @@ import { Type, IHighlighNodeDefaults } from "./interfaces";
 import Point from "./point";
 import ItemBase from "./itemsBase";
 export default class HighlightNode extends ItemBase {
-    protected __s: IHighlighNodeDefaults;
+    protected $: IHighlighNodeDefaults;
     get type(): Type;
     get radius(): number;
     get selectedId(): string;

@@ -36,14 +36,14 @@ export interface IBase {
 
 export abstract class Base implements IBase {
 
-	protected __s: { [x: string]: any };
+	protected $: { [x: string]: any };
 
 	constructor(options?: { [x: string]: any; }) {
 		this.clear(options);
 	}
 
 	public clear(options?: { [x: string]: any; }): void {
-		this.__s = obj(copy(this.defaults(), options || {}));
+		this.$ = obj(copy(this.defaults(), options || {}));
 	}
 
 	abstract defaults(): { [x: string]: any; };
@@ -103,7 +103,7 @@ export interface IDisposable {
 export interface IReactProp extends IDisposable {
 	value: any;
 	onChange?: IUIPropertyCallback | undefined;
-	data: { [id: string]: any };
+	_: { [id: string]: any };
 }
 
 export interface IUIPropertyCallback {
@@ -117,7 +117,7 @@ export interface IPropHook {
 	modified: boolean;
 }
 export interface IReactPropDefaults {
-	data: { [id: string]: any };
+	_: { [id: string]: any };
 	value: any;
 }
 
@@ -134,7 +134,7 @@ export interface IUIPropertyDefaults extends IReactPropDefaults {
 
 
 export interface IPropContainerDefaults {
-	root: { [id: string]: IPropHook };
+	_: { [id: string]: IPropHook };
 	modified: boolean;
 }
 
@@ -214,10 +214,10 @@ export interface IItemDefaults {
 	class: string;
 	visible: boolean;
 	label: string;
-	base: Comp;
-
 }
+
 export interface IItemBaseDefaults extends IItemDefaults {
+	base: Comp;
 	g: SVGElement;
 }
 
@@ -244,11 +244,17 @@ export interface IHighlighNodeDefaults extends IItemBaseDefaults {
 	selectedNode: number;
 }
 
+export interface IItemBoardPropEvent {
+	id: string;
+	code: number;
+	$?: { [id: string]: any };
+}
+
 export interface IItemBoardDefaults extends IItemBaseDefaults {
 	props: { [x: string]: any };
 	selected: boolean;
-	onProp: Function;
-	directional: boolean;
+	onProp: (args: IItemBoardPropEvent) => void;
+	dir: boolean;
 }
 
 export interface IItemSolidDefaults extends IItemBoardDefaults {

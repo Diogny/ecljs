@@ -24,7 +24,7 @@ var EC = /** @class */ (function (_super) {
         }
         //create label if defined
         if (_this.base.meta.labelId) {
-            _this.__s.boardLabel = new label_1.default({
+            _this.$.boardLabel = new label_1.default({
                 fontSize: 15,
                 x: _this.base.meta.labelId.x,
                 y: _this.base.meta.labelId.y
@@ -35,15 +35,7 @@ var EC = /** @class */ (function (_super) {
         //signal component creation
         _this.onProp && _this.onProp({
             id: "#" + _this.id,
-            args: {
-                id: _this.id,
-                name: _this.name,
-                x: _this.x,
-                y: _this.y,
-                rotation: _this.rotation
-            },
-            method: 'create',
-            where: 1 //signals it was a change inside the object
+            code: 1 // "create" code = 1
         });
         return _this;
     }
@@ -53,7 +45,7 @@ var EC = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(EC.prototype, "boardLabel", {
-        get: function () { return this.__s.boardLabel; },
+        get: function () { return this.$.boardLabel; },
         enumerable: false,
         configurable: true
     });

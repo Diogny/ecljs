@@ -1,45 +1,42 @@
-import { IType, ISize, IItemDefaults, Type, Base } from "./interfaces";
+import { IType, IItemDefaults, Type, Base } from "./interfaces";
 import Point from "./point";
 
 export default abstract class Item extends Base implements IType {
 
 	//thi's until we can get real private variables
-	protected __s: IItemDefaults;
+	protected $: IItemDefaults;
 
 	abstract get type(): Type;
 
-	get name(): string { return this.__s.name }
-	get id(): string { return this.__s.id }
-	get x(): number { return this.__s.x }
-	get y(): number { return this.__s.y }
+	get name(): string { return this.$.name }
+	get id(): string { return this.$.id }
+	get x(): number { return this.$.x }
+	get y(): number { return this.$.y }
 	get p(): Point { return new Point(this.x, this.y) }
-	get class(): string { return this.__s.class }
-	get visible(): boolean { return this.__s.visible; }
-
-	abstract get ClientRect(): ISize;
-	abstract get box(): any;
+	get class(): string { return this.$.class }
+	get visible(): boolean { return this.$.visible; }
 
 	constructor(options: { [x: string]: any; }) {
 		//merge defaults and deep copy
-		//all default properties must be refrenced from this or this.__s
+		//all default properties must be refrenced from this or this.$
 		// options is for custom options only
 		let
 			optionsClass = options.class;
 		delete options.class;
 		super(options);
-		optionsClass && (this.__s.class += ` ${optionsClass}`);
-		this.__s.x = this.__s.x || 0;
-		this.__s.y = this.__s.y || 0;
+		optionsClass && (this.$.class += ` ${optionsClass}`);
+		this.$.x = this.$.x || 0;
+		this.$.y = this.$.y || 0;
 	}
 
 	public setVisible(value: boolean): Item {
-		this.__s.visible = !!value;
+		this.$.visible = !!value;
 		return this;
 	}
 
 	public move(x: number, y: number): Item {
-		this.__s.x = x | 0;
-		this.__s.y = y | 0;
+		this.$.x = x | 0;
+		this.$.y = y | 0;
 		return this;
 	}
 
@@ -59,8 +56,7 @@ export default abstract class Item extends Base implements IType {
 			y: 0,
 			class: "",
 			visible: true,		//defaults is visible
-			label: "",
-			base: <any>void 0	//this comes from createItem by default
+			label: ""
 		}
 	}
 }

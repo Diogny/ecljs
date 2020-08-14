@@ -18,7 +18,7 @@ export default class Size implements ISize {
 		return this
 	}
 
-	static empty = new Size(0, 0);
+	static get empty(): Size { return new Size(0, 0) }
 
 	static create(size: ISize): Size {
 		return new Size(size.width, size.height)

@@ -1,4 +1,4 @@
-import { IPoint, IItemBoardDefaults, INodeInfo, ComponentPropertyType } from './interfaces';
+import { IPoint, IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
 import { tCl, attr, extend, isFn, obj } from './dab';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
@@ -7,13 +7,13 @@ import Container from './container';
 //ItemBoard->Wire
 export default abstract class ItemBoard extends ItemBase {
 
-	protected __s: IItemBoardDefaults;
+	protected $: IItemBoardDefaults;
 
-	get onProp(): Function { return this.__s.onProp }
-	get selected(): boolean { return this.__s.selected }
+	get onProp(): (args: IItemBoardPropEvent) => void { return this.$.onProp }
+	get selected(): boolean { return this.$.selected }
 	get bonds(): Bond[] | undefined { return this.container.itemBonds(this) }
-	get directional(): boolean { return this.__s.directional }
-	get label(): string { return this.__s.label }
+	get dir(): boolean { return this.$.dir }
+	get label(): string { return this.$.label }
 
 	abstract get count(): number;
 	abstract valid(node: number): boolean;
@@ -31,28 +31,26 @@ export default abstract class ItemBoard extends ItemBase {
 		super(options);
 		if (!container)
 			throw `missing container`;
-		this.__s.props = obj(this.base.props);
+		this.$.props = obj(this.base.props);
 		attr(this.g, {
 			id: this.id,
 			"svg-comp": this.base.type,
 		})
 		//this still doesn't work to get all overridable properties ¿?
 		//properties still cannot access super value
-		//(<any>this.__s).__selected = dab.propDescriptor(this, "selected");
+		//(<any>this.$).$elected = dab.propDescriptor(this, "selected");
 	}
 
 	public select(value: boolean): ItemBoard {
 		if (this.selected != value) {
 			//set new value
-			this.__s.selected = value;
+			this.$.selected = value;
 			//add class if selected, otherwise removes it
 			tCl(this.g, "selected", this.selected);
 			//trigger property changed if applicable
 			this.onProp && this.onProp({
 				id: `#${this.id}`,
-				value: this.selected,
-				prop: "selected",
-				where: 1				//signals it was a change inside the object
+				code: 3					// "selected" code: 3
 			});
 		}
 		return this;
@@ -63,18 +61,13 @@ export default abstract class ItemBoard extends ItemBase {
 		//trigger property changed if applicable
 		this.onProp && this.onProp({
 			id: `#${this.id}`,
-			args: {
-				x: this.x,
-				y: this.y
-			},
-			method: 'move',
-			where: 1				//signals it was a change inside the object
+			code: 2					// "move" code: 2
 		})
 		return this;
 	}
 
-	public setOnProp(value: Function): ItemBoard {
-		isFn(value) && (this.__s.onProp = value);
+	public setOnProp(value: (args: IItemBoardPropEvent) => void): ItemBoard {
+		isFn(value) && (this.$.onProp = value);
 		return this;
 	}
 
@@ -99,14 +92,14 @@ export default abstract class ItemBoard extends ItemBase {
 	}
 
 	public prop(propName: string): ComponentPropertyType {
-		return this.__s.props[propName]
+		return this.$.props[propName]
 	}
-	
+
 	public defaults(): IItemBoardDefaults {
 		return <IItemBoardDefaults>extend(super.defaults(), {
 			selected: false,
 			onProp: void 0,
-			directional: false,
+			dir: false,
 		})
 	}
 

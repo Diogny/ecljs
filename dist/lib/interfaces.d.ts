@@ -26,7 +26,7 @@ export interface IBase {
     };
 }
 export declare abstract class Base implements IBase {
-    protected __s: {
+    protected $: {
         [x: string]: any;
     };
     constructor(options?: {
@@ -87,7 +87,7 @@ export interface IDisposable {
 export interface IReactProp extends IDisposable {
     value: any;
     onChange?: IUIPropertyCallback | undefined;
-    data: {
+    _: {
         [id: string]: any;
     };
 }
@@ -101,7 +101,7 @@ export interface IPropHook {
     modified: boolean;
 }
 export interface IReactPropDefaults {
-    data: {
+    _: {
         [id: string]: any;
     };
     value: any;
@@ -117,7 +117,7 @@ export interface IUIPropertyDefaults extends IReactPropDefaults {
     selectMultiple: boolean;
 }
 export interface IPropContainerDefaults {
-    root: {
+    _: {
         [id: string]: IPropHook;
     };
     modified: boolean;
@@ -180,9 +180,9 @@ export interface IItemDefaults {
     class: string;
     visible: boolean;
     label: string;
-    base: Comp;
 }
 export interface IItemBaseDefaults extends IItemDefaults {
+    base: Comp;
     g: SVGElement;
 }
 export interface IBaseLabelDefaults extends IItemBaseDefaults {
@@ -203,13 +203,20 @@ export interface IHighlighNodeDefaults extends IItemBaseDefaults {
     selectedId: string;
     selectedNode: number;
 }
+export interface IItemBoardPropEvent {
+    id: string;
+    code: number;
+    $?: {
+        [id: string]: any;
+    };
+}
 export interface IItemBoardDefaults extends IItemBaseDefaults {
     props: {
         [x: string]: any;
     };
     selected: boolean;
-    onProp: Function;
-    directional: boolean;
+    onProp: (args: IItemBoardPropEvent) => void;
+    dir: boolean;
 }
 export interface IItemSolidDefaults extends IItemBoardDefaults {
     rotation: number;

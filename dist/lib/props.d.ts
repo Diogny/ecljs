@@ -1,7 +1,7 @@
 import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp, IPropHook } from './interfaces';
 export declare class ReactProp extends Base implements IReactProp {
-    protected __s: IReactPropDefaults;
-    get data(): {
+    protected $: IReactPropDefaults;
+    get _(): {
         [id: string]: any;
     };
     get value(): any;
@@ -14,25 +14,25 @@ export declare class ReactProp extends Base implements IReactProp {
     defaults(): IReactPropDefaults;
 }
 export declare class UIProp extends ReactProp {
-    protected __s: IUIPropertyDefaults;
+    protected $: IUIPropertyDefaults;
     get type(): string;
     get html(): HTMLElement;
     get editable(): boolean;
     get tag(): string | Element;
     get nodeName(): string;
     get react(): boolean;
-    get value(): any;
-    set value(val: any);
     constructor(options: {
         [id: string]: any;
     });
+    get value(): any;
+    set value(val: any);
     dispose(): void;
     private trigger;
     defaults(): IUIPropertyDefaults;
 }
 export declare class PropContainer extends Base {
-    protected __s: IPropContainerDefaults;
-    get root(): {
+    protected $: IPropContainerDefaults;
+    get props(): {
         [id: string]: IPropHook;
     };
     get modified(): boolean;

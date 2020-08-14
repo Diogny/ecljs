@@ -11,9 +11,9 @@ var Label = /** @class */ (function (_super) {
         var _this = this;
         options.visible = false;
         _this = _super.call(this, options) || this;
-        _this.__s.text = '';
-        _this.__s.svgtext = utils_1.tag("text", "", {});
-        dab_1.aChld(_this.g, _this.__s.svgtext);
+        _this.$.text = '';
+        _this.$.svgtext = utils_1.tag("text", "", {});
+        dab_1.aChld(_this.g, _this.$.svgtext);
         return _this;
     }
     Object.defineProperty(Label.prototype, "type", {
@@ -22,13 +22,13 @@ var Label = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Label.prototype, "text", {
-        get: function () { return this.__s.text; },
+        get: function () { return this.$.text; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Label.prototype, "size", {
         get: function () {
-            var b = this.__s.svgtext.getBBox();
+            var b = this.$.svgtext.getBBox();
             return dab_1.obj({
                 width: Math.round(b.width),
                 height: Math.round(b.height)
@@ -38,7 +38,7 @@ var Label = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Label.prototype, "fontSize", {
-        get: function () { return this.__s.fontSize; },
+        get: function () { return this.$.fontSize; },
         enumerable: false,
         configurable: true
     });
@@ -48,11 +48,11 @@ var Label = /** @class */ (function (_super) {
         return this;
     };
     Label.prototype.setFontSize = function (value) {
-        this.__s.fontSize = value;
+        this.$.fontSize = value;
         return this.build();
     };
     Label.prototype.build = function () {
-        dab_1.attr(this.__s.svgtext, {
+        dab_1.attr(this.$.svgtext, {
             "font-size": this.fontSize,
             x: 0,
             y: 0
@@ -60,7 +60,7 @@ var Label = /** @class */ (function (_super) {
         return this;
     };
     Label.prototype.setText = function (value) {
-        this.__s.svgtext.innerHTML = this.__s.text = value;
+        this.$.svgtext.innerHTML = this.$.text = value;
         return this.build();
     };
     Label.prototype.defaults = function () {

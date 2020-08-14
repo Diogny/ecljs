@@ -11,7 +11,7 @@ import Container from "./container";
 //ItemBoard->ItemSolid->EC
 export default abstract class ItemSolid extends ItemBoard {
 
-	protected __s: IItemSolidDefaults;
+	protected $: IItemSolidDefaults;
 
 	get last(): number { return this.base.meta.nodes.list.length - 1 }
 
@@ -40,19 +40,14 @@ export default abstract class ItemSolid extends ItemBoard {
 
 	}
 
-	get rotation(): number { return this.__s.rotation }
+	get rotation(): number { return this.$.rotation }
 
 	public rotate(value: number): ItemSolid {
-		if (this.__s.rotation != (value = Point.validateRotation(value))) {
-			//set new value
-			this.__s.rotation = value;
-
-			//trigger property changed if applicable
+		if (this.$.rotation != (value = Point.validateRotation(value))) {
+			this.$.rotation = value;
 			this.onProp && this.onProp({
 				id: `#${this.id}`,
-				value: this.rotation,
-				prop: "rotate",
-				where: 1				//signals it was a change inside the object
+				code: 4					// "rotate" code: 4
 			});
 		}
 		return <ItemSolid>this.refresh();

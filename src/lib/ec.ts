@@ -8,11 +8,11 @@ import Circuit from './circuit';
 
 export default class EC extends ItemSolid {
 
-	protected __s: IECDefaults;
+	protected $: IECDefaults;
 
 	get type(): Type { return Type.EC }
 
-	get boardLabel(): Label { return this.__s.boardLabel }
+	get boardLabel(): Label { return this.$.boardLabel }
 
 	constructor(circuit: Circuit, options: { [x: string]: any; }) {
 		super(circuit, options);
@@ -32,7 +32,7 @@ export default class EC extends ItemSolid {
 		}
 		//create label if defined
 		if (this.base.meta.labelId) {
-			this.__s.boardLabel = new Label(<any>{
+			this.$.boardLabel = new Label(<any>{
 				fontSize: 15,
 				x: this.base.meta.labelId.x,
 				y: this.base.meta.labelId.y
@@ -43,15 +43,7 @@ export default class EC extends ItemSolid {
 		//signal component creation
 		this.onProp && this.onProp({
 			id: `#${this.id}`,
-			args: {
-				id: this.id,
-				name: this.name,
-				x: this.x,
-				y: this.y,
-				rotation: this.rotation
-			},
-			method: 'create',
-			where: 1			//signals it was a change inside the object
+			code: 1					// "create" code = 1
 		});
 	}
 

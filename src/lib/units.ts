@@ -4,14 +4,14 @@ import { isStr } from "./dab";
 //npm https://www.npmjs.com/package/@dabberio/electric-units
 export default class Unit {
 
-	protected __s: { unit: number, prefix: number, value: number };
+	protected $: { unit: number, prefix: number, value: number };
 
 	//get unit name and symbol
-	get name(): string { return Unit.unitNames[this.__s.unit] }
-	get unit(): string { return Unit.unitSymbols[this.__s.unit] }
-	get prefix(): string { return Unit.prefixSymbols[this.__s.prefix] }
-	get exponent(): number { return Math.pow(10, Unit.prefixExponents[this.__s.prefix]) }
-	get value(): number { return this.__s.value; }
+	get name(): string { return Unit.unitNames[this.$.unit] }
+	get unit(): string { return Unit.unitSymbols[this.$.unit] }
+	get prefix(): string { return Unit.prefixSymbols[this.$.prefix] }
+	get exponent(): number { return Math.pow(10, Unit.prefixExponents[this.$.prefix]) }
+	get value(): number { return this.$.value; }
 
 	constructor(n: string) {
 		if (!isStr(n) || !(n = n.trim()))
@@ -21,25 +21,25 @@ export default class Unit {
 			error = () => `invalid number: ${n}`,
 			indexOf = (s: Array<string>, x: string, u: any) => s.indexOf(u ? x.toUpperCase() : x);
 		//defaults
-		this.__s = {
+		this.$ = {
 			unit: -1,
 			prefix: -1,
 			value: NaN
 		};
 		//extract unit
 		//start with full name first
-		if ((this.__s.unit = Unit.unitNames.findIndex(u => n.toUpperCase().endsWith(u.toUpperCase()))) >= 0) {
-			ndx -= Unit.unitNames[this.__s.unit].length;
+		if ((this.$.unit = Unit.unitNames.findIndex(u => n.toUpperCase().endsWith(u.toUpperCase()))) >= 0) {
+			ndx -= Unit.unitNames[this.$.unit].length;
 			//now try with unit symbols as is, and then uppercased
-		} else if ((this.__s.unit = indexOf(Unit.unitSymbols, n[ndx], 0)) >= 0 ||
-			(this.__s.unit = indexOf(Unit.unitSymbols, n[ndx], 1)) >= 0) {
+		} else if ((this.$.unit = indexOf(Unit.unitSymbols, n[ndx], 0)) >= 0 ||
+			(this.$.unit = indexOf(Unit.unitSymbols, n[ndx], 1)) >= 0) {
 			ndx--;
 		} else
 			throw error();
 
 		//extract unit prefix
-		if ((this.__s.prefix = Unit.prefixSymbols.indexOf(n[ndx])) == -1) {
-			this.__s.prefix = 10;		// position of symbol and name: '', exponent: 0
+		if ((this.$.prefix = Unit.prefixSymbols.indexOf(n[ndx])) == -1) {
+			this.$.prefix = 10;		// position of symbol and name: '', exponent: 0
 			ndx++;
 		}
 
@@ -48,7 +48,7 @@ export default class Unit {
 			throw error();
 
 		//extract number
-		this.__s.value = parseFloat(n.substr(0, ndx));
+		this.$.value = parseFloat(n.substr(0, ndx));
 	}
 
 	public toString = (): string => {

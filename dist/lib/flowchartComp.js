@@ -46,7 +46,7 @@ var FlowchartComp = /** @class */ (function (_super) {
     };
     FlowchartComp.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
-            directional: true,
+            dir: true,
         });
     };
     return FlowchartComp;

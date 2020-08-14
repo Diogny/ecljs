@@ -13,7 +13,7 @@ var Circuit = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Circuit.prototype, "directional", {
+    Object.defineProperty(Circuit.prototype, "dir", {
         get: function () { return false; },
         enumerable: false,
         configurable: true

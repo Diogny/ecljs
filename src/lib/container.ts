@@ -9,27 +9,27 @@ import Board from "./board";
 
 export default abstract class Container<T extends ItemBoard> extends Base {
 
-	protected __s: IContainerDefaults<T>;
+	protected $: IContainerDefaults<T>;
 
-	get name(): string { return this.__s.name }
+	get name(): string { return this.$.name }
 	set name(value: string) {
-		this.__s.name = value
+		this.$.name = value
 	}
-	get board(): Board { return this.__s.board }
+	get board(): Board { return this.$.board }
 	set board(board: Board) {
-		this.__s.board = board
+		this.$.board = board
 	}
 	abstract get library(): string;
-	abstract get directional(): boolean;
+	abstract get dir(): boolean;
 	abstract createItem(options: { [x: string]: any; }): T;
 
-	get counters(): { [x: string]: any; } { return this.__s.counters }
-	get components(): Map<string, IBaseComponent> { return this.__s.components }
+	get counters(): { [x: string]: any; } { return this.$.counters }
+	get components(): Map<string, IBaseComponent> { return this.$.components }
 
-	get itemMap(): Map<string, { t: T, b: Bond[], c: number }> { return this.__s.itemMap }
-	get wireMap(): Map<string, { t: Wire, b: Bond[], c: number }> { return this.__s.wireMap }
+	get itemMap(): Map<string, { t: T, b: Bond[], c: number }> { return this.$.itemMap }
+	get wireMap(): Map<string, { t: Wire, b: Bond[], c: number }> { return this.$.wireMap }
 
-	get selected(): (T | Wire)[] { return this.__s.selected }
+	get selected(): (T | Wire)[] { return this.$.selected }
 
 	get items(): T[] { return Array.from(this.itemMap.values()).map(item => item.t) }
 	get wires(): Wire[] { return Array.from(this.wireMap.values()).map(item => item.t) }
@@ -69,13 +69,13 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	public hasItem(id: string): boolean { return this.itemMap.has(id) || this.wireMap.has(id); }
 
 	public selectAll(value: boolean): (T | Wire)[] {
-		return this.__s.selected = this.all
+		return this.$.selected = this.all
 			.filter(comp => (comp.select(value), value))
 	}
 
 	public toggleSelect(comp: T) {
 		comp.select(!comp.selected);
-		this.__s.selected = this.all.filter(c => c.selected);
+		this.$.selected = this.all.filter(c => c.selected);
 	}
 
 	public selectThis(comp: T | Wire): boolean {
@@ -85,11 +85,11 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 
 	public unselectThis(comp: T) {
 		comp.select(false);
-		this.__s.selected = this.all.filter(c => c.selected);
+		this.$.selected = this.all.filter(c => c.selected);
 	}
 
 	public selectRect(rect: Rect) {
-		(this.__s.selected = this.all.filter((item) => {
+		(this.$.selected = this.all.filter((item) => {
 			return rect.intersect(item.rect())
 		}))
 			.forEach(item => item.select(true));
@@ -98,7 +98,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	public deleteSelected(): number {
 		let
 			deletedCount = 0;
-		this.__s.selected = this.selected.filter((c) => {
+		this.$.selected = this.selected.filter((c) => {
 			if (this.delete(c)) {
 				deletedCount++;
 				return false;
@@ -112,14 +112,14 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		this.items.forEach(ec => this.delete(ec));
 		this.wires.forEach(wire => this.delete(wire));
 		//maps should be empty here
-		this.__s = <any>void 0;
+		this.$ = <any>void 0;
 	}
 
 	public boundariesRect(): Rect {
 		let
 			array = this.all,
 			first = array.shift(),
-			r = first ? first.rect() : Rect.empty();
+			r = first ? first.rect() : Rect.empty;
 		array.forEach(ec => r.add(ec.rect()));
 		r.grow(20, 20);
 		return r;

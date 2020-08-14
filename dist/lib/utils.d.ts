@@ -42,3 +42,15 @@ export declare const basePath: () => string | null;
  * @param filler cell filler
  */
 export declare const matrix: <T>(rows: number, cols: number, filler: T) => T[][];
+/**
+ * @description converts a web css property to camel case
+ * @param str font-size  -webkit-box-shadow
+ * @@returns fontSize  WebkitBoxShadow
+ */
+export declare const camel: (str: string) => string;
+/**
+ * @description removes camel of a web css property
+ * @param str fontSize  WebkitBoxShadow
+ * @returns font-size  -webkit-box-shadow
+ */
+export declare const uncamel: (str: string) => string;

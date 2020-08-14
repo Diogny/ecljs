@@ -140,3 +140,17 @@ export const basePath = () => {
  */
 export const matrix = <T>(rows: number, cols: number, filler: T): T[][] =>
 	Array.from({ length: rows }, () => new Array(cols).fill(filler));
+
+/**
+ * @description converts a web css property to camel case
+ * @param str font-size  -webkit-box-shadow
+ * @@returns fontSize  WebkitBoxShadow
+ */
+export const camel = (str: string) => str.replace(/\-([a-z])/gi, (match, group) => group.toUpperCase())
+
+/**
+ * @description removes camel of a web css property
+ * @param str fontSize  WebkitBoxShadow
+ * @returns font-size  -webkit-box-shadow
+ */
+export const uncamel = (str: string) => str.replace(/([A-Z])/g, (match, group) => '-' + group.toLowerCase())

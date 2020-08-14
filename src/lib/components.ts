@@ -25,34 +25,34 @@ export default class Comp {
 			defaults("wire", "wire")
 		]);
 
-	protected __s: IComponentOptions;
+	protected $: IComponentOptions;
 
-	get name(): string { return this.__s.name }
-	get library(): string { return this.__s.library }
-	get type(): string { return this.__s.type }
-	get data(): string { return this.__s.data }
-	get props(): { [x: string]: any } { return this.__s.properties }
-	get meta(): IComponentMetadata { return this.__s.meta }
+	get name(): string { return this.$.name }
+	get library(): string { return this.$.library }
+	get type(): string { return this.$.type }
+	get data(): string { return this.$.data }
+	get props(): { [x: string]: any } { return this.$.properties }
+	get meta(): IComponentMetadata { return this.$.meta }
 
 	constructor(options: IComponentOptions) {
 		let
 			that = this,
 			template = options.tmpl;
 		delete options.tmpl;
-		this.__s = obj(options);
+		this.$ = obj(options);
 		if (template) {
 			let
 				base = <Comp>Comp.find(template.name);
-			this.__s.data = base.data;
-			this.__s.meta = JSON.parse(JSON.stringify(base.meta));
-			template.label && (this.__s.meta.label = obj(template.label));
+			this.$.data = base.data;
+			this.$.meta = JSON.parse(JSON.stringify(base.meta));
+			template.label && (this.$.meta.label = obj(template.label));
 			template.nodeLabels.forEach((lbl, ndx) => {
-				that.__s.meta.nodes.list[ndx].label = lbl;
+				that.$.meta.nodes.list[ndx].label = lbl;
 			})
 		}
-		!this.__s.meta.nameTmpl && (this.__s.meta.nameTmpl = tmpl);
-		if (!Comp.store(this.__s.name, this))
-			throw `duplicated: ${this.__s.name}`;
+		!this.$.meta.nameTmpl && (this.$.meta.nameTmpl = tmpl);
+		if (!Comp.store(this.$.name, this))
+			throw `duplicated: ${this.$.name}`;
 	}
 
 	public static register = (options: IComponentOptions) => new Comp(options);

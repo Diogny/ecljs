@@ -18,47 +18,47 @@ var Comp = /** @class */ (function () {
     function Comp(options) {
         var that = this, template = options.tmpl;
         delete options.tmpl;
-        this.__s = dab_1.obj(options);
+        this.$ = dab_1.obj(options);
         if (template) {
             var base = Comp.find(template.name);
-            this.__s.data = base.data;
-            this.__s.meta = JSON.parse(JSON.stringify(base.meta));
-            template.label && (this.__s.meta.label = dab_1.obj(template.label));
+            this.$.data = base.data;
+            this.$.meta = JSON.parse(JSON.stringify(base.meta));
+            template.label && (this.$.meta.label = dab_1.obj(template.label));
             template.nodeLabels.forEach(function (lbl, ndx) {
-                that.__s.meta.nodes.list[ndx].label = lbl;
+                that.$.meta.nodes.list[ndx].label = lbl;
             });
         }
-        !this.__s.meta.nameTmpl && (this.__s.meta.nameTmpl = tmpl);
-        if (!Comp.store(this.__s.name, this))
-            throw "duplicated: " + this.__s.name;
+        !this.$.meta.nameTmpl && (this.$.meta.nameTmpl = tmpl);
+        if (!Comp.store(this.$.name, this))
+            throw "duplicated: " + this.$.name;
     }
     Object.defineProperty(Comp.prototype, "name", {
-        get: function () { return this.__s.name; },
+        get: function () { return this.$.name; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "library", {
-        get: function () { return this.__s.library; },
+        get: function () { return this.$.library; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "type", {
-        get: function () { return this.__s.type; },
+        get: function () { return this.$.type; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "data", {
-        get: function () { return this.__s.data; },
+        get: function () { return this.$.data; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "props", {
-        get: function () { return this.__s.properties; },
+        get: function () { return this.$.properties; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "meta", {
-        get: function () { return this.__s.meta; },
+        get: function () { return this.$.meta; },
         enumerable: false,
         configurable: true
     });

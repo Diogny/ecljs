@@ -11,7 +11,7 @@ var ItemBoard = /** @class */ (function (_super) {
         _this.container = container;
         if (!container)
             throw "missing container";
-        _this.__s.props = dab_1.obj(_this.base.props);
+        _this.$.props = dab_1.obj(_this.base.props);
         dab_1.attr(_this.g, {
             id: _this.id,
             "svg-comp": _this.base.type,
@@ -19,15 +19,15 @@ var ItemBoard = /** @class */ (function (_super) {
         return _this;
         //this still doesn't work to get all overridable properties ¿?
         //properties still cannot access super value
-        //(<any>this.__s).__selected = dab.propDescriptor(this, "selected");
+        //(<any>this.$).$elected = dab.propDescriptor(this, "selected");
     }
     Object.defineProperty(ItemBoard.prototype, "onProp", {
-        get: function () { return this.__s.onProp; },
+        get: function () { return this.$.onProp; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ItemBoard.prototype, "selected", {
-        get: function () { return this.__s.selected; },
+        get: function () { return this.$.selected; },
         enumerable: false,
         configurable: true
     });
@@ -36,28 +36,26 @@ var ItemBoard = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ItemBoard.prototype, "directional", {
-        get: function () { return this.__s.directional; },
+    Object.defineProperty(ItemBoard.prototype, "dir", {
+        get: function () { return this.$.dir; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ItemBoard.prototype, "label", {
-        get: function () { return this.__s.label; },
+        get: function () { return this.$.label; },
         enumerable: false,
         configurable: true
     });
     ItemBoard.prototype.select = function (value) {
         if (this.selected != value) {
             //set new value
-            this.__s.selected = value;
+            this.$.selected = value;
             //add class if selected, otherwise removes it
             dab_1.tCl(this.g, "selected", this.selected);
             //trigger property changed if applicable
             this.onProp && this.onProp({
                 id: "#" + this.id,
-                value: this.selected,
-                prop: "selected",
-                where: 1 //signals it was a change inside the object
+                code: 3 // "selected" code: 3
             });
         }
         return this;
@@ -67,17 +65,12 @@ var ItemBoard = /** @class */ (function (_super) {
         //trigger property changed if applicable
         this.onProp && this.onProp({
             id: "#" + this.id,
-            args: {
-                x: this.x,
-                y: this.y
-            },
-            method: 'move',
-            where: 1 //signals it was a change inside the object
+            code: 2 // "move" code: 2
         });
         return this;
     };
     ItemBoard.prototype.setOnProp = function (value) {
-        dab_1.isFn(value) && (this.__s.onProp = value);
+        dab_1.isFn(value) && (this.$.onProp = value);
         return this;
     };
     ItemBoard.prototype.bond = function (thisNode, ic, icNode) {
@@ -96,13 +89,13 @@ var ItemBoard = /** @class */ (function (_super) {
         this.container.disconnect(this);
     };
     ItemBoard.prototype.prop = function (propName) {
-        return this.__s.props[propName];
+        return this.$.props[propName];
     };
     ItemBoard.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             selected: false,
             onProp: void 0,
-            directional: false,
+            dir: false,
         });
     };
     return ItemBoard;

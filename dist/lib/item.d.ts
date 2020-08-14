@@ -1,7 +1,7 @@
-import { IType, ISize, IItemDefaults, Type, Base } from "./interfaces";
+import { IType, IItemDefaults, Type, Base } from "./interfaces";
 import Point from "./point";
 export default abstract class Item extends Base implements IType {
-    protected __s: IItemDefaults;
+    protected $: IItemDefaults;
     abstract get type(): Type;
     get name(): string;
     get id(): string;
@@ -10,8 +10,6 @@ export default abstract class Item extends Base implements IType {
     get p(): Point;
     get class(): string;
     get visible(): boolean;
-    abstract get ClientRect(): ISize;
-    abstract get box(): any;
     constructor(options: {
         [x: string]: any;
     });

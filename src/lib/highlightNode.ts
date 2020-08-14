@@ -6,13 +6,13 @@ import ItemBase from "./itemsBase";
 
 export default class HighlightNode extends ItemBase {
 
-	protected __s: IHighlighNodeDefaults;
+	protected $: IHighlighNodeDefaults;
 
 	get type(): Type { return Type.HIGHLIGHT }
-	get radius(): number { return this.__s.radius }
+	get radius(): number { return this.$.radius }
 
-	get selectedId(): string { return this.__s.selectedId }
-	get selectedNode(): number { return this.__s.selectedNode }
+	get selectedId(): string { return this.$.selectedId }
+	get selectedNode(): number { return this.$.selectedNode }
 
 	constructor(options: { [x: string]: any; }) {
 		//override
@@ -21,41 +21,41 @@ export default class HighlightNode extends ItemBase {
 		options.id = "highlighNode";
 		super(options);
 		this.g.setAttribute("svg-comp", "h-node");
-		this.__s.mainNode = <SVGCircleElement>tag("circle", "", {
+		this.$.mainNode = <SVGCircleElement>tag("circle", "", {
 			"svg-type": "node",	// "node-x",
 			r: this.radius
 		});
-		this.g.append(this.__s.mainNode);
+		this.g.append(this.$.mainNode);
 	}
 
 	public setRadius(value: number): HighlightNode {
-		this.__s.mainNode.setAttribute("r", <any>(this.__s.radius = value <= 0 ? 5 : value));
+		this.$.mainNode.setAttribute("r", <any>(this.$.radius = value <= 0 ? 5 : value));
 		return this;
 	}
 
 	public hide(): HighlightNode {
 		this.g.classList.add("hide");
-		this.__s.mainNode.classList.remove("hide");
+		this.$.mainNode.classList.remove("hide");
 		this.g.innerHTML = "";
-		this.g.append(this.__s.mainNode);
+		this.g.append(this.$.mainNode);
 		return this;
 	}
 
 	public show(x: number, y: number, id: string, node: number): HighlightNode {
 		this.move(x, y);
-		attr(this.__s.mainNode, {
+		attr(this.$.mainNode, {
 			cx: this.x,
 			cy: this.y,
 			//"node-x": <any>node,
-			"node": <any>(this.__s.selectedNode = node)
+			"node": <any>(this.$.selectedNode = node)
 		});
-		this.__s.selectedId = id;
+		this.$.selectedId = id;
 		this.g.classList.remove("hide");
 		return this;
 	}
 
 	public showConnections(nodes: Point[]): HighlightNode {
-		this.__s.mainNode.classList.add("hide");
+		this.$.mainNode.classList.add("hide");
 		this.g.classList.remove("hide");
 		nodes.forEach(p => {
 			let

@@ -12,6 +12,11 @@ var Size = /** @class */ (function () {
         this.height = Math.round(this.height);
         return this;
     };
+    Object.defineProperty(Size, "empty", {
+        get: function () { return new Size(0, 0); },
+        enumerable: false,
+        configurable: true
+    });
     Size.create = function (size) {
         return new Size(size.width, size.height);
     };
@@ -34,7 +39,6 @@ var Size = /** @class */ (function () {
         var pars = ((options = options | 0) & 1) != 0, shortVars = (options & 2) != 0, longVars = (options & 4) != 0, width = function () { return shortVars ? "w: " : longVars ? "width: " : ""; }, height = function () { return shortVars ? "h: " : longVars ? "height: " : ""; };
         return "" + (pars ? "(" : "") + width() + dab_1.round(this.width, 1) + ", " + height() + dab_1.round(this.height, 1) + (pars ? ")" : "");
     };
-    Size.empty = new Size(0, 0);
     return Size;
 }());
 exports.default = Size;

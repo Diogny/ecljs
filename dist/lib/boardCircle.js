@@ -7,7 +7,7 @@ var point_1 = tslib_1.__importDefault(require("./point"));
 var BoardCircle = /** @class */ (function () {
     function BoardCircle(nodeName) {
         //set initial default values
-        this.__s = {
+        this.$ = {
             nodeName: nodeName || "node",
             nodeValue: -1,
             visible: false,
@@ -20,35 +20,35 @@ var BoardCircle = /** @class */ (function () {
         tagAttrs["svg-type"] = this.nodeName;
         tagAttrs[this.nodeName] = this.nodeValue;
         //create SVG
-        this.__s.g = utils_1.tag("circle", "", tagAttrs);
+        this.$.g = utils_1.tag("circle", "", tagAttrs);
     }
     Object.defineProperty(BoardCircle.prototype, "visible", {
-        get: function () { return this.__s.visible; },
+        get: function () { return this.$.visible; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoardCircle.prototype, "p", {
-        get: function () { return this.__s.p; },
+        get: function () { return this.$.p; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoardCircle.prototype, "nodeName", {
-        get: function () { return this.__s.nodeName; },
+        get: function () { return this.$.nodeName; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoardCircle.prototype, "nodeValue", {
-        get: function () { return this.__s.nodeValue; },
+        get: function () { return this.$.nodeValue; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoardCircle.prototype, "radius", {
-        get: function () { return this.__s.radius; },
+        get: function () { return this.$.radius; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoardCircle.prototype, "g", {
-        get: function () { return this.__s.g; },
+        get: function () { return this.$.g; },
         enumerable: false,
         configurable: true
     });
@@ -56,23 +56,23 @@ var BoardCircle = /** @class */ (function () {
         return parseInt(dab_1.attr(this.g, "r"));
     };
     BoardCircle.prototype.move = function (x, y) {
-        this.__s.p = new point_1.default(x, y);
+        this.$.p = new point_1.default(x, y);
         return this;
     };
     BoardCircle.prototype.setRadius = function (value) {
-        this.__s.radius = value <= 0 ? 5 : value;
+        this.$.radius = value <= 0 ? 5 : value;
         return this.refresh();
     };
     BoardCircle.prototype.hide = function () {
-        this.__s.visible = false;
-        this.__s.p = point_1.default.origin;
-        this.__s.nodeValue = -1;
+        this.$.visible = false;
+        this.$.p = point_1.default.origin;
+        this.$.nodeValue = -1;
         return this.refresh();
     };
     BoardCircle.prototype.show = function (nodeValue) {
-        this.__s.visible = true;
+        this.$.visible = true;
         // this.p  moved first
-        this.__s.nodeValue = nodeValue;
+        this.$.nodeValue = nodeValue;
         return this.refresh();
     };
     BoardCircle.prototype.settings = function () {

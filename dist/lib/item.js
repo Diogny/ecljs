@@ -8,33 +8,33 @@ var Item = /** @class */ (function (_super) {
     function Item(options) {
         var _this = this;
         //merge defaults and deep copy
-        //all default properties must be refrenced from this or this.__s
+        //all default properties must be refrenced from this or this.$
         // options is for custom options only
         var optionsClass = options.class;
         delete options.class;
         _this = _super.call(this, options) || this;
-        optionsClass && (_this.__s.class += " " + optionsClass);
-        _this.__s.x = _this.__s.x || 0;
-        _this.__s.y = _this.__s.y || 0;
+        optionsClass && (_this.$.class += " " + optionsClass);
+        _this.$.x = _this.$.x || 0;
+        _this.$.y = _this.$.y || 0;
         return _this;
     }
     Object.defineProperty(Item.prototype, "name", {
-        get: function () { return this.__s.name; },
+        get: function () { return this.$.name; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "id", {
-        get: function () { return this.__s.id; },
+        get: function () { return this.$.id; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "x", {
-        get: function () { return this.__s.x; },
+        get: function () { return this.$.x; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "y", {
-        get: function () { return this.__s.y; },
+        get: function () { return this.$.y; },
         enumerable: false,
         configurable: true
     });
@@ -44,22 +44,22 @@ var Item = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Item.prototype, "class", {
-        get: function () { return this.__s.class; },
+        get: function () { return this.$.class; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Item.prototype, "visible", {
-        get: function () { return this.__s.visible; },
+        get: function () { return this.$.visible; },
         enumerable: false,
         configurable: true
     });
     Item.prototype.setVisible = function (value) {
-        this.__s.visible = !!value;
+        this.$.visible = !!value;
         return this;
     };
     Item.prototype.move = function (x, y) {
-        this.__s.x = x | 0;
-        this.__s.y = y | 0;
+        this.$.x = x | 0;
+        this.$.y = y | 0;
         return this;
     };
     Item.prototype.movePoint = function (p) {
@@ -76,8 +76,7 @@ var Item = /** @class */ (function (_super) {
             y: 0,
             class: "",
             visible: true,
-            label: "",
-            base: void 0 //this comes from createItem by default
+            label: ""
         };
     };
     return Item;

@@ -4,7 +4,7 @@ var dab_1 = require("./dab");
 var Board = /** @class */ (function () {
     function Board(containers) {
         var _this = this;
-        this.__s = containers || [];
+        this.$ = containers || [];
         var names = this.containers.map(function (c) {
             c.board = _this;
             return c.name;
@@ -13,7 +13,7 @@ var Board = /** @class */ (function () {
             throw "duplicated container names";
     }
     Object.defineProperty(Board.prototype, "containers", {
-        get: function () { return this.__s; },
+        get: function () { return this.$; },
         enumerable: false,
         configurable: true
     });
@@ -36,7 +36,7 @@ var Board = /** @class */ (function () {
     Board.prototype.destroy = function () {
         this.containers
             .forEach(function (c) { return c.destroy(); });
-        this.__s = void 0;
+        this.$ = void 0;
     };
     return Board;
 }());

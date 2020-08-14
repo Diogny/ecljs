@@ -5,13 +5,13 @@ import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 import Board from "./board";
 export default abstract class Container<T extends ItemBoard> extends Base {
-    protected __s: IContainerDefaults<T>;
+    protected $: IContainerDefaults<T>;
     get name(): string;
     set name(value: string);
     get board(): Board;
     set board(board: Board);
     abstract get library(): string;
-    abstract get directional(): boolean;
+    abstract get dir(): boolean;
     abstract createItem(options: {
         [x: string]: any;
     }): T;

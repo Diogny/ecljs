@@ -6,18 +6,18 @@ import Point from "./point";
 
 export default class BoardCircle implements IHighlightable {
 
-	protected __s: IHighlightable;
+	protected $: IHighlightable;
 
-	get visible(): boolean { return this.__s.visible }
-	get p(): Point { return this.__s.p }
-	get nodeName(): string { return this.__s.nodeName }
-	get nodeValue(): number { return this.__s.nodeValue }
-	get radius(): number { return this.__s.radius }
-	get g(): SVGCircleElement { return this.__s.g }
+	get visible(): boolean { return this.$.visible }
+	get p(): Point { return this.$.p }
+	get nodeName(): string { return this.$.nodeName }
+	get nodeValue(): number { return this.$.nodeValue }
+	get radius(): number { return this.$.radius }
+	get g(): SVGCircleElement { return this.$.g }
 
 	constructor(nodeName: string) {
 		//set initial default values
-		this.__s = <IHighlightable>{
+		this.$ = <IHighlightable>{
 			nodeName: nodeName || "node",
 			nodeValue: -1,
 			visible: false,
@@ -31,7 +31,7 @@ export default class BoardCircle implements IHighlightable {
 		tagAttrs["svg-type"] = this.nodeName;
 		tagAttrs[this.nodeName] = this.nodeValue;
 		//create SVG
-		this.__s.g = <SVGCircleElement>tag("circle", "", tagAttrs);
+		this.$.g = <SVGCircleElement>tag("circle", "", tagAttrs);
 	}
 
 	public domRadius(): number {
@@ -39,26 +39,26 @@ export default class BoardCircle implements IHighlightable {
 	}
 
 	move(x: number, y: number): BoardCircle {
-		this.__s.p = new Point(x, y);
+		this.$.p = new Point(x, y);
 		return this;
 	}
 
 	public setRadius(value: number): BoardCircle {
-		this.__s.radius = value <= 0 ? 5 : value;
+		this.$.radius = value <= 0 ? 5 : value;
 		return this.refresh();
 	}
 
 	public hide(): BoardCircle {
-		this.__s.visible = false;
-		this.__s.p = Point.origin;
-		this.__s.nodeValue = -1;
+		this.$.visible = false;
+		this.$.p = Point.origin;
+		this.$.nodeValue = -1;
 		return this.refresh();
 	}
 
 	public show(nodeValue: number): BoardCircle {
-		this.__s.visible = true;
+		this.$.visible = true;
 		// this.p  moved first
-		this.__s.nodeValue = nodeValue;
+		this.$.nodeValue = nodeValue;
 		return this.refresh();
 	}
 

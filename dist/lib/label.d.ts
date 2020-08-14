@@ -2,7 +2,7 @@ import { Type, ISize, ILabelDefaults } from "./interfaces";
 import ItemBase from "./itemsBase";
 export default class Label extends ItemBase {
     get type(): Type;
-    protected __s: ILabelDefaults;
+    protected $: ILabelDefaults;
     get text(): string;
     get size(): ISize;
     get fontSize(): number;

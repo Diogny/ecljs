@@ -14,5 +14,5 @@ export default class Rect implements IRect {
     move(x: number, y: number): void;
     grow(dx: number, dy: number): void;
     static create(r: IRect): Rect;
-    static empty(): Rect;
+    static get empty(): Rect;
 }

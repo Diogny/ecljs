@@ -5,12 +5,12 @@ import { unique } from "./dab";
 
 export default class Board {
 
-	protected __s: Container<EC | FlowchartComp>[];
+	protected $: Container<EC | FlowchartComp>[];
 
-	get containers(): Container<EC | FlowchartComp>[] { return this.__s }
+	get containers(): Container<EC | FlowchartComp>[] { return this.$ }
 
 	constructor(containers?: Container<EC | FlowchartComp>[]) {
-		this.__s = containers || [];
+		this.$ = containers || [];
 		let
 			names = this.containers.map(c => {
 				c.board = this;
@@ -44,7 +44,7 @@ export default class Board {
 	public destroy() {
 		this.containers
 			.forEach(c => c.destroy());
-		this.__s = <any>void 0;
+		this.$ = <any>void 0;
 	}
 
 }

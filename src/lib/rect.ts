@@ -54,7 +54,7 @@ export default class Rect implements IRect {
 		this.height += dy * 2;
 	}
 
-	public static create(r: IRect) { return new Rect(r.x, r.y, r.width, r.height) }
+	static create(r: IRect) { return new Rect(r.x, r.y, r.width, r.height) }
 
-	public static empty() { return new Rect(0, 0, 0, 0) }
+	static get empty(): Rect { return new Rect(0, 0, 0, 0) }
 }

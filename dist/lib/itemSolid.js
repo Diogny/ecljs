@@ -42,20 +42,16 @@ var ItemSolid = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(ItemSolid.prototype, "rotation", {
-        get: function () { return this.__s.rotation; },
+        get: function () { return this.$.rotation; },
         enumerable: false,
         configurable: true
     });
     ItemSolid.prototype.rotate = function (value) {
-        if (this.__s.rotation != (value = point_1.default.validateRotation(value))) {
-            //set new value
-            this.__s.rotation = value;
-            //trigger property changed if applicable
+        if (this.$.rotation != (value = point_1.default.validateRotation(value))) {
+            this.$.rotation = value;
             this.onProp && this.onProp({
                 id: "#" + this.id,
-                value: this.rotation,
-                prop: "rotate",
-                where: 1 //signals it was a change inside the object
+                code: 4 // "rotate" code: 4
             });
         }
         return this.refresh();

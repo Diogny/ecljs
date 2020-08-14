@@ -1,5 +1,5 @@
 export default class Unit {
-    protected __s: {
+    protected $: {
         unit: number;
         prefix: number;
         value: number;

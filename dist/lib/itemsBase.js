@@ -10,29 +10,18 @@ var ItemBase = /** @class */ (function (_super) {
     tslib_1.__extends(ItemBase, _super);
     function ItemBase(options) {
         var _this = _super.call(this, options) || this;
-        _this.__s.g = utils_1.tag("g", _this.__s.id, {
+        _this.$.g = utils_1.tag("g", _this.$.id, {
             class: _this.class + (_this.visible ? '' : ' hide')
         });
         return _this;
     }
     Object.defineProperty(ItemBase.prototype, "base", {
-        get: function () { return this.__s.base; },
+        get: function () { return this.$.base; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ItemBase.prototype, "g", {
-        get: function () { return this.__s.g; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(ItemBase.prototype, "ClientRect", {
-        get: function () {
-            var b = this.g.getBoundingClientRect();
-            return dab_1.obj({
-                width: b.width | 0,
-                height: b.height | 0
-            });
-        },
+        get: function () { return this.$.g; },
         enumerable: false,
         configurable: true
     });
@@ -60,6 +49,12 @@ var ItemBase = /** @class */ (function (_super) {
         (_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.g);
     };
     ItemBase.prototype.afterDOMinserted = function () { };
+    ItemBase.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
+            g: void 0,
+            base: void 0 //this comes from createItem by default
+        });
+    };
     return ItemBase;
 }(item_1.default));
 exports.default = ItemBase;

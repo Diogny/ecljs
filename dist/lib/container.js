@@ -15,43 +15,43 @@ var Container = /** @class */ (function (_super) {
         }) || this;
     }
     Object.defineProperty(Container.prototype, "name", {
-        get: function () { return this.__s.name; },
+        get: function () { return this.$.name; },
         set: function (value) {
-            this.__s.name = value;
+            this.$.name = value;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "board", {
-        get: function () { return this.__s.board; },
+        get: function () { return this.$.board; },
         set: function (board) {
-            this.__s.board = board;
+            this.$.board = board;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "counters", {
-        get: function () { return this.__s.counters; },
+        get: function () { return this.$.counters; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "components", {
-        get: function () { return this.__s.components; },
+        get: function () { return this.$.components; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "itemMap", {
-        get: function () { return this.__s.itemMap; },
+        get: function () { return this.$.itemMap; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "wireMap", {
-        get: function () { return this.__s.wireMap; },
+        get: function () { return this.$.wireMap; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "selected", {
-        get: function () { return this.__s.selected; },
+        get: function () { return this.$.selected; },
         enumerable: false,
         configurable: true
     });
@@ -105,12 +105,12 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.hasItem = function (id) { return this.itemMap.has(id) || this.wireMap.has(id); };
     Container.prototype.selectAll = function (value) {
-        return this.__s.selected = this.all
+        return this.$.selected = this.all
             .filter(function (comp) { return (comp.select(value), value); });
     };
     Container.prototype.toggleSelect = function (comp) {
         comp.select(!comp.selected);
-        this.__s.selected = this.all.filter(function (c) { return c.selected; });
+        this.$.selected = this.all.filter(function (c) { return c.selected; });
     };
     Container.prototype.selectThis = function (comp) {
         return comp
@@ -118,10 +118,10 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.unselectThis = function (comp) {
         comp.select(false);
-        this.__s.selected = this.all.filter(function (c) { return c.selected; });
+        this.$.selected = this.all.filter(function (c) { return c.selected; });
     };
     Container.prototype.selectRect = function (rect) {
-        (this.__s.selected = this.all.filter(function (item) {
+        (this.$.selected = this.all.filter(function (item) {
             return rect.intersect(item.rect());
         }))
             .forEach(function (item) { return item.select(true); });
@@ -129,7 +129,7 @@ var Container = /** @class */ (function (_super) {
     Container.prototype.deleteSelected = function () {
         var _this = this;
         var deletedCount = 0;
-        this.__s.selected = this.selected.filter(function (c) {
+        this.$.selected = this.selected.filter(function (c) {
             if (_this.delete(c)) {
                 deletedCount++;
                 return false;
@@ -143,10 +143,10 @@ var Container = /** @class */ (function (_super) {
         this.items.forEach(function (ec) { return _this.delete(ec); });
         this.wires.forEach(function (wire) { return _this.delete(wire); });
         //maps should be empty here
-        this.__s = void 0;
+        this.$ = void 0;
     };
     Container.prototype.boundariesRect = function () {
-        var array = this.all, first = array.shift(), r = first ? first.rect() : rect_1.default.empty();
+        var array = this.all, first = array.shift(), r = first ? first.rect() : rect_1.default.empty;
         array.forEach(function (ec) { return r.add(ec.rect()); });
         r.grow(20, 20);
         return r;

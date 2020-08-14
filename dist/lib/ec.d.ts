@@ -3,7 +3,7 @@ import ItemSolid from './itemSolid';
 import Label from './label';
 import Circuit from './circuit';
 export default class EC extends ItemSolid {
-    protected __s: IECDefaults;
+    protected $: IECDefaults;
     get type(): Type;
     get boardLabel(): Label;
     constructor(circuit: Circuit, options: {

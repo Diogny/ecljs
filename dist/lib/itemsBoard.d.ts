@@ -1,14 +1,14 @@
-import { IPoint, IItemBoardDefaults, INodeInfo, ComponentPropertyType } from './interfaces';
+import { IPoint, IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
 export default abstract class ItemBoard extends ItemBase {
     container: Container<ItemBoard>;
-    protected __s: IItemBoardDefaults;
-    get onProp(): Function;
+    protected $: IItemBoardDefaults;
+    get onProp(): (args: IItemBoardPropEvent) => void;
     get selected(): boolean;
     get bonds(): Bond[] | undefined;
-    get directional(): boolean;
+    get dir(): boolean;
     get label(): string;
     abstract get count(): number;
     abstract valid(node: number): boolean;
@@ -24,7 +24,7 @@ export default abstract class ItemBoard extends ItemBase {
     });
     select(value: boolean): ItemBoard;
     move(x: number, y: number): ItemBoard;
-    setOnProp(value: Function): ItemBoard;
+    setOnProp(value: (args: IItemBoardPropEvent) => void): ItemBoard;
     bond(thisNode: number, ic: ItemBoard, icNode: number): boolean;
     nodeBonds(node: number): Bond | undefined;
     unbond(node: number, id: string): void;

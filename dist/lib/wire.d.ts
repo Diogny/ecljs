@@ -4,7 +4,7 @@ import Rect from './rect';
 import ItemBoard from './itemsBoard';
 import Container from './container';
 export default class Wire extends ItemBoard {
-    protected __s: IWireDefaults;
+    protected $: IWireDefaults;
     get type(): Type;
     get count(): number;
     get last(): number;

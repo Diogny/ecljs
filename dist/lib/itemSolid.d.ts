@@ -3,7 +3,7 @@ import Rect from "./rect";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
 export default abstract class ItemSolid extends ItemBoard {
-    protected __s: IItemSolidDefaults;
+    protected $: IItemSolidDefaults;
     get last(): number;
     get count(): number;
     constructor(container: Container<ItemBoard>, options: {

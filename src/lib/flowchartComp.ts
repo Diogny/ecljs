@@ -36,7 +36,7 @@ export default abstract class FlowchartComp extends ItemSolid {
 
 	public defaults(): IItemBoardDefaults {
 		return <IItemBoardDefaults>extend(super.defaults(), {
-			directional: true,
+			dir: true,
 		})
 	}
 }

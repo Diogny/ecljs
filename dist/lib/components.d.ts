@@ -1,7 +1,7 @@
 import { IComponentOptions, IComponentMetadata } from './interfaces';
 export default class Comp {
     private static map;
-    protected __s: IComponentOptions;
+    protected $: IComponentOptions;
     get name(): string;
     get library(): string;
     get type(): string;

@@ -8,23 +8,23 @@ import Container from './container';
 
 export default class Wire extends ItemBoard {
 
-	protected __s: IWireDefaults;
+	protected $: IWireDefaults;
 
 	get type(): Type { return Type.WIRE }
 
-	get count(): number { return this.__s.points.length }
+	get count(): number { return this.$.points.length }
 
-	get last(): number { return this.__s.points.length - 1 }
+	get last(): number { return this.$.points.length - 1 }
 
-	get lastLine(): number { return this.editMode ? this.__s.lines.length : 0 }
+	get lastLine(): number { return this.editMode ? this.$.lines.length : 0 }
 
 	get isOpen(): boolean { return !this.nodeBonds(0) || !this.nodeBonds(this.last) }
 
 	public rect(): Rect { return Rect.create(this.box) }
 
-	get points(): Point[] { return Array.from(this.__s.points) }
+	get points(): Point[] { return Array.from(this.$.points) }
 
-	get editMode(): boolean { return this.__s.edit }
+	get editMode(): boolean { return this.$.edit }
 
 	set editMode(value: boolean) {
 		if (this.editMode == value)
@@ -32,22 +32,22 @@ export default class Wire extends ItemBoard {
 		if (this.editMode) {
 			//	will change to false
 			//		.destroy lines
-			this.__s.lines = this.__s.lines.filter(ln => {
+			this.$.lines = this.$.lines.filter(ln => {
 				this.g.removeChild(ln);
 				return false
 			});
 			//		.recreate polyline
 			this.refresh();
 			//		.show polyline
-			rCl(this.__s.polyline, "hide")
+			rCl(this.$.polyline, "hide")
 		} else {
 			//	will change to true
 			//		.hide polyline
-			aCl(this.__s.polyline, "hide");
+			aCl(this.$.polyline, "hide");
 			//		.create lines
-			for (let i = 0, a = this.__s.points[0], cnt = this.last; i < cnt; i++) {
+			for (let i = 0, a = this.$.points[0], cnt = this.last; i < cnt; i++) {
 				let
-					b = this.__s.points[i + 1],
+					b = this.$.points[i + 1],
 					ln = tag("line", "", {
 						"svg-type": "line",
 						line: (i + 1),
@@ -56,42 +56,33 @@ export default class Wire extends ItemBoard {
 						x2: b.x,
 						y2: b.y
 					});
-				this.__s.lines.push(ln);
-				this.g.insertBefore(ln, this.__s.polyline);
+				this.$.lines.push(ln);
+				this.g.insertBefore(ln, this.$.polyline);
 				a = b;
 			}
 		}
-		this.__s.edit = value
+		this.$.edit = value
 	}
 
 	constructor(container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(container, options);
-		this.__s.directional = container.directional;
-		this.__s.polyline = tag("polyline", "", {
+		this.$.dir = container.dir;
+		this.$.polyline = tag("polyline", "", {
 			"svg-type": "line",
 			line: "0",
 			points: "",
 		});
-		this.g.append(this.__s.polyline);
+		this.g.append(this.$.polyline);
 		this.setPoints(options.points);
 		this.onProp && this.onProp({
 			id: `#${this.id}`,
-			args: {
-				id: this.id,
-				name: this.name,
-				x: this.x,
-				y: this.y,
-				points: this.__s.points,
-				bonds: '[' + this.bonds?.map((b) => b.link).join(', ') + ']'
-			},
-			method: 'create',
-			where: 1			//signals it was a change inside the object
-		});
+			code: 1					// "create" code = 1
+		})
 	}
 
 	public refresh(): Wire {
-		attr(this.__s.polyline, {
-			points: this.__s.points.map(p => `${p.x}, ${p.y}`).join(' ')
+		attr(this.$.polyline, {
+			points: this.$.points.map(p => `${p.x}, ${p.y}`).join(' ')
 		});
 		return this;
 	}
@@ -100,16 +91,16 @@ export default class Wire extends ItemBoard {
 		if (this.editMode) {
 			let
 				ln: SVGElement,
-				p = this.__s.points[node];
-			(ln = this.__s.lines[node - 1]) && attr(ln, { x2: p.x, y2: p.y });
-			(ln = this.__s.lines[node]) && attr(ln, { x1: p.x, y1: p.y });
+				p = this.$.points[node];
+			(ln = this.$.lines[node - 1]) && attr(ln, { x2: p.x, y2: p.y });
+			(ln = this.$.lines[node]) && attr(ln, { x1: p.x, y1: p.y });
 		} else {
 			this.refresh();
 		}
 		if (!(node == 0 || node == this.last)) {
 			let
 				bond = this.nodeBonds(node),
-				p = this.__s.points[node];
+				p = this.$.points[node];
 			bond && bond.to.forEach(b => {
 				this.container.get(b.id)?.setNode(b.ndx, p)
 			})
@@ -123,7 +114,7 @@ export default class Wire extends ItemBoard {
 		let
 			savedEditMode = this.editMode;
 		this.editMode = false;
-		for (let i = 0, p = this.__s.points[i], end = this.last; i <= end; p = this.__s.points[++i]) {
+		for (let i = 0, p = this.$.points[i], end = this.last; i <= end; p = this.$.points[++i]) {
 			if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.nodeBonds(i))) {
 				this.setNode(i, Point.translateBy(p, dx, dy));
 			}
@@ -150,12 +141,12 @@ export default class Wire extends ItemBoard {
 	}
 
 	public appendNode(p: Point): boolean {
-		return !this.editMode && (this.__s.points.push(p), this.refresh(), true)
+		return !this.editMode && (this.$.points.push(p), this.refresh(), true)
 	}
 
 	public setNode(node: number, p: IPoint): Wire {
-		this.__s.points[node].x = p.x | 0;
-		this.__s.points[node].y = p.y | 0;
+		this.$.points[node].x = p.x | 0;
+		this.$.points[node].y = p.y | 0;
 		(node == 0) && moveToStart(this);
 		return this.nodeRefresh(node);
 	}
@@ -171,9 +162,9 @@ export default class Wire extends ItemBoard {
 			|| points.length < 2)
 			throw 'Poliwire min 2 points';
 		if (!this.editMode) {
-			this.__s.points = points.map(p => new Point(p.x | 0, p.y | 0));
+			this.$.points = points.map(p => new Point(p.x | 0, p.y | 0));
 			moveToStart(this);
-			this.__s.lines = [];
+			this.$.lines = [];
 			this.refresh();
 		}
 		return this
@@ -181,7 +172,7 @@ export default class Wire extends ItemBoard {
 
 	public getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined {
 		let
-			p: Point = this.__s.points[node];
+			p: Point = this.$.points[node];
 		return p && { x: p.x, y: p.y, label: `node::${node}` }
 	}
 
@@ -194,14 +185,14 @@ export default class Wire extends ItemBoard {
 			//the fast way
 			//lines are 1-based
 			let
-				p0 = this.__s.points[ln - 1],
-				p1 = this.__s.points[ln]
+				p0 = this.$.points[ln - 1],
+				p1 = this.$.points[ln]
 			return (!p0 || !p1) ? -1 : inside(p0) ? ln - 1 : inside(p1) ? ln : -1
 		}
 		else {
 			//the long way
-			for (let i = 0, np = this.__s.points[i], len = this.__s.points.length;
-				i < len; np = this.__s.points[++i]) {
+			for (let i = 0, np = this.$.points[i], len = this.$.points.length;
+				i < len; np = this.$.points[++i]) {
 				//radius 5 =>  5^2 = 25
 				if (inside(np))
 					return i;
@@ -244,7 +235,7 @@ export default class Wire extends ItemBoard {
 		for (let n = this.last; n >= node; n--) {
 			this.container.moveBond(this.id, n, n + 1);
 		}
-		this.__s.points.splice(node, 0, p);
+		this.$.points.splice(node, 0, p);
 		this.editMode = savedEditMode;
 		return true;
 	}
@@ -271,7 +262,7 @@ export default class Wire extends ItemBoard {
 }
 
 function moveToStart(wire: Wire) {
-	wire.move((<any>wire).__s.points[0].x, (<any>wire).__s.points[0].y)
+	wire.move((<any>wire).$.points[0].x, (<any>wire).$.points[0].y)
 }
 
 function deleteWireNode(wire: Wire, node: number): Point | undefined {
@@ -282,5 +273,5 @@ function deleteWireNode(wire: Wire, node: number): Point | undefined {
 		return;
 	wire.unbondNode(node);
 	wire.container.moveBond(wire.id, last, last - 1);
-	return (<any>wire).__s.points.splice(node, 1)[0];
+	return (<any>wire).$.points.splice(node, 1)[0];
 }

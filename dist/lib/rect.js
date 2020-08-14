@@ -50,7 +50,11 @@ var Rect = /** @class */ (function () {
         this.height += dy * 2;
     };
     Rect.create = function (r) { return new Rect(r.x, r.y, r.width, r.height); };
-    Rect.empty = function () { return new Rect(0, 0, 0, 0); };
+    Object.defineProperty(Rect, "empty", {
+        get: function () { return new Rect(0, 0, 0, 0); },
+        enumerable: false,
+        configurable: true
+    });
     return Rect;
 }());
 exports.default = Rect;

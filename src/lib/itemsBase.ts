@@ -1,5 +1,5 @@
-import { IItemBaseDefaults, ISize } from './interfaces';
-import { obj, tCl } from './dab';
+import { IItemBaseDefaults } from './interfaces';
+import { tCl, extend } from './dab';
 import { tag } from './utils';
 import Rect from './rect';
 import Point from './point';
@@ -8,18 +8,10 @@ import Comp from './components';
 
 export default abstract class ItemBase extends Item {
 
-	protected __s: IItemBaseDefaults;
+	protected $: IItemBaseDefaults;
 
-	get base(): Comp { return this.__s.base }
-	get g(): SVGElement { return this.__s.g }
-
-	get ClientRect(): ISize {
-		let b = this.g.getBoundingClientRect();
-		return obj({
-			width: b.width | 0,
-			height: b.height | 0
-		})
-	}
+	get base(): Comp { return this.$.base }
+	get g(): SVGElement { return this.$.g }
 
 	get box(): any { return (<any>this.g).getBBox() }
 
@@ -39,7 +31,7 @@ export default abstract class ItemBase extends Item {
 
 	constructor(options: { [x: string]: any; }) {
 		super(options);
-		this.__s.g = tag("g", this.__s.id, {
+		this.$.g = tag("g", this.$.id, {
 			class: this.class + (this.visible ? '' : ' hide')
 		});
 	}
@@ -49,5 +41,12 @@ export default abstract class ItemBase extends Item {
 	}
 
 	public afterDOMinserted() { }
+
+	public defaults(): IItemBaseDefaults {
+		return <IItemBaseDefaults>extend(super.defaults(), {
+			g: void 0,
+			base: <any>void 0	//this comes from createItem by default
+		})
+	}
 
 }

@@ -21,7 +21,7 @@ var Base = /** @class */ (function () {
         this.clear(options);
     }
     Base.prototype.clear = function (options) {
-        this.__s = dab_1.obj(dab_1.copy(this.defaults(), options || {}));
+        this.$ = dab_1.obj(dab_1.copy(this.defaults(), options || {}));
     };
     return Base;
 }());

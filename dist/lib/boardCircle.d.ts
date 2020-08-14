@@ -1,7 +1,7 @@
 import { IHighlightable } from "./interfaces";
 import Point from "./point";
 export default class BoardCircle implements IHighlightable {
-    protected __s: IHighlightable;
+    protected $: IHighlightable;
     get visible(): boolean;
     get p(): Point;
     get nodeName(): string;

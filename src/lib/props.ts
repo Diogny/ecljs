@@ -4,14 +4,14 @@ import { qS, each } from './utils';
 
 export class ReactProp extends Base implements IReactProp {
 
-	protected __s: IReactPropDefaults;
+	protected $: IReactPropDefaults;
 
-	get data(): { [id: string]: any } { return this.__s.data }
+	get _(): { [id: string]: any } { return this.$._ }
 
-	get value(): any { return this.__s.value }
+	get value(): any { return this.$.value }
 
 	set value(val: any) {
-		this.__s.value = val;
+		this.$.value = val;
 		this.onChange && this.onChange(val, 2, this, <any>void 0)
 	}
 
@@ -26,7 +26,7 @@ export class ReactProp extends Base implements IReactProp {
 
 	public defaults(): IReactPropDefaults {
 		return {
-			data: {},
+			_: {},
 			value: void 0
 		}
 	}
@@ -34,24 +34,97 @@ export class ReactProp extends Base implements IReactProp {
 
 export class UIProp extends ReactProp {
 
-	protected __s: IUIPropertyDefaults;
+	protected $: IUIPropertyDefaults;
 
-	get type(): string { return this.__s.type }
+	get type(): string { return this.$.type }
 
-	get html(): HTMLElement { return this.__s.html }
-	get editable(): boolean { return this.__s.editable }
+	get html(): HTMLElement { return this.$.html }
+	get editable(): boolean { return this.$.editable }
 
-	get tag(): string | Element { return this.__s.tag }
+	get tag(): string | Element { return this.$.tag }
 	get nodeName(): string { return this.html.nodeName.toLowerCase() }
-	get react(): boolean { return this.editable || this.__s.htmlSelect }
+	get react(): boolean { return this.editable || this.$.htmlSelect }
+
+	constructor(options: { [id: string]: any }) {
+		super(options);
+		if (!(this.$.html = <HTMLElement>(isDOM(options.tag) ? (options.tag) : qS(<string>options.tag))))
+			throw 'wrong options';
+		(<any>this.html).dab = this;
+		switch (this.nodeName) {
+			case 'input':
+				this.$.type = (<HTMLInputElement>this.html).type.toLowerCase();
+				this.$.editable = true;
+				switch (this.type) {
+					case 'radio':
+					case 'checkbox':
+						this.$.type = "boolean";
+						this.$.getter = 'checked';
+						break;
+					case 'submit':
+					case 'button':
+						throw 'HTML input tag type invalid';
+					case 'text':
+					case 'number':
+						//TML5 input types stays the same
+						break;
+					case 'password':
+					case 'hidden':	//prop.type is text
+					default:
+						//•color	•date	•datetime	•datetime-local	•email	•month	•number	•range	•search
+						//•tel	•time	•url	•week
+						this.$.type = 'text';
+				}
+				break;
+			case 'textarea':
+				this.$.type = 'text';
+				this.$.editable = true;
+				break;
+			case 'select':
+				this.$.htmlSelect = true;
+				switch ((<HTMLSelectElement>this.html).type.toLowerCase()) {
+					case 'select-one':
+						this.$.getter = "selectedIndex";	//'<any>null';
+						break;
+					case 'select-multiple':
+						this.$.getter = "selectedOptions";	//'<any>null'
+						this.$.selectMultiple = true;
+						break;
+				}
+				this.$.type = "integer";
+				//define properties for 'SELECT'
+				let
+					index: number = -1;
+				this.$.selectCount = (<any>this.html).length;
+				//later return an array for select multiple
+				dP(this, "index", {
+					get: () => index,
+					set(value: number) {
+						(value >= 0 && value < this.$.selectCount) &&	// this.options.length
+							((index != -1) && (this.html.options[index].selected = !1),
+								this.html.options[index = value].selected = !0,
+								this.trigger());
+					}
+				});
+				dP(this, "selectedOption", {
+					get: () => (<any>this.html).options[(<any>this.html).selectedIndex]
+				});
+				break;
+			default:
+				//later check this for all text HTMLElements
+				this.$.getter = 'innerHTML'
+		};
+		//this's set only if it's an editable property
+		this.react
+			&& this.html.addEventListener('change', this.trigger);
+	}
 
 	get value(): any {
 		if (!this.react) {
-			return this.__s.value
+			return this.$.value
 		}
 		let
-			val = (<any>this.html)[this.__s.getter];	//select.selectedOptions
-		if (!this.__s.htmlSelect) {
+			val = (<any>this.html)[this.$.getter];	//select.selectedOptions
+		if (!this.$.htmlSelect) {
 			switch (this.type) {
 				case "integer":
 					return isNaN(val = parseInt(val)) ? 0 : val
@@ -59,7 +132,7 @@ export class UIProp extends ReactProp {
 					return isNaN(val = parseFloat(val)) ? 0 : val
 			}
 			return val
-		} else if (this.__s.selectMultiple) {
+		} else if (this.$.selectMultiple) {
 			return [].map.call(val, (option: HTMLOptionElement) => option.value)
 		} else
 			return (<HTMLSelectElement>this.html).options[val].value
@@ -67,15 +140,15 @@ export class UIProp extends ReactProp {
 
 	set value(val: any) {
 		if (!this.react) {
-			this.__s.value = val;
+			this.$.value = val;
 			//call onchange to get UI value
 			let
 				transfValue = this.onChange && this.onChange(val, 2, this, <any>void 0);
 			//write to DOM transformed value, if undefined write "val"
-			(<any>this.html)[this.__s.getter] = (transfValue == undefined) ? val : transfValue
+			(<any>this.html)[this.$.getter] = (transfValue == undefined) ? val : transfValue
 			return
 		}
-		if (!this.__s.htmlSelect) {
+		if (!this.$.htmlSelect) {
 			let
 				valtype = typeOf(val);
 
@@ -84,10 +157,10 @@ export class UIProp extends ReactProp {
 				(this.type == "integer" && isInt(val)) ||
 				(this.type == "number" && isNumeric(val))
 			)
-				(<any>this.html)[this.__s.getter] = val;
+				(<any>this.html)[this.$.getter] = val;
 		}
 		else {
-			if (this.__s.selectMultiple) {
+			if (this.$.selectMultiple) {
 				let
 					values = splat(val).map((num: any) => num + '');
 
@@ -104,79 +177,6 @@ export class UIProp extends ReactProp {
 			}
 		}
 		this.trigger(null)
-	}
-
-	constructor(options: { [id: string]: any }) {
-		super(options);
-		if (!(this.__s.html = <HTMLElement>(isDOM(options.tag) ? (options.tag) : qS(<string>options.tag))))
-			throw 'wrong options';
-		(<any>this.html).dab = this;
-		switch (this.nodeName) {
-			case 'input':
-				this.__s.type = (<HTMLInputElement>this.html).type.toLowerCase();
-				this.__s.editable = true;
-				switch (this.type) {
-					case 'radio':
-					case 'checkbox':
-						this.__s.type = "boolean";
-						this.__s.getter = 'checked';
-						break;
-					case 'submit':
-					case 'button':
-						throw 'HTML input tag type invalid';
-					case 'text':
-					case 'number':
-						//TML5 input types stays the same
-						break;
-					case 'password':
-					case 'hidden':	//prop.type is text
-					default:
-						//•color	•date	•datetime	•datetime-local	•email	•month	•number	•range	•search
-						//•tel	•time	•url	•week
-						this.__s.type = 'text';
-				}
-				break;
-			case 'textarea':
-				this.__s.type = 'text';
-				this.__s.editable = true;
-				break;
-			case 'select':
-				this.__s.htmlSelect = true;
-				switch ((<HTMLSelectElement>this.html).type.toLowerCase()) {
-					case 'select-one':
-						this.__s.getter = "selectedIndex";	//'<any>null';
-						break;
-					case 'select-multiple':
-						this.__s.getter = "selectedOptions";	//'<any>null'
-						this.__s.selectMultiple = true;
-						break;
-				}
-				this.__s.type = "integer";
-				//define properties for 'SELECT'
-				let
-					index: number = -1;
-				this.__s.selectCount = (<any>this.html).length;
-				//later return an array for select multiple
-				dP(this, "index", {
-					get: () => index,
-					set(value: number) {
-						(value >= 0 && value < this.__s.selectCount) &&	// this.options.length
-							((index != -1) && (this.html.options[index].selected = !1),
-								this.html.options[index = value].selected = !0,
-								this.trigger());
-					}
-				});
-				dP(this, "selectedOption", {
-					get: () => (<any>this.html).options[(<any>this.html).selectedIndex]
-				});
-				break;
-			default:
-				//later check this for all text HTMLElements
-				this.__s.getter = 'innerHTML'
-		};
-		//this's set only if it's an editable property
-		this.react
-			&& this.html.addEventListener('change', this.trigger);
 	}
 
 	public dispose() {
@@ -204,7 +204,7 @@ export class UIProp extends ReactProp {
 		return <IUIPropertyDefaults>{
 			tag: "",
 			onChange: void 0,
-			data: {},
+			_: {},
 			html: <any>void 0,
 			type: "text",
 			selected: false,
@@ -221,21 +221,21 @@ export class UIProp extends ReactProp {
 
 export class PropContainer extends Base {
 
-	protected __s: IPropContainerDefaults;
+	protected $: IPropContainerDefaults;
 
-	get root(): { [id: string]: IPropHook } { return this.__s.root }
+	get props(): { [id: string]: IPropHook } { return this.$._ }
 
-	get modified(): boolean { return this.__s.modified }
-	set modified(value: boolean) { this.__s.modified = value }
+	get modified(): boolean { return this.$.modified }
+	set modified(value: boolean) { this.$.modified = value }
 
 	constructor(props: { [id: string]: { [id: string]: any } }) {
-		super({});
-		each(props, (options: { [id: string]: any }, key: string) => this.root[key] = hook(this, key, options))
+		super();
+		each(props, (options: { [id: string]: any }, key: string) => this.$._[key] = hook(this, key, options))
 	}
 
 	public defaults(): IPropContainerDefaults {
 		return <IPropContainerDefaults>{
-			root: {},
+			_: {},
 			modified: false
 		}
 	}
@@ -256,7 +256,7 @@ function hook(parent: PropContainer, name: string, options: { [id: string]: any 
 			p.value = value;
 			//trigger father's modified only if defined, defaults to "true"
 			modified = true;
-			onModify && ((<any>parent).__s.modified = true)
+			onModify && ((<any>parent).$.modified = true)
 		}
 	});
 	dP(prop, "name", { get(): string { return name } });

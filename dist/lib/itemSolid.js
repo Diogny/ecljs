@@ -130,6 +130,11 @@ var ItemSolid = /** @class */ (function (_super) {
         }
         return pin;
     };
+    ItemSolid.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
+            rotation: 0,
+        });
+    };
     ItemSolid.nodeArea = 81;
     return ItemSolid;
 }(itemsBoard_1.default));

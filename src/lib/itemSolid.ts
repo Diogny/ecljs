@@ -1,5 +1,5 @@
 import { IItemSolidDefaults, IPoint, INodeInfo } from "./interfaces";
-import { attr, aChld } from "./dab";
+import { attr, aChld, extend } from "./dab";
 import { each, tag } from "./utils";
 import Rect from "./rect";
 import Size from "./size";
@@ -151,6 +151,12 @@ export default abstract class ItemSolid extends ItemBoard {
 			pin.y += this.y;
 		}
 		return pin
+	}
+
+	public defaults(): IItemSolidDefaults {
+		return <IItemSolidDefaults>extend(super.defaults(), {
+			rotation: 0,
+		})
 	}
 
 }

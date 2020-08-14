@@ -60,40 +60,15 @@ var Wire = /** @class */ (function (_super) {
                 //	will change to false
                 //		.destroy lines
                 this.$.lines = [];
-                // this.$.lines = this.$.lines.filter(ln => {
-                // 	this.g.removeChild(ln);
-                // 	return false
-                // });
                 //		.recreate polyline
                 this.$.polyline = polyline(this.g);
-                //		.show polyline
-                //rCl(this.$.polyline, "hide")
             }
             else {
                 //	will change to true
-                //		.hide polyline
-                //aCl(this.$.polyline, "hide");
+                //		.destroy polyline
                 this.$.polyline = void 0;
+                //		.recreate lines
                 setlines(this, this.$);
-                // 
-                // //		.create lines
-                // for (let i = 0, a = this.$.points[0], cnt = this.last; i < cnt; i++) {
-                // 	let
-                // 		b = this.$.points[i + 1],
-                // 		ln = line(i + 1, a, b);
-                // 	// <SVGLineElement>tag("line", "", {
-                // 	// 	"svg-type": "line",
-                // 	// 	line: (i + 1),
-                // 	// 	x1: a.x,
-                // 	// 	y1: a.y,
-                // 	// 	x2: b.x,
-                // 	// 	y2: b.y
-                // 	// });
-                // 	this.$.lines.push(ln);
-                // 	//this.g.insertBefore(ln, this.$.polyline);
-                // 	this.g.append(ln);
-                // 	a = b;
-                // }
             }
             //has to be at the end, because logic
             this.$.edit = value;
@@ -121,7 +96,6 @@ var Wire = /** @class */ (function (_super) {
             dab_1.attr(this.$.polyline, {
                 points: this.$.points.map(function (p) { return p.x + ", " + p.y; }).join(' ')
             });
-        //full line refresh in editmode missing...
         return this;
     };
     Wire.prototype.nodeRefresh = function (node) {
@@ -314,16 +288,7 @@ function setlines(w, $) {
     $.lines = [];
     for (var i = 0, a = $.points[0], last = w.last; i < last; i++) {
         var b = $.points[i + 1], ln = line(i + 1, a, b);
-        // <SVGLineElement>tag("line", "", {
-        // 	"svg-type": "line",
-        // 	line: (i + 1),
-        // 	x1: a.x,
-        // 	y1: a.y,
-        // 	x2: b.x,
-        // 	y2: b.y
-        // });
         $.lines.push(ln);
-        //this.g.insertBefore(ln, this.$.polyline);
         w.g.append(ln);
         a = b;
     }

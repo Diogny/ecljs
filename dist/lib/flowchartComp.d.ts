@@ -1,4 +1,4 @@
-import { Type, IPoint, IItemBoardDefaults } from "./interfaces";
+import { Type, IPoint, IItemSolidDefaults } from "./interfaces";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Container from "./container";
@@ -13,5 +13,5 @@ export default abstract class FlowchartComp extends ItemSolid {
         [x: string]: any;
     });
     setNode(node: number, p: IPoint): FlowchartComp;
-    defaults(): IItemBoardDefaults;
+    defaults(): IItemSolidDefaults;
 }

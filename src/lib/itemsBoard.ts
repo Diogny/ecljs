@@ -13,7 +13,6 @@ export default abstract class ItemBoard extends ItemBase {
 	get selected(): boolean { return this.$.selected }
 	get bonds(): Bond[] | undefined { return this.container.itemBonds(this) }
 	get dir(): boolean { return this.$.dir }
-	get label(): string { return this.$.label }
 
 	abstract get count(): number;
 	abstract valid(node: number): boolean;
@@ -83,8 +82,13 @@ export default abstract class ItemBoard extends ItemBase {
 		this.container.unbond(this, node, id)
 	}
 
-	public unbondNode(node: number): void {
-		this.container.unbondNode(this, node)
+	/**
+	 * @description unbonds a node
+	 * @param node 0-base node
+	 * @returns undefined if invalid node, otherwise list of disconnected wire ids
+	 */
+	public unbondNode(node: number): string[] | undefined {
+		return this.container.unbondNode(this, node)
 	}
 
 	public disconnect() {

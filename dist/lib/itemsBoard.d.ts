@@ -9,7 +9,6 @@ export default abstract class ItemBoard extends ItemBase {
     get selected(): boolean;
     get bonds(): Bond[] | undefined;
     get dir(): boolean;
-    get label(): string;
     abstract get count(): number;
     abstract valid(node: number): boolean;
     abstract get last(): number;
@@ -28,7 +27,12 @@ export default abstract class ItemBoard extends ItemBase {
     bond(thisNode: number, ic: ItemBoard, icNode: number): boolean;
     nodeBonds(node: number): Bond | undefined;
     unbond(node: number, id: string): void;
-    unbondNode(node: number): void;
+    /**
+     * @description unbonds a node
+     * @param node 0-base node
+     * @returns undefined if invalid node, otherwise list of disconnected wire ids
+     */
+    unbondNode(node: number): string[] | undefined;
     disconnect(): void;
     prop(propName: string): ComponentPropertyType;
     defaults(): IItemBoardDefaults;

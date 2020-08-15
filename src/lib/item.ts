@@ -56,7 +56,6 @@ export default abstract class Item extends Base implements IType {
 			y: 0,
 			class: "",
 			visible: true,		//defaults is visible
-			label: ""
 		}
 	}
 }

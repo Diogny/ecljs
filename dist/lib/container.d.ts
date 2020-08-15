@@ -58,7 +58,13 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean;
     protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean;
     unbond(thisObj: T | Wire, node: number, id: string): void;
-    unbondNode(thisObj: T | Wire, node: number): void;
+    /**
+     * @description unbonds a component node
+     * @param thisObj component to be unbonded
+     * @param node 0-based node
+     * @returns undefined if invalid node, otherwise list of disconnected wire ids
+     */
+    unbondNode(thisObj: T | Wire, node: number): string[] | undefined;
     disconnect(thisObj: T | Wire): void;
     getAllBonds(): string[];
     moveBond(id: string, node: number, newIndex: number): void;

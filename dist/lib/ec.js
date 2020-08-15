@@ -29,7 +29,7 @@ var EC = /** @class */ (function (_super) {
                 x: _this.base.meta.labelId.x,
                 y: _this.base.meta.labelId.y
             });
-            _this.boardLabel.setText(_this.label);
+            _this.$.boardLabel.setText(_this.id);
         }
         _this.refresh();
         //signal component creation
@@ -44,20 +44,15 @@ var EC = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(EC.prototype, "boardLabel", {
-        get: function () { return this.$.boardLabel; },
-        enumerable: false,
-        configurable: true
-    });
     EC.prototype.refresh = function () {
         _super.prototype.refresh.call(this);
-        if (this.boardLabel) {
-            var pos = point_1.default.plus(this.p, this.boardLabel.p), center = this.origin, attrs = {
+        if (this.$.boardLabel) {
+            var pos = point_1.default.plus(this.p, this.$.boardLabel.p), center = this.origin, attrs = {
                 transform: "translate(" + pos.x + " " + pos.y + ")"
             };
             this.rotation && (center = point_1.default.minus(point_1.default.plus(this.p, center), pos),
                 attrs.transform += " rotate(" + this.rotation + " " + center.x + " " + center.y + ")");
-            dab_1.attr(this.boardLabel.g, attrs);
+            dab_1.attr(this.$.boardLabel.g, attrs);
         }
         return this;
     };
@@ -67,17 +62,17 @@ var EC = /** @class */ (function (_super) {
     };
     EC.prototype.setVisible = function (value) {
         _super.prototype.setVisible.call(this, value);
-        this.boardLabel && this.boardLabel.setVisible(value);
+        this.$.boardLabel && this.$.boardLabel.setVisible(value);
         return this;
     };
     EC.prototype.remove = function () {
         var _a;
         //delete label if any first
-        this.boardLabel && ((_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.boardLabel.g));
+        this.$.boardLabel && ((_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.$.boardLabel.g));
         _super.prototype.remove.call(this);
     };
     EC.prototype.afterDOMinserted = function () {
-        this.boardLabel && (this.g.insertAdjacentElement("afterend", this.boardLabel.g), this.boardLabel.setVisible(true));
+        this.$.boardLabel && (this.g.insertAdjacentElement("afterend", this.$.boardLabel.g), this.$.boardLabel.setVisible(true));
     };
     EC.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {

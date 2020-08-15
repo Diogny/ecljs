@@ -76,7 +76,6 @@ var Item = /** @class */ (function (_super) {
             y: 0,
             class: "",
             visible: true,
-            label: ""
         };
     };
     return Item;

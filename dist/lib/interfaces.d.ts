@@ -200,7 +200,6 @@ export interface IItemDefaults {
     y: number;
     class: string;
     visible: boolean;
-    label: string;
 }
 export interface IItemBaseDefaults extends IItemDefaults {
     base: Comp;

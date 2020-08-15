@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
 var dab_1 = require("./dab");
-var tmpl = "{base.comp.name}-{base.count}";
+//const tmpl = "{base.comp.name}-{base.count}";
 var defaults = function (type, name) { return ({
     name: name,
     comp: {
         type: type,
         name: name,
         meta: {
-            nameTmpl: tmpl,
+            //nameTmpl: tmpl,
             nodes: []
         },
         properties: {}
@@ -28,7 +29,7 @@ var Comp = /** @class */ (function () {
                 that.$.meta.nodes.list[ndx].label = lbl;
             });
         }
-        !this.$.meta.nameTmpl && (this.$.meta.nameTmpl = tmpl);
+        //!this.$.meta.nameTmpl && (this.$.meta.nameTmpl = tmpl);
         if (!Comp.store(this.$.name, this))
             throw "duplicated: " + this.$.name;
     }
@@ -91,7 +92,26 @@ var Comp = /** @class */ (function () {
     };
     Comp.has = function (name) { return Comp.map.has(name); };
     Comp.find = function (name) {
-        return Comp.map.get(name);
+        var e_1, _a;
+        var comp = Comp.map.get(name);
+        if (!comp) {
+            try {
+                //look by meta.nameTmpl, the hard way; for C, R, F, VR, BZ
+                for (var _b = tslib_1.__values(Comp.map.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var item = _c.value;
+                    if (item.meta.nameTmpl == name)
+                        return item;
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+        }
+        return comp;
     };
     return Comp;
 }());

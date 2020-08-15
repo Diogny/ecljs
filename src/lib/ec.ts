@@ -12,8 +12,6 @@ export default class EC extends ItemSolid {
 
 	get type(): Type { return Type.EC }
 
-	get boardLabel(): Label { return this.$.boardLabel }
-
 	constructor(circuit: Circuit, options: { [x: string]: any; }) {
 		super(circuit, options);
 		let
@@ -37,7 +35,7 @@ export default class EC extends ItemSolid {
 				x: this.base.meta.labelId.x,
 				y: this.base.meta.labelId.y
 			});
-			this.boardLabel.setText(this.label);
+			this.$.boardLabel.setText(this.id)
 		}
 		this.refresh();
 		//signal component creation
@@ -49,9 +47,9 @@ export default class EC extends ItemSolid {
 
 	public refresh(): EC {
 		super.refresh();
-		if (this.boardLabel) {
+		if (this.$.boardLabel) {
 			let
-				pos = Point.plus(this.p, this.boardLabel.p),
+				pos = Point.plus(this.p, this.$.boardLabel.p),
 				center = this.origin,
 				attrs = {
 					transform: `translate(${pos.x} ${pos.y})`
@@ -60,7 +58,7 @@ export default class EC extends ItemSolid {
 				center = Point.minus(Point.plus(this.p, center), pos),
 				attrs.transform += ` rotate(${this.rotation} ${center.x} ${center.y})`
 			);
-			attr(this.boardLabel.g, attrs)
+			attr(this.$.boardLabel.g, attrs)
 		}
 		return this;
 	}
@@ -72,18 +70,18 @@ export default class EC extends ItemSolid {
 
 	public setVisible(value: boolean): EC {
 		super.setVisible(value);
-		this.boardLabel && this.boardLabel.setVisible(value);
+		this.$.boardLabel && this.$.boardLabel.setVisible(value);
 		return this;
 	}
 
 	public remove() {
 		//delete label if any first
-		this.boardLabel && this.g.parentNode?.removeChild(this.boardLabel.g);
+		this.$.boardLabel && this.g.parentNode?.removeChild(this.$.boardLabel.g);
 		super.remove();
 	}
 
 	public afterDOMinserted() {
-		this.boardLabel && (this.g.insertAdjacentElement("afterend", this.boardLabel.g), this.boardLabel.setVisible(true))
+		this.$.boardLabel && (this.g.insertAdjacentElement("afterend", this.$.boardLabel.g), this.$.boardLabel.setVisible(true))
 	}
 
 	public defaults(): IECDefaults {

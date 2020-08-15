@@ -190,18 +190,27 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		unbond(this, thisObj.id, node, id, true);
 	}
 
-	public unbondNode(thisObj: T | Wire, node: number): void {
+	/**
+	 * @description unbonds a component node
+	 * @param thisObj component to be unbonded
+	 * @param node 0-based node
+	 * @returns undefined if invalid node, otherwise list of disconnected wire ids
+	 */
+	public unbondNode(thisObj: T | Wire, node: number): string[] | undefined {
 		let
 			item = getItem(this, thisObj.id),
 			bond = item && item.b[node],
-			link: IBondNode = <any>void 0;
+			link: IBondNode = <any>void 0,
+			disconnected: string[] = [];
 		if (!bond || !item)
 			return;
 		//try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
 		while (bond.to.length) {
 			link = bond.to[0];
-			unbond(this, link.id, link.ndx, thisObj.id, true)
+			unbond(this, link.id, link.ndx, thisObj.id, true);
+			disconnected.push(link.id)
 		}
+		return disconnected
 	}
 
 	public disconnect(thisObj: T | Wire) {
@@ -283,62 +292,54 @@ function getItem<T extends ItemBoard>(container: Container<T>, id: string)
 
 function createBoardItem<T extends ItemBoard>(container: Container<T>, options: { [x: string]: any; }): T | Wire {
 	let
-		regex = /(?:{([^}]+?)})+/g,
-		name = options.name || "",
-		base = <IBaseComponent>container.root(name),
-		newComp = !base,
-		item: T | Wire = <any>void 0;
-	!base && (base = {
-		comp: <Comp>Comp.find(name),
-		count: 0
-	});
-	if (!base.comp)
-		throw `unregistered component: ${name}`;
-	newComp
-		&& (base.count = base.comp.meta.countStart | 0, container.components.set(name, base));
-	options.base = base.comp;
-	if (!options.id) {
-		options.id = `${name}-${base.count}`;
-	}
-	let
-		label = base.comp.meta.nameTmpl.replace(regex,
-			function (match: string, group: string): string { //, offset: number, str: string
-				let
-					arr = group.split('.'),
-					getRoot = (name: string): any => {
-						//valid entry points
-						switch (name) {
-							case "base": return base;
-							case "Container": return container.counters;
-						}
-					},
-					rootName = arr.shift() || "",
-					rootRef = getRoot(rootName),
-					prop: string = <any>arr.pop(),
-					isUniqueCounter = () => rootName == "Container",
-					result: any;
-				while (rootRef && arr.length)
-					rootRef = rootRef[<any>arr.shift()];
-				if (rootRef == undefined
-					|| ((result = rootRef[prop]) == undefined
-						&& (!isUniqueCounter()
-							|| (result = rootRef[prop] = base.comp.meta.countStart | 0, false)))
-				)
-					throw `invalid label template`;
-				isUniqueCounter()
-					&& isNum(result)
-					&& (rootRef[<any>prop] = result + 1)
-				return result;
-			});
-	if (options.label && label != options.label)
-		throw `invalid label`;
-	else
-		options.label = label;
-	base.count++;
+		base: IBaseComponent = <any>void 0,
+		item: T | Wire = <any>void 0,
+		setBase = () => {
+			if (!(base = <IBaseComponent>container.root(options.name))) {
+				base = {
+					comp: <Comp>Comp.find(options.name),
+					count: 0
+				};
+				if (!base.comp)
+					throw `unregistered component: ${options.name}`;
+				container.components.set(options.name, base)
+			}
+			options.base = base.comp;
+		}
+	if (options.id) {
+		//this comes from a file read, get id counter
+		//get name from id
+		let
+			match = (/^(\w+)(\d+)$/g).exec(options.id),
+			count = 0;
+		if (match == null)
+			throw `invalid id: ${options.id}`;
+		//name can't contain numbers at the end,
+		//	id = name[count]    nand0	7408IC2
+		options.name = match[1];
+		count = parseInt(match[2]);
+		if (count <= 0)
+			throw `invalid id: ${options.id}`;
+		setBase();
+		//update internal component counter only if count > internal counter
+		(count > base.count) && (base.count = count)
+	} else if (options.name) {
+		//this creates a component from option's name
+		setBase();
+		base.count++;
+		if (!base.comp.meta.nameTmpl)
+			options.id = `${options.name}${base.count}`		//"{base.comp.name}-{base.count}";
+		else {
+			options.id = `${base.comp.meta.nameTmpl}${base.count}`
+		}
+	} else
+		throw `invalid component options`;
+
 	!options.onProp && (options.onProp = function () {
 		//this happens when this component is created...
 	});
-	if (name == "wire") {
+
+	if (options.name == "wire") {
 		item = new Wire(container, <any>options);
 		if (container.wireMap.has(item.id))
 			throw `duplicated connector`;

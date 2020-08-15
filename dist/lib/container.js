@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var interfaces_1 = require("./interfaces");
-var dab_1 = require("./dab");
 var rect_1 = tslib_1.__importDefault(require("./rect"));
 var bonds_1 = tslib_1.__importDefault(require("./bonds"));
 var wire_1 = tslib_1.__importDefault(require("./wire"));
@@ -206,15 +205,23 @@ var Container = /** @class */ (function (_super) {
     Container.prototype.unbond = function (thisObj, node, id) {
         unbond(this, thisObj.id, node, id, true);
     };
+    /**
+     * @description unbonds a component node
+     * @param thisObj component to be unbonded
+     * @param node 0-based node
+     * @returns undefined if invalid node, otherwise list of disconnected wire ids
+     */
     Container.prototype.unbondNode = function (thisObj, node) {
-        var item = getItem(this, thisObj.id), bond = item && item.b[node], link = void 0;
+        var item = getItem(this, thisObj.id), bond = item && item.b[node], link = void 0, disconnected = [];
         if (!bond || !item)
             return;
         //try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
         while (bond.to.length) {
             link = bond.to[0];
             unbond(this, link.id, link.ndx, thisObj.id, true);
+            disconnected.push(link.id);
         }
+        return disconnected;
     };
     Container.prototype.disconnect = function (thisObj) {
         for (var node = 0; node < thisObj.count; node++)
@@ -272,48 +279,50 @@ function getItem(container, id) {
     return container.itemMap.get(id) || container.wireMap.get(id);
 }
 function createBoardItem(container, options) {
-    var regex = /(?:{([^}]+?)})+/g, name = options.name || "", base = container.root(name), newComp = !base, item = void 0;
-    !base && (base = {
-        comp: components_1.default.find(name),
-        count: 0
-    });
-    if (!base.comp)
-        throw "unregistered component: " + name;
-    newComp
-        && (base.count = base.comp.meta.countStart | 0, container.components.set(name, base));
-    options.base = base.comp;
-    if (!options.id) {
-        options.id = name + "-" + base.count;
+    var base = void 0, item = void 0, setBase = function () {
+        if (!(base = container.root(options.name))) {
+            base = {
+                comp: components_1.default.find(options.name),
+                count: 0
+            };
+            if (!base.comp)
+                throw "unregistered component: " + options.name;
+            container.components.set(options.name, base);
+        }
+        options.base = base.comp;
+    };
+    if (options.id) {
+        //this comes from a file read, get id counter
+        //get name from id
+        var match = (/^(\w+)(\d+)$/g).exec(options.id), count = 0;
+        if (match == null)
+            throw "invalid id: " + options.id;
+        //name can't contain numbers at the end,
+        //	id = name[count]    nand0	7408IC2
+        options.name = match[1];
+        count = parseInt(match[2]);
+        if (count <= 0)
+            throw "invalid id: " + options.id;
+        setBase();
+        //update internal component counter only if count > internal counter
+        (count > base.count) && (base.count = count);
     }
-    var label = base.comp.meta.nameTmpl.replace(regex, function (match, group) {
-        var arr = group.split('.'), getRoot = function (name) {
-            //valid entry points
-            switch (name) {
-                case "base": return base;
-                case "Container": return container.counters;
-            }
-        }, rootName = arr.shift() || "", rootRef = getRoot(rootName), prop = arr.pop(), isUniqueCounter = function () { return rootName == "Container"; }, result;
-        while (rootRef && arr.length)
-            rootRef = rootRef[arr.shift()];
-        if (rootRef == undefined
-            || ((result = rootRef[prop]) == undefined
-                && (!isUniqueCounter()
-                    || (result = rootRef[prop] = base.comp.meta.countStart | 0, false))))
-            throw "invalid label template";
-        isUniqueCounter()
-            && dab_1.isNum(result)
-            && (rootRef[prop] = result + 1);
-        return result;
-    });
-    if (options.label && label != options.label)
-        throw "invalid label";
+    else if (options.name) {
+        //this creates a component from option's name
+        setBase();
+        base.count++;
+        if (!base.comp.meta.nameTmpl)
+            options.id = "" + options.name + base.count; //"{base.comp.name}-{base.count}";
+        else {
+            options.id = "" + base.comp.meta.nameTmpl + base.count;
+        }
+    }
     else
-        options.label = label;
-    base.count++;
+        throw "invalid component options";
     !options.onProp && (options.onProp = function () {
         //this happens when this component is created...
     });
-    if (name == "wire") {
+    if (options.name == "wire") {
         item = new wire_1.default(container, options);
         if (container.wireMap.has(item.id))
             throw "duplicated connector";

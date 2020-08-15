@@ -1,14 +1,14 @@
 import { IComponentOptions, IBaseStoreComponent, IComponentMetadata } from './interfaces';
 import { obj } from './dab';
 
-const tmpl = "{base.comp.name}-{base.count}";
+//const tmpl = "{base.comp.name}-{base.count}";
 const defaults = (type: string, name: string): IBaseStoreComponent => (<any>{
 	name: name,
 	comp: {
 		type: type,
 		name: name,
 		meta: {
-			nameTmpl: tmpl,
+			//nameTmpl: tmpl,
 			nodes: []
 		},
 		properties: {}
@@ -50,7 +50,7 @@ export default class Comp {
 				that.$.meta.nodes.list[ndx].label = lbl;
 			})
 		}
-		!this.$.meta.nameTmpl && (this.$.meta.nameTmpl = tmpl);
+		//!this.$.meta.nameTmpl && (this.$.meta.nameTmpl = tmpl);
 		if (!Comp.store(this.$.name, this))
 			throw `duplicated: ${this.$.name}`;
 	}
@@ -77,7 +77,16 @@ export default class Comp {
 	public static has = (name: string) => Comp.map.has(name);
 
 	public static find = (name: string): Comp | undefined => {
-		return Comp.map.get(name);
+		let
+			comp = <Comp>Comp.map.get(name);
+		if (!comp) {
+			//look by meta.nameTmpl, the hard way; for C, R, F, VR, BZ
+			for (let item of Comp.map.values()) {
+				if (item.meta.nameTmpl == name)
+					return item
+			}
+		}
+		return comp
 	}
 
 	public static get size(): number { return Comp.map.size }

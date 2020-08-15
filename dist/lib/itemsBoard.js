@@ -41,11 +41,6 @@ var ItemBoard = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ItemBoard.prototype, "label", {
-        get: function () { return this.$.label; },
-        enumerable: false,
-        configurable: true
-    });
     ItemBoard.prototype.select = function (value) {
         if (this.selected != value) {
             //set new value
@@ -82,8 +77,13 @@ var ItemBoard = /** @class */ (function (_super) {
     ItemBoard.prototype.unbond = function (node, id) {
         this.container.unbond(this, node, id);
     };
+    /**
+     * @description unbonds a node
+     * @param node 0-base node
+     * @returns undefined if invalid node, otherwise list of disconnected wire ids
+     */
     ItemBoard.prototype.unbondNode = function (node) {
-        this.container.unbondNode(this, node);
+        return this.container.unbondNode(this, node);
     };
     ItemBoard.prototype.disconnect = function () {
         this.container.disconnect(this);

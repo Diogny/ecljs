@@ -70,12 +70,8 @@ var ItemSolid = /** @class */ (function (_super) {
         }
         return new rect_1.default(p.x, p.y, size.width, size.height);
     };
-    ItemSolid.prototype.valid = function (node) {
-        return !!this.getNode(node);
-    };
-    ItemSolid.prototype.hghlightable = function (name) {
-        return this.valid(name); //for now all valid nodes are highlightables
-    };
+    ItemSolid.prototype.valid = function (node) { return node >= 0 && node < this.count; };
+    ItemSolid.prototype.hghlightable = function (node) { return this.valid(node); };
     ItemSolid.prototype.overNode = function (p, ln) {
         for (var i = 0, len = this.count; i < len; i++) {
             var node = this.getNode(i);
@@ -115,16 +111,16 @@ var ItemSolid = /** @class */ (function (_super) {
      * @param pinNode pin/node number
      * @param onlyPoint true to get internal rotated point only without transformations
      */
-    ItemSolid.prototype.getNode = function (pinNode, onlyPoint) {
-        var pin = pinInfo(this, pinNode);
+    ItemSolid.prototype.getNode = function (node, nodeOnly) {
+        var pin = pinInfo(this, node);
         if (!pin)
-            return null;
-        if (this.rotation) {
-            var center = this.origin, rot = point_1.default.rotateBy(pin.x, pin.y, center.x, center.y, -this.rotation);
-            pin.x = rot.x;
-            pin.y = rot.y;
-        }
-        if (!onlyPoint) {
+            return;
+        if (!nodeOnly) {
+            if (this.rotation) {
+                var center = this.origin, rot = point_1.default.rotateBy(pin.x, pin.y, center.x, center.y, -this.rotation);
+                pin.x = rot.x;
+                pin.y = rot.y;
+            }
             pin.x += this.x;
             pin.y += this.y;
         }

@@ -6,6 +6,7 @@ import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import Board from "./board";
+import { CompNode } from "src";
 export declare enum Type {
     UNDEFINED = 0,
     EC = 1,
@@ -198,8 +199,8 @@ export interface IItemDefaults {
     name: string;
     x: number;
     y: number;
-    class: string;
     visible: boolean;
+    class: string;
 }
 export interface IItemBaseDefaults extends IItemDefaults {
     base: Comp;
@@ -237,6 +238,7 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
     selected: boolean;
     onProp: (args: IItemBoardPropEvent) => void;
     dir: boolean;
+    highlights: CompNode[];
 }
 export interface IItemSolidDefaults extends IItemBoardDefaults {
     rotation: number;
@@ -250,18 +252,11 @@ export interface IWireDefaults extends IItemBoardDefaults {
 export interface IECDefaults extends IItemSolidDefaults {
     boardLabel: Label;
 }
-export interface IHighlightable {
-    visible: boolean;
-    p: Point;
+export interface IBoardCircleDefaults extends IItemDefaults {
     radius: number;
+    node: number;
+    label: string;
     g: SVGCircleElement;
-    nodeName: string;
-    nodeValue: number;
-    move(x: number, y: number): void;
-    hide(): IHighlightable;
-    show(nodeValue: number): IHighlightable;
-    refresh(): void;
-    setRadius(value: number): IHighlightable;
 }
 export interface IBondNode {
     id: string;

@@ -1,12 +1,10 @@
-import { IType, IItemDefaults, Type, Base } from "./interfaces";
+import { IItemDefaults, Base } from "./interfaces";
 import Point from "./point";
 
-export default abstract class Item extends Base implements IType {
+export default abstract class Item extends Base {
 
 	//thi's until we can get real private variables
 	protected $: IItemDefaults;
-
-	abstract get type(): Type;
 
 	get name(): string { return this.$.name }
 	get id(): string { return this.$.id }

@@ -139,7 +139,7 @@ export default class Wire extends ItemBoard {
 		//	-1  0  ... last  	   -> true
 		//	"-1"  "0"  ... "last"  -> true
 		//	""  "  "  "1."  "1a"   -> false
-		return node >= -1   //String(Number(node)) == node
+		return node >= 0 //-1   //String(Number(node)) == node
 			&& node <= this.last;	// NOW ACCEPTS  -1
 	}
 
@@ -150,8 +150,7 @@ export default class Wire extends ItemBoard {
 
 	public hghlightable(node: number): boolean {
 		//any Wire node and that it is not a start|end bonded node
-		return this.valid(node) //&& this.editMode
-			&& (!(this.nodeBonds(node) && (node == 0 || node == this.last)))
+		return !((node == 0 || node == this.last) && this.nodeBonds(node))
 	}
 
 	public setPoints(points: IPoint[]): Wire {

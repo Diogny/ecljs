@@ -7,6 +7,7 @@ import Point from "./point";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
+import { CompNode } from "src";
 
 //ItemBoard->ItemSolid->EC
 export default abstract class ItemSolid extends ItemBoard {
@@ -78,13 +79,9 @@ export default abstract class ItemSolid extends ItemBoard {
 		return new Rect(p.x, p.y, size.width, size.height)
 	}
 
-	public valid(node: number): boolean {
-		return !!this.getNode(node)
-	}
+	public valid(node: number): boolean { return node >= 0 && node < this.count; }
 
-	public hghlightable(name: number): boolean {
-		return this.valid(name)	//for now all valid nodes are highlightables
-	}
+	public hghlightable(node: number): boolean { return this.valid(node) }
 
 	public static nodeArea = 81;
 
@@ -134,19 +131,19 @@ export default abstract class ItemSolid extends ItemBoard {
 	 * @param pinNode pin/node number
 	 * @param onlyPoint true to get internal rotated point only without transformations
 	 */
-	public getNode(pinNode: number, onlyPoint?: boolean): INodeInfo | undefined {
+	public getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined {
 		let
-			pin = <INodeInfo>pinInfo(this, pinNode);
+			pin = <INodeInfo>pinInfo(this, node);
 		if (!pin)
-			return <any>null;
-		if (this.rotation) {
-			let
-				center = this.origin,
-				rot = Point.rotateBy(pin.x, pin.y, center.x, center.y, -this.rotation);
-			pin.x = rot.x;
-			pin.y = rot.y
-		}
-		if (!onlyPoint) {
+			return;
+		if (!nodeOnly) {
+			if (this.rotation) {
+				let
+					center = this.origin,
+					rot = Point.rotateBy(pin.x, pin.y, center.x, center.y, -this.rotation);
+				pin.x = rot.x;
+				pin.y = rot.y
+			}
 			pin.x += this.x;
 			pin.y += this.y;
 		}

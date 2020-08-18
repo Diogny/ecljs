@@ -3,6 +3,7 @@ import { tCl, attr, extend, isFn, obj } from './dab';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
+import CompNode from './compNode';
 
 //ItemBoard->Wire
 export default abstract class ItemBoard extends ItemBase {
@@ -13,13 +14,15 @@ export default abstract class ItemBoard extends ItemBase {
 	get selected(): boolean { return this.$.selected }
 	get bonds(): Bond[] | undefined { return this.container.itemBonds(this) }
 	get dir(): boolean { return this.$.dir }
+	get highlights(): CompNode[] { return this.$.highlights }
+	get highlighted(): boolean { return this.$.highlights.length != 0 }
 
 	abstract get count(): number;
 	abstract valid(node: number): boolean;
 	abstract get last(): number;
 	abstract refresh(): ItemBoard;
 	abstract nodeRefresh(node: number): ItemBoard;
-	abstract getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
+	abstract getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined;
 	abstract setNode(node: number, p: IPoint): ItemBoard;
 	abstract overNode(p: IPoint, ln?: number): number;
 
@@ -70,6 +73,31 @@ export default abstract class ItemBoard extends ItemBase {
 		return this;
 	}
 
+	/**
+	 * @description highlights a node, or keeps highlighting more nodes
+	 * @param node 0-base node to be highlighted
+	 * @param multiple false is default, so it highlights only this node, true is multiple highlighted nodes
+	 */
+	public highlightNode(node: number, multiple?: boolean): boolean | undefined {
+		return highlightNode(this, this.$, node, multiple)
+	}
+
+	/**
+	 * @description show/hide all node highlighted
+	 * @param value true shows all nodes highlighted, false removes all highlights
+	 */
+	public highlight(value: boolean): void {
+		if (value && this.highlights.length == this.count)
+			//already set
+			return;
+		//remove highlights if any
+		clear(this, this.$);
+		if (value) {
+			for (let node = 0; node < this.count; node++)
+				highlightNode(this, this.$, node, true, true)
+		}
+	}
+
 	public bond(thisNode: number, ic: ItemBoard, icNode: number): boolean {
 		return this.container.bond(this, thisNode, ic, icNode)
 	}
@@ -91,6 +119,11 @@ export default abstract class ItemBoard extends ItemBase {
 		return this.container.unbondNode(this, node)
 	}
 
+	public remove() {
+		clear(this, this.$);
+		super.remove()
+	}
+
 	public disconnect() {
 		this.container.disconnect(this)
 	}
@@ -104,8 +137,36 @@ export default abstract class ItemBoard extends ItemBase {
 			selected: false,
 			onProp: void 0,
 			dir: false,
+			highlights: []
 		})
 	}
 
 }
 
+function clear(that: ItemBoard, $: IItemBoardDefaults) {
+	$.highlights = $.highlights.filter(hl => (that.g.removeChild(hl.g), false));
+}
+
+function highlightNode(that: ItemBoard, $: IItemBoardDefaults, node: number, multiple?: boolean, noCheck?: boolean): boolean | undefined {
+	let
+		pin = that.getNode(node, true);
+	if (!pin)
+		return;
+	if (multiple) {
+		//avoid calling this for every node when doing a full internal highlight
+		if (!noCheck && $.highlights.some(hl => hl.node == node))
+			return false
+	}
+	else
+		clear(that, $);
+	let
+		hl = new CompNode({
+			node: node,
+			x: pin.x,
+			y: pin.y,
+			label: pin.label
+		});
+	that.g.appendChild(hl.g);
+	(!multiple && ($.highlights = [hl], true)) || $.highlights.push(hl);
+	return true
+}

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowchartComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.Board = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.BoardCircle = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = exports.Units = exports.XML = exports.Templates = exports.Size = exports.Rect = exports.Point = exports.Color = exports.utils = exports.dab = exports.ajaxp = void 0;
+exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowchartComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.Board = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = exports.Units = exports.XML = exports.Templates = exports.Size = exports.Rect = exports.Point = exports.Color = exports.utils = exports.dab = exports.ajaxp = void 0;
 var tslib_1 = require("tslib");
 var ajaxp_1 = tslib_1.__importDefault(require("./lib/ajaxp"));
 exports.ajaxp = ajaxp_1.default;
@@ -29,8 +29,8 @@ var units_1 = tslib_1.__importDefault(require("./lib/units"));
 exports.Units = units_1.default;
 var bonds_1 = tslib_1.__importDefault(require("./lib/bonds"));
 exports.Bonds = bonds_1.default;
-var boardCircle_1 = tslib_1.__importDefault(require("./lib/boardCircle"));
-exports.BoardCircle = boardCircle_1.default;
+var compNode_1 = tslib_1.__importDefault(require("./lib/compNode"));
+exports.CompNode = compNode_1.default;
 var highlightNode_1 = tslib_1.__importDefault(require("./lib/highlightNode"));
 exports.HighlightNode = highlightNode_1.default;
 var label_1 = tslib_1.__importDefault(require("./lib/label"));

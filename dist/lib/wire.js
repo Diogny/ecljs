@@ -150,7 +150,7 @@ var Wire = /** @class */ (function (_super) {
         //	-1  0  ... last  	   -> true
         //	"-1"  "0"  ... "last"  -> true
         //	""  "  "  "1."  "1a"   -> false
-        return node >= -1 //String(Number(node)) == node
+        return node >= 0 //-1   //String(Number(node)) == node
             && node <= this.last; // NOW ACCEPTS  -1
     };
     Wire.prototype.appendNode = function (p) {
@@ -159,8 +159,7 @@ var Wire = /** @class */ (function (_super) {
     };
     Wire.prototype.hghlightable = function (node) {
         //any Wire node and that it is not a start|end bonded node
-        return this.valid(node) //&& this.editMode
-            && (!(this.nodeBonds(node) && (node == 0 || node == this.last)));
+        return !((node == 0 || node == this.last) && this.nodeBonds(node));
     };
     Wire.prototype.setPoints = function (points) {
         if (!dab_1.isArr(points)

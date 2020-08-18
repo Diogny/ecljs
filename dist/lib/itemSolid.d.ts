@@ -14,7 +14,7 @@ export default abstract class ItemSolid extends ItemBoard {
     move(x: number, y: number): ItemSolid;
     rect(): Rect;
     valid(node: number): boolean;
-    hghlightable(name: number): boolean;
+    hghlightable(node: number): boolean;
     static nodeArea: number;
     overNode(p: IPoint, ln?: number): number;
     nodeRefresh(node: number): ItemSolid;
@@ -24,6 +24,6 @@ export default abstract class ItemSolid extends ItemBoard {
      * @param pinNode pin/node number
      * @param onlyPoint true to get internal rotated point only without transformations
      */
-    getNode(pinNode: number, onlyPoint?: boolean): INodeInfo | undefined;
+    getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined;
     defaults(): IItemSolidDefaults;
 }

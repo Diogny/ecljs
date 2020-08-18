@@ -1,8 +1,7 @@
-import { IType, IItemDefaults, Type, Base } from "./interfaces";
+import { IItemDefaults, Base } from "./interfaces";
 import Point from "./point";
-export default abstract class Item extends Base implements IType {
+export default abstract class Item extends Base {
     protected $: IItemDefaults;
-    abstract get type(): Type;
     get name(): string;
     get id(): string;
     get x(): number;

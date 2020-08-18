@@ -1,4 +1,4 @@
-import { IItemBaseDefaults } from './interfaces';
+import { IItemBaseDefaults, IType, Type } from './interfaces';
 import { tCl, extend } from './dab';
 import { tag } from './utils';
 import Rect from './rect';
@@ -6,9 +6,11 @@ import Point from './point';
 import Item from './item';
 import Comp from './components';
 
-export default abstract class ItemBase extends Item {
+export default abstract class ItemBase extends Item implements IType {
 
 	protected $: IItemBaseDefaults;
+
+	abstract get type(): Type;
 
 	get base(): Comp { return this.$.base }
 	get g(): SVGElement { return this.$.g }

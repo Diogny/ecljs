@@ -1,10 +1,11 @@
-import { IItemBaseDefaults } from './interfaces';
+import { IItemBaseDefaults, IType, Type } from './interfaces';
 import Rect from './rect';
 import Point from './point';
 import Item from './item';
 import Comp from './components';
-export default abstract class ItemBase extends Item {
+export default abstract class ItemBase extends Item implements IType {
     protected $: IItemBaseDefaults;
+    abstract get type(): Type;
     get base(): Comp;
     get g(): SVGElement;
     get box(): any;

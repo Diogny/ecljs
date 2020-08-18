@@ -7,6 +7,7 @@ import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import Board from "./board";
+import { HighlightNode, CompNode } from "src";
 
 
 //***************************************** Types ************************************//
@@ -227,8 +228,8 @@ export interface IItemDefaults {
 	name: string;
 	x: number;
 	y: number;
-	class: string;
 	visible: boolean;
+	class: string;
 }
 
 export interface IItemBaseDefaults extends IItemDefaults {
@@ -270,6 +271,7 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
 	selected: boolean;
 	onProp: (args: IItemBoardPropEvent) => void;
 	dir: boolean;
+	highlights: CompNode[];
 }
 
 export interface IItemSolidDefaults extends IItemBoardDefaults {
@@ -287,20 +289,11 @@ export interface IECDefaults extends IItemSolidDefaults {
 	boardLabel: Label;
 }
 
-export interface IHighlightable {
-	visible: boolean;
-	p: Point;
+export interface IBoardCircleDefaults extends IItemDefaults {
 	radius: number;
+	node: number;
+	label: string;
 	g: SVGCircleElement;
-
-	nodeName: string;
-	nodeValue: number;
-
-	move(x: number, y: number): void;
-	hide(): IHighlightable;
-	show(nodeValue: number): IHighlightable;
-	refresh(): void;
-	setRadius(value: number): IHighlightable;
 }
 
 //***************************************** Bonds ************************************//

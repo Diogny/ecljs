@@ -82,8 +82,7 @@ var BoardCircle = /** @class */ (function () {
             r: this.radius,
             class: this.visible ? "" : "hide"
         };
-        o[this.nodeName] = this.nodeValue;
-        return o;
+        return o[this.nodeName] = this.nodeValue, o;
     };
     BoardCircle.prototype.refresh = function () {
         return (dab_1.attr(this.g, this.settings()), this);

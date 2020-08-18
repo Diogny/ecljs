@@ -12,7 +12,7 @@ import { UIProp, ReactProp, PropContainer } from "./lib/props";
 import Units from "./lib/units";
 import Bonds from "./lib/bonds";
 
-import BoardCircle from "./lib/boardCircle";
+import CompNode from "./lib/compNode";
 import HighlightNode from "./lib/highlightNode";
 import Label from "./lib/label";
 import Tooltip from "./lib/tooltip";
@@ -58,7 +58,7 @@ export {
 	Interfaces,
 
 	Bonds,
-	BoardCircle,
+	CompNode,
 	HighlightNode,
 	Label,
 	Tooltip,

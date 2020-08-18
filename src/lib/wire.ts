@@ -107,6 +107,7 @@ export default class Wire extends ItemBoard {
 		this.$.points[node].x = p.x | 0;
 		this.$.points[node].y = p.y | 0;
 		(node == 0) && moveToStart(this);
+		this.refreshHighlight(node);
 		return this.nodeRefresh(node);
 	}
 
@@ -148,12 +149,12 @@ export default class Wire extends ItemBoard {
 		return !this.editMode && (this.$.points.push(p), this.refresh(), true)
 	}
 
-	public hghlightable(node: number): boolean {
+	public highlightable(node: number): boolean {
 		//any Wire node and that it is not a start|end bonded node
 		return !((node == 0 || node == this.last) && this.nodeBonds(node))
 	}
 
-	public setPoints(points: IPoint[]): Wire {
+	protected setPoints(points: IPoint[]): Wire {
 		if (!isArr(points)
 			|| points.length < 2)
 			throw 'wire min 2 points';
@@ -210,6 +211,7 @@ export default class Wire extends ItemBoard {
 		deleteWireNode(this, this.$, line);
 		deleteWireNode(this, this.$, line - 1);
 		this.refresh();
+		this.highlight(false);
 		return true;
 	}
 
@@ -217,6 +219,7 @@ export default class Wire extends ItemBoard {
 		let
 			p = deleteWireNode(this, this.$, node);
 		this.refresh();
+		this.highlight(false);
 		return p;
 	}
 
@@ -237,6 +240,7 @@ export default class Wire extends ItemBoard {
 			this.$.lines.unshift(newline)
 		}
 		this.refresh();
+		this.highlight(false);
 		return true;
 	}
 

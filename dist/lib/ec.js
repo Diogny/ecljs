@@ -57,8 +57,8 @@ var EC = /** @class */ (function (_super) {
         return this;
     };
     EC.prototype.setNode = function (node, p) {
-        //Some code tries to call this, investigate later...
-        throw 'somebody called me, not good!';
+        //nobody should call this
+        return this;
     };
     EC.prototype.setVisible = function (value) {
         _super.prototype.setVisible.call(this, value);

@@ -80,7 +80,7 @@ export default abstract class ItemSolid extends ItemBoard {
 
 	public valid(node: number): boolean { return node >= 0 && node < this.count; }
 
-	public hghlightable(node: number): boolean { return this.valid(node) }
+	public highlightable(node: number): boolean { return this.valid(node) }
 
 	public static nodeArea = 81;
 

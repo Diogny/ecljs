@@ -64,8 +64,8 @@ export default class EC extends ItemSolid {
 	}
 
 	public setNode(node: number, p: IPoint): EC {
-		//Some code tries to call this, investigate later...
-		throw 'somebody called me, not good!';
+		//nobody should call this
+		return this;
 	}
 
 	public setVisible(value: boolean): EC {

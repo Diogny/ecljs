@@ -30,8 +30,8 @@ export default class Wire extends ItemBoard {
      */
     valid(node: number): boolean;
     appendNode(p: Point): boolean;
-    hghlightable(node: number): boolean;
-    setPoints(points: IPoint[]): Wire;
+    highlightable(node: number): boolean;
+    protected setPoints(points: IPoint[]): Wire;
     getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
     static nodeArea: number;
     overNode(p: IPoint, ln?: number): number;

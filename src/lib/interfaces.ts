@@ -271,7 +271,7 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
 	selected: boolean;
 	onProp: (args: IItemBoardPropEvent) => void;
 	dir: boolean;
-	highlights: CompNode[];
+	highlights: Map<number, CompNode>;
 }
 
 export interface IItemSolidDefaults extends IItemBoardDefaults {

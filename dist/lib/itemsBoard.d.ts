@@ -10,8 +10,6 @@ export default abstract class ItemBoard extends ItemBase {
     get selected(): boolean;
     get bonds(): Bond[] | undefined;
     get dir(): boolean;
-    get highlights(): CompNode[];
-    get highlighted(): boolean;
     abstract get count(): number;
     abstract valid(node: number): boolean;
     abstract get last(): number;
@@ -20,24 +18,34 @@ export default abstract class ItemBoard extends ItemBase {
     abstract getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined;
     abstract setNode(node: number, p: IPoint): ItemBoard;
     abstract overNode(p: IPoint, ln?: number): number;
-    abstract hghlightable(node: number): boolean;
     constructor(container: Container<ItemBoard>, options: {
         [x: string]: any;
     });
     select(value: boolean): ItemBoard;
     move(x: number, y: number): ItemBoard;
     setOnProp(value: (args: IItemBoardPropEvent) => void): ItemBoard;
+    abstract highlightable(node: number): boolean;
     /**
-     * @description highlights a node, or keeps highlighting more nodes
-     * @param node 0-base node to be highlighted
-     * @param multiple false is default, so it highlights only this node, true is multiple highlighted nodes
+     * @description returns true if there's at least one node highlighted
      */
-    highlightNode(node: number, multiple?: boolean): boolean | undefined;
+    get isHighlighted(): boolean;
+    /**
+     * @description returns highlighted status of a node, or sets it's status
+     * @param node 0-based node
+     * @param value undefined: returns Highlighter; true: highlights; false: removes highlight
+     * @returns Highlighter for get if exists & set to true; otherwise undefined
+     */
+    highlighted(node: number, value?: boolean): CompNode | undefined;
     /**
      * @description show/hide all node highlighted
      * @param value true shows all nodes highlighted, false removes all highlights
      */
     highlight(value: boolean): void;
+    /**
+     * @description refreshes the node highlight position, useful for wire node draggings
+     * @param node 0-base node
+     */
+    refreshHighlight(node: number): boolean;
     bond(thisNode: number, ic: ItemBoard, icNode: number): boolean;
     nodeBonds(node: number): Bond | undefined;
     unbond(node: number, id: string): void;

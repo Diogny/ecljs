@@ -14,8 +14,6 @@ export default abstract class ItemBoard extends ItemBase {
 	get selected(): boolean { return this.$.selected }
 	get bonds(): Bond[] | undefined { return this.container.itemBonds(this) }
 	get dir(): boolean { return this.$.dir }
-	get highlights(): CompNode[] { return this.$.highlights }
-	get highlighted(): boolean { return this.$.highlights.length != 0 }
 
 	abstract get count(): number;
 	abstract valid(node: number): boolean;
@@ -25,9 +23,6 @@ export default abstract class ItemBoard extends ItemBase {
 	abstract getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined;
 	abstract setNode(node: number, p: IPoint): ItemBoard;
 	abstract overNode(p: IPoint, ln?: number): number;
-
-	//this returns true for an EC, and any Wire node and that it is not a start|end bonded node
-	abstract hghlightable(node: number): boolean;
 
 	constructor(public container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(options);
@@ -73,13 +68,49 @@ export default abstract class ItemBoard extends ItemBase {
 		return this;
 	}
 
+	//this returns true for an EC, and any Wire node and that it is not a start|end bonded node
+	abstract highlightable(node: number): boolean;
+
 	/**
-	 * @description highlights a node, or keeps highlighting more nodes
-	 * @param node 0-base node to be highlighted
-	 * @param multiple false is default, so it highlights only this node, true is multiple highlighted nodes
+	 * @description returns true if there's at least one node highlighted
 	 */
-	public highlightNode(node: number, multiple?: boolean): boolean | undefined {
-		return highlightNode(this, this.$, node, multiple)
+	get isHighlighted(): boolean { return this.$.highlights.size != 0 }
+
+	/**
+	 * @description returns highlighted status of a node, or sets it's status
+	 * @param node 0-based node
+	 * @param value undefined: returns Highlighter; true: highlights; false: removes highlight
+	 * @returns Highlighter for get if exists & set to true; otherwise undefined
+	 */
+	public highlighted(node: number, value?: boolean): CompNode | undefined {
+		let
+			hl = this.$.highlights.get(node);
+		if (value != undefined) {
+			if (value === false) {
+				//remove if exists, otherwise do nothing, it doesn't exists
+				if (hl) {
+					this.g.removeChild(hl.g);
+					this.$.highlights.delete(node);
+					hl = void 0;
+				}
+			}
+			else if (!hl) {
+				if (!this.highlightable(node))
+					return;
+				//value == true, and it doesn't exists, create and return
+				let
+					pin = <INodeInfo>this.getNode(node, true);
+				hl = new CompNode({
+					node: node,
+					x: pin.x,
+					y: pin.y,
+					label: pin.label
+				});
+				this.g.appendChild(hl.g);
+				this.$.highlights.set(node, hl)
+			}
+		}
+		return hl
 	}
 
 	/**
@@ -87,15 +118,28 @@ export default abstract class ItemBoard extends ItemBase {
 	 * @param value true shows all nodes highlighted, false removes all highlights
 	 */
 	public highlight(value: boolean): void {
-		if (value && this.highlights.length == this.count)
-			//already set
+		//setting to false with no highlights shortcut
+		if (!value && !this.isHighlighted)
 			return;
-		//remove highlights if any
-		clear(this, this.$);
-		if (value) {
-			for (let node = 0; node < this.count; node++)
-				highlightNode(this, this.$, node, true, true)
+		for (let node = 0, count = this.count; node < count; node++)
+			this.highlighted(node, value)
+	}
+
+	/**
+	 * @description refreshes the node highlight position, useful for wire node draggings
+	 * @param node 0-base node
+	 */
+	public refreshHighlight(node: number): boolean {
+		let
+			hl = this.highlighted(node);
+		if (hl) {
+			let
+				pin = <INodeInfo>this.getNode(node, true);
+			//only changes x,y
+			hl.move(pin.x, pin.y);
+			return true
 		}
+		return false
 	}
 
 	public bond(thisNode: number, ic: ItemBoard, icNode: number): boolean {
@@ -120,7 +164,7 @@ export default abstract class ItemBoard extends ItemBase {
 	}
 
 	public remove() {
-		clear(this, this.$);
+		this.highlight(false);
 		super.remove()
 	}
 
@@ -137,38 +181,8 @@ export default abstract class ItemBoard extends ItemBase {
 			selected: false,
 			onProp: void 0,
 			dir: false,
-			highlights: []
+			highlights: new Map()
 		})
 	}
 
-}
-
-function clear(that: ItemBoard, $: IItemBoardDefaults) {
-	$.highlights = $.highlights.filter(hl => (that.g.removeChild(hl.g), false));
-}
-
-function highlightNode(that: ItemBoard, $: IItemBoardDefaults, node: number, multiple?: boolean, noCheck?: boolean): boolean | undefined {
-	let
-		pin = that.getNode(node, true);
-	if (!pin)
-		return;
-	if (!that.hghlightable(node))
-		return false;
-	if (multiple) {
-		//avoid calling this for every node when doing a full internal highlight
-		if (!noCheck && $.highlights.some(hl => hl.node == node))
-			return false
-	}
-	else
-		clear(that, $);
-	let
-		hl = new CompNode({
-			node: node,
-			x: pin.x,
-			y: pin.y,
-			label: pin.label
-		});
-	that.g.appendChild(hl.g);
-	(!multiple && ($.highlights = [hl], true)) || $.highlights.push(hl);
-	return true
 }

@@ -71,7 +71,7 @@ var ItemSolid = /** @class */ (function (_super) {
         return new rect_1.default(p.x, p.y, size.width, size.height);
     };
     ItemSolid.prototype.valid = function (node) { return node >= 0 && node < this.count; };
-    ItemSolid.prototype.hghlightable = function (node) { return this.valid(node); };
+    ItemSolid.prototype.highlightable = function (node) { return this.valid(node); };
     ItemSolid.prototype.overNode = function (p, ln) {
         for (var i = 0, len = this.count; i < len; i++) {
             var node = this.getNode(i);

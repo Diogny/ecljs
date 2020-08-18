@@ -14,7 +14,7 @@ export default abstract class ItemSolid extends ItemBoard {
     move(x: number, y: number): ItemSolid;
     rect(): Rect;
     valid(node: number): boolean;
-    hghlightable(node: number): boolean;
+    highlightable(node: number): boolean;
     static nodeArea: number;
     overNode(p: IPoint, ln?: number): number;
     nodeRefresh(node: number): ItemSolid;

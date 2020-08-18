@@ -42,16 +42,6 @@ var ItemBoard = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ItemBoard.prototype, "highlights", {
-        get: function () { return this.$.highlights; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(ItemBoard.prototype, "highlighted", {
-        get: function () { return this.$.highlights.length != 0; },
-        enumerable: false,
-        configurable: true
-    });
     ItemBoard.prototype.select = function (value) {
         if (this.selected != value) {
             //set new value
@@ -79,28 +69,72 @@ var ItemBoard = /** @class */ (function (_super) {
         dab_1.isFn(value) && (this.$.onProp = value);
         return this;
     };
+    Object.defineProperty(ItemBoard.prototype, "isHighlighted", {
+        /**
+         * @description returns true if there's at least one node highlighted
+         */
+        get: function () { return this.$.highlights.size != 0; },
+        enumerable: false,
+        configurable: true
+    });
     /**
-     * @description highlights a node, or keeps highlighting more nodes
-     * @param node 0-base node to be highlighted
-     * @param multiple false is default, so it highlights only this node, true is multiple highlighted nodes
+     * @description returns highlighted status of a node, or sets it's status
+     * @param node 0-based node
+     * @param value undefined: returns Highlighter; true: highlights; false: removes highlight
+     * @returns Highlighter for get if exists & set to true; otherwise undefined
      */
-    ItemBoard.prototype.highlightNode = function (node, multiple) {
-        return highlightNode(this, this.$, node, multiple);
+    ItemBoard.prototype.highlighted = function (node, value) {
+        var hl = this.$.highlights.get(node);
+        if (value != undefined) {
+            if (value === false) {
+                //remove if exists, otherwise do nothing, it doesn't exists
+                if (hl) {
+                    this.g.removeChild(hl.g);
+                    this.$.highlights.delete(node);
+                    hl = void 0;
+                }
+            }
+            else if (!hl) {
+                if (!this.highlightable(node))
+                    return;
+                //value == true, and it doesn't exists, create and return
+                var pin = this.getNode(node, true);
+                hl = new compNode_1.default({
+                    node: node,
+                    x: pin.x,
+                    y: pin.y,
+                    label: pin.label
+                });
+                this.g.appendChild(hl.g);
+                this.$.highlights.set(node, hl);
+            }
+        }
+        return hl;
     };
     /**
      * @description show/hide all node highlighted
      * @param value true shows all nodes highlighted, false removes all highlights
      */
     ItemBoard.prototype.highlight = function (value) {
-        if (value && this.highlights.length == this.count)
-            //already set
+        //setting to false with no highlights shortcut
+        if (!value && !this.isHighlighted)
             return;
-        //remove highlights if any
-        clear(this, this.$);
-        if (value) {
-            for (var node = 0; node < this.count; node++)
-                highlightNode(this, this.$, node, true, true);
+        for (var node = 0, count = this.count; node < count; node++)
+            this.highlighted(node, value);
+    };
+    /**
+     * @description refreshes the node highlight position, useful for wire node draggings
+     * @param node 0-base node
+     */
+    ItemBoard.prototype.refreshHighlight = function (node) {
+        var hl = this.highlighted(node);
+        if (hl) {
+            var pin = this.getNode(node, true);
+            //only changes x,y
+            hl.move(pin.x, pin.y);
+            return true;
         }
+        return false;
     };
     ItemBoard.prototype.bond = function (thisNode, ic, icNode) {
         return this.container.bond(this, thisNode, ic, icNode);
@@ -120,7 +154,7 @@ var ItemBoard = /** @class */ (function (_super) {
         return this.container.unbondNode(this, node);
     };
     ItemBoard.prototype.remove = function () {
-        clear(this, this.$);
+        this.highlight(false);
         _super.prototype.remove.call(this);
     };
     ItemBoard.prototype.disconnect = function () {
@@ -134,35 +168,9 @@ var ItemBoard = /** @class */ (function (_super) {
             selected: false,
             onProp: void 0,
             dir: false,
-            highlights: []
+            highlights: new Map()
         });
     };
     return ItemBoard;
 }(itemsBase_1.default));
 exports.default = ItemBoard;
-function clear(that, $) {
-    $.highlights = $.highlights.filter(function (hl) { return (that.g.removeChild(hl.g), false); });
-}
-function highlightNode(that, $, node, multiple, noCheck) {
-    var pin = that.getNode(node, true);
-    if (!pin)
-        return;
-    if (!that.hghlightable(node))
-        return false;
-    if (multiple) {
-        //avoid calling this for every node when doing a full internal highlight
-        if (!noCheck && $.highlights.some(function (hl) { return hl.node == node; }))
-            return false;
-    }
-    else
-        clear(that, $);
-    var hl = new compNode_1.default({
-        node: node,
-        x: pin.x,
-        y: pin.y,
-        label: pin.label
-    });
-    that.g.appendChild(hl.g);
-    (!multiple && ($.highlights = [hl], true)) || $.highlights.push(hl);
-    return true;
-}

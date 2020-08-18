@@ -121,6 +121,7 @@ var Wire = /** @class */ (function (_super) {
         this.$.points[node].x = p.x | 0;
         this.$.points[node].y = p.y | 0;
         (node == 0) && moveToStart(this);
+        this.refreshHighlight(node);
         return this.nodeRefresh(node);
     };
     Wire.prototype.translate = function (dx, dy) {
@@ -157,7 +158,7 @@ var Wire = /** @class */ (function (_super) {
         //only works in edit mode = false, so far
         return !this.editMode && (this.$.points.push(p), this.refresh(), true);
     };
-    Wire.prototype.hghlightable = function (node) {
+    Wire.prototype.highlightable = function (node) {
         //any Wire node and that it is not a start|end bonded node
         return !((node == 0 || node == this.last) && this.nodeBonds(node));
     };
@@ -209,11 +210,13 @@ var Wire = /** @class */ (function (_super) {
         deleteWireNode(this, this.$, line);
         deleteWireNode(this, this.$, line - 1);
         this.refresh();
+        this.highlight(false);
         return true;
     };
     Wire.prototype.deleteNode = function (node) {
         var p = deleteWireNode(this, this.$, node);
         this.refresh();
+        this.highlight(false);
         return p;
     };
     Wire.prototype.insertNode = function (node, p) {
@@ -232,6 +235,7 @@ var Wire = /** @class */ (function (_super) {
             this.$.lines.unshift(newline);
         }
         this.refresh();
+        this.highlight(false);
         return true;
     };
     /**

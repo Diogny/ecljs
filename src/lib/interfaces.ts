@@ -7,7 +7,7 @@ import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import Board from "./board";
-import { HighlightNode, CompNode } from "src";
+import CompNode from "./compNode";
 
 
 //***************************************** Types ************************************//

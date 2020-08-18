@@ -7,7 +7,6 @@ import Point from "./point";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
-import { CompNode } from "src";
 
 //ItemBoard->ItemSolid->EC
 export default abstract class ItemSolid extends ItemBoard {

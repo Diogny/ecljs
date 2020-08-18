@@ -6,7 +6,7 @@ import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import Board from "./board";
-import { CompNode } from "src";
+import CompNode from "./compNode";
 export declare enum Type {
     UNDEFINED = 0,
     EC = 1,

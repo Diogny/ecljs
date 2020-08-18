@@ -1,5 +1,4 @@
 import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base } from "./interfaces";
-import { isNum } from "./dab";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";

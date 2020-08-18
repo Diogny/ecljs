@@ -14,6 +14,7 @@ var CompNode = /** @class */ (function (_super) {
             "svg-type": _this.name,
             class: _this.class
         });
+        _this.refresh();
         return _this;
     }
     Object.defineProperty(CompNode.prototype, "p", {

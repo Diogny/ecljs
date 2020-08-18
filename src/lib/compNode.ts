@@ -22,6 +22,7 @@ export default class CompNode extends Item {
 			"svg-type": this.name,
 			class: this.class
 		});
+		this.refresh()
 	}
 
 	move(x: number, y: number): CompNode {

@@ -18,7 +18,7 @@ export default class HighlightNode extends ItemBase {
 		//override
 		options.selectedNode = -1;
 		options.selectedId = "";
-		options.id = "highlighNode";
+		//options.id = "highlighNode";
 		super(options);
 		this.g.setAttribute("svg-comp", "h-node");
 		this.$.mainNode = <SVGCircleElement>tag("circle", "", {

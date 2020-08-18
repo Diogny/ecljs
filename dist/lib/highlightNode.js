@@ -12,7 +12,7 @@ var HighlightNode = /** @class */ (function (_super) {
         //override
         options.selectedNode = -1;
         options.selectedId = "";
-        options.id = "highlighNode";
+        //options.id = "highlighNode";
         _this = _super.call(this, options) || this;
         _this.g.setAttribute("svg-comp", "h-node");
         _this.$.mainNode = utils_1.tag("circle", "", {

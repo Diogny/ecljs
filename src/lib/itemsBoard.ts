@@ -152,6 +152,8 @@ function highlightNode(that: ItemBoard, $: IItemBoardDefaults, node: number, mul
 		pin = that.getNode(node, true);
 	if (!pin)
 		return;
+	if (!that.hghlightable(node))
+		return false;
 	if (multiple) {
 		//avoid calling this for every node when doing a full internal highlight
 		if (!noCheck && $.highlights.some(hl => hl.node == node))

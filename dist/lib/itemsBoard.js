@@ -73,7 +73,7 @@ var ItemBoard = /** @class */ (function (_super) {
         /**
          * @description returns true if there's at least one node highlighted
          */
-        get: function () { return this.$.highlights.size != 0; },
+        get: function () { return this.$.highlights["length"] != 0; },
         enumerable: false,
         configurable: true
     });
@@ -84,32 +84,37 @@ var ItemBoard = /** @class */ (function (_super) {
      * @returns Highlighter for get if exists & set to true; otherwise undefined
      */
     ItemBoard.prototype.highlighted = function (node, value) {
-        var hl = this.$.highlights.get(node);
-        if (value != undefined) {
-            if (value === false) {
-                //remove if exists, otherwise do nothing, it doesn't exists
-                if (hl) {
-                    this.g.removeChild(hl.g);
-                    this.$.highlights.delete(node);
-                    hl = void 0;
-                }
-            }
-            else if (!hl) {
-                if (!this.highlightable(node))
-                    return;
-                //value == true, and it doesn't exists, create and return
-                var pin = this.getNode(node, true);
-                hl = new compNode_1.default({
-                    node: node,
-                    x: pin.x,
-                    y: pin.y,
-                    label: pin.label
-                });
-                this.g.appendChild(hl.g);
-                this.$.highlights.set(node, hl);
+        //get part
+        if (value === undefined) {
+            return this.$.highlights[node];
+        }
+        //set part
+        var hl = this.$.highlights[node];
+        if (value === false) {
+            //remove if exists, otherwise do nothing, it doesn't exists
+            if (hl) {
+                var svg = this.g.removeChild(hl.g);
+                delete this.$.highlights[node];
+                this.$.highlights["length"]--;
+                return;
             }
         }
-        return hl;
+        else {
+            if (!this.highlightable(node))
+                return;
+            //value == true, and it doesn't exists, create and return
+            //some bug, it's not deleted
+            var pin = this.getNode(node, true), exists = hl != undefined;
+            hl = new compNode_1.default({
+                node: node,
+                x: pin.x,
+                y: pin.y,
+                label: pin.label
+            });
+            this.g.appendChild(hl.g);
+            this.$.highlights[node] = hl;
+            !exists && this.$.highlights["length"]++;
+        }
     };
     /**
      * @description show/hide all node highlighted
@@ -117,10 +122,19 @@ var ItemBoard = /** @class */ (function (_super) {
      */
     ItemBoard.prototype.highlight = function (value) {
         //setting to false with no highlights shortcut
-        if (!value && !this.isHighlighted)
-            return;
+        //if (!value && !this.isHighlighted)
+        //	return;
         for (var node = 0, count = this.count; node < count; node++)
             this.highlighted(node, value);
+    };
+    /**
+     * @description removes all highlights except for this node
+     * @param node 0-base node
+     */
+    ItemBoard.prototype.highlightThis = function (node) {
+        for (var n = 0, count = this.count; n < count; n++)
+            (n != node)
+                && this.highlighted(n, false);
     };
     /**
      * @description refreshes the node highlight position, useful for wire node draggings
@@ -168,7 +182,7 @@ var ItemBoard = /** @class */ (function (_super) {
             selected: false,
             onProp: void 0,
             dir: false,
-            highlights: new Map()
+            highlights: { length: 0 }
         });
     };
     return ItemBoard;

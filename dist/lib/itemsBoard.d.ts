@@ -42,6 +42,11 @@ export default abstract class ItemBoard extends ItemBase {
      */
     highlight(value: boolean): void;
     /**
+     * @description removes all highlights except for this node
+     * @param node 0-base node
+     */
+    highlightThis(node: number): void;
+    /**
      * @description refreshes the node highlight position, useful for wire node draggings
      * @param node 0-base node
      */

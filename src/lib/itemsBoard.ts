@@ -74,7 +74,7 @@ export default abstract class ItemBoard extends ItemBase {
 	/**
 	 * @description returns true if there's at least one node highlighted
 	 */
-	get isHighlighted(): boolean { return this.$.highlights.size != 0 }
+	get isHighlighted(): boolean { return this.$.highlights["length"] != 0 }
 
 	/**
 	 * @description returns highlighted status of a node, or sets it's status
@@ -83,34 +83,41 @@ export default abstract class ItemBoard extends ItemBase {
 	 * @returns Highlighter for get if exists & set to true; otherwise undefined
 	 */
 	public highlighted(node: number, value?: boolean): CompNode | undefined {
+		//get part
+		if (value === undefined) {
+			return this.$.highlights[node]
+		}
+		//set part
 		let
-			hl = this.$.highlights.get(node);
-		if (value != undefined) {
-			if (value === false) {
-				//remove if exists, otherwise do nothing, it doesn't exists
-				if (hl) {
-					this.g.removeChild(hl.g);
-					this.$.highlights.delete(node);
-					hl = void 0;
-				}
-			}
-			else if (!hl) {
-				if (!this.highlightable(node))
-					return;
-				//value == true, and it doesn't exists, create and return
+			hl = this.$.highlights[node];
+		if (value === false) {
+			//remove if exists, otherwise do nothing, it doesn't exists
+			if (hl) {
 				let
-					pin = <INodeInfo>this.getNode(node, true);
-				hl = new CompNode({
-					node: node,
-					x: pin.x,
-					y: pin.y,
-					label: pin.label
-				});
-				this.g.appendChild(hl.g);
-				this.$.highlights.set(node, hl)
+					svg = this.g.removeChild(hl.g);
+				delete this.$.highlights[node];
+				this.$.highlights["length"]--;
+				return
 			}
 		}
-		return hl
+		else {
+			if (!this.highlightable(node))
+				return;
+			//value == true, and it doesn't exists, create and return
+			//some bug, it's not deleted
+			let
+				pin = <INodeInfo>this.getNode(node, true),
+				exists = hl != undefined;
+			hl = new CompNode({
+				node: node,
+				x: pin.x,
+				y: pin.y,
+				label: pin.label
+			});
+			this.g.appendChild(hl.g);
+			this.$.highlights[node] = hl;
+			!exists && this.$.highlights["length"]++;
+		}
 	}
 
 	/**
@@ -119,10 +126,20 @@ export default abstract class ItemBoard extends ItemBase {
 	 */
 	public highlight(value: boolean): void {
 		//setting to false with no highlights shortcut
-		if (!value && !this.isHighlighted)
-			return;
+		//if (!value && !this.isHighlighted)
+		//	return;
 		for (let node = 0, count = this.count; node < count; node++)
-			this.highlighted(node, value)
+			this.highlighted(node, value);
+	}
+
+	/**
+	 * @description removes all highlights except for this node
+	 * @param node 0-base node
+	 */
+	public highlightThis(node: number): void {
+		for (let n = 0, count = this.count; n < count; n++)
+			(n != node)
+				&& this.highlighted(n, false);
 	}
 
 	/**
@@ -181,7 +198,7 @@ export default abstract class ItemBoard extends ItemBase {
 			selected: false,
 			onProp: void 0,
 			dir: false,
-			highlights: new Map()
+			highlights: { length: 0 }
 		})
 	}
 

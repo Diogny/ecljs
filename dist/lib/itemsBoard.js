@@ -174,9 +174,17 @@ var ItemBoard = /** @class */ (function (_super) {
     ItemBoard.prototype.disconnect = function () {
         this.container.disconnect(this);
     };
-    ItemBoard.prototype.prop = function (propName) {
-        return this.$.props[propName];
+    ItemBoard.prototype.prop = function (name) {
+        return this.$.props[name];
     };
+    Object.defineProperty(ItemBoard.prototype, "props", {
+        /**
+         * @description returns all custom properties of this component
+         */
+        get: function () { return this.$.props; },
+        enumerable: false,
+        configurable: true
+    });
     ItemBoard.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             selected: false,

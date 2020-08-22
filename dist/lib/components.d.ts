@@ -1,4 +1,4 @@
-import { IComponentOptions, IComponentMetadata } from './interfaces';
+import { IComponentOptions, IComponentMetadata, ComponentPropertyType } from './interfaces';
 export default class Comp {
     private static map;
     protected $: IComponentOptions;
@@ -7,7 +7,7 @@ export default class Comp {
     get type(): string;
     get data(): string;
     get props(): {
-        [x: string]: any;
+        [x: string]: ComponentPropertyType;
     };
     get meta(): IComponentMetadata;
     constructor(options: IComponentOptions);

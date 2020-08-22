@@ -1,4 +1,4 @@
-import { IComponentOptions, IBaseStoreComponent, IComponentMetadata } from './interfaces';
+import { IComponentOptions, IBaseStoreComponent, IComponentMetadata, ComponentPropertyType } from './interfaces';
 import { obj } from './dab';
 
 //const tmpl = "{base.comp.name}-{base.count}";
@@ -11,7 +11,7 @@ const defaults = (type: string, name: string): IBaseStoreComponent => (<any>{
 			//nameTmpl: tmpl,
 			nodes: []
 		},
-		properties: {}
+		props: {}
 	}
 });
 
@@ -31,7 +31,7 @@ export default class Comp {
 	get library(): string { return this.$.library }
 	get type(): string { return this.$.type }
 	get data(): string { return this.$.data }
-	get props(): { [x: string]: any } { return this.$.properties }
+	get props(): { [x: string]: ComponentPropertyType } { return this.$.props }
 	get meta(): IComponentMetadata { return this.$.meta }
 
 	constructor(options: IComponentOptions) {

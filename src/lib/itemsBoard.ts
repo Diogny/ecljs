@@ -189,9 +189,14 @@ export default abstract class ItemBoard extends ItemBase {
 		this.container.disconnect(this)
 	}
 
-	public prop(propName: string): ComponentPropertyType {
-		return this.$.props[propName]
+	public prop(name: string): ComponentPropertyType {
+		return this.$.props[name]
 	}
+
+	/**
+	 * @description returns all custom properties of this component
+	 */
+	get props(): { [x: string]: ComponentPropertyType } { return this.$.props }
 
 	public defaults(): IItemBoardDefaults {
 		return <IItemBoardDefaults>extend(super.defaults(), {

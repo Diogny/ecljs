@@ -12,7 +12,7 @@ var defaults = function (type, name) { return ({
             //nameTmpl: tmpl,
             nodes: []
         },
-        properties: {}
+        props: {}
     }
 }); };
 var Comp = /** @class */ (function () {
@@ -54,7 +54,7 @@ var Comp = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(Comp.prototype, "props", {
-        get: function () { return this.$.properties; },
+        get: function () { return this.$.props; },
         enumerable: false,
         configurable: true
     });

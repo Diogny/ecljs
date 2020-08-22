@@ -88,16 +88,20 @@ export interface ISize {
 export interface IRect extends IPoint, ISize {
 }
 export interface IComponentProperty {
-    name: string;
+    /**
+     * unit
+     */
     value: string | number | any;
     valueType: string;
+    /**
+     * input, select, string, number
+     */
     type: string;
-    isProperty: boolean;
-    readonly: boolean;
-    label: string;
-    class: string;
+    /**
+     * options when type is select
+     */
     options?: string[];
-    setValue(val: string): boolean;
+    readonly: boolean;
 }
 export declare type ComponentPropertyType = string | number | IComponentProperty;
 export interface IDisposable {
@@ -148,8 +152,8 @@ export interface IComponentOptions {
     library: string;
     type: string;
     name: string;
-    properties: {
-        [x: string]: any;
+    props: {
+        [x: string]: ComponentPropertyType;
     };
     data: string;
     meta: IComponentMetadata;
@@ -233,7 +237,7 @@ export interface IItemBoardPropEvent {
 }
 export interface IItemBoardDefaults extends IItemBaseDefaults {
     props: {
-        [x: string]: any;
+        [x: string]: ComponentPropertyType;
     };
     selected: boolean;
     onProp: (args: IItemBoardPropEvent) => void;

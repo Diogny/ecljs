@@ -62,6 +62,12 @@ export default abstract class ItemBoard extends ItemBase {
     unbondNode(node: number): string[] | undefined;
     remove(): void;
     disconnect(): void;
-    prop(propName: string): ComponentPropertyType;
+    prop(name: string): ComponentPropertyType;
+    /**
+     * @description returns all custom properties of this component
+     */
+    get props(): {
+        [x: string]: ComponentPropertyType;
+    };
     defaults(): IItemBoardDefaults;
 }

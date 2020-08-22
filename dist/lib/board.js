@@ -27,11 +27,12 @@ var Board = /** @class */ (function () {
         var ndx = index(this, name);
         return (ndx == -1) ? undefined : this.containers.splice(ndx, 1)[0];
     };
+    /**
+     * @description gets a library container by name
+     * @param name library name
+     */
     Board.prototype.get = function (name) {
         return this.containers[index(this, name)];
-    };
-    Board.prototype.libraries = function (library) {
-        return this.containers.filter(function (c) { return c.library == library; });
     };
     Board.prototype.destroy = function () {
         this.containers
@@ -42,5 +43,5 @@ var Board = /** @class */ (function () {
 }());
 exports.default = Board;
 function index(board, name) {
-    return board.containers.findIndex(function (c) { return c.name == name; });
+    return board.containers.findIndex(function (c) { return c.library == name; });
 }

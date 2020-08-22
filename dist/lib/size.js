@@ -3,15 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var dab_1 = require("./dab");
 var Size = /** @class */ (function () {
     function Size(width, height) {
-        this.width = parseFloat(width); //ensure it's a number
-        this.height = parseFloat(height);
+        this.width = Math.round(width);
+        this.height = Math.round(height);
     }
     Size.prototype.clone = function () { return new Size(this.width, this.height); };
-    Size.prototype.round = function () {
-        this.width = Math.round(this.width);
-        this.height = Math.round(this.height);
-        return this;
-    };
+    Size.prototype.equal = function (size) { return this.width == size.width && this.height == size.height; };
     Object.defineProperty(Size, "empty", {
         get: function () { return new Size(0, 0); },
         enumerable: false,

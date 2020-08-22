@@ -16,17 +16,40 @@ export default class Point implements IPoint {
 		this.y = Math.round(y)
 	}
 
+	/**
+	 * @description calculates distance from this point to another
+	 * @param p point
+	 */
 	public distance(p: Point): number {
 		var dx = this.x - p.x;
 		var dy = this.y - p.y;
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
+	/**
+	 * @description clones point
+	 */
 	public clone(): Point { return new Point(this.x, this.y) }
 
+	/**
+	 * @description returns a new point shifted by (x,y) vector
+	 * @param x vector x
+	 * @param y vector y
+	 */
 	public add(x: number, y: number): Point { return new Point(this.x + x, this.y + y) }
 
+	/**
+	 * @description scales this point by a multiple (x,y)
+	 * @param x mul x
+	 * @param y mul y
+	 */
 	public mul(x: number, y: number): Point { return new Point(this.x * x, this.y * y) }
+
+	/**
+	 * @description equality comparer
+	 * @param p point
+	 */
+	public equal(p: Point): boolean { return this.x == p.x && this.y == p.y }
 
 	/**
 	 * @description returns string of a Point oobject

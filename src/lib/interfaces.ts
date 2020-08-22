@@ -126,16 +126,17 @@ export interface IUIPropertyCallback {
 	(value: any, where: number, prop: IReactProp, e: any): any | void;
 }
 
+export interface IReactPropDefaults {
+	_: { [id: string]: any };
+	value: any;
+}
+
 export interface IPropHook {
 	name: string;
 	value: any;
 	prop: ReactProp;
 	modified: boolean;
 	_: { [id: string]: any };
-}
-export interface IReactPropDefaults {
-	_: { [id: string]: any };
-	value: any;
 }
 
 export interface IUIPropertyDefaults extends IReactPropDefaults {

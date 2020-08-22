@@ -6,10 +6,32 @@ export default class Point implements IPoint {
     x: number;
     y: number;
     constructor(x: number, y: number);
+    /**
+     * @description calculates distance from this point to another
+     * @param p point
+     */
     distance(p: Point): number;
+    /**
+     * @description clones point
+     */
     clone(): Point;
+    /**
+     * @description returns a new point shifted by (x,y) vector
+     * @param x vector x
+     * @param y vector y
+     */
     add(x: number, y: number): Point;
+    /**
+     * @description scales this point by a multiple (x,y)
+     * @param x mul x
+     * @param y mul y
+     */
     mul(x: number, y: number): Point;
+    /**
+     * @description equality comparer
+     * @param p point
+     */
+    equal(p: Point): boolean;
     /**
      * @description returns string of a Point oobject
      * @param options 0 = x,y	1 = parenthesis; 	2 = variables x: x, y: y

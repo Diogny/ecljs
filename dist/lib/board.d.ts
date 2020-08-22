@@ -7,7 +7,10 @@ export default class Board {
     constructor(containers?: Container<EC | FlowchartComp>[]);
     add(container: Container<EC | FlowchartComp>): void;
     delete(name: string): Container<EC | FlowchartComp> | undefined;
+    /**
+     * @description gets a library container by name
+     * @param name library name
+     */
     get(name: string): Container<EC | FlowchartComp> | undefined;
-    libraries(library: string): Container<EC | FlowchartComp>[];
     destroy(): void;
 }

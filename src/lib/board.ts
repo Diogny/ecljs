@@ -33,12 +33,12 @@ export default class Board {
 		return (ndx == -1) ? undefined : this.containers.splice(ndx, 1)[0]
 	}
 
+	/**
+	 * @description gets a library container by name
+	 * @param name library name
+	 */
 	public get(name: string): Container<EC | FlowchartComp> | undefined {
 		return this.containers[index(this, name)]
-	}
-
-	public libraries(library: string): Container<EC | FlowchartComp>[] {
-		return this.containers.filter(c => c.library == library)
 	}
 
 	public destroy() {
@@ -50,5 +50,5 @@ export default class Board {
 }
 
 function index(board: Board, name: string): number {
-	return board.containers.findIndex(c => c.name == name)
+	return board.containers.findIndex(c => c.library == name)
 }

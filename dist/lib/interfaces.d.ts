@@ -113,6 +113,12 @@ export interface IReactProp extends IDisposable {
 export interface IUIPropertyCallback {
     (value: any, where: number, prop: IReactProp, e: any): any | void;
 }
+export interface IReactPropDefaults {
+    _: {
+        [id: string]: any;
+    };
+    value: any;
+}
 export interface IPropHook {
     name: string;
     value: any;
@@ -121,12 +127,6 @@ export interface IPropHook {
     _: {
         [id: string]: any;
     };
-}
-export interface IReactPropDefaults {
-    _: {
-        [id: string]: any;
-    };
-    value: any;
 }
 export interface IUIPropertyDefaults extends IReactPropDefaults {
     tag: string | Element;

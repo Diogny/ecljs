@@ -11,14 +11,36 @@ var Point = /** @class */ (function () {
         this.x = Math.round(x);
         this.y = Math.round(y);
     }
+    /**
+     * @description calculates distance from this point to another
+     * @param p point
+     */
     Point.prototype.distance = function (p) {
         var dx = this.x - p.x;
         var dy = this.y - p.y;
         return Math.sqrt(dx * dx + dy * dy);
     };
+    /**
+     * @description clones point
+     */
     Point.prototype.clone = function () { return new Point(this.x, this.y); };
+    /**
+     * @description returns a new point shifted by (x,y) vector
+     * @param x vector x
+     * @param y vector y
+     */
     Point.prototype.add = function (x, y) { return new Point(this.x + x, this.y + y); };
+    /**
+     * @description scales this point by a multiple (x,y)
+     * @param x mul x
+     * @param y mul y
+     */
     Point.prototype.mul = function (x, y) { return new Point(this.x * x, this.y * y); };
+    /**
+     * @description equality comparer
+     * @param p point
+     */
+    Point.prototype.equal = function (p) { return this.x == p.x && this.y == p.y; };
     /**
      * @description returns string of a Point oobject
      * @param options 0 = x,y	1 = parenthesis; 	2 = variables x: x, y: y

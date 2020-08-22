@@ -6,18 +6,14 @@ export default class Size implements ISize {
 	public height: number;
 
 	constructor(width: number, height: number) {
-		this.width = parseFloat(<any>width);	//ensure it's a number
-		this.height = parseFloat(<any>height);
+		this.width = Math.round(width);
+		this.height = Math.round(height)
 	}
 
 	public clone(): Size { return new Size(this.width, this.height) }
 
-	public round(): Size {
-		this.width = Math.round(this.width);
-		this.height = Math.round(this.height);
-		return this
-	}
-
+	public equal(size: Size): boolean { return this.width == size.width && this.height == size.height }
+	
 	static get empty(): Size { return new Size(0, 0) }
 
 	static create(size: ISize): Size {

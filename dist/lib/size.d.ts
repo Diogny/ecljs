@@ -4,7 +4,7 @@ export default class Size implements ISize {
     height: number;
     constructor(width: number, height: number);
     clone(): Size;
-    round(): Size;
+    equal(size: Size): boolean;
     static get empty(): Size;
     static create(size: ISize): Size;
     /**

@@ -30,6 +30,7 @@ export default class Wire extends ItemBoard {
 		if (this.edit == value)
 			return;
 		this.g.innerHTML = "";
+		this.$.dir && (this.$.arrow = poly(this.g, "arrow", -1));
 		if (this.edit) {
 			//	will change to false
 			//		.destroy lines

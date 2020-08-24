@@ -12,8 +12,8 @@ export default class Wire extends ItemBoard {
     get isOpen(): boolean;
     rect(): Rect;
     get points(): Point[];
-    get editMode(): boolean;
-    set editMode(value: boolean);
+    get edit(): boolean;
+    set edit(value: boolean);
     constructor(container: Container<ItemBoard>, options: {
         [x: string]: any;
     });
@@ -29,10 +29,14 @@ export default class Wire extends ItemBoard {
      * @returns {boolean} true if point is valid
      */
     valid(node: number): boolean;
-    appendNode(p: Point): boolean;
+    /**
+     * @description appends a new node at the end, only works in edit mode, creating a wire
+     * @param p new point
+     */
+    append(p: Point): boolean;
     highlightable(node: number): boolean;
     protected setPoints(points: IPoint[]): Wire;
-    getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined;
+    node(node: number, onlyPoint?: boolean): INodeInfo | undefined;
     static nodeArea: number;
     overNode(p: IPoint, ln?: number): number;
     deleteLine(line: number): boolean;

@@ -74,7 +74,7 @@ var ItemSolid = /** @class */ (function (_super) {
     ItemSolid.prototype.highlightable = function (node) { return this.valid(node); };
     ItemSolid.prototype.overNode = function (p, ln) {
         for (var i = 0, len = this.count; i < len; i++) {
-            var node = this.getNode(i);
+            var node = this.node(i);
             //radius 5 =>  5^2 = 25
             if ((Math.pow((p.x) - node.x, 2) + Math.pow((p.y) - node.y, 2)) <= ItemSolid.nodeArea)
                 return i;
@@ -83,7 +83,7 @@ var ItemSolid = /** @class */ (function (_super) {
     };
     ItemSolid.prototype.nodeRefresh = function (node) {
         var _this = this;
-        var bond = this.nodeBonds(node), p = this.getNode(node);
+        var bond = this.nodeBonds(node), p = this.node(node);
         p && bond && bond.to.forEach(function (d) {
             var ic = _this.container.get(d.id);
             ic && ic.setNode(d.ndx, p);
@@ -111,7 +111,7 @@ var ItemSolid = /** @class */ (function (_super) {
      * @param pinNode pin/node number
      * @param onlyPoint true to get internal rotated point only without transformations
      */
-    ItemSolid.prototype.getNode = function (node, nodeOnly) {
+    ItemSolid.prototype.node = function (node, nodeOnly) {
         var pin = pinInfo(this, node);
         if (!pin)
             return;

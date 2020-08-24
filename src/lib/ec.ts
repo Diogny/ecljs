@@ -80,7 +80,7 @@ export default class EC extends ItemSolid {
 		super.remove();
 	}
 
-	public afterDOMinserted() {
+	public onDOM() {
 		this.$.boardLabel && (this.g.insertAdjacentElement("afterend", this.$.boardLabel.g), this.$.boardLabel.setVisible(true))
 	}
 

@@ -1,24 +1,15 @@
-import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base } from "./interfaces";
+import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base, IComponent } from "./interfaces";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
-import Comp from "./components";
-import Board from "./board";
+import CompStore from "./components";
 
 export default abstract class Container<T extends ItemBoard> extends Base {
 
 	protected $: IContainerDefaults<T>;
 
-	get name(): string { return this.$.name }
-	set name(value: string) {
-		this.$.name = value
-	}
-	get board(): Board { return this.$.board }
-	set board(board: Board) {
-		this.$.board = board
-	}
-	abstract get library(): string;
+	abstract get name(): string;
 	abstract get dir(): boolean;
 	abstract createItem(options: { [x: string]: any; }): T;
 
@@ -37,22 +28,23 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	get empty(): boolean { return !(this.wireMap.size || this.itemMap.size) }
 	get size(): number { return this.itemMap.size + this.wireMap.size }
 
-	get registered(): boolean { return this.board != undefined }
+	get store(): CompStore { return this.$.store }
 
 	public get(id: string): T | Wire | undefined {
 		return this.itemMap.get(id)?.t || this.wireMap.get(id)?.t
 	}
 
-	constructor(name: string) {
-		super({
-			name: name
-		})
+	/**
+	 * @description creates a library component container
+	 * @param store component store
+	 */
+	constructor(store: CompStore) {
+		super({ store: store })
 	}
 
 	public defaults(): IContainerDefaults<T> {
 		return {
-			name: "",
-			board: <any>void 0,
+			store: <any>void 0,
 			counters: {},
 			components: new Map(),
 			itemMap: new Map(),
@@ -127,8 +119,8 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	public add(options: { [x: string]: any; }): T | Wire {
 		let
 			comp: T | Wire = createBoardItem(this, options);
-		if (comp.type != Type.WIRE && comp.base.library != this.library)
-			throw `component incompatible type`;
+		// if (comp.type != Type.WIRE && comp.base.library != this.name)
+		// 	throw `component incompatible type`;
 		return comp
 	}
 
@@ -296,7 +288,7 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 		setBase = () => {
 			if (!(base = <IBaseComponent>container.root(options.name))) {
 				base = {
-					comp: <Comp>Comp.find(options.name),
+					comp: <IComponent>container.store.find(options.name),
 					count: 0
 				};
 				if (!base.comp)

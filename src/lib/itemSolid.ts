@@ -87,7 +87,7 @@ export default abstract class ItemSolid extends ItemBoard {
 	public overNode(p: IPoint, ln?: number): number {
 		for (let i = 0, len = this.count; i < len; i++) {
 			let
-				node = <INodeInfo>this.getNode(i);
+				node = <INodeInfo>this.node(i);
 			//radius 5 =>  5^2 = 25
 			if ((Math.pow((p.x) - node.x, 2) + Math.pow((p.y) - node.y, 2)) <= ItemSolid.nodeArea)
 				return i;
@@ -98,7 +98,7 @@ export default abstract class ItemSolid extends ItemBoard {
 	public nodeRefresh(node: number): ItemSolid {
 		let
 			bond = this.nodeBonds(node),
-			p = this.getNode(node);
+			p = this.node(node);
 		p && bond && bond.to.forEach((d) => {
 			let
 				ic = this.container.get(d.id);
@@ -130,7 +130,7 @@ export default abstract class ItemSolid extends ItemBoard {
 	 * @param pinNode pin/node number
 	 * @param onlyPoint true to get internal rotated point only without transformations
 	 */
-	public getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined {
+	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {
 		let
 			pin = <INodeInfo>pinInfo(this, node);
 		if (!pin)

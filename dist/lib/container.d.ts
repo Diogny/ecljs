@@ -3,14 +3,10 @@ import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
-import Board from "./board";
+import CompStore from "./components";
 export default abstract class Container<T extends ItemBoard> extends Base {
     protected $: IContainerDefaults<T>;
-    get name(): string;
-    set name(value: string);
-    get board(): Board;
-    set board(board: Board);
-    abstract get library(): string;
+    abstract get name(): string;
     abstract get dir(): boolean;
     abstract createItem(options: {
         [x: string]: any;
@@ -35,9 +31,13 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     get all(): (T | Wire)[];
     get empty(): boolean;
     get size(): number;
-    get registered(): boolean;
+    get store(): CompStore;
     get(id: string): T | Wire | undefined;
-    constructor(name: string);
+    /**
+     * @description creates a library component container
+     * @param store component store
+     */
+    constructor(store: CompStore);
     defaults(): IContainerDefaults<T>;
     root(name: string): IBaseComponent | undefined;
     hasItem(id: string): boolean;

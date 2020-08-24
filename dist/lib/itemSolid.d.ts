@@ -24,6 +24,6 @@ export default abstract class ItemSolid extends ItemBoard {
      * @param pinNode pin/node number
      * @param onlyPoint true to get internal rotated point only without transformations
      */
-    getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined;
+    node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
     defaults(): IItemSolidDefaults;
 }

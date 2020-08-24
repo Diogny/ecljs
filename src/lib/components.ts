@@ -1,4 +1,4 @@
-import { IComponentOptions, IBaseStoreComponent, IComponentMetadata, ComponentPropertyType } from './interfaces';
+import { IBaseStoreComponent, ILibrary, IComponent } from './interfaces';
 import { obj } from './dab';
 
 //const tmpl = "{base.comp.name}-{base.count}";
@@ -15,80 +15,81 @@ const defaults = (type: string, name: string): IBaseStoreComponent => (<any>{
 	}
 });
 
-export default class Comp {
+export default class CompStore {
+	/**	
+	 * library
+	 */
+	type: string;
+	/**
+	 * library name: circuit, flowchart
+	 */
+	name: string;
+	version: string;
+	store: Map<string, IComponent>;
 
-	private static map: Map<string, Comp> =
-		Comp.init([
+	constructor(library: ILibrary) {
+		this.name = library.name;
+		this.type = library.type;
+		this.version = library.version
+		this.store = new Map();
+		//register system components
+		([
 			defaults("utils", "label"),
 			defaults("utils", "tooltip"),
 			defaults("utils", "h-node"),
 			defaults("wire", "wire")
-		]);
-
-	protected $: IComponentOptions;
-
-	get name(): string { return this.$.name }
-	get library(): string { return this.$.library }
-	get type(): string { return this.$.type }
-	get data(): string { return this.$.data }
-	get props(): { [x: string]: ComponentPropertyType } { return this.$.props }
-	get meta(): IComponentMetadata { return this.$.meta }
-
-	constructor(options: IComponentOptions) {
-		let
-			that = this,
-			template = options.tmpl;
-		delete options.tmpl;
-		this.$ = obj(options);
-		if (template) {
+		]).forEach(c => this.store.set(c.name, c.comp));
+		//register library
+		library.list.forEach(options => {
 			let
-				base = <Comp>Comp.find(template.name);
-			this.$.data = base.data;
-			this.$.meta = JSON.parse(JSON.stringify(base.meta));
-			template.label && (this.$.meta.label = obj(template.label));
-			template.nodeLabels.forEach((lbl, ndx) => {
-				that.$.meta.nodes.list[ndx].label = lbl;
-			})
-		}
-		//!this.$.meta.nameTmpl && (this.$.meta.nameTmpl = tmpl);
-		if (!Comp.store(this.$.name, this))
-			throw `duplicated: ${this.$.name}`;
-	}
-
-	public static register = (options: IComponentOptions) => new Comp(options);
-
-	private static init(list: IBaseStoreComponent[]): Map<string, Comp> {
-		let
-			set: Map<string, Comp> = Comp.map;
-		if (set == null) {
-			set = new Map();
-		}
-		list.forEach((c) => {
-			set.set(c.name, c.comp)
+				template = options.tmpl;
+			if (template) {
+				let
+					base = this.find(template.name);
+				if (!base)
+					throw ``;
+				options.data = base.data;
+				options.meta = JSON.parse(JSON.stringify(base.meta));
+				template.label && (options.meta.label = obj(template.label));
+				template.nodeLabels.forEach((lbl, ndx) => {
+					options.meta.nodes.list[ndx].label = lbl;
+				})
+			}
+			//new Comp(option)
+			if (this.store.has(options.name))
+				throw `duplicated: ${options.name}`
+			else
+				this.store.set(options.name, options)
 		});
-		return set;
 	}
 
-	public static store = (name: string, comp: Comp): boolean =>
-		Comp.map.has(name) ?
-			false :
-			(Comp.map.set(name, comp), true);
+	public has = (name: string) => this.store.has(name);
 
-	public static has = (name: string) => Comp.map.has(name);
-
-	public static find = (name: string): Comp | undefined => {
+	/**
+	 * @description find a component by name
+	 * @param name component name
+	 */
+	public find = (name: string): IComponent | undefined => {
 		let
-			comp = <Comp>Comp.map.get(name);
+			comp = this.store.get(name);
 		if (!comp) {
 			//look by meta.nameTmpl, the hard way; for C, R, F, VR, BZ
-			for (let item of Comp.map.values()) {
+			for (let item of this.store.values()) {
 				if (item.meta.nameTmpl == name)
 					return item
 			}
 		}
-		return comp
+		return obj(comp)
 	}
 
-	public static get size(): number { return Comp.map.size }
+	/**	
+	 * returns all registered components, except wire and system components
+	 */
+	public get keys(): string[] {
+		return Array.from(this.store.values())
+			.filter(c => !(c.type == "utils" || c.type == "wire"))
+			.map(c => c.name)
+	}
 
+	public get size(): number { return this.store.size }
 }

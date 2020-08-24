@@ -11,6 +11,6 @@ export default class EC extends ItemSolid {
     setNode(node: number, p: IPoint): EC;
     setVisible(value: boolean): EC;
     remove(): void;
-    afterDOMinserted(): void;
+    onDOM(): void;
     defaults(): IECDefaults;
 }

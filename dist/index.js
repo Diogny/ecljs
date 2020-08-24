@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowchartComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.Board = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = exports.Units = exports.XML = exports.Templates = exports.Size = exports.Rect = exports.Point = exports.Color = exports.utils = exports.dab = exports.ajaxp = void 0;
+exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowchartComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = exports.Units = exports.XML = exports.Templates = exports.Size = exports.Rect = exports.Point = exports.Color = exports.utils = exports.dab = exports.ajaxp = void 0;
 var tslib_1 = require("tslib");
 var ajaxp_1 = tslib_1.__importDefault(require("./lib/ajaxp"));
 exports.ajaxp = ajaxp_1.default;
@@ -47,8 +47,6 @@ var itemsBoard_1 = tslib_1.__importDefault(require("./lib/itemsBoard"));
 exports.ItemBoard = itemsBoard_1.default;
 var itemSolid_1 = tslib_1.__importDefault(require("./lib/itemSolid"));
 exports.ItemSolid = itemSolid_1.default;
-var board_1 = tslib_1.__importDefault(require("./lib/board"));
-exports.Board = board_1.default;
 var container_1 = tslib_1.__importDefault(require("./lib/container"));
 exports.Container = container_1.default;
 var circuit_1 = tslib_1.__importDefault(require("./lib/circuit"));

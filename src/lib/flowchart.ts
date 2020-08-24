@@ -6,7 +6,7 @@ import FlowConditional from "./conditional";
 
 export default class Flowchart extends Container<FlowchartComp>{
 
-	get library(): string { return "flowchart" }
+	get name(): string { return "flowchart" }
 	get dir(): boolean { return true }
 
 	public createItem(options: { [x: string]: any; }): FlowchartComp {

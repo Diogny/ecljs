@@ -3,7 +3,7 @@ import Container from "./container";
 
 export default class Circuit extends Container<EC> {
 
-	get library(): string { return "circuit" }
+	get name(): string { return "circuit" }
 	get dir(): boolean { return false }
 
 	get ec(): EC | undefined {

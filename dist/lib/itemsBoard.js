@@ -104,7 +104,7 @@ var ItemBoard = /** @class */ (function (_super) {
                 return;
             //value == true, and it doesn't exists, create and return
             //some bug, it's not deleted
-            var pin = this.getNode(node, true), exists = hl != undefined;
+            var pin = this.node(node, true), exists = hl != undefined;
             hl = new compNode_1.default({
                 node: node,
                 x: pin.x,
@@ -143,7 +143,7 @@ var ItemBoard = /** @class */ (function (_super) {
     ItemBoard.prototype.refreshHighlight = function (node) {
         var hl = this.highlighted(node);
         if (hl) {
-            var pin = this.getNode(node, true);
+            var pin = this.node(node, true);
             //only changes x,y
             hl.move(pin.x, pin.y);
             return true;

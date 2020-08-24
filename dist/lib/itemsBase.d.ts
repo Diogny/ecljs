@@ -1,12 +1,11 @@
-import { IItemBaseDefaults, IType, Type } from './interfaces';
+import { IItemBaseDefaults, IType, Type, IComponent } from './interfaces';
 import Rect from './rect';
 import Point from './point';
 import Item from './item';
-import Comp from './components';
 export default abstract class ItemBase extends Item implements IType {
     protected $: IItemBaseDefaults;
     abstract get type(): Type;
-    get base(): Comp;
+    get base(): IComponent;
     get g(): SVGElement;
     get box(): any;
     get origin(): Point;
@@ -16,6 +15,9 @@ export default abstract class ItemBase extends Item implements IType {
         [x: string]: any;
     });
     remove(): void;
-    afterDOMinserted(): void;
+    /**
+     * @description this's called after component is inserted in the DOM
+     */
+    onDOM(): void;
     defaults(): IItemBaseDefaults;
 }

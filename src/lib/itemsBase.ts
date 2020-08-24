@@ -1,10 +1,9 @@
-import { IItemBaseDefaults, IType, Type } from './interfaces';
+import { IItemBaseDefaults, IType, Type, IComponent } from './interfaces';
 import { tCl, extend } from './dab';
 import { tag } from './utils';
 import Rect from './rect';
 import Point from './point';
 import Item from './item';
-import Comp from './components';
 
 export default abstract class ItemBase extends Item implements IType {
 
@@ -12,7 +11,7 @@ export default abstract class ItemBase extends Item implements IType {
 
 	abstract get type(): Type;
 
-	get base(): Comp { return this.$.base }
+	get base(): IComponent { return this.$.base }
 	get g(): SVGElement { return this.$.g }
 
 	get box(): any { return (<any>this.g).getBBox() }
@@ -42,7 +41,10 @@ export default abstract class ItemBase extends Item implements IType {
 		this.g.parentNode?.removeChild(this.g);
 	}
 
-	public afterDOMinserted() { }
+	/**
+	 * @description this's called after component is inserted in the DOM
+	 */
+	public onDOM() { }
 
 	public defaults(): IItemBaseDefaults {
 		return <IItemBaseDefaults>extend(super.defaults(), {

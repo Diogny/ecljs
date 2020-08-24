@@ -48,7 +48,10 @@ var ItemBase = /** @class */ (function (_super) {
         var _a;
         (_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.g);
     };
-    ItemBase.prototype.afterDOMinserted = function () { };
+    /**
+     * @description this's called after component is inserted in the DOM
+     */
+    ItemBase.prototype.onDOM = function () { };
     ItemBase.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             g: void 0,

@@ -71,7 +71,7 @@ var EC = /** @class */ (function (_super) {
         this.$.boardLabel && ((_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.$.boardLabel.g));
         _super.prototype.remove.call(this);
     };
-    EC.prototype.afterDOMinserted = function () {
+    EC.prototype.onDOM = function () {
         this.$.boardLabel && (this.g.insertAdjacentElement("afterend", this.$.boardLabel.g), this.$.boardLabel.setVisible(true));
     };
     EC.prototype.defaults = function () {

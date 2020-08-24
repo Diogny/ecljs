@@ -1,20 +1,25 @@
-import { IComponentOptions, IComponentMetadata, ComponentPropertyType } from './interfaces';
-export default class Comp {
-    private static map;
-    protected $: IComponentOptions;
-    get name(): string;
-    get library(): string;
-    get type(): string;
-    get data(): string;
-    get props(): {
-        [x: string]: ComponentPropertyType;
-    };
-    get meta(): IComponentMetadata;
-    constructor(options: IComponentOptions);
-    static register: (options: IComponentOptions) => Comp;
-    private static init;
-    static store: (name: string, comp: Comp) => boolean;
-    static has: (name: string) => boolean;
-    static find: (name: string) => Comp | undefined;
-    static get size(): number;
+import { ILibrary, IComponent } from './interfaces';
+export default class CompStore {
+    /**
+     * library
+     */
+    type: string;
+    /**
+     * library name: circuit, flowchart
+     */
+    name: string;
+    version: string;
+    store: Map<string, IComponent>;
+    constructor(library: ILibrary);
+    has: (name: string) => boolean;
+    /**
+     * @description find a component by name
+     * @param name component name
+     */
+    find: (name: string) => IComponent | undefined;
+    /**
+     * returns all registered components, except wire and system components
+     */
+    get keys(): string[];
+    get size(): number;
 }

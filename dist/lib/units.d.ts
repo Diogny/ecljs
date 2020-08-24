@@ -1,19 +1,24 @@
 export default class Unit {
     protected $: {
-        unit: number;
-        prefix: number;
+        unit: string;
+        prefix: string;
+        exp: number;
         value: number;
     };
-    get name(): string;
     get unit(): string;
     get prefix(): string;
+    get exp(): number;
     get exponent(): number;
     get value(): number;
-    constructor(n: string);
+    constructor(n: string | {
+        value: number;
+        exp?: number;
+        unit: string;
+    });
+    add(u: Unit): Unit | undefined;
     toString: () => string;
     static split: (text: string) => string[];
-    static prefixSymbols: string[];
-    static prefixExponents: number[];
-    static unitNames: string[];
-    static unitSymbols: string[];
+    static prefixes: string[];
+    static exponents: number[];
+    static units: string[];
 }

@@ -16,7 +16,7 @@ export default class Wire extends ItemBoard {
 
 	get last(): number { return this.$.points.length - 1 }
 
-	get lastLine(): number { return this.editMode ? this.$.lines.length : 0 }
+	get lastLine(): number { return this.edit ? this.$.lines.length : 0 }
 
 	get isOpen(): boolean { return !this.nodeBonds(0) || !this.nodeBonds(this.last) }
 
@@ -24,22 +24,22 @@ export default class Wire extends ItemBoard {
 
 	get points(): Point[] { return Array.from(this.$.points) }
 
-	get editMode(): boolean { return this.$.edit }
+	get edit(): boolean { return this.$.edit }
 
-	set editMode(value: boolean) {
-		if (this.editMode == value)
+	set edit(value: boolean) {
+		if (this.edit == value)
 			return;
 		this.g.innerHTML = "";
-		if (this.editMode) {
+		if (this.edit) {
 			//	will change to false
 			//		.destroy lines
 			this.$.lines = [];
 			//		.recreate polyline
-			this.$.polyline = polyline(this.g);
+			this.$.poly = poly(this.g);
 		} else {
 			//	will change to true
 			//		.destroy polyline
-			this.$.polyline = <any>void 0;
+			this.$.poly = <any>void 0;
 			//		.recreate lines
 			setlines(this, this.$);
 		}
@@ -60,7 +60,7 @@ export default class Wire extends ItemBoard {
 	}
 
 	public refresh(): Wire {
-		if (this.editMode) {
+		if (this.edit) {
 			for (let i = 0, a = this.$.points[0], last = this.last; i < last; i++) {
 				let
 					b = this.$.points[i + 1],
@@ -76,14 +76,14 @@ export default class Wire extends ItemBoard {
 			}
 		}
 		else
-			attr(this.$.polyline, {
+			attr(this.$.poly, {
 				points: this.$.points.map(p => `${p.x}, ${p.y}`).join(' ')
 			});
 		return this;
 	}
 
 	public nodeRefresh(node: number): Wire {
-		if (this.editMode) {
+		if (this.edit) {
 			let
 				ln: SVGElement,
 				p = this.$.points[node];
@@ -115,15 +115,15 @@ export default class Wire extends ItemBoard {
 		super.translate(dx, dy);
 		//don't translate bonded end points because it should have been|will be moved by bonded EC or Wire
 		let
-			savedEditMode = this.editMode;
-		this.editMode = false;
+			savededit = this.edit;
+		this.edit = false;
 		for (let i = 0, p = this.$.points[i], end = this.last; i <= end; p = this.$.points[++i]) {
 			//avoid circular reference, bonded start/end nodes are refresed by EC's nodes
 			if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.nodeBonds(i))) {
 				this.setNode(i, Point.translateBy(p, dx, dy));
 			}
 		}
-		this.editMode = savedEditMode;
+		this.edit = savededit;
 		return this;
 	}
 
@@ -144,9 +144,13 @@ export default class Wire extends ItemBoard {
 			&& node <= this.last;	// NOW ACCEPTS  -1
 	}
 
-	public appendNode(p: Point): boolean {
+	/**
+	 * @description appends a new node at the end, only works in edit mode, creating a wire
+	 * @param p new point
+	 */
+	public append(p: Point): boolean {
 		//only works in edit mode = false, so far
-		return !this.editMode && (this.$.points.push(p), this.refresh(), true)
+		return !this.edit && (this.$.points.push(p), this.refresh(), true)
 	}
 
 	public highlightable(node: number): boolean {
@@ -162,18 +166,18 @@ export default class Wire extends ItemBoard {
 		this.g.innerHTML = "";
 		this.$.points = points.map(p => new Point(p.x | 0, p.y | 0));
 		moveToStart(this);
-		if (this.editMode) {
-			this.$.polyline = <any>void 0;
+		if (this.edit) {
+			this.$.poly = <any>void 0;
 			setlines(this, this.$)
 		} else {
 			this.$.lines = [];
-			this.$.polyline = polyline(this.g);
+			this.$.poly = poly(this.g);
 			this.refresh();
 		}
 		return this
 	}
 
-	public getNode(node: number, onlyPoint?: boolean): INodeInfo | undefined {
+	public node(node: number, onlyPoint?: boolean): INodeInfo | undefined {
 		let
 			p: Point = this.$.points[node];
 		return p && { x: p.x, y: p.y, label: `node::${node}` }
@@ -232,7 +236,7 @@ export default class Wire extends ItemBoard {
 			this.container.moveBond(this.id, n, n + 1);
 		}
 		this.$.points.splice(node, 0, p);
-		if (this.editMode) {
+		if (this.edit) {
 			let
 				newline = line(0, Point.origin, Point.origin);
 			this.g.insertBefore(newline, this.$.lines[0]);
@@ -279,7 +283,7 @@ function deleteWireNode(wire: Wire, $: IWireDefaults, node: number): Point | und
 	wire.container.moveBond(wire.id, last, last - 1);
 	let
 		p = $.points.splice(node, 1)[0];
-	if (wire.editMode) {
+	if (wire.edit) {
 		wire.g.removeChild($.lines[0]);
 		//use shift for ARROW next to last line
 		$.lines.shift();
@@ -311,7 +315,7 @@ function setlines(w: Wire, $: IWireDefaults) {
 	}
 }
 
-function polyline(g: SVGElement): SVGPolylineElement {
+function poly(g: SVGElement): SVGPolylineElement {
 	let
 		polyline = <SVGPolylineElement>tag("polyline", "", {
 			"svg-type": "line",

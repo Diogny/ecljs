@@ -20,7 +20,7 @@ export default abstract class ItemBoard extends ItemBase {
 	abstract get last(): number;
 	abstract refresh(): ItemBoard;
 	abstract nodeRefresh(node: number): ItemBoard;
-	abstract getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined;
+	abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
 	abstract setNode(node: number, p: IPoint): ItemBoard;
 	abstract overNode(p: IPoint, ln?: number): number;
 
@@ -106,7 +106,7 @@ export default abstract class ItemBoard extends ItemBase {
 			//value == true, and it doesn't exists, create and return
 			//some bug, it's not deleted
 			let
-				pin = <INodeInfo>this.getNode(node, true),
+				pin = <INodeInfo>this.node(node, true),
 				exists = hl != undefined;
 			hl = new CompNode({
 				node: node,
@@ -151,7 +151,7 @@ export default abstract class ItemBoard extends ItemBase {
 			hl = this.highlighted(node);
 		if (hl) {
 			let
-				pin = <INodeInfo>this.getNode(node, true);
+				pin = <INodeInfo>this.node(node, true);
 			//only changes x,y
 			hl.move(pin.x, pin.y);
 			return true

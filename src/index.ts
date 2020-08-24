@@ -24,7 +24,6 @@ import ItemBase from "./lib/itemsBase";
 import ItemBoard from "./lib/itemsBoard";
 import ItemSolid from "./lib/itemSolid";
 
-import Board from "./lib/board";
 import Container from "./lib/container";
 import Circuit from "./lib/circuit";
 import Flowchart from "./lib/flowchart";
@@ -69,7 +68,6 @@ export {
 	ItemBase,
 	ItemBoard,
 
-	Board,
 	Container,
 	Circuit,
 	Flowchart,

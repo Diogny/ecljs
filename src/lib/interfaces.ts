@@ -1,13 +1,12 @@
 import { obj, copy } from "./dab";
 import Point from './point';
-import Comp from "./components";
 import { ReactProp } from "./props";
 import Label from "./label";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
-import Board from "./board";
 import CompNode from "./compNode";
+import CompStore from "./components";
 
 
 //***************************************** Types ************************************//
@@ -67,8 +66,9 @@ export abstract class Base implements IBase {
 }
 
 export interface IContainerDefaults<T extends ItemBoard> {
-	name: string;
-	board: Board;
+	//name: string;
+	//board: Board;
+	store: CompStore;
 	counters: { [x: string]: any; };
 	components: Map<string, IBaseComponent>;
 	itemMap: Map<string, { t: T, b: Bond[], c: number }>;
@@ -106,7 +106,7 @@ export interface IComponentProperty {
 	 * options when type is select
 	 */
 	options?: string[];
-	readonly: boolean;	
+	readonly: boolean;
 }
 
 export type ComponentPropertyType = string | number | IComponentProperty;
@@ -159,14 +159,27 @@ export interface IPropContainerDefaults {
 
 
 //***************************************** Component ************************************//
-export interface IComponentOptions {
-	library: string;
+
+export interface IComponent {
 	type: string;
 	name: string;
 	props: { [x: string]: ComponentPropertyType };
 	data: string;
 	meta: IComponentMetadata;
+}
+
+export interface IComponentOptions extends IComponent {
 	tmpl: IComponentTemplate;
+}
+
+export interface ILibrary {
+	type: string;
+	/**
+	 * library name: circuit, flowchart
+	 */
+	name: string;
+	version: string;
+	list: IComponentOptions[];
 }
 
 //meta
@@ -214,12 +227,12 @@ export interface IComponentTemplateLabel {
 //
 export interface IBaseStoreComponent {
 	name: string,
-	comp: Comp;
+	comp: IComponent;
 }
 
 export interface IBaseComponent {
 	count: number;
-	comp: Comp;
+	comp: IComponent;
 }
 
 //***************************************** Item ************************************//
@@ -235,7 +248,7 @@ export interface IItemDefaults {
 }
 
 export interface IItemBaseDefaults extends IItemDefaults {
-	base: Comp;
+	base: IComponent;
 	g: SVGElement;
 }
 
@@ -282,7 +295,7 @@ export interface IItemSolidDefaults extends IItemBoardDefaults {
 
 export interface IWireDefaults extends IItemBoardDefaults {
 	points: Point[];
-	polyline: SVGPolylineElement;
+	poly: SVGPolylineElement;
 	lines: SVGLineElement[];		//used on edit-mode only
 	edit: boolean;
 }

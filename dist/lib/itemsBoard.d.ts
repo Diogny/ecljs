@@ -15,7 +15,7 @@ export default abstract class ItemBoard extends ItemBase {
     abstract get last(): number;
     abstract refresh(): ItemBoard;
     abstract nodeRefresh(node: number): ItemBoard;
-    abstract getNode(node: number, nodeOnly?: boolean): INodeInfo | undefined;
+    abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
     abstract setNode(node: number, p: IPoint): ItemBoard;
     abstract overNode(p: IPoint, ln?: number): number;
     constructor(container: Container<ItemBoard>, options: {

@@ -5,30 +5,15 @@ var interfaces_1 = require("./interfaces");
 var rect_1 = tslib_1.__importDefault(require("./rect"));
 var bonds_1 = tslib_1.__importDefault(require("./bonds"));
 var wire_1 = tslib_1.__importDefault(require("./wire"));
-var components_1 = tslib_1.__importDefault(require("./components"));
 var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
-    function Container(name) {
-        return _super.call(this, {
-            name: name
-        }) || this;
+    /**
+     * @description creates a library component container
+     * @param store component store
+     */
+    function Container(store) {
+        return _super.call(this, { store: store }) || this;
     }
-    Object.defineProperty(Container.prototype, "name", {
-        get: function () { return this.$.name; },
-        set: function (value) {
-            this.$.name = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Container.prototype, "board", {
-        get: function () { return this.$.board; },
-        set: function (board) {
-            this.$.board = board;
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Container.prototype, "counters", {
         get: function () { return this.$.counters; },
         enumerable: false,
@@ -79,8 +64,8 @@ var Container = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Container.prototype, "registered", {
-        get: function () { return this.board != undefined; },
+    Object.defineProperty(Container.prototype, "store", {
+        get: function () { return this.$.store; },
         enumerable: false,
         configurable: true
     });
@@ -90,8 +75,7 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.defaults = function () {
         return {
-            name: "",
-            board: void 0,
+            store: void 0,
             counters: {},
             components: new Map(),
             itemMap: new Map(),
@@ -152,8 +136,8 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.add = function (options) {
         var comp = createBoardItem(this, options);
-        if (comp.type != interfaces_1.Type.WIRE && comp.base.library != this.library)
-            throw "component incompatible type";
+        // if (comp.type != Type.WIRE && comp.base.library != this.name)
+        // 	throw `component incompatible type`;
         return comp;
     };
     Container.prototype.delete = function (comp) {
@@ -282,7 +266,7 @@ function createBoardItem(container, options) {
     var base = void 0, item = void 0, setBase = function () {
         if (!(base = container.root(options.name))) {
             base = {
-                comp: components_1.default.find(options.name),
+                comp: container.store.find(options.name),
                 count: 0
             };
             if (!base.comp)

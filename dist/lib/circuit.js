@@ -28,6 +28,10 @@ var Circuit = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    /**
+     * @description creates a circuit compoents
+     * @param options dictionary of options
+     */
     Circuit.prototype.createItem = function (options) {
         return new ec_1.default(this, options);
     };

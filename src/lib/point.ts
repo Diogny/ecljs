@@ -2,7 +2,7 @@
 //https://github.com/Microsoft/TypeScriptSamples/blob/master/raytracer/raytracer.ts
 
 import { IPoint, ISize } from './interfaces';
-import { round, isNumeric } from './dab';
+import { round, parse } from './dab';
 
 /**
  * @description a 2 dimension integer point class
@@ -62,6 +62,8 @@ export default class Point implements IPoint {
 		return `${pars ? "(" : ""}${vars ? "x: " : ""}${round(this.x, 1)}, ${vars ? "y: " : ""}${round(this.y, 1)}${pars ? ")" : ""}`
 	}
 
+	public get str(): string { return `${this.x}, ${this.y}` }
+
 	/**	
 	 * @description returns quadrant of this point
 	 * @returns 0 (0,0); -1 (x==0 or y ==0); 1 (y>0,x>0); 2 (y>0,x<0); 3 (y<0,x<0); 4 (y<0,x>0)
@@ -111,11 +113,8 @@ export default class Point implements IPoint {
 	 */
 	static parse(value: string): Point | undefined {
 		let
-			arr = value.split(",");
-		if (arr.length == 2 && isNumeric(arr[0]) && isNumeric(arr[1])) {
-			return new Point(parseInt(arr[0]), parseInt(arr[1]));
-		}
-		//invalid point
+			numbers = parse(value, 2);
+		return numbers && new Point(numbers[0], numbers[1])
 	}
 
 	static scale(v: IPoint, k: number): Point { return new Point(k * v.x, k * v.y) }

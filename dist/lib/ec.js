@@ -50,8 +50,8 @@ var EC = /** @class */ (function (_super) {
             var pos = point_1.default.plus(this.p, this.$.boardLabel.p), center = this.origin, attrs = {
                 transform: "translate(" + pos.x + " " + pos.y + ")"
             };
-            this.rotation && (center = point_1.default.minus(point_1.default.plus(this.p, center), pos),
-                attrs.transform += " rotate(" + this.rotation + " " + center.x + " " + center.y + ")");
+            this.rot && (center = point_1.default.minus(point_1.default.plus(this.p, center), pos),
+                attrs.transform += " rotate(" + this.rot + " " + center.x + " " + center.y + ")");
             dab_1.attr(this.$.boardLabel.g, attrs);
         }
         return this;

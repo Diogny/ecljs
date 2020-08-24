@@ -15,6 +15,7 @@ export default class Unit {
         exp?: number;
         unit: string;
     });
+    equal(u: Unit): boolean;
     add(u: Unit): Unit | undefined;
     toString: () => string;
     static split: (text: string) => string[];

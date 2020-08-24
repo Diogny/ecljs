@@ -40,6 +40,8 @@ export default class Unit {
 			throw `NaN unit value`
 	}
 
+	public equal(u: Unit): boolean { return this.value == u.value && this.unit == u.unit && this.exp == u.exp }
+
 	public add(u: Unit): Unit | undefined {
 		if (this.unit != u.unit)
 			return

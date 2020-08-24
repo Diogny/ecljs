@@ -1,4 +1,4 @@
-import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base, IComponent } from "./interfaces";
+import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base, IComponent, BondDir } from "./interfaces";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
@@ -116,6 +116,10 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return r;
 	}
 
+	/**
+	 * @description adds a new component to this container
+	 * @param options disctionary of options
+	 */
 	public add(options: { [x: string]: any; }): T | Wire {
 		let
 			comp: T | Wire = createBoardItem(this, options);
@@ -150,11 +154,11 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	public bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean {
 		if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
 			return false;
-		return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
-			&& this.bondOneWay(ic, icNode, thisObj, thisNode, false)
+		return this.bondOneWay(thisObj, thisNode, ic, icNode, 0)		// from A to B
+			&& this.bondOneWay(ic, icNode, thisObj, thisNode, 1)		// back B to A
 	}
 
-	protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean {
+	protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, dir: BondDir): boolean {
 		let
 			item = getItem(this, thisObj.id),
 			entry = item && item.b[thisNode];
@@ -169,7 +173,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 				throw `duplicated bond`;
 		} else {
 			//this's the origin of the bond
-			entry = new Bond(<ItemBoard>thisObj, thisNode, <ItemBoard>ic, icNode, origin);
+			entry = new Bond(<ItemBoard>thisObj, thisNode, <ItemBoard>ic, icNode, dir);
 			item.b[thisNode] = entry;
 		}
 		item.c++;

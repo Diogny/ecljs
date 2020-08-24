@@ -13,6 +13,13 @@ export default class Rect implements IRect {
     add(r: Rect): void;
     move(x: number, y: number): void;
     grow(dx: number, dy: number): void;
+    equal(r: Rect): boolean;
     static create(r: IRect): Rect;
     static get empty(): Rect;
+    /**
+     * @description parse an string into an (x,y) Point
+     * @param value string in the for "x, y"
+     */
+    static parse(value: string): Rect | undefined;
+    get str(): string;
 }

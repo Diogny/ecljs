@@ -22,12 +22,15 @@ export default abstract class ItemBoard extends ItemBase {
 	abstract nodeRefresh(node: number): ItemBoard;
 	abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
 	abstract setNode(node: number, p: IPoint): ItemBoard;
-	abstract overNode(p: IPoint, ln?: number): number;
+	abstract over(p: IPoint, ln?: number): number;
 
 	constructor(public container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(options);
 		if (!container)
 			throw `missing container`;
+		//create getter/setters for every property, so type=="size" or "point" don't need to parse always
+		//and later save it along the .xml file for custom values
+
 		this.$.props = obj(this.base.props);
 		attr(this.g, {
 			id: this.id,
@@ -159,14 +162,25 @@ export default abstract class ItemBoard extends ItemBase {
 		return false
 	}
 
-	public bond(thisNode: number, ic: ItemBoard, icNode: number): boolean {
-		return this.container.bond(this, thisNode, ic, icNode)
+	/**
+	 * @description bonds two components two-way
+	 * @param node 0-based node
+	 * @param ic component to bond to
+	 * @param icNode component node
+	 */
+	public bond(node: number, ic: ItemBoard, icNode: number): boolean {
+		return this.container.bond(this, node, ic, icNode)
 	}
 
 	public nodeBonds(node: number): Bond | undefined {
 		return this.container.nodeBonds(this, node); // <Bond>(<any>this.bonds)[node]
 	}
 
+	/**
+	 * @description unbonds a node from a component
+	 * @param node 0-base node to unbond
+	 * @param id component to unbond from
+	 */
 	public unbond(node: number, id: string): void {
 		this.container.unbond(this, node, id)
 	}

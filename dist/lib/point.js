@@ -49,6 +49,11 @@ var Point = /** @class */ (function () {
         var vars = ((options = options | 0) & 2) != 0, pars = (options & 1) != 0;
         return "" + (pars ? "(" : "") + (vars ? "x: " : "") + dab_1.round(this.x, 1) + ", " + (vars ? "y: " : "") + dab_1.round(this.y, 1) + (pars ? ")" : "");
     };
+    Object.defineProperty(Point.prototype, "str", {
+        get: function () { return this.x + ", " + this.y; },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Point.prototype, "quadrant", {
         /**
          * @description returns quadrant of this point
@@ -96,11 +101,8 @@ var Point = /** @class */ (function () {
      * @param value string in the for "x, y"
      */
     Point.parse = function (value) {
-        var arr = value.split(",");
-        if (arr.length == 2 && dab_1.isNumeric(arr[0]) && dab_1.isNumeric(arr[1])) {
-            return new Point(parseInt(arr[0]), parseInt(arr[1]));
-        }
-        //invalid point
+        var numbers = dab_1.parse(value, 2);
+        return numbers && new Point(numbers[0], numbers[1]);
     };
     Point.scale = function (v, k) { return new Point(k * v.x, k * v.y); };
     Point.translateBy = function (v, dx, dy) { return new Point(v.x + dx, v.y + dy); };

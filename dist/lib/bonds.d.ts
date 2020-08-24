@@ -1,7 +1,7 @@
-import { IType, IBondNode, Type } from './interfaces';
+import { IType, IBondNode, Type, BondDir } from './interfaces';
 import ItemBoard from './itemsBoard';
 export default class Bond implements IType {
-    origin: boolean;
+    dir: BondDir;
     from: IBondNode;
     to: IBondNode[];
     get type(): Type;
@@ -9,12 +9,13 @@ export default class Bond implements IType {
     get link(): string;
     /**
      * @description implements a component bond, it must be created by default as a One-to-One bond
-     * @param {object} from from
-     * @param {object} to to
-     * @param {number} toNode node
-     * @param {any} fromPin pin
+     * @param from component
+     * @param fromPin component's pin/node
+     * @param to component
+     * @param toNode component's pini/node
+     * @param dir direction of the bond: 0=origin, A to B; or 1=dest, B to A
      */
-    constructor(from: ItemBoard, fromPin: number, to: ItemBoard, toNode: number, origin: boolean);
+    constructor(from: ItemBoard, fromPin: number, to: ItemBoard, toNode: number, dir: BondDir);
     has(id: string): boolean;
     get(id: string): IBondNode | undefined;
     add(t: ItemBoard, ndx: number): boolean;

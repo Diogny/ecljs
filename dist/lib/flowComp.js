@@ -22,13 +22,11 @@ var FlowComp = /** @class */ (function (_super) {
     });
     Object.defineProperty(FlowComp.prototype, "size", {
         get: function () {
-            var s = size_1.default.parse(this.prop("size"));
-            if (s == undefined)
-                throw "invalid Size";
-            else
-                return s;
+            return size_1.default.parse(this.prop("size"));
         },
         set: function (value) {
+            if (value.equal(this.size))
+                return;
             this.prop("size").value = value.width + "," + value.height;
             this.onResize(value);
         },
@@ -46,8 +44,8 @@ var FlowComp = /** @class */ (function (_super) {
         configurable: true
     });
     FlowComp.prototype.setNode = function (node, p) {
-        //Some code tries to call this, investigate later...
-        throw 'somebody called me, not good!';
+        //nobody should call this
+        return this;
     };
     FlowComp.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {

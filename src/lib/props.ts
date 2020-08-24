@@ -1,4 +1,4 @@
-import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp, IPropHook } from './interfaces';
+import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp, IReactPropHook } from './interfaces';
 import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric, isFn } from './dab';
 import { qS, each } from './utils';
 
@@ -260,7 +260,7 @@ export class PropContainer extends Base {
 
 	protected $: IPropContainerDefaults;
 
-	get props(): { [id: string]: IPropHook } { return this.$._ }
+	get props(): { [id: string]: IReactPropHook } { return this.$._ }
 
 	get modified(): boolean { return this.$.modified }
 	set modified(value: boolean) { this.$.modified = value }
@@ -304,7 +304,7 @@ export class PropContainer extends Base {
  * - modify: triggers container modified, default to true
  * - label --experiment to use shorter names
  */
-function hook(parent: PropContainer, name: string, options: { [id: string]: any }): IPropHook {
+function hook(parent: PropContainer, name: string, options: { [id: string]: any }): IReactPropHook {
 	var
 		//defaults to "true" if not defined
 		onModify = options.modify == undefined ? true : options.modify,

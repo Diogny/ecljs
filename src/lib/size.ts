@@ -1,5 +1,5 @@
 import { ISize } from './interfaces';
-import { round, isNumeric } from './dab';
+import { round, isNumeric, parse } from './dab';
 
 export default class Size implements ISize {
 	public width: number;
@@ -13,7 +13,7 @@ export default class Size implements ISize {
 	public clone(): Size { return new Size(this.width, this.height) }
 
 	public equal(size: Size): boolean { return this.width == size.width && this.height == size.height }
-	
+
 	static get empty(): Size { return new Size(0, 0) }
 
 	static create(size: ISize): Size {
@@ -26,11 +26,8 @@ export default class Size implements ISize {
 	 */
 	static parse(value: string): Size | undefined {
 		let
-			arr = value.split(",");
-		if (arr.length == 2 && isNumeric(arr[0]) && isNumeric(arr[1])) {
-			return new Size(parseInt(arr[0]), parseInt(arr[1]));
-		}
-		//invalid size
+			numbers = parse(value, 2);
+		return numbers && new Size(numbers[0], numbers[1])
 	}
 
 	/**
@@ -46,4 +43,7 @@ export default class Size implements ISize {
 			height = () => shortVars ? "h: " : longVars ? "height: " : "";
 		return `${pars ? "(" : ""}${width()}${round(this.width, 1)}, ${height()}${round(this.height, 1)}${pars ? ")" : ""}`
 	}
+
+	public get str(): string { return `${this.width}, ${this.height}` }
+
 }

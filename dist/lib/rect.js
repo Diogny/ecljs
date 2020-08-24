@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var dab_1 = require("./dab");
 var Rect = /** @class */ (function () {
     function Rect(x, y, width, height) {
         this.x = x;
@@ -49,9 +50,23 @@ var Rect = /** @class */ (function () {
         this.width += dx * 2;
         this.height += dy * 2;
     };
+    Rect.prototype.equal = function (r) { return this.x == r.x && this.y == r.y && this.width == r.width && this.height == r.height; };
     Rect.create = function (r) { return new Rect(r.x, r.y, r.width, r.height); };
     Object.defineProperty(Rect, "empty", {
         get: function () { return new Rect(0, 0, 0, 0); },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * @description parse an string into an (x,y) Point
+     * @param value string in the for "x, y"
+     */
+    Rect.parse = function (value) {
+        var numbers = dab_1.parse(value, 4);
+        return numbers && new Rect(numbers[0], numbers[1], numbers[2], numbers[3]);
+    };
+    Object.defineProperty(Rect.prototype, "str", {
+        get: function () { return this.x + ", " + this.y + ", " + this.width + ", " + this.height; },
         enumerable: false,
         configurable: true
     });

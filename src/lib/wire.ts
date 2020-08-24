@@ -26,6 +26,9 @@ export default class Wire extends ItemBoard {
 
 	get edit(): boolean { return this.$.edit }
 
+	/**	
+	 * @description get/set wire edit mode
+	 */
 	set edit(value: boolean) {
 		if (this.edit == value)
 			return;
@@ -182,6 +185,13 @@ export default class Wire extends ItemBoard {
 		return this
 	}
 
+	/**
+	 * @description returns the node information
+	 * @param node 0-based pin/node number
+	 * @param onlyPoint it's discarded
+	 * 
+	 * this returns absolute (x, y) position
+	 */
 	public node(node: number, onlyPoint?: boolean): INodeInfo | undefined {
 		let
 			p: Point = this.$.points[node];
@@ -190,7 +200,12 @@ export default class Wire extends ItemBoard {
 
 	public static nodeArea = 25;
 
-	public overNode(p: IPoint, ln?: number): number {
+	/**
+	 * @description detects a point over a node
+	 * @param p point to check for component node
+	 * @param ln 1-based line number, ln undefined or 0, checks the whole wire, otherwise just check this line
+	 */
+	public over(p: IPoint, ln?: number): number {
 		let
 			inside = (np: IPoint): boolean => (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea;
 		if (ln) {
@@ -269,7 +284,7 @@ export default class Wire extends ItemBoard {
 			name: "wire",
 			class: "wire",
 			edit: false,
-			head: 7,
+			head: 14,
 		})
 	}
 

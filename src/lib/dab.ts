@@ -243,3 +243,11 @@ var a = {
 };
 
 export const toBool = (val: any): boolean => a[val];
+
+export const parse = (s: string, l: number): number[] | undefined => {
+	let
+		n: number,
+		nans = false,
+		numbers = s.split(',').map(str => (n = parseFloat(str), isNaN(n) && (nans = true), n));
+	return (nans || numbers.length != l) ? void 0 : numbers
+}

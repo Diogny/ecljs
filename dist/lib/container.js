@@ -134,6 +134,10 @@ var Container = /** @class */ (function (_super) {
         r.grow(20, 20);
         return r;
     };
+    /**
+     * @description adds a new component to this container
+     * @param options disctionary of options
+     */
     Container.prototype.add = function (options) {
         var comp = createBoardItem(this, options);
         // if (comp.type != Type.WIRE && comp.base.library != this.name)
@@ -162,10 +166,10 @@ var Container = /** @class */ (function (_super) {
     Container.prototype.bond = function (thisObj, thisNode, ic, icNode) {
         if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
             return false;
-        return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
-            && this.bondOneWay(ic, icNode, thisObj, thisNode, false);
+        return this.bondOneWay(thisObj, thisNode, ic, icNode, 0) // from A to B
+            && this.bondOneWay(ic, icNode, thisObj, thisNode, 1); // back B to A
     };
-    Container.prototype.bondOneWay = function (thisObj, thisNode, ic, icNode, origin) {
+    Container.prototype.bondOneWay = function (thisObj, thisNode, ic, icNode, dir) {
         var item = getItem(this, thisObj.id), entry = item && item.b[thisNode];
         if (!item)
             return false;
@@ -179,7 +183,7 @@ var Container = /** @class */ (function (_super) {
         }
         else {
             //this's the origin of the bond
-            entry = new bonds_1.default(thisObj, thisNode, ic, icNode, origin);
+            entry = new bonds_1.default(thisObj, thisNode, ic, icNode, dir);
             item.b[thisNode] = entry;
         }
         item.c++;

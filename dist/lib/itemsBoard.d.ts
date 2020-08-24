@@ -17,7 +17,7 @@ export default abstract class ItemBoard extends ItemBase {
     abstract nodeRefresh(node: number): ItemBoard;
     abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
     abstract setNode(node: number, p: IPoint): ItemBoard;
-    abstract overNode(p: IPoint, ln?: number): number;
+    abstract over(p: IPoint, ln?: number): number;
     constructor(container: Container<ItemBoard>, options: {
         [x: string]: any;
     });
@@ -51,8 +51,19 @@ export default abstract class ItemBoard extends ItemBase {
      * @param node 0-base node
      */
     refreshHighlight(node: number): boolean;
-    bond(thisNode: number, ic: ItemBoard, icNode: number): boolean;
+    /**
+     * @description bonds two components two-way
+     * @param node 0-based node
+     * @param ic component to bond to
+     * @param icNode component node
+     */
+    bond(node: number, ic: ItemBoard, icNode: number): boolean;
     nodeBonds(node: number): Bond | undefined;
+    /**
+     * @description unbonds a node from a component
+     * @param node 0-base node to unbond
+     * @param id component to unbond from
+     */
     unbond(node: number, id: string): void;
     /**
      * @description unbonds a node

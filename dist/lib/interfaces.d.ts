@@ -6,6 +6,9 @@ import Bond from "./bonds";
 import Wire from "./wire";
 import CompNode from "./compNode";
 import CompStore from "./components";
+import Size from "./size";
+import Unit from "./units";
+import { Rect } from "src";
 export declare enum Type {
     UNDEFINED = 0,
     EC = 1,
@@ -75,6 +78,7 @@ export interface IContainerDefaults<T extends ItemBoard> {
     }>;
     selected: (T | Wire)[];
 }
+export declare type IEqual = (p: Point | Size | Rect | Unit) => boolean;
 export interface IPoint {
     x: number;
     y: number;
@@ -85,12 +89,18 @@ export interface ISize {
 }
 export interface IRect extends IPoint, ISize {
 }
-export interface IComponentProperty {
+export interface IPropHookProp {
     /**
-     * unit
+    * value
+    */
+    value: any;
+    /**
+     * number | string | size | point | rect | unit
      */
-    value: string | number | any;
     valueType: string;
+}
+export declare type IPropHookPropType = string | number | IPropHookProp;
+export interface IComponentProperty extends IPropHookProp {
     /**
      * input, select, string, number
      */
@@ -122,10 +132,12 @@ export interface IReactPropDefaults {
     value: any;
 }
 export interface IPropHook {
-    name: string;
     value: any;
-    prop: ReactProp;
     modified: boolean;
+}
+export interface IReactPropHook extends IPropHook {
+    name: string;
+    prop: ReactProp;
     _: {
         [id: string]: any;
     };
@@ -142,7 +154,7 @@ export interface IUIPropertyDefaults extends IReactPropDefaults {
 }
 export interface IPropContainerDefaults {
     _: {
-        [id: string]: IPropHook;
+        [id: string]: IReactPropHook;
     };
     modified: boolean;
 }
@@ -255,7 +267,10 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
     };
 }
 export interface IItemSolidDefaults extends IItemBoardDefaults {
-    rotation: number;
+    /**
+     * rotation in 45° (+/-) increments until 360° goes back to 0°
+     */
+    rot: number;
 }
 export interface IWireDefaults extends IItemBoardDefaults {
     points: Point[];
@@ -279,3 +294,10 @@ export interface IBondNode {
     type: Type;
     ndx: number;
 }
+/**
+ * @description direction of the bond.
+ *
+ * - 0 - origin bond. this's the start of EC | FlowComp or Wire node bond
+ * - 1 - dest bond. this's the way back in this bond relationship
+ */
+export declare type BondDir = 0 | 1;

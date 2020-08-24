@@ -12,6 +12,8 @@ var ItemBoard = /** @class */ (function (_super) {
         _this.container = container;
         if (!container)
             throw "missing container";
+        //create getter/setters for every property, so type=="size" or "point" don't need to parse always
+        //and later save it along the .xml file for custom values
         _this.$.props = dab_1.obj(_this.base.props);
         dab_1.attr(_this.g, {
             id: _this.id,
@@ -150,12 +152,23 @@ var ItemBoard = /** @class */ (function (_super) {
         }
         return false;
     };
-    ItemBoard.prototype.bond = function (thisNode, ic, icNode) {
-        return this.container.bond(this, thisNode, ic, icNode);
+    /**
+     * @description bonds two components two-way
+     * @param node 0-based node
+     * @param ic component to bond to
+     * @param icNode component node
+     */
+    ItemBoard.prototype.bond = function (node, ic, icNode) {
+        return this.container.bond(this, node, ic, icNode);
     };
     ItemBoard.prototype.nodeBonds = function (node) {
         return this.container.nodeBonds(this, node); // <Bond>(<any>this.bonds)[node]
     };
+    /**
+     * @description unbonds a node from a component
+     * @param node 0-base node to unbond
+     * @param id component to unbond from
+     */
     ItemBoard.prototype.unbond = function (node, id) {
         this.container.unbond(this, node, id);
     };

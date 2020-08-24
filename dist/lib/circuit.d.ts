@@ -7,6 +7,10 @@ export default class Circuit extends Container<EC> {
     get name(): string;
     get dir(): boolean;
     get ec(): EC | undefined;
+    /**
+     * @description creates a circuit compoents
+     * @param options dictionary of options
+     */
     createItem(options: {
         [x: string]: any;
     }): EC;

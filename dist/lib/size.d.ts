@@ -17,4 +17,5 @@ export default class Size implements ISize {
      * @param options  0 = width,height	1 = parenthesis	2 = short variables w: width, h: height	4 = long variables (width: width, height: height)
      */
     toString(options?: number): string;
+    get str(): string;
 }

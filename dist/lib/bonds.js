@@ -5,14 +5,15 @@ var dab_1 = require("./dab");
 var Bond = /** @class */ (function () {
     /**
      * @description implements a component bond, it must be created by default as a One-to-One bond
-     * @param {object} from from
-     * @param {object} to to
-     * @param {number} toNode node
-     * @param {any} fromPin pin
+     * @param from component
+     * @param fromPin component's pin/node
+     * @param to component
+     * @param toNode component's pini/node
+     * @param dir direction of the bond: 0=origin, A to B; or 1=dest, B to A
      */
-    function Bond(from, fromPin, to, toNode, origin) {
+    function Bond(from, fromPin, to, toNode, dir) {
         var _this = this;
-        this.origin = origin;
+        this.dir = dir;
         this.toString = function () {
             var fn = function (o) { return "#" + o.id + " [" + o.ndx + "]"; }, toStr = _this.to.map(function (b) { return fn(b); }).join(', ');
             return "from " + fn(_this.from) + " to " + toStr;

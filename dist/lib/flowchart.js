@@ -37,8 +37,8 @@ var Flowchart = /** @class */ (function (_super) {
             return false;
         //directional components can only be connected to other directional components or wires
         //directional components have only ONE origin|destination bond in any node
-        return this.bondOneWay(thisObj, thisNode, ic, icNode, true)
-            && this.bondOneWay(ic, icNode, thisObj, thisNode, false);
+        return this.bondOneWay(thisObj, thisNode, ic, icNode, 0) // from A to B
+            && this.bondOneWay(ic, icNode, thisObj, thisNode, 1); // back B to A
     };
     return Flowchart;
 }(container_1.default));

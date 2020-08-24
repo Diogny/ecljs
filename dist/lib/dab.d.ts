@@ -103,3 +103,4 @@ export declare const union: (x: any[], y: any[]) => any[];
 export declare const aClx: (el: Element, className: string) => Element;
 export declare const selectMany: <TIn, TOut>(input: TIn[], selectListFn: (t: TIn) => TOut[]) => TOut[];
 export declare const toBool: (val: any) => boolean;
+export declare const parse: (s: string, l: number) => number[] | undefined;

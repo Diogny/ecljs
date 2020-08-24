@@ -1,4 +1,5 @@
 import { IPoint, IRect } from "./interfaces";
+import { parse } from "./dab";
 
 export default class Rect implements IRect {
 
@@ -54,7 +55,21 @@ export default class Rect implements IRect {
 		this.height += dy * 2;
 	}
 
+	public equal(r: Rect): boolean { return this.x == r.x && this.y == r.y && this.width == r.width && this.height == r.height }
+
 	static create(r: IRect) { return new Rect(r.x, r.y, r.width, r.height) }
 
 	static get empty(): Rect { return new Rect(0, 0, 0, 0) }
+
+	/**
+	 * @description parse an string into an (x,y) Point
+	 * @param value string in the for "x, y"
+	 */
+	static parse(value: string): Rect | undefined {
+		let
+			numbers = parse(value, 4);
+		return numbers && new Rect(numbers[0], numbers[1], numbers[2], numbers[3])
+	}
+
+	public get str(): string { return `${this.x}, ${this.y}, ${this.width}, ${this.height}` }
 }

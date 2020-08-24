@@ -13,6 +13,9 @@ export default class Wire extends ItemBoard {
     rect(): Rect;
     get points(): Point[];
     get edit(): boolean;
+    /**
+     * @description get/set wire edit mode
+     */
     set edit(value: boolean);
     constructor(container: Container<ItemBoard>, options: {
         [x: string]: any;
@@ -36,9 +39,21 @@ export default class Wire extends ItemBoard {
     append(p: Point): boolean;
     highlightable(node: number): boolean;
     protected setPoints(points: IPoint[]): Wire;
+    /**
+     * @description returns the node information
+     * @param node 0-based pin/node number
+     * @param onlyPoint it's discarded
+     *
+     * this returns absolute (x, y) position
+     */
     node(node: number, onlyPoint?: boolean): INodeInfo | undefined;
     static nodeArea: number;
-    overNode(p: IPoint, ln?: number): number;
+    /**
+     * @description detects a point over a node
+     * @param p point to check for component node
+     * @param ln 1-based line number, ln undefined or 0, checks the whole wire, otherwise just check this line
+     */
+    over(p: IPoint, ln?: number): number;
     deleteLine(line: number): boolean;
     deleteNode(node: number): Point | undefined;
     insertNode(node: number, p: Point): boolean;

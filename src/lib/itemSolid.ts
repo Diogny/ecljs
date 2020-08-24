@@ -20,7 +20,7 @@ export default abstract class ItemSolid extends ItemBoard {
 	}
 
 	constructor(container: Container<ItemBoard>, options: { [x: string]: any; }) {
-		options.rotation = Point.validateRotation(options.rotation);
+		options.rot = Point.validateRotation(options.rot);
 		super(container, options);
 		this.g.innerHTML = this.base.data;
 		let
@@ -40,11 +40,15 @@ export default abstract class ItemSolid extends ItemBoard {
 
 	}
 
-	get rotation(): number { return this.$.rotation }
+	get rot(): number { return this.$.rot }
 
+	/**
+	 * @description sets rotation of this component to this amount 0-360°
+	 * @param value 0-360° number value
+	 */
 	public rotate(value: number): ItemSolid {
-		if (this.$.rotation != (value = Point.validateRotation(value))) {
-			this.$.rotation = value;
+		if (this.$.rot != (value = Point.validateRotation(value))) {
+			this.$.rot = value;
 			this.onProp && this.onProp({
 				id: `#${this.id}`,
 				code: 4					// "rotate" code: 4
@@ -62,11 +66,11 @@ export default abstract class ItemSolid extends ItemBoard {
 		let
 			size = Size.create(this.box),
 			p = this.p;
-		if (this.rotation) {
+		if (this.rot) {
 			//rotate (0,0) (width,0) (width,height) (0,height) and get the boundaries respectivelly to the location (x,y)
 			let
 				origin = this.origin,
-				angle = -this.rotation,
+				angle = -this.rot,
 				points = [[p.x, p.y], [p.x + size.width, p.y], [p.x, p.y + size.height], [p.x + size.width, p.y + size.height]]
 					.map(p => Point.rotateBy(p[0], p[1], origin.x, origin.y, angle)),
 				x = Math.min.apply(Math, points.map(a => a.x)),
@@ -84,7 +88,12 @@ export default abstract class ItemSolid extends ItemBoard {
 
 	public static nodeArea = 81;
 
-	public overNode(p: IPoint, ln?: number): number {
+	/**
+	 * @description detects a point over a node
+	 * @param p point to check for component node
+	 * @param ln 1-based line number, for EC it's discarded
+	 */
+	public over(p: IPoint, ln?: number): number {
 		for (let i = 0, len = this.count; i < len; i++) {
 			let
 				node = <INodeInfo>this.node(i);
@@ -113,8 +122,8 @@ export default abstract class ItemSolid extends ItemBoard {
 				transform: `translate(${this.x} ${this.y})`
 			},
 			center = this.origin;
-		if (this.rotation) {
-			attrs.transform += ` rotate(${this.rotation} ${center.x} ${center.y})`
+		if (this.rot) {
+			attrs.transform += ` rotate(${this.rot} ${center.x} ${center.y})`
 		}
 		attr(this.g, attrs);
 		//check below
@@ -124,11 +133,12 @@ export default abstract class ItemSolid extends ItemBoard {
 		return this
 	}
 
-	//this returns (x, y) relative to the EC location
 	/**
-	 * 
-	 * @param pinNode pin/node number
+	 * @description returns the node information
+	 * @param node 0-based pin/node number
 	 * @param onlyPoint true to get internal rotated point only without transformations
+	 * 
+	 * this returns (x, y) relative to the EC location
 	 */
 	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {
 		let
@@ -136,10 +146,10 @@ export default abstract class ItemSolid extends ItemBoard {
 		if (!pin)
 			return;
 		if (!nodeOnly) {
-			if (this.rotation) {
+			if (this.rot) {
 				let
 					center = this.origin,
-					rot = Point.rotateBy(pin.x, pin.y, center.x, center.y, -this.rotation);
+					rot = Point.rotateBy(pin.x, pin.y, center.x, center.y, -this.rot);
 				pin.x = rot.x;
 				pin.y = rot.y
 			}
@@ -151,7 +161,7 @@ export default abstract class ItemSolid extends ItemBoard {
 
 	public defaults(): IItemSolidDefaults {
 		return <IItemSolidDefaults>extend(super.defaults(), {
-			rotation: 0,
+			rot: 0,
 		})
 	}
 

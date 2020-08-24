@@ -21,11 +21,8 @@ var Size = /** @class */ (function () {
      * @param value string in the for "width, height"
      */
     Size.parse = function (value) {
-        var arr = value.split(",");
-        if (arr.length == 2 && dab_1.isNumeric(arr[0]) && dab_1.isNumeric(arr[1])) {
-            return new Size(parseInt(arr[0]), parseInt(arr[1]));
-        }
-        //invalid size
+        var numbers = dab_1.parse(value, 2);
+        return numbers && new Size(numbers[0], numbers[1]);
     };
     /**
      * returns string of a Size oobject
@@ -35,6 +32,11 @@ var Size = /** @class */ (function () {
         var pars = ((options = options | 0) & 1) != 0, shortVars = (options & 2) != 0, longVars = (options & 4) != 0, width = function () { return shortVars ? "w: " : longVars ? "width: " : ""; }, height = function () { return shortVars ? "h: " : longVars ? "height: " : ""; };
         return "" + (pars ? "(" : "") + width() + dab_1.round(this.width, 1) + ", " + height() + dab_1.round(this.height, 1) + (pars ? ")" : "");
     };
+    Object.defineProperty(Size.prototype, "str", {
+        get: function () { return this.width + ", " + this.height; },
+        enumerable: false,
+        configurable: true
+    });
     return Size;
 }());
 exports.default = Size;

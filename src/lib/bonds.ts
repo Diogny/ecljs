@@ -1,4 +1,4 @@
-import { IType, IBondNode, Type } from './interfaces';
+import { IType, IBondNode, Type, BondDir } from './interfaces';
 import { obj } from './dab';
 import ItemBoard from './itemsBoard';
 
@@ -16,12 +16,13 @@ export default class Bond implements IType {
 
 	/**
 	 * @description implements a component bond, it must be created by default as a One-to-One bond
-	 * @param {object} from from
-	 * @param {object} to to
-	 * @param {number} toNode node
-	 * @param {any} fromPin pin
+	 * @param from component
+	 * @param fromPin component's pin/node
+	 * @param to component
+	 * @param toNode component's pini/node
+	 * @param dir direction of the bond: 0=origin, A to B; or 1=dest, B to A
 	 */
-	constructor(from: ItemBoard, fromPin: number, to: ItemBoard, toNode: number, public origin: boolean) {
+	constructor(from: ItemBoard, fromPin: number, to: ItemBoard, toNode: number, public dir: BondDir) {
 		if (!from || !to)
 			throw 'empty bond';
 		this.from = this.create(from, fromPin);

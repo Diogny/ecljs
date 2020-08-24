@@ -52,6 +52,9 @@ var Wire = /** @class */ (function (_super) {
     });
     Object.defineProperty(Wire.prototype, "edit", {
         get: function () { return this.$.edit; },
+        /**
+         * @description get/set wire edit mode
+         */
         set: function (value) {
             if (this.edit == value)
                 return;
@@ -190,11 +193,23 @@ var Wire = /** @class */ (function (_super) {
         }
         return this;
     };
+    /**
+     * @description returns the node information
+     * @param node 0-based pin/node number
+     * @param onlyPoint it's discarded
+     *
+     * this returns absolute (x, y) position
+     */
     Wire.prototype.node = function (node, onlyPoint) {
         var p = this.$.points[node];
         return p && { x: p.x, y: p.y, label: "node::" + node };
     };
-    Wire.prototype.overNode = function (p, ln) {
+    /**
+     * @description detects a point over a node
+     * @param p point to check for component node
+     * @param ln 1-based line number, ln undefined or 0, checks the whole wire, otherwise just check this line
+     */
+    Wire.prototype.over = function (p, ln) {
         var inside = function (np) { return (Math.pow(p.x - np.x, 2) + Math.pow(p.y - np.y, 2)) <= Wire.nodeArea; };
         if (ln) {
             //the fast way
@@ -262,7 +277,7 @@ var Wire = /** @class */ (function (_super) {
             name: "wire",
             class: "wire",
             edit: false,
-            head: 7,
+            head: 14,
         });
     };
     Wire.nodeArea = 25;

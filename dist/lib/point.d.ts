@@ -37,6 +37,7 @@ export default class Point implements IPoint {
      * @param options 0 = x,y	1 = parenthesis; 	2 = variables x: x, y: y
      */
     toString(options?: number): string;
+    get str(): string;
     /**
      * @description returns quadrant of this point
      * @returns 0 (0,0); -1 (x==0 or y ==0); 1 (y>0,x>0); 2 (y>0,x<0); 3 (y<0,x<0); 4 (y<0,x>0)

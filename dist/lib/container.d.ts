@@ -1,4 +1,4 @@
-import { IBaseComponent, IContainerDefaults, Base } from "./interfaces";
+import { IBaseComponent, IContainerDefaults, Base, BondDir } from "./interfaces";
 import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
@@ -49,6 +49,10 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     deleteSelected(): number;
     destroy(): void;
     boundariesRect(): Rect;
+    /**
+     * @description adds a new component to this container
+     * @param options disctionary of options
+     */
     add(options: {
         [x: string]: any;
     }): T | Wire;
@@ -56,7 +60,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     itemBonds(item: T | Wire): Bond[] | undefined;
     nodeBonds(item: T | Wire, node: number): Bond | undefined;
     bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean;
-    protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, origin: boolean): boolean;
+    protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, dir: BondDir): boolean;
     unbond(thisObj: T | Wire, node: number, id: string): void;
     /**
      * @description unbonds a component node

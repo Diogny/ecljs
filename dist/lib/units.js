@@ -59,6 +59,7 @@ var Unit = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Unit.prototype.equal = function (u) { return this.value == u.value && this.unit == u.unit && this.exp == u.exp; };
     Unit.prototype.add = function (u) {
         if (this.unit != u.unit)
             return;

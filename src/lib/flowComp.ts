@@ -12,13 +12,11 @@ export default abstract class FlowComp extends ItemSolid {
 	get type(): Type { return Type.FLOWCHART }
 
 	get size(): Size {
-		let
-			s = Size.parse(<string>this.prop("size"));
-		if (s == undefined)
-			throw `invalid Size`
-		else return s;
+		return <Size>Size.parse(<string>this.prop("size"))
 	}
 	set size(value: Size) {
+		if (value.equal(this.size))
+			return;
 		(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
 		this.onResize(value)
 	}
@@ -34,8 +32,8 @@ export default abstract class FlowComp extends ItemSolid {
 	}
 
 	public setNode(node: number, p: IPoint): FlowComp {
-		//Some code tries to call this, investigate later...
-		throw 'somebody called me, not good!';
+		//nobody should call this
+		return this;
 	}
 
 	public defaults(): IItemSolidDefaults {

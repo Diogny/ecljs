@@ -1,5 +1,5 @@
-import FlowchartComp from "./flowchartComp";
+import FlowComp from "./flowComp";
 import Size from "./size";
-export default abstract class FlowTerminational extends FlowchartComp {
+export default abstract class FlowTerminational extends FlowComp {
     onResize(size: Size): void;
 }

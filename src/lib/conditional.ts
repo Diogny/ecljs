@@ -1,9 +1,9 @@
 import { IComponentProperty } from "./interfaces";
-import FlowchartComp from "./flowchartComp";
+import FlowComp from "./flowComp";
 import Point from "./point";
 import Size from "./size";
 
-export default class FlowConditional extends FlowchartComp {
+export default class FlowConditional extends FlowComp {
 
 	get fontSize(): number { return <number>this.prop("fontSize") }
 

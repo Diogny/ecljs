@@ -1,5 +1,8 @@
 import EC from "./ec";
 import Container from "./container";
+/**
+ * @description Circuits component container
+ */
 export default class Circuit extends Container<EC> {
     get name(): string;
     get dir(): boolean;

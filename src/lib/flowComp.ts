@@ -4,7 +4,10 @@ import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
 
-export default abstract class FlowchartComp extends ItemSolid {
+/**
+ * @description flowchart base component class
+ */
+export default abstract class FlowComp extends ItemSolid {
 
 	get type(): Type { return Type.FLOWCHART }
 
@@ -30,7 +33,7 @@ export default abstract class FlowchartComp extends ItemSolid {
 		this.refresh()
 	}
 
-	public setNode(node: number, p: IPoint): FlowchartComp {
+	public setNode(node: number, p: IPoint): FlowComp {
 		//Some code tries to call this, investigate later...
 		throw 'somebody called me, not good!';
 	}

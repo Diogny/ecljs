@@ -1,11 +1,14 @@
 import Container from "./container";
-import FlowchartComp from "./flowchartComp";
+import FlowComp from "./flowComp";
 import Wire from "./wire";
-export default class Flowchart extends Container<FlowchartComp> {
+/**
+ * @description Flowchart component container
+ */
+export default class Flowchart extends Container<FlowComp> {
     get name(): string;
     get dir(): boolean;
     createItem(options: {
         [x: string]: any;
-    }): FlowchartComp;
-    bond(thisObj: FlowchartComp | Wire, thisNode: number, ic: FlowchartComp | Wire, icNode: number): boolean;
+    }): FlowComp;
+    bond(thisObj: FlowComp | Wire, thisNode: number, ic: FlowComp | Wire, icNode: number): boolean;
 }

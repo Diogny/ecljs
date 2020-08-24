@@ -79,6 +79,7 @@ export default class Wire extends ItemBoard {
 			attr(this.$.poly, {
 				points: this.$.points.map(p => `${p.x}, ${p.y}`).join(' ')
 			});
+		arrow(this.$);	//	full-refresh
 		return this;
 	}
 
@@ -89,6 +90,7 @@ export default class Wire extends ItemBoard {
 				p = this.$.points[node];
 			(ln = this.$.lines[node - 1]) && attr(ln, { x2: p.x, y2: p.y });
 			(ln = this.$.lines[node]) && attr(ln, { x1: p.x, y1: p.y });
+			arrow(this.$, node);	// partial-refresh
 		} else {
 			this.refresh();
 		}
@@ -124,6 +126,7 @@ export default class Wire extends ItemBoard {
 			}
 		}
 		this.edit = savededit;
+		arrow(this.$);		// full-refresh
 		return this;
 	}
 
@@ -165,6 +168,7 @@ export default class Wire extends ItemBoard {
 		//cleanup
 		this.g.innerHTML = "";
 		this.$.points = points.map(p => new Point(p.x | 0, p.y | 0));
+		this.$.dir && (this.$.arrow = poly(this.g, "arrow", -1));
 		moveToStart(this);
 		if (this.edit) {
 			this.$.poly = <any>void 0;
@@ -263,7 +267,8 @@ export default class Wire extends ItemBoard {
 		return <IWireDefaults>extend(super.defaults(), {
 			name: "wire",
 			class: "wire",
-			edit: false
+			edit: false,
+			head: 7,
 		})
 	}
 
@@ -313,14 +318,41 @@ function setlines(w: Wire, $: IWireDefaults) {
 		w.g.append(ln);
 		a = b;
 	}
+	arrow($)
 }
 
-function poly(g: SVGElement): SVGPolylineElement {
+function poly(g: SVGElement, type?: string, line?: number): SVGPolylineElement {
 	let
 		polyline = <SVGPolylineElement>tag("polyline", "", {
-			"svg-type": "line",
-			line: "0",
+			"svg-type": type || "line",
+			line: line || "0",
 			points: "",
 		});
 	return g.append(polyline), polyline
+}
+
+/**
+ * 
+ * @param $ wire internal data
+ * @param node 0-based node to be refreshed.
+ * 
+ * node == undefined, then draw arrow if wire is directional
+ * node != undefined, only draw arrow if node is prev|last node for a directional wire
+ */
+function arrow($: IWireDefaults, node?: number) {
+	if (!$.dir)
+		return;
+	let
+		c = $.points.length - 1,
+		last = $.points[c],
+		prev = $.points[c - 1],
+		r = $.head,
+		angle = Math.atan2(last.y - prev.y, last.x - prev.x),
+		p = (ang: number) => new Point((last.x - r * Math.cos(ang)) | 0, (last.y - r * Math.sin(ang)) | 0);
+	//if node is defined, only redraw arrow when node is prev|last node of wire
+	if (node != undefined && !(node == c || node == c - 1))
+		return;
+	attr($.arrow, {
+		points: [p(angle - 0.78), last, p(angle + 0.78)].map(p => `${p.x}, ${p.y}`).join(' ')
+	})
 }

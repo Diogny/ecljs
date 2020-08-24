@@ -96,6 +96,7 @@ var Wire = /** @class */ (function (_super) {
             dab_1.attr(this.$.poly, {
                 points: this.$.points.map(function (p) { return p.x + ", " + p.y; }).join(' ')
             });
+        arrow(this.$); //	full-refresh
         return this;
     };
     Wire.prototype.nodeRefresh = function (node) {
@@ -104,6 +105,7 @@ var Wire = /** @class */ (function (_super) {
             var ln = void 0, p = this.$.points[node];
             (ln = this.$.lines[node - 1]) && dab_1.attr(ln, { x2: p.x, y2: p.y });
             (ln = this.$.lines[node]) && dab_1.attr(ln, { x1: p.x, y1: p.y });
+            arrow(this.$, node); // partial-refresh
         }
         else {
             this.refresh();
@@ -136,6 +138,7 @@ var Wire = /** @class */ (function (_super) {
             }
         }
         this.edit = savededit;
+        arrow(this.$); // full-refresh
         return this;
     };
     /**
@@ -173,6 +176,7 @@ var Wire = /** @class */ (function (_super) {
         //cleanup
         this.g.innerHTML = "";
         this.$.points = points.map(function (p) { return new point_1.default(p.x | 0, p.y | 0); });
+        this.$.dir && (this.$.arrow = poly(this.g, "arrow", -1));
         moveToStart(this);
         if (this.edit) {
             this.$.poly = void 0;
@@ -256,7 +260,8 @@ var Wire = /** @class */ (function (_super) {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             name: "wire",
             class: "wire",
-            edit: false
+            edit: false,
+            head: 7,
         });
     };
     Wire.nodeArea = 25;
@@ -299,12 +304,32 @@ function setlines(w, $) {
         w.g.append(ln);
         a = b;
     }
+    arrow($);
 }
-function poly(g) {
+function poly(g, type, line) {
     var polyline = utils_1.tag("polyline", "", {
-        "svg-type": "line",
-        line: "0",
+        "svg-type": type || "line",
+        line: line || "0",
         points: "",
     });
     return g.append(polyline), polyline;
+}
+/**
+ *
+ * @param $ wire internal data
+ * @param node 0-based node to be refreshed.
+ *
+ * node == undefined, then draw arrow if wire is directional
+ * node != undefined, only draw arrow if node is prev|last node for a directional wire
+ */
+function arrow($, node) {
+    if (!$.dir)
+        return;
+    var c = $.points.length - 1, last = $.points[c], prev = $.points[c - 1], r = $.head, angle = Math.atan2(last.y - prev.y, last.x - prev.x), p = function (ang) { return new point_1.default((last.x - r * Math.cos(ang)) | 0, (last.y - r * Math.sin(ang)) | 0); };
+    //if node is defined, only redraw arrow when node is prev|last node of wire
+    if (node != undefined && !(node == c || node == c - 1))
+        return;
+    dab_1.attr($.arrow, {
+        points: [p(angle - 0.78), last, p(angle + 0.78)].map(function (p) { return p.x + ", " + p.y; }).join(' ')
+    });
 }

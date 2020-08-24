@@ -260,6 +260,8 @@ export interface IItemSolidDefaults extends IItemBoardDefaults {
 export interface IWireDefaults extends IItemBoardDefaults {
     points: Point[];
     poly: SVGPolylineElement;
+    arrow: SVGPolylineElement;
+    head: number;
     lines: SVGLineElement[];
     edit: boolean;
 }

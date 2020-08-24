@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var ec_1 = tslib_1.__importDefault(require("./ec"));
 var container_1 = tslib_1.__importDefault(require("./container"));
+/**
+ * @description Circuits component container
+ */
 var Circuit = /** @class */ (function (_super) {
     tslib_1.__extends(Circuit, _super);
     function Circuit() {

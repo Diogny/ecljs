@@ -1,9 +1,9 @@
 import { IComponentProperty } from "./interfaces";
 import Point from "./point";
 import Size from "./size";
-import FlowchartComp from "./flowchartComp";
+import FlowComp from "./flowComp";
 
-export default class FlowProcess extends FlowchartComp {
+export default class FlowProcess extends FlowComp {
 
 	get fontSize(): number { return <number>this.prop("fontSize") }
 

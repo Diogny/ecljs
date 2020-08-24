@@ -31,7 +31,7 @@ import Flowchart from "./lib/flowchart";
 import EC from "./lib/ec";
 import Wire from "./lib/wire";
 
-import FlowchartComp from "./lib/flowchartComp";
+import FlowComp from "./lib/flowComp";
 import FlowProcess from "./lib/process";
 import FlowConditional from "./lib/conditional";
 import FlowStart from "./lib/flowstart";
@@ -76,7 +76,7 @@ export {
 	EC,
 	Wire,
 
-	FlowchartComp,
+	FlowComp,
 	FlowProcess,
 	FlowConditional,
 	FlowStart,

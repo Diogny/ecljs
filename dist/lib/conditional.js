@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var flowchartComp_1 = tslib_1.__importDefault(require("./flowchartComp"));
+var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
 var point_1 = tslib_1.__importDefault(require("./point"));
 var FlowConditional = /** @class */ (function (_super) {
     tslib_1.__extends(FlowConditional, _super);
@@ -39,5 +39,5 @@ var FlowConditional = /** @class */ (function (_super) {
         //resize component
     };
     return FlowConditional;
-}(flowchartComp_1.default));
+}(flowComp_1.default));
 exports.default = FlowConditional;

@@ -2,7 +2,7 @@ import { Type, IComponentProperty, IPoint, IItemSolidDefaults } from "./interfac
 import { extend } from "./dab";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
-import Container from "./container";
+import Flowchart from "./flowchart";
 
 export default abstract class FlowchartComp extends ItemSolid {
 
@@ -25,8 +25,9 @@ export default abstract class FlowchartComp extends ItemSolid {
 	get inputs(): number { return <number>this.prop("inputs") }
 	get outputs(): number { return <number>this.prop("outputs") }
 
-	constructor(container: Container<FlowchartComp>, options: { [x: string]: any; }) {
-		super(container, options);
+	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
+		super(flowchart, options);
+		this.refresh()
 	}
 
 	public setNode(node: number, p: IPoint): FlowchartComp {
@@ -36,8 +37,8 @@ export default abstract class FlowchartComp extends ItemSolid {
 
 	public defaults(): IItemSolidDefaults {
 		return <IItemSolidDefaults>extend(super.defaults(), {
+			class: "fl",
 			dir: true,
-			rotation: 0
 		})
 	}
 }

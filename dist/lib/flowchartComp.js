@@ -7,8 +7,10 @@ var size_1 = tslib_1.__importDefault(require("./size"));
 var itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
 var FlowchartComp = /** @class */ (function (_super) {
     tslib_1.__extends(FlowchartComp, _super);
-    function FlowchartComp(container, options) {
-        return _super.call(this, container, options) || this;
+    function FlowchartComp(flowchart, options) {
+        var _this = _super.call(this, flowchart, options) || this;
+        _this.refresh();
+        return _this;
     }
     Object.defineProperty(FlowchartComp.prototype, "type", {
         get: function () { return interfaces_1.Type.FLOWCHART; },
@@ -46,8 +48,8 @@ var FlowchartComp = /** @class */ (function (_super) {
     };
     FlowchartComp.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
+            class: "fl",
             dir: true,
-            rotation: 0
         });
     };
     return FlowchartComp;

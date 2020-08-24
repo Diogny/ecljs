@@ -1,7 +1,7 @@
 import { Type, IPoint, IItemSolidDefaults } from "./interfaces";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
-import Container from "./container";
+import Flowchart from "./flowchart";
 export default abstract class FlowchartComp extends ItemSolid {
     get type(): Type;
     get size(): Size;
@@ -9,7 +9,7 @@ export default abstract class FlowchartComp extends ItemSolid {
     abstract onResize(size: Size): void;
     get inputs(): number;
     get outputs(): number;
-    constructor(container: Container<FlowchartComp>, options: {
+    constructor(flowchart: Flowchart, options: {
         [x: string]: any;
     });
     setNode(node: number, p: IPoint): FlowchartComp;

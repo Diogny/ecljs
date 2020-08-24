@@ -1,4 +1,4 @@
-/*! ecljs - 0.2.59 | (c) 2020,  Diogny A. B. <diognyab@outlook.com> | MIT | https://github.com/Diogny/ecljs */
+/*! ecljs - 0.2.61 | (c) 2020,  Diogny A. B. <diognyab@outlook.com> | MIT | https://github.com/Diogny/ecljs */
 !function(e,o){"object"==typeof exports&&"object"==typeof module?module.exports=o():"function"==typeof define&&define.amd?define([],o):"object"==typeof exports?exports.ecljs=o():e.ecljs=o()}(window,function(){return t={},s.m=n={"./node_modules/.pnpm/core-js@3.6.5/node_modules/core-js/internals/a-function.js":
 /*!***************************************************************************************!*\
   !*** ./node_modules/.pnpm/core-js@3.6.5/node_modules/core-js/internals/a-function.js ***!

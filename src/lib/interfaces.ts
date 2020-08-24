@@ -9,7 +9,7 @@ import CompNode from "./compNode";
 import CompStore from "./components";
 import Size from "./size";
 import Unit from "./units";
-import { Rect } from "src";
+import Rect from "./rect";
 
 
 //***************************************** Types ************************************//

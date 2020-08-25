@@ -1,5 +1,5 @@
 import { Type, IPoint, IFlowChartDefaults, IFlowchartMetadata } from "./interfaces";
-import { extend, aChld, css } from "./dab";
+import { extend, aChld, css, toBool } from "./dab";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
@@ -29,6 +29,13 @@ export default abstract class FlowComp extends ItemSolid {
 			let
 				s = new Size(value.width - this.minSize.width, value.height - this.minSize.height);
 			if (s.positive) {
+				//for flowchart conditional
+				if (toBool((<IFlowchartMetadata>this.base.meta).lockedSize)) {
+					let
+						m = Math.min(value.width, value.height);
+					value.width = m;
+					value.height = m
+				}
 				this.$.size = value;
 				//internal adjust node points
 				this.onResize(value);

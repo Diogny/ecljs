@@ -55,6 +55,12 @@ var FlowComp = /** @class */ (function (_super) {
         if (!value.equal(this.size)) {
             var s = new size_1.default(value.width - this.minSize.width, value.height - this.minSize.height);
             if (s.positive) {
+                //for flowchart conditional
+                if (dab_1.toBool(this.base.meta.lockedSize)) {
+                    var m = Math.min(value.width, value.height);
+                    value.width = m;
+                    value.height = m;
+                }
                 this.$.size = value;
                 //internal adjust node points
                 this.onResize(value);

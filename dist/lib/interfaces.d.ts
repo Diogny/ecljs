@@ -196,6 +196,7 @@ export interface IFlowchartMetadata extends IComponentMetadata {
      */
     size: string;
     minSize: string;
+    lockedSize: string;
     fontSize: number;
     text: string;
     /**

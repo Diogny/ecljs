@@ -195,14 +195,16 @@ exports.selectMany = function (input, selectListFn) {
     }, new Array());
 };
 var a = {
+    'True': true,
     'true': true,
     'false': false,
+    'False': false,
     'undefined': false,
     'null': false,
     '1': true,
     '0': false
 };
-exports.toBool = function (val) { return a[val]; };
+exports.toBool = function (val) { return a[val] || false; };
 exports.parse = function (s, l) {
     var n, nans = false, numbers = s.split(',').map(function (str) { return (n = parseFloat(str), isNaN(n) && (nans = true), n); });
     return (nans || numbers.length != l) ? void 0 : numbers;

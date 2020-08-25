@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uncamel = exports.camel = exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.DOMTemplates = void 0;
+exports.createText = exports.uncamel = exports.camel = exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.DOMTemplates = void 0;
 var dab_1 = require("./dab");
 exports.DOMTemplates = function () {
     var templates = {};
@@ -130,3 +130,7 @@ exports.camel = function (str) { return str.replace(/\-([a-z])/gi, function (mat
  * @returns font-size  -webkit-box-shadow
  */
 exports.uncamel = function (str) { return str.replace(/([A-Z])/g, function (match, group) { return '-' + group.toLowerCase(); }); };
+exports.createText = function (attr, text) {
+    var svgText = exports.tag("text", "", attr);
+    return svgText.innerHTML = text, svgText;
+};

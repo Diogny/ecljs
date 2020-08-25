@@ -1,6 +1,6 @@
 import { IItemSolidDefaults, IPoint, INodeInfo } from "./interfaces";
 import { attr, aChld, extend } from "./dab";
-import { each, tag } from "./utils";
+import { each, tag, createText } from "./utils";
 import Rect from "./rect";
 import Size from "./size";
 import Point from "./point";
@@ -23,12 +23,6 @@ export default abstract class ItemSolid extends ItemBoard {
 		options.rot = Point.validateRotation(options.rot);
 		super(container, options);
 		this.g.innerHTML = this.base.data;
-		let
-			createText = (attr: any, text: string) => {
-				let
-					svgText = tag("text", "", attr);
-				return svgText.innerHTML = text, svgText
-			}
 		//for labels in N555, 7408, Atmega168
 		if (this.base.meta.label) {
 			aChld(this.g, createText({

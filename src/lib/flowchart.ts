@@ -27,10 +27,24 @@ export default class Flowchart extends Container<FlowComp>{
 		if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
 			return false;
 		//directional components can only be connected to other directional components or wires
-		//directional components have only ONE origin|destination bond in any node
+		//directional components have a specific amount of origin|destination bonds
+		let
+			thisFlow: boolean,
+			icFlow: boolean;
 
-		return this.bondOneWay(thisObj, thisNode, ic, icNode, 0)		// from A to B
-			&& this.bondOneWay(ic, icNode, thisObj, thisNode, 1)		// back B to A
+		if (((thisFlow = thisObj instanceof FlowComp) && thisObj.outs >= thisObj.outputs)
+			|| ((icFlow = ic instanceof FlowComp) && ic.ins >= ic.inputs)) {
+			return false
+		}
+		else if (this.bondOneWay(thisObj, thisNode, ic, icNode, 0)		// from A to B
+			&& this.bondOneWay(ic, icNode, thisObj, thisNode, 1))		// back B to A
+		{
+			//internal hack
+			thisFlow && ((<any>thisObj).$.outs++);
+			icFlow && ((<any>ic).$.ins++);
+			return true
+		}
+		return false
 	}
 
 }

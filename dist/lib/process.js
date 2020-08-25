@@ -1,42 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var point_1 = tslib_1.__importDefault(require("./point"));
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
+var dab_1 = require("./dab");
 var FlowProcess = /** @class */ (function (_super) {
     tslib_1.__extends(FlowProcess, _super);
-    function FlowProcess() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function FlowProcess(flowchart, options) {
+        var _this = _super.call(this, flowchart, options) || this;
+        //get rect, should be this.g.firstChild
+        _this.$.rect = _this.g.firstElementChild;
+        _this.refresh();
+        return _this;
     }
-    Object.defineProperty(FlowProcess.prototype, "fontSize", {
-        get: function () { return this.prop("fontSize"); },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FlowProcess.prototype, "text", {
-        get: function () { return this.prop("text"); },
-        enumerable: false,
-        configurable: true
-    });
-    FlowProcess.prototype.setText = function (value) {
-        this.prop("text").value = value;
-        return this;
-    };
-    Object.defineProperty(FlowProcess.prototype, "position", {
-        get: function () {
-            var p = point_1.default.parse(this.prop("position"));
-            if (p == undefined)
-                throw "invalid Point";
-            else
-                return p;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    FlowProcess.prototype.onResize = function (size) {
-        //(<string>(<IComponentProperty>this.prop("position")).value) = `${value.x},${value.y}`
-        //(<number><unknown>(<IComponentProperty>this.prop("fontSize")).value) = 18
-        //resize component
+    FlowProcess.prototype.refresh = function () {
+        //calculate rect
+        dab_1.attr(this.$.rect, {
+            width: this.size.width,
+            height: this.size.height
+        });
+        //later text resize goes here
+        //...
+        return _super.prototype.refresh.call(this), this;
     };
     return FlowProcess;
 }(flowComp_1.default));

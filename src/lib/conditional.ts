@@ -1,32 +1,30 @@
-import { IComponentProperty } from "./interfaces";
+import { IFlowCondDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
-import Point from "./point";
-import Size from "./size";
+import Flowchart from "./flowchart";
+import { attr } from "./dab";
 
 export default class FlowConditional extends FlowComp {
 
-	get fontSize(): number { return <number>this.prop("fontSize") }
+	protected $: IFlowCondDefaults;
 
-	get text(): string { return <string>this.prop("text") }
-	public setText(value: string): FlowConditional {
-		(<string>(<IComponentProperty>this.prop("text")).value) = value;
-
-		return this
+	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
+		super(flowchart, options);
+		//get path, hould be this.g.firstChild
+		this.$.path = <SVGPathElement>this.g.firstElementChild;
+		this.refresh()
 	}
 
-	get position(): Point {
+	public refresh(): FlowConditional {
+		//calculate rect
 		let
-			p = Point.parse(<string>this.prop("position"));
-		if (p == undefined)
-			throw `invalid Point`
-		else return p;
+			w = this.size.width / 2 | 0,
+			h = this.size.height / 2 | 0;
+		attr(this.$.path, {
+			d: `M ${w},0 L ${this.size.width},${h} L ${w},${this.size.height} L 0,${h} Z`
+		});
+		//later text resize goes here
+		//...
+		return super.refresh(), this
 	}
 
-	public onResize(size: Size): void {
-		//(<string>(<IComponentProperty>this.prop("position")).value) = `${value.x},${value.y}`
-		//(<number><unknown>(<IComponentProperty>this.prop("fontSize")).value) = 18
-
-		//resize component
-
-	}
 }

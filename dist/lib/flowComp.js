@@ -5,6 +5,8 @@ var interfaces_1 = require("./interfaces");
 var dab_1 = require("./dab");
 var size_1 = tslib_1.__importDefault(require("./size"));
 var itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
+var point_1 = tslib_1.__importDefault(require("./point"));
+var utils_1 = require("./utils");
 /**
  * @description flowchart base component class
  */
@@ -12,7 +14,17 @@ var FlowComp = /** @class */ (function (_super) {
     tslib_1.__extends(FlowComp, _super);
     function FlowComp(flowchart, options) {
         var _this = _super.call(this, flowchart, options) || this;
-        _this.refresh();
+        //get size from properties
+        //(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
+        _this.$.size = size_1.default.parse(_this.base.meta.size);
+        _this.$.fontSize = _this.base.meta.fontSize;
+        _this.$.text = _this.base.meta.text;
+        _this.$.pos = point_1.default.parse(_this.base.meta.position);
+        //create text if defined
+        dab_1.aChld(_this.g, _this.$.svgText = utils_1.createText({
+            x: _this.$.pos.x,
+            y: _this.$.pos.y,
+        }, _this.text));
         return _this;
     }
     Object.defineProperty(FlowComp.prototype, "type", {
@@ -21,25 +33,71 @@ var FlowComp = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(FlowComp.prototype, "size", {
-        get: function () {
-            return size_1.default.parse(this.prop("size"));
-        },
-        set: function (value) {
-            if (value.equal(this.size))
-                return;
-            this.prop("size").value = value.width + "," + value.height;
-            this.onResize(value);
-        },
+        get: function () { return this.$.size; },
+        enumerable: false,
+        configurable: true
+    });
+    FlowComp.prototype.setSize = function (value) {
+        if (!value.equal(this.size)) {
+            this.$.size = value;
+            this.refresh();
+            this.onResize && this.onResize(value);
+        }
+        return this;
+    };
+    Object.defineProperty(FlowComp.prototype, "onResize", {
+        get: function () { return this.$.onResize; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(FlowComp.prototype, "inputs", {
-        get: function () { return this.prop("inputs"); },
+        /**
+         * @description maximum inbounds
+         */
+        get: function () { return this.base.meta.inputs; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowComp.prototype, "ins", {
+        /**
+         * @description current inbounds
+         */
+        get: function () { return this.$.ins; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(FlowComp.prototype, "outputs", {
-        get: function () { return this.prop("outputs"); },
+        /**
+         * @description maximum outbounds
+         */
+        get: function () { return this.base.meta.outputs; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowComp.prototype, "outs", {
+        /**
+         * @description current outbounds
+         */
+        get: function () { return this.$.outs; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowComp.prototype, "text", {
+        //will be removed, internal, just to dev easier from outside
+        get: function () { return this.$.text; },
+        set: function (value) { this.$.text = value; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowComp.prototype, "fontSize", {
+        get: function () { return this.$.fontSize; },
+        set: function (value) { this.$.fontSize = value; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowComp.prototype, "pos", {
+        get: function () { return this.$.pos; },
+        set: function (value) { this.$.pos = value; },
         enumerable: false,
         configurable: true
     });
@@ -51,6 +109,9 @@ var FlowComp = /** @class */ (function (_super) {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             class: "fl",
             dir: true,
+            onResize: void 0,
+            ins: 0,
+            outs: 0
         });
     };
     return FlowComp;

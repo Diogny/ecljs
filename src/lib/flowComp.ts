@@ -1,34 +1,74 @@
-import { Type, IComponentProperty, IPoint, IItemSolidDefaults } from "./interfaces";
-import { extend } from "./dab";
+import { Type, IPoint, IFlowChartDefaults, IFlowchartMetadata } from "./interfaces";
+import { extend, aChld } from "./dab";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
+import Point from "./point";
+import { createText } from "./utils";
 
 /**
  * @description flowchart base component class
  */
 export default abstract class FlowComp extends ItemSolid {
 
+	protected $: IFlowChartDefaults;
+
 	get type(): Type { return Type.FLOWCHART }
 
-	get size(): Size {
-		return <Size>Size.parse(<string>this.prop("size"))
-	}
-	set size(value: Size) {
-		if (value.equal(this.size))
-			return;
-		(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
-		this.onResize(value)
-	}
+	get size(): Size { return this.$.size }
 
-	abstract onResize(size: Size): void;
+	public setSize(value: Size): FlowComp {
+		if (!value.equal(this.size)) {
+			this.$.size = value;
+			this.refresh();
+			this.onResize && this.onResize(value)
+		}
+		return this
+	}
+	get onResize(): (size: Size) => void { return this.$.onResize }
 
-	get inputs(): number { return <number>this.prop("inputs") }
-	get outputs(): number { return <number>this.prop("outputs") }
+	/**
+	 * @description maximum inbounds
+	 */
+	get inputs(): number { return (<IFlowchartMetadata>this.base.meta).inputs }
+
+	/**
+	 * @description current inbounds
+	 */
+	get ins(): number { return this.$.ins }
+
+	/**
+	 * @description maximum outbounds
+	 */
+	get outputs(): number { return (<IFlowchartMetadata>this.base.meta).outputs }
+
+	/**
+	 * @description current outbounds
+	 */
+	get outs(): number { return this.$.outs }
+
+	//will be removed, internal, just to dev easier from outside
+	get text(): string { return this.$.text }
+	set text(value: string) { this.$.text = value }
+	get fontSize(): number { return this.$.fontSize }
+	set fontSize(value: number) { this.$.fontSize = value }
+	get pos(): Point { return this.$.pos }
+	set pos(value: Point) { this.$.pos = value }
 
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
 		super(flowchart, options);
-		this.refresh()
+		//get size from properties
+		//(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
+		this.$.size = <Size>Size.parse((<IFlowchartMetadata>this.base.meta).size);
+		this.$.fontSize = (<IFlowchartMetadata>this.base.meta).fontSize;
+		this.$.text = (<IFlowchartMetadata>this.base.meta).text;
+		this.$.pos = <Point>Point.parse((<IFlowchartMetadata>this.base.meta).position);
+		//create text if defined
+		aChld(this.g, this.$.svgText = createText({
+			x: this.$.pos.x,
+			y: this.$.pos.y,
+			//"class": this.base.meta.label.class
+		}, this.text))
 	}
 
 	public setNode(node: number, p: IPoint): FlowComp {
@@ -36,10 +76,13 @@ export default abstract class FlowComp extends ItemSolid {
 		return this;
 	}
 
-	public defaults(): IItemSolidDefaults {
-		return <IItemSolidDefaults>extend(super.defaults(), {
+	public defaults(): IFlowChartDefaults {
+		return <IFlowChartDefaults>extend(super.defaults(), {
 			class: "fl",
 			dir: true,
+			onResize: void 0,
+			ins: 0,
+			outs: 0
 		})
 	}
 }

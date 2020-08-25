@@ -2,41 +2,25 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
-var point_1 = tslib_1.__importDefault(require("./point"));
+var dab_1 = require("./dab");
 var FlowConditional = /** @class */ (function (_super) {
     tslib_1.__extends(FlowConditional, _super);
-    function FlowConditional() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function FlowConditional(flowchart, options) {
+        var _this = _super.call(this, flowchart, options) || this;
+        //get path, hould be this.g.firstChild
+        _this.$.path = _this.g.firstElementChild;
+        _this.refresh();
+        return _this;
     }
-    Object.defineProperty(FlowConditional.prototype, "fontSize", {
-        get: function () { return this.prop("fontSize"); },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FlowConditional.prototype, "text", {
-        get: function () { return this.prop("text"); },
-        enumerable: false,
-        configurable: true
-    });
-    FlowConditional.prototype.setText = function (value) {
-        this.prop("text").value = value;
-        return this;
-    };
-    Object.defineProperty(FlowConditional.prototype, "position", {
-        get: function () {
-            var p = point_1.default.parse(this.prop("position"));
-            if (p == undefined)
-                throw "invalid Point";
-            else
-                return p;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    FlowConditional.prototype.onResize = function (size) {
-        //(<string>(<IComponentProperty>this.prop("position")).value) = `${value.x},${value.y}`
-        //(<number><unknown>(<IComponentProperty>this.prop("fontSize")).value) = 18
-        //resize component
+    FlowConditional.prototype.refresh = function () {
+        //calculate rect
+        var w = this.size.width / 2 | 0, h = this.size.height / 2 | 0;
+        dab_1.attr(this.$.path, {
+            d: "M " + w + ",0 L " + this.size.width + "," + h + " L " + w + "," + this.size.height + " L 0," + h + " Z"
+        });
+        //later text resize goes here
+        //...
+        return _super.prototype.refresh.call(this), this;
     };
     return FlowConditional;
 }(flowComp_1.default));

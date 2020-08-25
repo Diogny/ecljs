@@ -1,10 +1,10 @@
-import Point from "./point";
-import Size from "./size";
+import { IFlowProcessDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
+import Flowchart from "./flowchart";
 export default class FlowProcess extends FlowComp {
-    get fontSize(): number;
-    get text(): string;
-    setText(value: string): FlowProcess;
-    get position(): Point;
-    onResize(size: Size): void;
+    protected $: IFlowProcessDefaults;
+    constructor(flowchart: Flowchart, options: {
+        [x: string]: any;
+    });
+    refresh(): FlowProcess;
 }

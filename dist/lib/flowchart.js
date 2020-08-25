@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var container_1 = tslib_1.__importDefault(require("./container"));
+var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
 var process_1 = tslib_1.__importDefault(require("./process"));
 var conditional_1 = tslib_1.__importDefault(require("./conditional"));
 /**
@@ -36,9 +37,21 @@ var Flowchart = /** @class */ (function (_super) {
         if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
             return false;
         //directional components can only be connected to other directional components or wires
-        //directional components have only ONE origin|destination bond in any node
-        return this.bondOneWay(thisObj, thisNode, ic, icNode, 0) // from A to B
-            && this.bondOneWay(ic, icNode, thisObj, thisNode, 1); // back B to A
+        //directional components have a specific amount of origin|destination bonds
+        var thisFlow, icFlow;
+        if (((thisFlow = thisObj instanceof flowComp_1.default) && thisObj.outs >= thisObj.outputs)
+            || ((icFlow = ic instanceof flowComp_1.default) && ic.ins >= ic.inputs)) {
+            return false;
+        }
+        else if (this.bondOneWay(thisObj, thisNode, ic, icNode, 0) // from A to B
+            && this.bondOneWay(ic, icNode, thisObj, thisNode, 1)) // back B to A
+         {
+            //internal hack
+            thisFlow && (thisObj.$.outs++);
+            icFlow && (ic.$.ins++);
+            return true;
+        }
+        return false;
     };
     return Flowchart;
 }(container_1.default));

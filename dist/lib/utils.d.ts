@@ -54,3 +54,4 @@ export declare const camel: (str: string) => string;
  * @returns font-size  -webkit-box-shadow
  */
 export declare const uncamel: (str: string) => string;
+export declare const createText: (attr: any, text: string) => SVGTextElement;

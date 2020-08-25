@@ -1,32 +1,28 @@
-import { IComponentProperty } from "./interfaces";
-import Point from "./point";
-import Size from "./size";
+import { IFlowProcessDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
+import Flowchart from "./flowchart";
+import { attr } from "./dab";
 
 export default class FlowProcess extends FlowComp {
 
-	get fontSize(): number { return <number>this.prop("fontSize") }
+	protected $: IFlowProcessDefaults;
 
-	get text(): string { return <string>this.prop("text") }
-	public setText(value: string): FlowProcess {
-		(<string>(<IComponentProperty>this.prop("text")).value) = value;
-
-		return this
+	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
+		super(flowchart, options);
+		//get rect, should be this.g.firstChild
+		this.$.rect = <SVGRectElement>this.g.firstElementChild;
+		this.refresh()
 	}
 
-	get position(): Point {
-		let
-			p = Point.parse(<string>this.prop("position"));
-		if (p == undefined)
-			throw `invalid Point`
-		else return p;
+	public refresh(): FlowProcess {
+		//calculate rect
+		attr(this.$.rect, {
+			width: this.size.width,
+			height: this.size.height
+		});
+		//later text resize goes here
+		//...
+		return super.refresh(), this
 	}
 
-	public onResize(size: Size): void {
-		//(<string>(<IComponentProperty>this.prop("position")).value) = `${value.x},${value.y}`
-		//(<number><unknown>(<IComponentProperty>this.prop("fontSize")).value) = 18
-
-		//resize component
-
-	}
 }

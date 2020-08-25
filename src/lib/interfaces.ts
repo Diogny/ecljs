@@ -209,6 +209,21 @@ export interface IComponentMetadata {
 	//createNodeLabels: boolean;
 }
 
+export interface IFlowchartMetadata extends IComponentMetadata {
+	inputs: number;
+	outputs: number;
+	/**
+	 * "width, height"
+	 */
+	size: string;
+	fontSize: number;
+	text: string;
+	/**
+	 * "x, y"
+	 */
+	position: string;
+}
+
 export interface IMetadataNodes {
 	//length: number;
 	//size: ISize;
@@ -304,13 +319,6 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
 	highlights: { [node: number]: CompNode };
 }
 
-export interface IItemSolidDefaults extends IItemBoardDefaults {
-	/**
-	 * rotation in 45° (+/-) increments until 360° goes back to 0°
-	 */
-	rot: number;
-}
-
 export interface IWireDefaults extends IItemBoardDefaults {
 	points: Point[];
 	poly: SVGPolylineElement;
@@ -320,8 +328,34 @@ export interface IWireDefaults extends IItemBoardDefaults {
 	edit: boolean;
 }
 
+export interface IItemSolidDefaults extends IItemBoardDefaults {
+	/**
+	 * rotation in 45° (+/-) increments until 360° goes back to 0°
+	 */
+	rot: number;
+}
+
 export interface IECDefaults extends IItemSolidDefaults {
 	boardLabel: Label;
+}
+
+export interface IFlowChartDefaults extends IItemSolidDefaults {
+	size: Size;
+	ins: number;
+	outs: number;
+	fontSize: number;
+	text: string;
+	svgText: SVGTextElement;
+	pos: Point;
+	onResize: (size: Size) => void;
+}
+
+export interface IFlowProcessDefaults extends IFlowChartDefaults {
+	rect: SVGRectElement;
+}
+
+export interface IFlowCondDefaults extends IFlowChartDefaults {
+	path: SVGPathElement;
 }
 
 export interface IBoardCircleDefaults extends IItemDefaults {

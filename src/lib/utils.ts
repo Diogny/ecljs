@@ -154,3 +154,10 @@ export const camel = (str: string) => str.replace(/\-([a-z])/gi, (match, group) 
  * @returns font-size  -webkit-box-shadow
  */
 export const uncamel = (str: string) => str.replace(/([A-Z])/g, (match, group) => '-' + group.toLowerCase())
+
+
+export const createText = (attr: any, text: string): SVGTextElement => {
+	let
+		svgText = tag("text", "", attr);
+	return svgText.innerHTML = text, <SVGTextElement>svgText
+}

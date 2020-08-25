@@ -15,13 +15,9 @@ var ItemSolid = /** @class */ (function (_super) {
         options.rot = point_1.default.validateRotation(options.rot);
         _this = _super.call(this, container, options) || this;
         _this.g.innerHTML = _this.base.data;
-        var createText = function (attr, text) {
-            var svgText = utils_1.tag("text", "", attr);
-            return svgText.innerHTML = text, svgText;
-        };
         //for labels in N555, 7408, Atmega168
         if (_this.base.meta.label) {
-            dab_1.aChld(_this.g, createText({
+            dab_1.aChld(_this.g, utils_1.createText({
                 x: _this.base.meta.label.x,
                 y: _this.base.meta.label.y,
                 "class": _this.base.meta.label.class

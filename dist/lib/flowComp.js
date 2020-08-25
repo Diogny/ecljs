@@ -26,6 +26,9 @@ var FlowComp = /** @class */ (function (_super) {
             x: _this.$.pos.x,
             y: _this.$.pos.y,
         }, _this.text));
+        dab_1.css(_this.$.svgText, {
+            "font-size": _this.fontSize + "px",
+        });
         return _this;
     }
     Object.defineProperty(FlowComp.prototype, "type", {
@@ -112,6 +115,10 @@ var FlowComp = /** @class */ (function (_super) {
         //nobody should call this
         return this;
     };
+    //highlights from itemSolid must be overridden here to allow inputs/outputs when available
+    //	DirType = 0,	show only available outputs
+    //			= 1,	show ony available inputs
+    //wiring must send signal if it's starting or ending the bond
     FlowComp.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             class: "fl",

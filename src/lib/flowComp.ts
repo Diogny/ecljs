@@ -1,5 +1,5 @@
 import { Type, IPoint, IFlowChartDefaults, IFlowchartMetadata } from "./interfaces";
-import { extend, aChld } from "./dab";
+import { extend, aChld, css } from "./dab";
 import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
@@ -34,7 +34,7 @@ export default abstract class FlowComp extends ItemSolid {
 		}
 		return this
 	}
-	
+
 	/**
 	 * @description every descendant must implement it's own custom node readjustment
 	 * @param size new size
@@ -83,13 +83,21 @@ export default abstract class FlowComp extends ItemSolid {
 			x: this.$.pos.x,
 			y: this.$.pos.y,
 			//"class": this.base.meta.label.class
-		}, this.text))
+		}, this.text));
+		css(this.$.svgText, {
+			"font-size": this.fontSize + "px",
+		})
 	}
 
 	public setNode(node: number, p: IPoint): FlowComp {
 		//nobody should call this
 		return this;
 	}
+
+	//highlights from itemSolid must be overridden here to allow inputs/outputs when available
+	//	DirType = 0,	show only available outputs
+	//			= 1,	show ony available inputs
+	//wiring must send signal if it's starting or ending the bond
 
 	public defaults(): IFlowChartDefaults {
 		return <IFlowChartDefaults>extend(super.defaults(), {

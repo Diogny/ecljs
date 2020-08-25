@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
 var dab_1 = require("./dab");
+var utils_1 = require("./utils");
 var FlowConditional = /** @class */ (function (_super) {
     tslib_1.__extends(FlowConditional, _super);
     function FlowConditional(flowchart, options) {
@@ -21,6 +22,9 @@ var FlowConditional = /** @class */ (function (_super) {
         //later text resize goes here
         //...
         return _super.prototype.refresh.call(this), this;
+    };
+    FlowConditional.prototype.onResize = function (size) {
+        utils_1.flowNodes(this.base.meta.nodes.list, size);
     };
     return FlowConditional;
 }(flowComp_1.default));

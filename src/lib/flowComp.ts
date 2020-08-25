@@ -15,17 +15,31 @@ export default abstract class FlowComp extends ItemSolid {
 
 	get type(): Type { return Type.FLOWCHART }
 
+	get minSize(): Size { return this.$.minSize }
+
 	get size(): Size { return this.$.size }
 
 	public setSize(value: Size): FlowComp {
 		if (!value.equal(this.size)) {
-			this.$.size = value;
-			this.refresh();
-			this.onResize && this.onResize(value)
+			let
+				s = new Size(value.width - this.minSize.width, value.height - this.minSize.height);
+			if (s.positive) {
+				this.$.size = value;
+				//internal adjust node points
+				this.onResize(value);
+				this.refresh();
+				//hooked events if any
+				this.$.onResize && this.$.onResize(value)
+			}
 		}
 		return this
 	}
-	get onResize(): (size: Size) => void { return this.$.onResize }
+	
+	/**
+	 * @description every descendant must implement it's own custom node readjustment
+	 * @param size new size
+	 */
+	abstract onResize(size: Size): void;
 
 	/**
 	 * @description maximum inbounds
@@ -60,6 +74,7 @@ export default abstract class FlowComp extends ItemSolid {
 		//get size from properties
 		//(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
 		this.$.size = <Size>Size.parse((<IFlowchartMetadata>this.base.meta).size);
+		this.$.minSize = <Size>Size.parse((<IFlowchartMetadata>this.base.meta).minSize);
 		this.$.fontSize = (<IFlowchartMetadata>this.base.meta).fontSize;
 		this.$.text = (<IFlowchartMetadata>this.base.meta).text;
 		this.$.pos = <Point>Point.parse((<IFlowchartMetadata>this.base.meta).position);

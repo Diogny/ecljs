@@ -2,6 +2,8 @@ import { IFlowCondDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
 import Flowchart from "./flowchart";
 import { attr } from "./dab";
+import Size from "./size";
+import { flowNodes } from "./utils";
 
 export default class FlowConditional extends FlowComp {
 
@@ -27,4 +29,7 @@ export default class FlowConditional extends FlowComp {
 		return super.refresh(), this
 	}
 
+	public onResize(size: Size): void {
+		flowNodes(this.base.meta.nodes.list, size)
+	}
 }

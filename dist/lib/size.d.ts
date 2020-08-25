@@ -5,6 +5,10 @@ export default class Size implements ISize {
     constructor(width: number, height: number);
     clone(): Size;
     equal(size: Size): boolean;
+    /**
+     * @description returns true if both width & height are positive
+     */
+    get positive(): boolean;
     static get empty(): Size;
     static create(size: ISize): Size;
     /**

@@ -9,5 +9,10 @@ export default abstract class FlowTerminational extends FlowComp {
 
 	// 	//resize component
 
+	public onResize(size: Size): void {
+		//all descendants must implement this function
+		throw `no resize implemented`
+	}
+
 	// }
 }

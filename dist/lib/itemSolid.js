@@ -118,7 +118,7 @@ var ItemSolid = /** @class */ (function (_super) {
      * this returns (x, y) relative to the EC location
      */
     ItemSolid.prototype.node = function (node, nodeOnly) {
-        var pin = pinInfo(this, node);
+        var pin = utils_1.pinInfo(this, node);
         if (!pin)
             return;
         if (!nodeOnly) {
@@ -141,11 +141,3 @@ var ItemSolid = /** @class */ (function (_super) {
     return ItemSolid;
 }(itemsBoard_1.default));
 exports.default = ItemSolid;
-function pinInfo(that, node) {
-    var pin = that.base.meta.nodes.list[node];
-    return pin && {
-        x: pin.x,
-        y: pin.y,
-        label: pin.label
-    };
-}

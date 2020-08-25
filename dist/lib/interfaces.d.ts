@@ -195,6 +195,7 @@ export interface IFlowchartMetadata extends IComponentMetadata {
      * "width, height"
      */
     size: string;
+    minSize: string;
     fontSize: number;
     text: string;
     /**
@@ -299,6 +300,7 @@ export interface IECDefaults extends IItemSolidDefaults {
 }
 export interface IFlowChartDefaults extends IItemSolidDefaults {
     size: Size;
+    minSize: Size;
     ins: number;
     outs: number;
     fontSize: number;

@@ -1,3 +1,6 @@
+import ItemSolid from './itemSolid';
+import { INodeInfo } from './interfaces';
+import Size from './size';
 export declare const DOMTemplates: () => {
     [key: string]: any;
 };
@@ -55,3 +58,5 @@ export declare const camel: (str: string) => string;
  */
 export declare const uncamel: (str: string) => string;
 export declare const createText: (attr: any, text: string) => SVGTextElement;
+export declare const pinInfo: (that: ItemSolid, node: number) => INodeInfo | undefined;
+export declare const flowNodes: (list: INodeInfo[], size: Size) => void;

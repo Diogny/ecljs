@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createText = exports.uncamel = exports.camel = exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.DOMTemplates = void 0;
+exports.flowNodes = exports.pinInfo = exports.createText = exports.uncamel = exports.camel = exports.matrix = exports.basePath = exports.gEId = exports.qSA = exports.qS = exports.ready = exports.prop = exports.filterArray = exports.filter = exports.map = exports.each = exports.html = exports.svg = exports.tag = exports.formatNumber = exports.padStr = exports.fillChar = exports.pad = exports.DOMTemplates = void 0;
 var dab_1 = require("./dab");
 exports.DOMTemplates = function () {
     var templates = {};
@@ -133,4 +133,21 @@ exports.uncamel = function (str) { return str.replace(/([A-Z])/g, function (matc
 exports.createText = function (attr, text) {
     var svgText = exports.tag("text", "", attr);
     return svgText.innerHTML = text, svgText;
+};
+exports.pinInfo = function (that, node) {
+    var pin = that.base.meta.nodes.list[node];
+    return pin && {
+        x: pin.x,
+        y: pin.y,
+        label: pin.label
+    };
+};
+exports.flowNodes = function (list, size) {
+    var w2 = size.width / 2 | 0, h2 = size.height / 2 | 0, n = 0, node = list[n++];
+    node.x = w2;
+    (node = list[n++]).x = size.width;
+    node.y = h2;
+    (node = list[n++]).x = w2;
+    node.y = size.height;
+    list[n].y = h2;
 };

@@ -14,6 +14,11 @@ export default class Size implements ISize {
 
 	public equal(size: Size): boolean { return this.width == size.width && this.height == size.height }
 
+	/**	
+	 * @description returns true if both width & height are positive
+	 */
+	get positive(): boolean { return this.width >= 0 && this.height >= 0 }
+
 	static get empty(): Size { return new Size(0, 0) }
 
 	static create(size: ISize): Size {

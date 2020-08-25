@@ -7,6 +7,14 @@ var FlowTerminational = /** @class */ (function (_super) {
     function FlowTerminational() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    // public onResize(size: Size): void {
+    // 	//(<string>(<IComponentProperty>this.prop("position")).value) = `${value.x},${value.y}`
+    // 	//(<number><unknown>(<IComponentProperty>this.prop("fontSize")).value) = 18
+    // 	//resize component
+    FlowTerminational.prototype.onResize = function (size) {
+        //all descendants must implement this function
+        throw "no resize implemented";
+    };
     return FlowTerminational;
 }(flowComp_1.default));
 exports.default = FlowTerminational;

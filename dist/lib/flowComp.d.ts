@@ -9,9 +9,14 @@ import Point from "./point";
 export default abstract class FlowComp extends ItemSolid {
     protected $: IFlowChartDefaults;
     get type(): Type;
+    get minSize(): Size;
     get size(): Size;
     setSize(value: Size): FlowComp;
-    get onResize(): (size: Size) => void;
+    /**
+     * @description every descendant must implement it's own custom node readjustment
+     * @param size new size
+     */
+    abstract onResize(size: Size): void;
     /**
      * @description maximum inbounds
      */

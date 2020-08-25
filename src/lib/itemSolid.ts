@@ -1,6 +1,6 @@
 import { IItemSolidDefaults, IPoint, INodeInfo } from "./interfaces";
 import { attr, aChld, extend } from "./dab";
-import { each, tag, createText } from "./utils";
+import { each, tag, createText, pinInfo } from "./utils";
 import Rect from "./rect";
 import Size from "./size";
 import Point from "./point";
@@ -159,13 +159,4 @@ export default abstract class ItemSolid extends ItemBoard {
 		})
 	}
 
-}
-function pinInfo(that: ItemSolid, node: number): INodeInfo | undefined {
-	let
-		pin = <INodeInfo>that.base.meta.nodes.list[node];
-	return pin && {
-		x: pin.x,
-		y: pin.y,
-		label: pin.label
-	}
 }

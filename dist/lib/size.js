@@ -8,6 +8,14 @@ var Size = /** @class */ (function () {
     }
     Size.prototype.clone = function () { return new Size(this.width, this.height); };
     Size.prototype.equal = function (size) { return this.width == size.width && this.height == size.height; };
+    Object.defineProperty(Size.prototype, "positive", {
+        /**
+         * @description returns true if both width & height are positive
+         */
+        get: function () { return this.width >= 0 && this.height >= 0; },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Size, "empty", {
         get: function () { return new Size(0, 0); },
         enumerable: false,

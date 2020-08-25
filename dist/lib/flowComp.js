@@ -17,6 +17,7 @@ var FlowComp = /** @class */ (function (_super) {
         //get size from properties
         //(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
         _this.$.size = size_1.default.parse(_this.base.meta.size);
+        _this.$.minSize = size_1.default.parse(_this.base.meta.minSize);
         _this.$.fontSize = _this.base.meta.fontSize;
         _this.$.text = _this.base.meta.text;
         _this.$.pos = point_1.default.parse(_this.base.meta.position);
@@ -32,6 +33,11 @@ var FlowComp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(FlowComp.prototype, "minSize", {
+        get: function () { return this.$.minSize; },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(FlowComp.prototype, "size", {
         get: function () { return this.$.size; },
         enumerable: false,
@@ -39,17 +45,18 @@ var FlowComp = /** @class */ (function (_super) {
     });
     FlowComp.prototype.setSize = function (value) {
         if (!value.equal(this.size)) {
-            this.$.size = value;
-            this.refresh();
-            this.onResize && this.onResize(value);
+            var s = new size_1.default(value.width - this.minSize.width, value.height - this.minSize.height);
+            if (s.positive) {
+                this.$.size = value;
+                //internal adjust node points
+                this.onResize(value);
+                this.refresh();
+                //hooked events if any
+                this.$.onResize && this.$.onResize(value);
+            }
         }
         return this;
     };
-    Object.defineProperty(FlowComp.prototype, "onResize", {
-        get: function () { return this.$.onResize; },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(FlowComp.prototype, "inputs", {
         /**
          * @description maximum inbounds

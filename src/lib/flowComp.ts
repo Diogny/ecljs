@@ -19,7 +19,12 @@ export default abstract class FlowComp extends ItemSolid {
 
 	get size(): Size { return this.$.size }
 
-	public setSize(value: Size): FlowComp {
+	/**
+	 * @description resize the flowchart component
+	 * @param value new size
+	 * @returns true if it was resized, false otherwise
+	 */
+	public setSize(value: Size): boolean {
 		if (!value.equal(this.size)) {
 			let
 				s = new Size(value.width - this.minSize.width, value.height - this.minSize.height);
@@ -29,10 +34,11 @@ export default abstract class FlowComp extends ItemSolid {
 				this.onResize(value);
 				this.refresh();
 				//hooked events if any
-				this.$.onResize && this.$.onResize(value)
+				this.$.onResize && this.$.onResize(value);
+				return true
 			}
 		}
-		return this
+		return false
 	}
 
 	/**

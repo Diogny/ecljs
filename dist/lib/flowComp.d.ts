@@ -11,7 +11,12 @@ export default abstract class FlowComp extends ItemSolid {
     get type(): Type;
     get minSize(): Size;
     get size(): Size;
-    setSize(value: Size): FlowComp;
+    /**
+     * @description resize the flowchart component
+     * @param value new size
+     * @returns true if it was resized, false otherwise
+     */
+    setSize(value: Size): boolean;
     /**
      * @description every descendant must implement it's own custom node readjustment
      * @param size new size

@@ -46,6 +46,11 @@ var FlowComp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    /**
+     * @description resize the flowchart component
+     * @param value new size
+     * @returns true if it was resized, false otherwise
+     */
     FlowComp.prototype.setSize = function (value) {
         if (!value.equal(this.size)) {
             var s = new size_1.default(value.width - this.minSize.width, value.height - this.minSize.height);
@@ -56,9 +61,10 @@ var FlowComp = /** @class */ (function (_super) {
                 this.refresh();
                 //hooked events if any
                 this.$.onResize && this.$.onResize(value);
+                return true;
             }
         }
-        return this;
+        return false;
     };
     Object.defineProperty(FlowComp.prototype, "inputs", {
         /**

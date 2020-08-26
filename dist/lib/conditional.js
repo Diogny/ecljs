@@ -4,6 +4,7 @@ var tslib_1 = require("tslib");
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
 var dab_1 = require("./dab");
 var utils_1 = require("./utils");
+var rect_1 = tslib_1.__importDefault(require("./rect"));
 var FlowConditional = /** @class */ (function (_super) {
     tslib_1.__extends(FlowConditional, _super);
     function FlowConditional(flowchart, options) {
@@ -13,6 +14,25 @@ var FlowConditional = /** @class */ (function (_super) {
         _this.refresh();
         return _this;
     }
+    Object.defineProperty(FlowConditional.prototype, "body", {
+        /**
+        * contains the main frame body, where full component size can be calculated
+        */
+        get: function () { return this.$.path; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowConditional.prototype, "clientRect", {
+        /**
+         * client rect where text should be safely contained
+         */
+        get: function () {
+            var r = rect_1.default.create(this.body.getBoundingClientRect(), true), sw = r.width / 4 | 0, sh = r.height / 4 | 0;
+            return r.grow(-sw, -sh).translate(sw - this.$.padding, sh - this.$.padding);
+        },
+        enumerable: false,
+        configurable: true
+    });
     FlowConditional.prototype.refresh = function () {
         //calculate rect
         var w = this.size.width / 2 | 0, h = this.size.height / 2 | 0;

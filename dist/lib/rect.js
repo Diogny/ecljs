@@ -39,19 +39,35 @@ var Rect = /** @class */ (function () {
         this.y = ny;
         this.width = Math.max(this.x + this.width, r.x + r.width) - nx;
         this.height = Math.max(this.y + this.height, r.y + r.height) - ny;
+        return this;
     };
     Rect.prototype.move = function (x, y) {
         this.x = x | 0;
         this.y = y | 0;
     };
+    /**
+     * @description grow/shrink rectangle
+     * @param dx left & right growth
+     * @param dy top & bottom growth
+     */
     Rect.prototype.grow = function (dx, dy) {
         this.x -= (dx = dx | 0);
         this.y -= (dy = dy | 0);
         this.width += dx * 2;
         this.height += dy * 2;
+        return this;
+    };
+    Rect.prototype.translate = function (tx, ty) {
+        this.x -= (tx = tx | 0);
+        this.y -= (ty = ty | 0);
+        return this;
     };
     Rect.prototype.equal = function (r) { return this.x == r.x && this.y == r.y && this.width == r.width && this.height == r.height; };
-    Rect.create = function (r) { return new Rect(r.x, r.y, r.width, r.height); };
+    Rect.create = function (rect, toInt) {
+        var r = new Rect(rect.x, rect.y, rect.width, rect.height);
+        toInt && (r.x = r.x | 0, r.y = r.y | 0, r.width = r.width | 0, r.height = r.height | 0);
+        return r;
+    };
     Object.defineProperty(Rect, "empty", {
         get: function () { return new Rect(0, 0, 0, 0); },
         enumerable: false,

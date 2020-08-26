@@ -5,6 +5,7 @@ import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
 import Point from "./point";
 import { createText } from "./utils";
+import { Rect } from "src";
 
 /**
  * @description flowchart base component class
@@ -18,6 +19,16 @@ export default abstract class FlowComp extends ItemSolid {
 	get minSize(): Size { return this.$.minSize }
 
 	get size(): Size { return this.$.size }
+
+	/**
+	 * body frame, has the real size of component
+	 */
+	abstract get body(): SVGElement;
+
+	/**
+	 * client rect where text should be safely contained
+	 */
+	abstract get clientRect(): Rect;
 
 	/**
 	 * @description resize the flowchart component
@@ -74,6 +85,11 @@ export default abstract class FlowComp extends ItemSolid {
 	 */
 	get outs(): number { return this.$.outs }
 
+	/**
+	 * SVG text
+	 */
+	get svgText(): SVGTextElement { return this.$.svgText }
+
 	//will be removed, internal, just to dev easier from outside
 	get text(): string { return this.$.text }
 	set text(value: string) { this.$.text = value }
@@ -118,7 +134,8 @@ export default abstract class FlowComp extends ItemSolid {
 			dir: true,
 			onResize: void 0,
 			ins: 0,
-			outs: 0
+			outs: 0,
+			padding: 5
 		})
 	}
 }

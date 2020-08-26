@@ -351,6 +351,10 @@ export interface IFlowChartDefaults extends IItemSolidDefaults {
 	svgText: SVGTextElement;
 	pos: Point;
 	onResize: (size: Size) => void;
+	/**
+	 * client rect text padding
+	 */
+	padding: number;
 }
 
 export interface IFlowProcessDefaults extends IFlowChartDefaults {

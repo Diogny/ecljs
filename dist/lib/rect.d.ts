@@ -10,11 +10,17 @@ export default class Rect implements IRect {
     intersect(r: Rect): boolean;
     clone(): Rect;
     contains(r: Rect): boolean;
-    add(r: Rect): void;
+    add(r: Rect): Rect;
     move(x: number, y: number): void;
-    grow(dx: number, dy: number): void;
+    /**
+     * @description grow/shrink rectangle
+     * @param dx left & right growth
+     * @param dy top & bottom growth
+     */
+    grow(dx: number, dy: number): Rect;
+    translate(tx: number, ty: number): Rect;
     equal(r: Rect): boolean;
-    static create(r: IRect): Rect;
+    static create(rect: IRect, toInt?: boolean): Rect;
     static get empty(): Rect;
     /**
      * @description parse an string into an (x,y) Point

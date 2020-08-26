@@ -3,6 +3,7 @@ import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
 import Point from "./point";
+import { Rect } from "src";
 /**
  * @description flowchart base component class
  */
@@ -11,6 +12,14 @@ export default abstract class FlowComp extends ItemSolid {
     get type(): Type;
     get minSize(): Size;
     get size(): Size;
+    /**
+     * body frame, has the real size of component
+     */
+    abstract get body(): SVGElement;
+    /**
+     * client rect where text should be safely contained
+     */
+    abstract get clientRect(): Rect;
     /**
      * @description resize the flowchart component
      * @param value new size
@@ -38,6 +47,10 @@ export default abstract class FlowComp extends ItemSolid {
      * @description current outbounds
      */
     get outs(): number;
+    /**
+     * SVG text
+     */
+    get svgText(): SVGTextElement;
     get text(): string;
     set text(value: string);
     get fontSize(): number;

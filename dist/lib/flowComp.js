@@ -104,6 +104,14 @@ var FlowComp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(FlowComp.prototype, "svgText", {
+        /**
+         * SVG text
+         */
+        get: function () { return this.$.svgText; },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(FlowComp.prototype, "text", {
         //will be removed, internal, just to dev easier from outside
         get: function () { return this.$.text; },
@@ -137,7 +145,8 @@ var FlowComp = /** @class */ (function (_super) {
             dir: true,
             onResize: void 0,
             ins: 0,
-            outs: 0
+            outs: 0,
+            padding: 5
         });
     };
     return FlowComp;

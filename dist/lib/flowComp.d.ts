@@ -3,7 +3,7 @@ import Size from "./size";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
 import Point from "./point";
-import { Rect } from "src";
+import Rect from "./rect";
 /**
  * @description flowchart base component class
  */
@@ -48,7 +48,7 @@ export default abstract class FlowComp extends ItemSolid {
      */
     get outs(): number;
     /**
-     * SVG text
+     * SVG text, changing SVG text x's value, must change all inside tspan x's values too
      */
     get svgText(): SVGTextElement;
     get text(): string;

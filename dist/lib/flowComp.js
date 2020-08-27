@@ -25,7 +25,7 @@ var FlowComp = /** @class */ (function (_super) {
         dab_1.aChld(_this.g, _this.$.svgText = utils_1.createText({
             x: _this.$.pos.x,
             y: _this.$.pos.y,
-        }, _this.text));
+        }, "<tspan x=\"" + _this.$.pos.x + "\" dy=\"0\">" + _this.text + "</tspan>"));
         dab_1.css(_this.$.svgText, {
             "font-size": _this.fontSize + "px",
         });
@@ -106,7 +106,7 @@ var FlowComp = /** @class */ (function (_super) {
     });
     Object.defineProperty(FlowComp.prototype, "svgText", {
         /**
-         * SVG text
+         * SVG text, changing SVG text x's value, must change all inside tspan x's values too
          */
         get: function () { return this.$.svgText; },
         enumerable: false,

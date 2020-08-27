@@ -19,13 +19,17 @@ export default class FlowProcess extends FlowComp {
 	 * client rect where text should be safely contained
 	 */
 	get clientRect(): Rect {
-		return Rect.create(this.body.getBoundingClientRect(), true).grow(-this.$.padding, -this.$.padding)
+		let
+			r = this.body.getBoundingClientRect();
+		return (new Rect(0, 0, r.width | 0, r.height | 0)).grow(-this.$.padding, -this.$.padding)
 	}
 
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
 		super(flowchart, options);
 		//get rect, should be this.g.firstChild
 		this.$.rect = <SVGRectElement>this.g.firstElementChild;
+		//refresh nodes
+		this.onResize(this.size);
 		this.refresh()
 	}
 

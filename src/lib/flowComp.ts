@@ -5,7 +5,7 @@ import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
 import Point from "./point";
 import { createText } from "./utils";
-import { Rect } from "src";
+import Rect from "./rect";
 
 /**
  * @description flowchart base component class
@@ -86,7 +86,7 @@ export default abstract class FlowComp extends ItemSolid {
 	get outs(): number { return this.$.outs }
 
 	/**
-	 * SVG text
+	 * SVG text, changing SVG text x's value, must change all inside tspan x's values too
 	 */
 	get svgText(): SVGTextElement { return this.$.svgText }
 
@@ -112,7 +112,7 @@ export default abstract class FlowComp extends ItemSolid {
 			x: this.$.pos.x,
 			y: this.$.pos.y,
 			//"class": this.base.meta.label.class
-		}, this.text));
+		}, `<tspan x="${this.$.pos.x}" dy="0">${this.text}</tspan>`));
 		css(this.$.svgText, {
 			"font-size": this.fontSize + "px",
 		})

@@ -11,6 +11,8 @@ var FlowConditional = /** @class */ (function (_super) {
         var _this = _super.call(this, flowchart, options) || this;
         //get path, hould be this.g.firstChild
         _this.$.path = _this.g.firstElementChild;
+        //refresh nodes
+        _this.onResize(_this.size);
         _this.refresh();
         return _this;
     }
@@ -27,8 +29,8 @@ var FlowConditional = /** @class */ (function (_super) {
          * client rect where text should be safely contained
          */
         get: function () {
-            var r = rect_1.default.create(this.body.getBoundingClientRect(), true), sw = r.width / 4 | 0, sh = r.height / 4 | 0;
-            return r.grow(-sw, -sh).translate(sw - this.$.padding, sh - this.$.padding);
+            var dom = this.body.getBoundingClientRect(), r = new rect_1.default(0, 0, dom.width | 0, dom.height | 0), sw = r.width / 4 | 0, sh = r.height / 4 | 0;
+            return r.grow(-sw - this.$.padding, -sh - this.$.padding);
         },
         enumerable: false,
         configurable: true

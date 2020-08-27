@@ -20,16 +20,19 @@ export default class FlowConditional extends FlowComp {
 	 */
 	get clientRect(): Rect {
 		let
-			r = Rect.create(this.body.getBoundingClientRect(), true),
+			dom = this.body.getBoundingClientRect(),
+			r = new Rect(0, 0, dom.width | 0, dom.height | 0),
 			sw = r.width / 4 | 0,
 			sh = r.height / 4 | 0;
-		return r.grow(-sw, -sh).translate(sw - this.$.padding, sh - this.$.padding)
+		return r.grow(-sw - this.$.padding, -sh - this.$.padding)
 	}
 
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
 		super(flowchart, options);
 		//get path, hould be this.g.firstChild
 		this.$.path = <SVGPathElement>this.g.firstElementChild;
+		//refresh nodes
+		this.onResize(this.size);
 		this.refresh()
 	}
 

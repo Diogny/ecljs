@@ -11,6 +11,8 @@ var FlowProcess = /** @class */ (function (_super) {
         var _this = _super.call(this, flowchart, options) || this;
         //get rect, should be this.g.firstChild
         _this.$.rect = _this.g.firstElementChild;
+        //refresh nodes
+        _this.onResize(_this.size);
         _this.refresh();
         return _this;
     }
@@ -27,7 +29,8 @@ var FlowProcess = /** @class */ (function (_super) {
          * client rect where text should be safely contained
          */
         get: function () {
-            return rect_1.default.create(this.body.getBoundingClientRect(), true).grow(-this.$.padding, -this.$.padding);
+            var r = this.body.getBoundingClientRect();
+            return (new rect_1.default(0, 0, r.width | 0, r.height | 0)).grow(-this.$.padding, -this.$.padding);
         },
         enumerable: false,
         configurable: true

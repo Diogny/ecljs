@@ -1,5 +1,4 @@
 import * as Interfaces from "./lib/interfaces";
-import { Templates, XML } from "./lib/templates";
 import { UIProp, ReactProp, PropContainer } from "./lib/props";
 import Bonds from "./lib/bonds";
 import CompNode from "./lib/compNode";
@@ -21,4 +20,4 @@ import FlowProcess from "./lib/process";
 import FlowConditional from "./lib/conditional";
 import FlowStart from "./lib/flowstart";
 import FlowEnd from "./lib/flowend";
-export { Templates, XML, ReactProp, UIProp, PropContainer, Interfaces, Bonds, CompNode, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowComp, FlowProcess, FlowConditional, FlowStart, FlowEnd, };
+export { ReactProp, UIProp, PropContainer, Interfaces, Bonds, CompNode, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowComp, FlowProcess, FlowConditional, FlowStart, FlowEnd, };

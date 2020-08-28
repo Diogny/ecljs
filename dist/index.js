@@ -1,12 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = exports.XML = exports.Templates = void 0;
+exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = void 0;
 var tslib_1 = require("tslib");
 var Interfaces = tslib_1.__importStar(require("./lib/interfaces"));
 exports.Interfaces = Interfaces;
-var templates_1 = require("./lib/templates");
-Object.defineProperty(exports, "Templates", { enumerable: true, get: function () { return templates_1.Templates; } });
-Object.defineProperty(exports, "XML", { enumerable: true, get: function () { return templates_1.XML; } });
 var props_1 = require("./lib/props");
 Object.defineProperty(exports, "UIProp", { enumerable: true, get: function () { return props_1.UIProp; } });
 Object.defineProperty(exports, "ReactProp", { enumerable: true, get: function () { return props_1.ReactProp; } });

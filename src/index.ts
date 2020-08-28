@@ -1,6 +1,5 @@
 import * as Interfaces from "./lib/interfaces";
 
-import { Templates, XML } from "./lib/templates";
 import { UIProp, ReactProp, PropContainer } from "./lib/props";
 import Bonds from "./lib/bonds";
 
@@ -30,8 +29,6 @@ import FlowStart from "./lib/flowstart";
 import FlowEnd from "./lib/flowend";
 
 export {
-	Templates,
-	XML,
 
 	ReactProp,
 	UIProp,

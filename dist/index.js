@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = void 0;
+exports.FlowInOut = exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = void 0;
 var tslib_1 = require("tslib");
 var Interfaces = tslib_1.__importStar(require("./lib/interfaces"));
 exports.Interfaces = Interfaces;
@@ -48,3 +48,5 @@ var flowstart_1 = tslib_1.__importDefault(require("./lib/flowstart"));
 exports.FlowStart = flowstart_1.default;
 var flowend_1 = tslib_1.__importDefault(require("./lib/flowend"));
 exports.FlowEnd = flowend_1.default;
+var flowInOut_1 = tslib_1.__importDefault(require("./lib/flowInOut"));
+exports.FlowInOut = flowInOut_1.default;

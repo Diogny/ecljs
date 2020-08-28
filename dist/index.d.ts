@@ -20,4 +20,5 @@ import FlowProcess from "./lib/process";
 import FlowConditional from "./lib/flowCond";
 import FlowStart from "./lib/flowstart";
 import FlowEnd from "./lib/flowend";
-export { ReactProp, UIProp, PropContainer, Interfaces, Bonds, CompNode, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowComp, FlowProcess, FlowConditional, FlowStart, FlowEnd, };
+import FlowInOut from "./lib/flowInOut";
+export { ReactProp, UIProp, PropContainer, Interfaces, Bonds, CompNode, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowComp, FlowProcess, FlowConditional, FlowStart, FlowEnd, FlowInOut };

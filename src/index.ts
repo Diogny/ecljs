@@ -27,6 +27,7 @@ import FlowProcess from "./lib/process";
 import FlowConditional from "./lib/flowCond";
 import FlowStart from "./lib/flowstart";
 import FlowEnd from "./lib/flowend";
+import FlowInOut from "./lib/flowInOut";
 
 export {
 
@@ -61,5 +62,6 @@ export {
 	FlowConditional,
 	FlowStart,
 	FlowEnd,
+	FlowInOut
 
 }

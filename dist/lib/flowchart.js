@@ -5,6 +5,9 @@ var container_1 = tslib_1.__importDefault(require("./container"));
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
 var process_1 = tslib_1.__importDefault(require("./process"));
 var flowCond_1 = tslib_1.__importDefault(require("./flowCond"));
+var flowstart_1 = tslib_1.__importDefault(require("./flowstart"));
+var flowend_1 = tslib_1.__importDefault(require("./flowend"));
+var flowInOut_1 = tslib_1.__importDefault(require("./flowInOut"));
 /**
  * @description Flowchart component container
  */
@@ -29,6 +32,12 @@ var Flowchart = /** @class */ (function (_super) {
                 return new process_1.default(this, options);
             case "cond":
                 return new flowCond_1.default(this, options);
+            case "start":
+                return new flowstart_1.default(this, options);
+            case "end":
+                return new flowend_1.default(this, options);
+            case "inout":
+                return new flowInOut_1.default(this, options);
             default:
                 throw "unknown flowchart";
         }

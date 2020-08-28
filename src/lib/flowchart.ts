@@ -3,6 +3,9 @@ import FlowComp from "./flowComp";
 import FlowProcess from "./process";
 import Wire from "./wire";
 import FlowConditional from "./flowCond";
+import FlowStart from "./flowstart";
+import FlowEnd from "./flowend";
+import FlowInOut from "./flowInOut";
 
 /**
  * @description Flowchart component container
@@ -18,6 +21,12 @@ export default class Flowchart extends Container<FlowComp>{
 				return new FlowProcess(this, <any>options);
 			case "cond":
 				return new FlowConditional(this, <any>options);
+			case "start":
+				return new FlowStart(this, <any>options);
+			case "end":
+				return new FlowEnd(this, <any>options);
+			case "inout":
+				return new FlowInOut(this, <any>options);
 			default:
 				throw `unknown flowchart`
 		}

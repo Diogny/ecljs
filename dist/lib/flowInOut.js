@@ -5,9 +5,9 @@ var dab_1 = require("dabbjs/dist/lib/dab");
 var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
 var extra_1 = require("./extra");
-var FlowConditional = /** @class */ (function (_super) {
-    tslib_1.__extends(FlowConditional, _super);
-    function FlowConditional(flowchart, options) {
+var FlowInOut = /** @class */ (function (_super) {
+    tslib_1.__extends(FlowInOut, _super);
+    function FlowInOut(flowchart, options) {
         var _this = _super.call(this, flowchart, options) || this;
         //get path, hould be this.g.firstChild
         _this.$.path = _this.g.firstElementChild;
@@ -16,7 +16,7 @@ var FlowConditional = /** @class */ (function (_super) {
         _this.refresh();
         return _this;
     }
-    Object.defineProperty(FlowConditional.prototype, "body", {
+    Object.defineProperty(FlowInOut.prototype, "body", {
         /**
         * contains the main frame body, where full component size can be calculated
         */
@@ -24,30 +24,33 @@ var FlowConditional = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(FlowConditional.prototype, "clientRect", {
+    Object.defineProperty(FlowInOut.prototype, "clientRect", {
         /**
          * client rect where text should be safely contained
          */
         get: function () {
-            var dom = this.body.getBoundingClientRect(), r = new rect_1.default(0, 0, dom.width | 0, dom.height | 0), sw = r.width / 4 | 0, sh = r.height / 4 | 0;
-            return r.grow(-sw - this.$.padding, -sh - this.$.padding);
+            var r = this.body.getBoundingClientRect();
+            return (new rect_1.default(0, 0, r.width | 0, r.height | 0)).grow(-this.$.shift, -this.$.padding);
         },
         enumerable: false,
         configurable: true
     });
-    FlowConditional.prototype.refresh = function () {
-        //calculate rect
-        var w = this.size.width / 2 | 0, h = this.size.height / 2 | 0;
+    FlowInOut.prototype.refresh = function () {
+        var h = this.size.height, s = this.$.shift = h / 4 | 0, w = this.size.width, s2 = w - s;
         dab_1.attr(this.$.path, {
-            d: "M " + w + ",0 L " + this.size.width + "," + h + " L " + w + "," + this.size.height + " L 0," + h + " Z"
+            d: "M " + s + ",0 H" + w + " L" + s2 + "," + h + " H0 Z"
         });
         //later text resize goes here
         //...
         return _super.prototype.refresh.call(this), this;
     };
-    FlowConditional.prototype.onResize = function (size) {
-        extra_1.flowNodes(this.base.meta.nodes.list, size);
+    FlowInOut.prototype.onResize = function (size) {
+        var list = this.base.meta.nodes.list, xs = this.$.shift / 2 | 0;
+        extra_1.flowNodes(list, size);
+        list[1].x -= xs;
+        list[3].x = xs;
     };
-    return FlowConditional;
+    return FlowInOut;
 }(flowComp_1.default));
-exports.default = FlowConditional;
+exports.default = FlowInOut;
+//IFlowInOutDefaults

@@ -2,7 +2,7 @@ import Container from "./container";
 import FlowComp from "./flowComp";
 import FlowProcess from "./process";
 import Wire from "./wire";
-import FlowConditional from "./conditional";
+import FlowConditional from "./flowCond";
 
 /**
  * @description Flowchart component container

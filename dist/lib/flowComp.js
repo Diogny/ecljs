@@ -146,7 +146,7 @@ var FlowComp = /** @class */ (function (_super) {
             onResize: void 0,
             ins: 0,
             outs: 0,
-            padding: 5
+            padding: 2
         });
     };
     return FlowComp;

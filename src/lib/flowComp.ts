@@ -136,7 +136,7 @@ export default abstract class FlowComp extends ItemSolid {
 			onResize: void 0,
 			ins: 0,
 			outs: 0,
-			padding: 5
+			padding: 2
 		})
 	}
 }

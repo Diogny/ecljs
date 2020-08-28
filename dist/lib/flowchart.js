@@ -4,7 +4,7 @@ var tslib_1 = require("tslib");
 var container_1 = tslib_1.__importDefault(require("./container"));
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
 var process_1 = tslib_1.__importDefault(require("./process"));
-var conditional_1 = tslib_1.__importDefault(require("./conditional"));
+var flowCond_1 = tslib_1.__importDefault(require("./flowCond"));
 /**
  * @description Flowchart component container
  */
@@ -28,7 +28,7 @@ var Flowchart = /** @class */ (function (_super) {
             case "proc":
                 return new process_1.default(this, options);
             case "cond":
-                return new conditional_1.default(this, options);
+                return new flowCond_1.default(this, options);
             default:
                 throw "unknown flowchart";
         }

@@ -311,6 +311,12 @@ export interface IFlowProcessDefaults extends IFlowChartDefaults {
 export interface IFlowCondDefaults extends IFlowChartDefaults {
     path: SVGPathElement;
 }
+export interface IFlowTermDefaults extends IFlowCondDefaults {
+    curve: number;
+}
+export interface IFlowInOutDefaults extends IFlowCondDefaults {
+    shift: number;
+}
 export interface IBoardCircleDefaults extends IItemDefaults {
     radius: number;
     node: number;

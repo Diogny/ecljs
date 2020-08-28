@@ -1,14 +1,15 @@
 import { attr } from "dabbjs/dist/lib/dab";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
-import { IFlowCondDefaults } from "./interfaces";
-import FlowComp from "./flowComp";
+//
+import { IFlowTermDefaults } from "./interfaces";
 import Flowchart from "./flowchart";
+import FlowComp from "./flowComp";
 import { flowNodes } from "./extra";
 
-export default class FlowConditional extends FlowComp {
+export default abstract class FlowTerminational extends FlowComp {
 
-	protected $: IFlowCondDefaults;
+	protected $: IFlowTermDefaults;	//reuse, later if needed add it's own interface
 
 	/**
 	* contains the main frame body, where full component size can be calculated
@@ -20,11 +21,8 @@ export default class FlowConditional extends FlowComp {
 	 */
 	get clientRect(): Rect {
 		let
-			dom = this.body.getBoundingClientRect(),
-			r = new Rect(0, 0, dom.width | 0, dom.height | 0),
-			sw = r.width / 4 | 0,
-			sh = r.height / 4 | 0;
-		return r.grow(-sw - this.$.padding, -sh - this.$.padding)
+			r = this.body.getBoundingClientRect();
+		return (new Rect(0, 0, r.width | 0, r.height | 0)).grow(-this.$.curve, -this.$.padding)
 	}
 
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
@@ -36,13 +34,15 @@ export default class FlowConditional extends FlowComp {
 		this.refresh()
 	}
 
-	public refresh(): FlowConditional {
-		//calculate rect
+	public refresh(): FlowTerminational {
 		let
-			w = this.size.width / 2 | 0,
-			h = this.size.height / 2 | 0;
+			h = this.size.height,
+			h2 = h / 2 | 0,
+			c = this.$.curve = h / 4 | 0,
+			w = this.size.width,
+			c2 = w - c;
 		attr(this.$.path, {
-			d: `M ${w},0 L ${this.size.width},${h} L ${w},${this.size.height} L 0,${h} Z`
+			d: `M ${c},0 H${c2} C ${c2},0 ${w},${h2} ${c2},${h} H${c} C ${c},${h} 0,${h2} ${c},0 Z`
 		});
 		//later text resize goes here
 		//...
@@ -52,4 +52,5 @@ export default class FlowConditional extends FlowComp {
 	public onResize(size: Size): void {
 		flowNodes(this.base.meta.nodes.list, size)
 	}
+
 }

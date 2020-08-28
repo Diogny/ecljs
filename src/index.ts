@@ -24,7 +24,7 @@ import Wire from "./lib/wire";
 
 import FlowComp from "./lib/flowComp";
 import FlowProcess from "./lib/process";
-import FlowConditional from "./lib/conditional";
+import FlowConditional from "./lib/flowCond";
 import FlowStart from "./lib/flowstart";
 import FlowEnd from "./lib/flowend";
 

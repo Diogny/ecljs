@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
 var interfaces_1 = require("./interfaces");
-var rect_1 = tslib_1.__importDefault(require("./rect"));
 var bonds_1 = tslib_1.__importDefault(require("./bonds"));
 var wire_1 = tslib_1.__importDefault(require("./wire"));
 var Container = /** @class */ (function (_super) {

@@ -1,5 +1,5 @@
+import { obj } from 'dabbjs/dist/lib/dab';
 import { IType, IBondNode, Type, BondDir } from './interfaces';
-import { obj } from './dab';
 import ItemBoard from './itemsBoard';
 
 export default class Bond implements IType {

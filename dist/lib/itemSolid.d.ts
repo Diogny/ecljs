@@ -1,5 +1,6 @@
-import { IItemSolidDefaults, IPoint, INodeInfo } from "./interfaces";
-import Rect from "./rect";
+import { IPoint } from "dabbjs/dist/lib/interfaces";
+import Rect from "dabbjs/dist/lib/rect";
+import { IItemSolidDefaults, INodeInfo } from "./interfaces";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
 export default abstract class ItemSolid extends ItemBoard {

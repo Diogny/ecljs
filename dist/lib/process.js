@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var dab_1 = require("dabbjs/dist/lib/dab");
+var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
 var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
-var dab_1 = require("./dab");
-var utils_1 = require("./utils");
-var rect_1 = tslib_1.__importDefault(require("./rect"));
+var extra_1 = require("./extra");
 var FlowProcess = /** @class */ (function (_super) {
     tslib_1.__extends(FlowProcess, _super);
     function FlowProcess(flowchart, options) {
@@ -46,7 +46,7 @@ var FlowProcess = /** @class */ (function (_super) {
         return _super.prototype.refresh.call(this), this;
     };
     FlowProcess.prototype.onResize = function (size) {
-        utils_1.flowNodes(this.base.meta.nodes.list, size);
+        extra_1.flowNodes(this.base.meta.nodes.list, size);
     };
     return FlowProcess;
 }(flowComp_1.default));

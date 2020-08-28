@@ -1,6 +1,6 @@
+import Point from 'dabbjs/dist/lib/point';
+import Rect from 'dabbjs/dist/lib/rect';
 import { IItemBaseDefaults, IType, Type, IComponent } from './interfaces';
-import Rect from './rect';
-import Point from './point';
 import Item from './item';
 export default abstract class ItemBase extends Item implements IType {
     protected $: IItemBaseDefaults;

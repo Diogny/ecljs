@@ -1,7 +1,8 @@
-import { Type, IPoint, IECDefaults } from './interfaces';
-import { attr, extend, aChld } from './dab';
-import { tag } from './utils';
-import Point from './point';
+import { IPoint } from 'dabbjs/dist/lib/interfaces';
+import { attr, extend, aChld } from 'dabbjs/dist/lib/dab';
+import { tag } from 'dabbjs/dist/lib/utils';
+import Point from 'dabbjs/dist/lib/point';
+import { Type, IECDefaults } from './interfaces';
 import ItemSolid from './itemSolid';
 import Label from './label';
 import Circuit from './circuit';

@@ -1,4 +1,5 @@
-import { Type, ISize, ILabelDefaults } from "./interfaces";
+import { ISize } from "dabbjs/dist/lib/interfaces";
+import { Type, ILabelDefaults } from "./interfaces";
 import ItemBase from "./itemsBase";
 export default class Label extends ItemBase {
     get type(): Type;

@@ -1,5 +1,5 @@
+import Rect from "dabbjs/dist/lib/rect";
 import FlowTerminational from "./terminational";
-import Rect from "./rect";
 export default class FlowEnd extends FlowTerminational {
     /**
          * contains the main frame body, where full component size can be calculated

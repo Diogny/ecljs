@@ -1,7 +1,7 @@
+import { extend, attr } from "dabbjs/dist/lib/dab";
+import { tag } from "dabbjs/dist/lib/utils";
+import Point from "dabbjs/dist/lib/point";
 import { Type, IHighlighNodeDefaults } from "./interfaces";
-import { extend, attr } from "./dab";
-import { tag } from "./utils";
-import Point from "./point";
 import ItemBase from "./itemsBase";
 
 export default class HighlightNode extends ItemBase {

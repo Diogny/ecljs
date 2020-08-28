@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var dab_1 = require("./dab");
-var utils_1 = require("./utils");
-var rect_1 = tslib_1.__importDefault(require("./rect"));
-var point_1 = tslib_1.__importDefault(require("./point"));
+var dab_1 = require("dabbjs/dist/lib/dab");
+var utils_1 = require("dabbjs/dist/lib/utils");
+var point_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/point"));
+var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
 var item_1 = tslib_1.__importDefault(require("./item"));
 var ItemBase = /** @class */ (function (_super) {
     tslib_1.__extends(ItemBase, _super);

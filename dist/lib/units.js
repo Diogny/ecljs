@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var dab_1 = require("./dab");
+var dab_1 = require("dabbjs/dist/lib/dab");
 //... in progress ...
 //npm https://www.npmjs.com/package/@dabberio/electric-units
 var Unit = /** @class */ (function () {

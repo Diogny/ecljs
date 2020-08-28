@@ -1,8 +1,8 @@
+import Size from "dabbjs/dist/lib/size";
+import Rect from "dabbjs/dist/lib/rect";
 import { IFlowProcessDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
 import Flowchart from "./flowchart";
-import Size from "./size";
-import Rect from "./rect";
 export default class FlowProcess extends FlowComp {
     protected $: IFlowProcessDefaults;
     /**

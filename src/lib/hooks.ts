@@ -1,9 +1,9 @@
+import { dP } from "dabbjs/dist/lib/dab";
+import Size from "dabbjs/dist/lib/size";
+import Point from "dabbjs/dist/lib/point";
+import Rect from "dabbjs/dist/lib/rect";
+import Unit from "electric-units/dist/units";
 import { IPropHook, IComponentProperty, IEqual, IPropHookPropType } from "./interfaces";
-import { dP } from "./dab";
-import Size from "./size";
-import Point from "./point";
-import Unit from "./units";
-import Rect from "./rect";
 
 /**
  * @description creates a property hook

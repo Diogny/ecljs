@@ -1,5 +1,6 @@
-import { IPoint, IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
-import { tCl, attr, extend, isFn, obj } from './dab';
+import { IPoint } from 'dabbjs/dist/lib/interfaces';
+import { tCl, attr, extend, isFn, obj } from 'dabbjs/dist/lib/dab';
+import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';

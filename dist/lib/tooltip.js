@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var dab_1 = require("dabbjs/dist/lib/dab");
+var utils_1 = require("dabbjs/dist/lib/utils");
 var interfaces_1 = require("./interfaces");
-var dab_1 = require("./dab");
-var utils_1 = require("./utils");
 var label_1 = tslib_1.__importDefault(require("./label"));
 var Tooltip = /** @class */ (function (_super) {
     tslib_1.__extends(Tooltip, _super);

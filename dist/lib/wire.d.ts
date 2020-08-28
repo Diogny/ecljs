@@ -1,6 +1,7 @@
-import { Type, IPoint, IWireDefaults, INodeInfo } from './interfaces';
-import Point from './point';
-import Rect from './rect';
+import { IPoint } from 'dabbjs/dist/lib/interfaces';
+import Point from 'dabbjs/dist/lib/point';
+import Rect from 'dabbjs/dist/lib/rect';
+import { Type, IWireDefaults, INodeInfo } from './interfaces';
 import ItemBoard from './itemsBoard';
 import Container from './container';
 export default class Wire extends ItemBoard {

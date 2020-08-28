@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PHook = void 0;
 var tslib_1 = require("tslib");
-var dab_1 = require("./dab");
-var size_1 = tslib_1.__importDefault(require("./size"));
-var point_1 = tslib_1.__importDefault(require("./point"));
-var units_1 = tslib_1.__importDefault(require("./units"));
-var rect_1 = tslib_1.__importDefault(require("./rect"));
+var dab_1 = require("dabbjs/dist/lib/dab");
+var size_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/size"));
+var point_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/point"));
+var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
+var units_1 = tslib_1.__importDefault(require("electric-units/dist/units"));
 /**
  * @description creates a property hook
  * @param p a component property

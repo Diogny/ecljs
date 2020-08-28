@@ -1,5 +1,5 @@
+import Rect from "dabbjs/dist/lib/rect";
 import FlowTerminational from "./terminational";
-import Rect from "./rect";
 
 export default class FlowStart extends FlowTerminational { 
 

@@ -1,5 +1,9 @@
-import { obj, copy } from "./dab";
-import Point from './point';
+import { IPoint } from "dabbjs/dist/lib/interfaces";
+import { obj, copy } from "dabbjs/dist/lib/dab";
+import Point from 'dabbjs/dist/lib/point';
+import Size from "dabbjs/dist/lib/size";
+import Rect from "dabbjs/dist/lib/rect";
+import Unit from "electric-units/dist/units";
 import { ReactProp } from "./props";
 import Label from "./label";
 import ItemBoard from "./itemsBoard";
@@ -7,10 +11,6 @@ import Bond from "./bonds";
 import Wire from "./wire";
 import CompNode from "./compNode";
 import CompStore from "./components";
-import Size from "./size";
-import Unit from "./units";
-import Rect from "./rect";
-
 
 //***************************************** Types ************************************//
 
@@ -82,18 +82,6 @@ export interface IContainerDefaults<T extends ItemBoard> {
 //***************************************** General ************************************//
 
 export type IEqual = (p: Point | Size | Rect | Unit) => boolean;
-
-export interface IPoint {
-	x: number;
-	y: number;
-}
-
-export interface ISize {
-	width: number;
-	height: number;
-}
-
-export interface IRect extends IPoint, ISize { }
 
 //***************************************** Component Property ************************************//
 

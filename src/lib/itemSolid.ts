@@ -1,12 +1,14 @@
-import { IItemSolidDefaults, IPoint, INodeInfo } from "./interfaces";
-import { attr, aChld, extend } from "./dab";
-import { each, tag, createText, pinInfo } from "./utils";
-import Rect from "./rect";
-import Size from "./size";
-import Point from "./point";
+import { IPoint } from "dabbjs/dist/lib/interfaces";
+import { attr, aChld, extend } from "dabbjs/dist/lib/dab";
+import { each } from "dabbjs/dist/lib/utils";
+import Point from "dabbjs/dist/lib/point";
+import Size from "dabbjs/dist/lib/size";
+import Rect from "dabbjs/dist/lib/rect";
+import { IItemSolidDefaults, INodeInfo } from "./interfaces";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Container from "./container";
+import { createText, pinInfo } from "./extra";
 
 //ItemBoard->ItemSolid->EC
 export default abstract class ItemSolid extends ItemBoard {

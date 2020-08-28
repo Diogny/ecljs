@@ -1,5 +1,5 @@
+import { obj } from 'dabbjs/dist/lib/dab';
 import { IBaseStoreComponent, ILibrary, IComponent } from './interfaces';
-import { obj } from './dab';
 
 //const tmpl = "{base.comp.name}-{base.count}";
 const defaults = (type: string, name: string): IBaseStoreComponent => (<any>{

@@ -1,8 +1,7 @@
-
+import { attr, extend } from "dabbjs/dist/lib/dab";
+import { tag } from "dabbjs/dist/lib/utils";
+import Point from "dabbjs/dist/lib/point";
 import { IBoardCircleDefaults } from "./interfaces";
-import { attr, extend } from "./dab";
-import { tag } from "./utils";
-import Point from "./point";
 import Item from "./item";
 
 export default class CompNode extends Item {

@@ -1,6 +1,7 @@
-import { Type, ISize, ITooltipDefaults } from "./interfaces";
-import { attr, obj, isStr, pojo, extend } from './dab';
-import { tag, map, filter } from './utils';
+import { ISize } from 'dabbjs/dist/lib/interfaces';
+import { attr, obj, isStr, pojo, extend } from 'dabbjs/dist/lib/dab';
+import { tag, map, filter } from 'dabbjs/dist/lib/utils';
+import { Type, ITooltipDefaults } from "./interfaces";
 import Label from './label';
 
 export default class Tooltip extends Label {

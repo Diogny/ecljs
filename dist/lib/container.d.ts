@@ -1,5 +1,5 @@
+import Rect from "dabbjs/dist/lib/rect";
 import { IBaseComponent, IContainerDefaults, Base, BondDir } from "./interfaces";
-import Rect from "./rect";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";

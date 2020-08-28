@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Base = exports.Type = void 0;
-var dab_1 = require("./dab");
+var dab_1 = require("dabbjs/dist/lib/dab");
 //***************************************** Types ************************************//
 var Type;
 (function (Type) {

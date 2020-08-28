@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var dab_1 = require("dabbjs/dist/lib/dab");
 var interfaces_1 = require("./interfaces");
-var dab_1 = require("./dab");
 var Bond = /** @class */ (function () {
     /**
      * @description implements a component bond, it must be created by default as a One-to-One bond

@@ -1,9 +1,10 @@
-import { Type, IPoint, IFlowChartDefaults } from "./interfaces";
-import Size from "./size";
+import { IPoint } from "dabbjs/dist/lib/interfaces";
+import Point from "dabbjs/dist/lib/point";
+import Size from "dabbjs/dist/lib/size";
+import Rect from "dabbjs/dist/lib/rect";
+import { Type, IFlowChartDefaults } from "./interfaces";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
-import Point from "./point";
-import Rect from "./rect";
 /**
  * @description flowchart base component class
  */

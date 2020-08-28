@@ -1,11 +1,12 @@
-import { Type, IPoint, IFlowChartDefaults, IFlowchartMetadata } from "./interfaces";
-import { extend, aChld, css, toBool } from "./dab";
-import Size from "./size";
+import { IPoint } from "dabbjs/dist/lib/interfaces";
+import { extend, aChld, css, toBool } from "dabbjs/dist/lib/dab";
+import Point from "dabbjs/dist/lib/point";
+import Size from "dabbjs/dist/lib/size";
+import Rect from "dabbjs/dist/lib/rect";
+import { Type, IFlowChartDefaults, IFlowchartMetadata } from "./interfaces";
 import ItemSolid from "./itemSolid";
 import Flowchart from "./flowchart";
-import Point from "./point";
-import { createText } from "./utils";
-import Rect from "./rect";
+import { createText } from "./extra";
 
 /**
  * @description flowchart base component class

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var dab_1 = require("./dab");
+var dab_1 = require("dabbjs/dist/lib/dab");
 //const tmpl = "{base.comp.name}-{base.count}";
 var defaults = function (type, name) { return ({
     name: name,

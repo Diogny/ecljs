@@ -2,7 +2,7 @@
 //Point class is adapted from:
 //https://github.com/Microsoft/TypeScriptSamples/blob/master/raytracer/raytracer.ts
 Object.defineProperty(exports, "__esModule", { value: true });
-var dab_1 = require("./dab");
+var dab_1 = require("dabbjs/dist/lib/dab");
 /**
  * @description a 2 dimension integer point class
  */

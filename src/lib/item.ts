@@ -1,5 +1,5 @@
+import Point from "dabbjs/dist/lib/point";
 import { IItemDefaults, Base } from "./interfaces";
-import Point from "./point";
 
 export default abstract class Item extends Base {
 

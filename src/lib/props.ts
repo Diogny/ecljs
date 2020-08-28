@@ -1,6 +1,6 @@
+import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric, isFn } from 'dabbjs/dist/lib/dab';
+import { qS, each } from 'dabbjs/dist/lib/utils';
 import { IUIPropertyCallback, Base, IPropContainerDefaults, IReactPropDefaults, IUIPropertyDefaults, IReactProp, IReactPropHook } from './interfaces';
-import { dP, typeOf, isInt, splat, isDOM, isStr, isNumeric, isFn } from './dab';
-import { qS, each } from './utils';
 
 export class ReactProp extends Base implements IReactProp {
 

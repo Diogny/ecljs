@@ -1,5 +1,5 @@
+import Point from "dabbjs/dist/lib/point";
 import { IBoardCircleDefaults } from "./interfaces";
-import Point from "./point";
 import Item from "./item";
 export default class CompNode extends Item {
     protected $: IBoardCircleDefaults;

@@ -1,4 +1,5 @@
-import { Type, IPoint, IECDefaults } from './interfaces';
+import { IPoint } from 'dabbjs/dist/lib/interfaces';
+import { Type, IECDefaults } from './interfaces';
 import ItemSolid from './itemSolid';
 import Circuit from './circuit';
 export default class EC extends ItemSolid {

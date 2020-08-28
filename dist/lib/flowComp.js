@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var dab_1 = require("dabbjs/dist/lib/dab");
+var point_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/point"));
+var size_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/size"));
 var interfaces_1 = require("./interfaces");
-var dab_1 = require("./dab");
-var size_1 = tslib_1.__importDefault(require("./size"));
 var itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
-var point_1 = tslib_1.__importDefault(require("./point"));
-var utils_1 = require("./utils");
+var extra_1 = require("./extra");
 /**
  * @description flowchart base component class
  */
@@ -22,7 +22,7 @@ var FlowComp = /** @class */ (function (_super) {
         _this.$.text = _this.base.meta.text;
         _this.$.pos = point_1.default.parse(_this.base.meta.position);
         //create text if defined
-        dab_1.aChld(_this.g, _this.$.svgText = utils_1.createText({
+        dab_1.aChld(_this.g, _this.$.svgText = extra_1.createText({
             x: _this.$.pos.x,
             y: _this.$.pos.y,
         }, "<tspan x=\"" + _this.$.pos.x + "\" dy=\"0\">" + _this.text + "</tspan>"));

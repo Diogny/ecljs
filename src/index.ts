@@ -1,15 +1,7 @@
-import ajaxp from "./lib/ajaxp";
-import * as dab from "./lib/dab";
-import * as utils from "./lib/utils";
 import * as Interfaces from "./lib/interfaces";
 
-import Color from "./lib/colors";
-import Point from "./lib/point";
-import Rect from "./lib/rect";
-import Size from "./lib/size";
 import { Templates, XML } from "./lib/templates";
 import { UIProp, ReactProp, PropContainer } from "./lib/props";
-import Units from "./lib/units";
 import Bonds from "./lib/bonds";
 
 import CompNode from "./lib/compNode";
@@ -38,17 +30,8 @@ import FlowStart from "./lib/flowstart";
 import FlowEnd from "./lib/flowend";
 
 export {
-	ajaxp,
-	dab,
-	utils,
-
-	Color,
-	Point,
-	Rect,
-	Size,
 	Templates,
 	XML,
-	Units,
 
 	ReactProp,
 	UIProp,

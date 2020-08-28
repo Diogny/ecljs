@@ -1,8 +1,9 @@
-import { Type, IPoint, IWireDefaults, INodeInfo } from './interfaces';
-import { attr, isArr, extend } from './dab';
-import { tag } from './utils';
-import Point from './point';
-import Rect from './rect';
+import { IPoint } from 'dabbjs/dist/lib/interfaces';
+import { attr, isArr, extend } from 'dabbjs/dist/lib/dab';
+import { tag } from 'dabbjs/dist/lib/utils';
+import Point from 'dabbjs/dist/lib/point';
+import Rect from 'dabbjs/dist/lib/rect';
+import { Type, IWireDefaults, INodeInfo } from './interfaces';
 import ItemBoard from './itemsBoard';
 import Container from './container';
 

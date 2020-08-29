@@ -126,7 +126,7 @@ var Wire = /** @class */ (function (_super) {
     Wire.prototype.setNode = function (node, p) {
         this.$.points[node].x = p.x | 0;
         this.$.points[node].y = p.y | 0;
-        (node == 0) && moveToStart(this, this.$);
+        (node == 0) && moveToStart(this.$);
         this.refreshHighlight(node);
         return this.nodeRefresh(node);
     };
@@ -181,7 +181,7 @@ var Wire = /** @class */ (function (_super) {
         this.g.innerHTML = "";
         this.$.points = points.map(function (p) { return new point_1.default(p.x | 0, p.y | 0); });
         this.$.dir && (this.$.arrow = poly(this.g, "arrow", -1));
-        moveToStart(this, this.$);
+        moveToStart(this.$);
         if (this.edit) {
             this.$.poly = void 0;
             setlines(this, this.$);
@@ -284,9 +284,9 @@ var Wire = /** @class */ (function (_super) {
     return Wire;
 }(itemsBoard_1.default));
 exports.default = Wire;
-function moveToStart(wire, $) {
-    $.points[0].x = wire.x;
-    $.points[0].y = wire.y;
+function moveToStart($) {
+    $.x = $.points[0].x;
+    $.y = $.points[0].y;
 }
 function deleteWireNode(wire, $, node) {
     var last = wire.last;

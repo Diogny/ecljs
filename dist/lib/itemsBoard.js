@@ -169,8 +169,8 @@ var ItemBoard = /** @class */ (function (_super) {
         if (!circleNode)
             return false;
         dab_1.attr(circleNode, {
-            cX: pin.x,
-            cy: pin.y
+            cx: pin.x,
+            cy: pin.y,
         });
         return true;
     };

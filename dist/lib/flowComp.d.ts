@@ -65,7 +65,7 @@ export default abstract class FlowComp extends ItemBoard {
     /**
      * @description returns the node information
      * @param node 0-based pin/node number
-     * @param onlyPoint not used here
+     * @param onlyPoint true to get internal point, false get the real board point
      *
      * this returns (x, y) relative to the EC location
      */

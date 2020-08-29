@@ -113,7 +113,7 @@ export default class Wire extends ItemBoard {
 	public setNode(node: number, p: IPoint): Wire {
 		this.$.points[node].x = p.x | 0;
 		this.$.points[node].y = p.y | 0;
-		(node == 0) && moveToStart(this, this.$);
+		(node == 0) && moveToStart(this.$);
 		this.refreshHighlight(node);
 		return this.nodeRefresh(node)
 	}
@@ -174,7 +174,7 @@ export default class Wire extends ItemBoard {
 		this.g.innerHTML = "";
 		this.$.points = points.map(p => new Point(p.x | 0, p.y | 0));
 		this.$.dir && (this.$.arrow = poly(this.g, "arrow", -1));
-		moveToStart(this, this.$);
+		moveToStart(this.$);
 		if (this.edit) {
 			this.$.poly = <any>void 0;
 			setlines(this, this.$)
@@ -291,9 +291,9 @@ export default class Wire extends ItemBoard {
 
 }
 
-function moveToStart(wire: Wire, $: IWireDefaults) {
-	$.points[0].x = wire.x;
-	$.points[0].y = wire.y
+function moveToStart($: IWireDefaults) {
+	$.x = $.points[0].x;
+	$.y = $.points[0].y
 }
 
 function deleteWireNode(wire: Wire, $: IWireDefaults, node: number): Point | undefined {

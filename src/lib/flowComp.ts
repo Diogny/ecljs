@@ -129,12 +129,18 @@ export default abstract class FlowComp extends ItemBoard {
 	/**
 	 * @description returns the node information
 	 * @param node 0-based pin/node number
-	 * @param onlyPoint not used here
+	 * @param onlyPoint true to get internal point, false get the real board point
 	 * 
 	 * this returns (x, y) relative to the EC location
 	 */
 	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {
-		return <INodeInfo>pinInfo(this.$.nodes, node)
+		let
+			pin = <INodeInfo>pinInfo(this.$.nodes, node);
+		if (!nodeOnly) {
+			pin.x += this.x;
+			pin.y += this.y;
+		}
+		return pin
 	}
 
 	public refresh(): FlowComp {

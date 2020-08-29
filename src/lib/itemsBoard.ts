@@ -181,8 +181,8 @@ export default abstract class ItemBoard extends ItemBase {
 		if (!circleNode)
 			return false;
 		attr(circleNode, {
-			cX: pin.x,
-			cy: pin.y
+			cx: pin.x,
+			cy: pin.y,
 		})
 		return true
 	}

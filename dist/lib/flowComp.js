@@ -147,12 +147,17 @@ var FlowComp = /** @class */ (function (_super) {
     /**
      * @description returns the node information
      * @param node 0-based pin/node number
-     * @param onlyPoint not used here
+     * @param onlyPoint true to get internal point, false get the real board point
      *
      * this returns (x, y) relative to the EC location
      */
     FlowComp.prototype.node = function (node, nodeOnly) {
-        return extra_1.pinInfo(this.$.nodes, node);
+        var pin = extra_1.pinInfo(this.$.nodes, node);
+        if (!nodeOnly) {
+            pin.x += this.x;
+            pin.y += this.y;
+        }
+        return pin;
     };
     FlowComp.prototype.refresh = function () {
         var _this = this;

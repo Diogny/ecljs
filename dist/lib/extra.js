@@ -6,8 +6,10 @@ exports.createText = function (attr, text) {
     var svgText = utils_1.tag("text", "", attr);
     return svgText.innerHTML = text, svgText;
 };
-exports.pinInfo = function (that, node) {
-    var pin = that.base.meta.nodes.list[node];
+exports.pinInfo = function ($, node) {
+    var 
+    //$.nodes has value only for Flowcharts
+    list = $.nodes || $.base.meta.nodes.list, pin = list[node];
     return pin && {
         x: pin.x,
         y: pin.y,

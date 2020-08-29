@@ -46,7 +46,7 @@ var FlowConditional = /** @class */ (function (_super) {
         return _super.prototype.refresh.call(this), this;
     };
     FlowConditional.prototype.onResize = function (size) {
-        extra_1.flowNodes(this.base.meta.nodes.list, size);
+        extra_1.flowNodes(this.$.nodes, size);
     };
     return FlowConditional;
 }(flowComp_1.default));

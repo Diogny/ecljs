@@ -1,5 +1,5 @@
 import { IPoint } from "dabbjs/dist/lib/interfaces";
-import { extend, aChld, css, toBool } from "dabbjs/dist/lib/dab";
+import { extend, aChld, css, toBool, obj } from "dabbjs/dist/lib/dab";
 import Point from "dabbjs/dist/lib/point";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
@@ -103,6 +103,7 @@ export default abstract class FlowComp extends ItemSolid {
 		super(flowchart, options);
 		//get size from properties
 		//(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
+		this.$.nodes = obj(this.base.meta.nodes.list);
 		this.$.size = <Size>Size.parse((<IFlowchartMetadata>this.base.meta).size);
 		this.$.minSize = <Size>Size.parse((<IFlowchartMetadata>this.base.meta).minSize);
 		this.$.fontSize = (<IFlowchartMetadata>this.base.meta).fontSize;

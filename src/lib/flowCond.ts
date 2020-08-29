@@ -50,6 +50,6 @@ export default class FlowConditional extends FlowComp {
 	}
 
 	public onResize(size: Size): void {
-		flowNodes(this.base.meta.nodes.list, size)
+		flowNodes(this.$.nodes, size)
 	}
 }

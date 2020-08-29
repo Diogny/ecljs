@@ -16,6 +16,7 @@ var FlowComp = /** @class */ (function (_super) {
         var _this = _super.call(this, flowchart, options) || this;
         //get size from properties
         //(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
+        _this.$.nodes = dab_1.obj(_this.base.meta.nodes.list);
         _this.$.size = size_1.default.parse(_this.base.meta.size);
         _this.$.minSize = size_1.default.parse(_this.base.meta.minSize);
         _this.$.fontSize = _this.base.meta.fontSize;

@@ -45,7 +45,10 @@ var FlowTerminational = /** @class */ (function (_super) {
         return _super.prototype.refresh.call(this), this;
     };
     FlowTerminational.prototype.onResize = function (size) {
-        extra_1.flowNodes(this.base.meta.nodes.list, size);
+        var list = this.$.nodes, xs = this.$.curve / 2 | 0;
+        extra_1.flowNodes(list, size);
+        list[1].x -= xs;
+        list[3].x = xs;
     };
     return FlowTerminational;
 }(flowComp_1.default));

@@ -49,7 +49,7 @@ export default class FlowInOut extends FlowComp {
 
 	public onResize(size: Size): void {
 		let
-			list = this.base.meta.nodes.list,
+			list = this.$.nodes,
 			xs = this.$.shift / 2 | 0;
 		flowNodes(list, size);
 		list[1].x -= xs;

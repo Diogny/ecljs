@@ -45,7 +45,7 @@ var FlowInOut = /** @class */ (function (_super) {
         return _super.prototype.refresh.call(this), this;
     };
     FlowInOut.prototype.onResize = function (size) {
-        var list = this.base.meta.nodes.list, xs = this.$.shift / 2 | 0;
+        var list = this.$.nodes, xs = this.$.shift / 2 | 0;
         extra_1.flowNodes(list, size);
         list[1].x -= xs;
         list[3].x = xs;

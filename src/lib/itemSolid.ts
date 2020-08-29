@@ -138,7 +138,7 @@ export default abstract class ItemSolid extends ItemBoard {
 	 */
 	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {
 		let
-			pin = <INodeInfo>pinInfo(this, node);
+			pin = <INodeInfo>pinInfo(this.$, node);
 		if (!pin)
 			return;
 		if (!nodeOnly) {

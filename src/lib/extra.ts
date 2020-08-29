@@ -1,6 +1,5 @@
 import { tag } from "dabbjs/dist/lib/utils"
-import ItemSolid from "./itemSolid";
-import { INodeInfo } from "./interfaces";
+import { INodeInfo, IItemSolidDefaults } from "./interfaces";
 import Size from "dabbjs/dist/lib/size";
 
 export const createText = (attr: any, text: string): SVGTextElement => {
@@ -9,9 +8,11 @@ export const createText = (attr: any, text: string): SVGTextElement => {
 	return svgText.innerHTML = text, <SVGTextElement>svgText
 }
 
-export const pinInfo = (that: ItemSolid, node: number): INodeInfo | undefined => {
+export const pinInfo = ($: IItemSolidDefaults, node: number): INodeInfo | undefined => {
 	let
-		pin = <INodeInfo>that.base.meta.nodes.list[node];
+		//$.nodes has value only for Flowcharts
+		list = $.nodes || $.base.meta.nodes.list,
+		pin = <INodeInfo>list[node];
 	return pin && {
 		x: pin.x,
 		y: pin.y,

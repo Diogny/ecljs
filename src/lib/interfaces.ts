@@ -300,6 +300,9 @@ export interface IItemBoardPropEvent {
 	$?: { [id: string]: any };
 }
 
+/**
+ * don't use "nodes" as it's
+ */
 export interface IItemBoardDefaults extends IItemBaseDefaults {
 	props: { [x: string]: ComponentPropertyType };
 	selected: boolean;
@@ -313,6 +316,10 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
 	 * has the highlight node circle radius
 	 */
 	hlRadius: number;
+	/**
+	 * it's undefined except for Flowcharts, because they reSize
+	 */
+	nodes: INodeInfo[];
 }
 
 export interface IWireDefaults extends IItemBoardDefaults {

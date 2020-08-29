@@ -119,7 +119,7 @@ var ItemSolid = /** @class */ (function (_super) {
      * this returns (x, y) relative to the EC location
      */
     ItemSolid.prototype.node = function (node, nodeOnly) {
-        var pin = extra_1.pinInfo(this, node);
+        var pin = extra_1.pinInfo(this.$, node);
         if (!pin)
             return;
         if (!nodeOnly) {

@@ -50,7 +50,12 @@ export default abstract class FlowTerminational extends FlowComp {
 	}
 
 	public onResize(size: Size): void {
-		flowNodes(this.base.meta.nodes.list, size)
+		let
+			list = this.$.nodes,
+			xs = this.$.curve / 2 | 0;
+		flowNodes(list, size);
+		list[1].x -= xs;
+		list[3].x = xs
 	}
 
 }

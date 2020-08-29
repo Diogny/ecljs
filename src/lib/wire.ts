@@ -107,15 +107,15 @@ export default class Wire extends ItemBoard {
 				this.container.get(b.id)?.setNode(b.ndx, p)
 			})
 		}
-		return this;
+		return this
 	}
 
 	public setNode(node: number, p: IPoint): Wire {
 		this.$.points[node].x = p.x | 0;
 		this.$.points[node].y = p.y | 0;
-		(node == 0) && moveToStart(this);
+		(node == 0) && moveToStart(this, this.$);
 		this.refreshHighlight(node);
-		return this.nodeRefresh(node);
+		return this.nodeRefresh(node)
 	}
 
 	public translate(dx: number, dy: number): Wire {
@@ -132,7 +132,7 @@ export default class Wire extends ItemBoard {
 		}
 		this.edit = savededit;
 		arrow(this.$);		// full-refresh
-		return this;
+		return this
 	}
 
 	/**
@@ -174,7 +174,7 @@ export default class Wire extends ItemBoard {
 		this.g.innerHTML = "";
 		this.$.points = points.map(p => new Point(p.x | 0, p.y | 0));
 		this.$.dir && (this.$.arrow = poly(this.g, "arrow", -1));
-		moveToStart(this);
+		moveToStart(this, this.$);
 		if (this.edit) {
 			this.$.poly = <any>void 0;
 			setlines(this, this.$)
@@ -237,7 +237,7 @@ export default class Wire extends ItemBoard {
 		deleteWireNode(this, this.$, line - 1);
 		this.refresh();
 		this.highlight(false);
-		return true;
+		return true
 	}
 
 	public deleteNode(node: number): Point | undefined {
@@ -245,7 +245,7 @@ export default class Wire extends ItemBoard {
 			p = deleteWireNode(this, this.$, node);
 		this.refresh();
 		this.highlight(false);
-		return p;
+		return p
 	}
 
 	public insertNode(node: number, p: Point): boolean {
@@ -266,7 +266,7 @@ export default class Wire extends ItemBoard {
 		}
 		this.refresh();
 		this.highlight(false);
-		return true;
+		return true
 	}
 
 	/**
@@ -277,7 +277,7 @@ export default class Wire extends ItemBoard {
 	public standarizeNode(node: number): number {
 		if (this.valid(node))
 			return node == -1 ? this.last : <any>node;
-		return -1;
+		return -1
 	}
 
 	public defaults(): IWireDefaults {
@@ -291,8 +291,9 @@ export default class Wire extends ItemBoard {
 
 }
 
-function moveToStart(wire: Wire) {
-	wire.move((<any>wire).$.points[0].x, (<any>wire).$.points[0].y)
+function moveToStart(wire: Wire, $: IWireDefaults) {
+	$.points[0].x = wire.x;
+	$.points[0].y = wire.y
 }
 
 function deleteWireNode(wire: Wire, $: IWireDefaults, node: number): Point | undefined {

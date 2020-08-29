@@ -342,7 +342,7 @@ export interface IECDefaults extends IItemSolidDefaults {
 	boardLabel: Label;
 }
 
-export interface IFlowChartDefaults extends IItemSolidDefaults {
+export interface IFlowChartDefaults extends IItemBoardDefaults {
 	size: Size;
 	minSize: Size;
 	ins: number;

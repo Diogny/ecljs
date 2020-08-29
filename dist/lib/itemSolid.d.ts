@@ -1,4 +1,3 @@
-import { IPoint } from "dabbjs/dist/lib/interfaces";
 import Rect from "dabbjs/dist/lib/rect";
 import { IItemSolidDefaults, INodeInfo } from "./interfaces";
 import ItemBoard from "./itemsBoard";
@@ -16,18 +15,7 @@ export default abstract class ItemSolid extends ItemBoard {
      * @param value 0-360° number value
      */
     rotate(value: number): ItemSolid;
-    move(x: number, y: number): ItemSolid;
     rect(): Rect;
-    valid(node: number): boolean;
-    highlightable(node: number): boolean;
-    static nodeArea: number;
-    /**
-     * @description detects a point over a node
-     * @param p point to check for component node
-     * @param ln 1-based line number, for EC it's discarded
-     */
-    over(p: IPoint, ln?: number): number;
-    nodeRefresh(node: number): ItemSolid;
     refresh(): ItemSolid;
     /**
      * @description returns the node information

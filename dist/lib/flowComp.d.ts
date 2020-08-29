@@ -1,16 +1,17 @@
-import { IPoint } from "dabbjs/dist/lib/interfaces";
 import Point from "dabbjs/dist/lib/point";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
-import { Type, IFlowChartDefaults } from "./interfaces";
-import ItemSolid from "./itemSolid";
+import { Type, IFlowChartDefaults, INodeInfo } from "./interfaces";
 import Flowchart from "./flowchart";
+import ItemBoard from "./itemsBoard";
 /**
  * @description flowchart base component class
  */
-export default abstract class FlowComp extends ItemSolid {
+export default abstract class FlowComp extends ItemBoard {
     protected $: IFlowChartDefaults;
     get type(): Type;
+    get last(): number;
+    get count(): number;
     get minSize(): Size;
     get size(): Size;
     /**
@@ -61,6 +62,14 @@ export default abstract class FlowComp extends ItemSolid {
     constructor(flowchart: Flowchart, options: {
         [x: string]: any;
     });
-    setNode(node: number, p: IPoint): FlowComp;
+    /**
+     * @description returns the node information
+     * @param node 0-based pin/node number
+     * @param onlyPoint not used here
+     *
+     * this returns (x, y) relative to the EC location
+     */
+    node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
+    refresh(): FlowComp;
     defaults(): IFlowChartDefaults;
 }

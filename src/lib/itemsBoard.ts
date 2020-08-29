@@ -17,13 +17,9 @@ export default abstract class ItemBoard extends ItemBase {
 	get dir(): boolean { return this.$.dir }
 
 	abstract get count(): number;
-	abstract valid(node: number): boolean;
 	abstract get last(): number;
 	abstract refresh(): ItemBoard;
-	abstract nodeRefresh(node: number): ItemBoard;
 	abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
-	abstract setNode(node: number, p: IPoint): ItemBoard;
-	abstract over(p: IPoint, ln?: number): number;
 
 	constructor(public container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(options);
@@ -36,7 +32,8 @@ export default abstract class ItemBoard extends ItemBase {
 		attr(this.g, {
 			id: this.id,
 			"svg-comp": this.base.type,
-		})
+		});
+		this.g.innerHTML = this.base.data;
 		//this still doesn't work to get all overridable properties ¿?
 		//properties still cannot access super value
 		//(<any>this.$).$elected = dab.propDescriptor(this, "selected");
@@ -57,6 +54,11 @@ export default abstract class ItemBoard extends ItemBase {
 		return this;
 	}
 
+	public valid(node: number): boolean { return node >= 0 && node < this.count; }
+
+	//this returns true for an EC, and any Wire node and that it is not a start|end bonded node
+	public highlightable(node: number): boolean { return this.valid(node) }
+
 	public move(x: number, y: number): ItemBoard {
 		super.move(x, y);
 		//trigger property changed if applicable
@@ -64,16 +66,50 @@ export default abstract class ItemBoard extends ItemBase {
 			id: `#${this.id}`,
 			code: 2					// "move" code: 2
 		})
+		return this.refresh();
+	}
+
+	public static nodeArea = 81;
+
+	/**
+	 * @description detects a point over a node
+	 * @param p point to check for component node
+	 * @param ln 1-based line number, for EC it's discarded
+	 */
+	public over(p: IPoint, ln?: number): number {
+		for (let i = 0, len = this.count; i < len; i++) {
+			let
+				node = <INodeInfo>this.node(i);
+			//radius 5 =>  5^2 = 25
+			if ((Math.pow((p.x) - node.x, 2) + Math.pow((p.y) - node.y, 2)) <= ItemBoard.nodeArea)
+				return i;
+		}
+		return -1;
+	}
+
+	public nodeRefresh(node: number): ItemBoard {
+		let
+			bond = this.nodeBonds(node),
+			p = this.node(node);
+		p && bond && bond.to.forEach((d) => {
+			let
+				ic = this.container.get(d.id);
+			ic && ic.setNode(d.ndx, <IPoint>p)
+		});
 		return this;
 	}
+
+	/**
+	 * @description sets node new location. Only works for Wire
+	 * @param node 0-base node
+	 * @param p new location
+	 */
+	public setNode(node: number, p: IPoint): ItemBoard { return this }
 
 	public setOnProp(value: (args: IItemBoardPropEvent) => void): ItemBoard {
 		isFn(value) && (this.$.onProp = value);
 		return this;
 	}
-
-	//this returns true for an EC, and any Wire node and that it is not a start|end bonded node
-	abstract highlightable(node: number): boolean;
 
 	/**
 	 * @description returns true if there's at least one node highlighted.

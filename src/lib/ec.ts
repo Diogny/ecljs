@@ -1,11 +1,10 @@
-import { IPoint } from 'dabbjs/dist/lib/interfaces';
 import { attr, extend, aChld } from 'dabbjs/dist/lib/dab';
-import { tag } from 'dabbjs/dist/lib/utils';
 import Point from 'dabbjs/dist/lib/point';
 import { Type, IECDefaults } from './interfaces';
 import ItemSolid from './itemSolid';
 import Label from './label';
 import Circuit from './circuit';
+import { createText } from './extra';
 
 export default class EC extends ItemSolid {
 
@@ -15,12 +14,14 @@ export default class EC extends ItemSolid {
 
 	constructor(circuit: Circuit, options: { [x: string]: any; }) {
 		super(circuit, options);
-		let
-			createText = (attr: any, text: string) => {
-				let
-					svgText = tag("text", "", attr);
-				return svgText.innerHTML = text, svgText
-			}
+		//for labels in N555, 7408, Atmega168
+		if (this.base.meta.label) {
+			aChld(this.g, createText({
+				x: this.base.meta.label.x,
+				y: this.base.meta.label.y,
+				"class": this.base.meta.label.class
+			}, this.base.meta.label.text))
+		}
 		//add node labels for DIP packages
 		if (this.base.meta.nodes.createLabels) {
 			let
@@ -61,11 +62,6 @@ export default class EC extends ItemSolid {
 			);
 			attr(this.$.boardLabel.g, attrs)
 		}
-		return this;
-	}
-
-	public setNode(node: number, p: IPoint): EC {
-		//nobody should call this
 		return this;
 	}
 

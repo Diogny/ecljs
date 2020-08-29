@@ -6,16 +6,24 @@ exports.createText = function (attr, text) {
     var svgText = utils_1.tag("text", "", attr);
     return svgText.innerHTML = text, svgText;
 };
-exports.pinInfo = function ($, node) {
-    var 
-    //$.nodes has value only for Flowcharts
-    list = $.nodes || $.base.meta.nodes.list, pin = list[node];
+/**
+ * @description return the info of a node
+ * @param list pin/node list
+ * @param node 0-based node
+ */
+exports.pinInfo = function (list, node) {
+    var pin = list[node];
     return pin && {
         x: pin.x,
         y: pin.y,
         label: pin.label
     };
 };
+/**
+ * @description updates node positions for resizable components like: Flowchart
+ * @param list pin/node list
+ * @param size component size
+ */
 exports.flowNodes = function (list, size) {
     var w2 = size.width / 2 | 0, h2 = size.height / 2 | 0, n = 0, node = list[n++];
     node.x = w2;

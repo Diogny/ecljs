@@ -2,25 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var dab_1 = require("dabbjs/dist/lib/dab");
-var utils_1 = require("dabbjs/dist/lib/utils");
 var point_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/point"));
 var interfaces_1 = require("./interfaces");
 var itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
 var label_1 = tslib_1.__importDefault(require("./label"));
+var extra_1 = require("./extra");
 var EC = /** @class */ (function (_super) {
     tslib_1.__extends(EC, _super);
     function EC(circuit, options) {
         var _this = _super.call(this, circuit, options) || this;
-        var createText = function (attr, text) {
-            var svgText = utils_1.tag("text", "", attr);
-            return svgText.innerHTML = text, svgText;
-        };
+        //for labels in N555, 7408, Atmega168
+        if (_this.base.meta.label) {
+            dab_1.aChld(_this.g, extra_1.createText({
+                x: _this.base.meta.label.x,
+                y: _this.base.meta.label.y,
+                "class": _this.base.meta.label.class
+            }, _this.base.meta.label.text));
+        }
         //add node labels for DIP packages
         if (_this.base.meta.nodes.createLabels) {
             var pins = _this.count / 2;
             for (var y = 55, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
                 for (var col = 0; col < pins; col++, i++, x += factor)
-                    dab_1.aChld(_this.g, createText({ x: x, y: y }, i + ""));
+                    dab_1.aChld(_this.g, extra_1.createText({ x: x, y: y }, i + ""));
         }
         //create label if defined
         if (_this.base.meta.labelId) {
@@ -54,10 +58,6 @@ var EC = /** @class */ (function (_super) {
                 attrs.transform += " rotate(" + this.rot + " " + center.x + " " + center.y + ")");
             dab_1.attr(this.$.boardLabel.g, attrs);
         }
-        return this;
-    };
-    EC.prototype.setNode = function (node, p) {
-        //nobody should call this
         return this;
     };
     EC.prototype.setVisible = function (value) {

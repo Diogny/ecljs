@@ -1,6 +1,6 @@
 import { tag } from "dabbjs/dist/lib/utils"
-import { INodeInfo, IItemSolidDefaults } from "./interfaces";
 import Size from "dabbjs/dist/lib/size";
+import { INodeInfo } from "./interfaces";
 
 export const createText = (attr: any, text: string): SVGTextElement => {
 	let
@@ -8,10 +8,13 @@ export const createText = (attr: any, text: string): SVGTextElement => {
 	return svgText.innerHTML = text, <SVGTextElement>svgText
 }
 
-export const pinInfo = ($: IItemSolidDefaults, node: number): INodeInfo | undefined => {
+/**
+ * @description return the info of a node
+ * @param list pin/node list
+ * @param node 0-based node
+ */
+export const pinInfo = (list: INodeInfo[], node: number): INodeInfo | undefined => {
 	let
-		//$.nodes has value only for Flowcharts
-		list = $.nodes || $.base.meta.nodes.list,
 		pin = <INodeInfo>list[node];
 	return pin && {
 		x: pin.x,
@@ -20,6 +23,11 @@ export const pinInfo = ($: IItemSolidDefaults, node: number): INodeInfo | undefi
 	}
 }
 
+/**
+ * @description updates node positions for resizable components like: Flowchart
+ * @param list pin/node list
+ * @param size component size
+ */
 export const flowNodes = (list: INodeInfo[], size: Size) => {
 	let
 		w2 = size.width / 2 | 0,

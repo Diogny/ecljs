@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var dab_1 = require("dabbjs/dist/lib/dab");
+var utils_1 = require("dabbjs/dist/lib/utils");
 var point_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/point"));
 var size_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/size"));
+//
 var interfaces_1 = require("./interfaces");
-var itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
+var itemsBoard_1 = tslib_1.__importDefault(require("./itemsBoard"));
 var extra_1 = require("./extra");
 /**
  * @description flowchart base component class
@@ -22,7 +24,7 @@ var FlowComp = /** @class */ (function (_super) {
         _this.$.fontSize = _this.base.meta.fontSize;
         _this.$.text = _this.base.meta.text;
         _this.$.pos = point_1.default.parse(_this.base.meta.position);
-        //create text if defined
+        //create text
         dab_1.aChld(_this.g, _this.$.svgText = extra_1.createText({
             x: _this.$.pos.x,
             y: _this.$.pos.y,
@@ -34,6 +36,16 @@ var FlowComp = /** @class */ (function (_super) {
     }
     Object.defineProperty(FlowComp.prototype, "type", {
         get: function () { return interfaces_1.Type.FLOWCHART; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowComp.prototype, "last", {
+        get: function () { return this.$.nodes.length - 1; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowComp.prototype, "count", {
+        get: function () { return this.$.nodes.length; },
         enumerable: false,
         configurable: true
     });
@@ -132,8 +144,26 @@ var FlowComp = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    FlowComp.prototype.setNode = function (node, p) {
-        //nobody should call this
+    /**
+     * @description returns the node information
+     * @param node 0-based pin/node number
+     * @param onlyPoint not used here
+     *
+     * this returns (x, y) relative to the EC location
+     */
+    FlowComp.prototype.node = function (node, nodeOnly) {
+        return extra_1.pinInfo(this.$.nodes, node);
+    };
+    FlowComp.prototype.refresh = function () {
+        var _this = this;
+        var attrs = {
+            transform: "translate(" + this.x + " " + this.y + ")"
+        };
+        dab_1.attr(this.g, attrs);
+        //check below
+        utils_1.each(this.bonds, function (b, key) {
+            _this.nodeRefresh(key);
+        });
         return this;
     };
     //highlights from itemSolid must be overridden here to allow inputs/outputs when available
@@ -151,5 +181,5 @@ var FlowComp = /** @class */ (function (_super) {
         });
     };
     return FlowComp;
-}(itemSolid_1.default));
+}(itemsBoard_1.default));
 exports.default = FlowComp;

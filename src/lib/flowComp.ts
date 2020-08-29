@@ -1,21 +1,27 @@
-import { IPoint } from "dabbjs/dist/lib/interfaces";
-import { extend, aChld, css, toBool, clone } from "dabbjs/dist/lib/dab";
+import { extend, aChld, css, toBool, clone, attr } from "dabbjs/dist/lib/dab";
+import { each } from "dabbjs/dist/lib/utils";
 import Point from "dabbjs/dist/lib/point";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
-import { Type, IFlowChartDefaults, IFlowchartMetadata } from "./interfaces";
-import ItemSolid from "./itemSolid";
+//
+import { Type, IFlowChartDefaults, IFlowchartMetadata, INodeInfo } from "./interfaces";
 import Flowchart from "./flowchart";
-import { createText } from "./extra";
+import ItemBoard from "./itemsBoard";
+import Bond from "./bonds";
+import { createText, pinInfo } from "./extra";
 
 /**
  * @description flowchart base component class
  */
-export default abstract class FlowComp extends ItemSolid {
+export default abstract class FlowComp extends ItemBoard {
 
 	protected $: IFlowChartDefaults;
 
 	get type(): Type { return Type.FLOWCHART }
+
+	get last(): number { return this.$.nodes.length - 1 }
+
+	get count(): number { return this.$.nodes.length }
 
 	get minSize(): Size { return this.$.minSize }
 
@@ -109,7 +115,7 @@ export default abstract class FlowComp extends ItemSolid {
 		this.$.fontSize = (<IFlowchartMetadata>this.base.meta).fontSize;
 		this.$.text = (<IFlowchartMetadata>this.base.meta).text;
 		this.$.pos = <Point>Point.parse((<IFlowchartMetadata>this.base.meta).position);
-		//create text if defined
+		//create text
 		aChld(this.g, this.$.svgText = createText({
 			x: this.$.pos.x,
 			y: this.$.pos.y,
@@ -120,9 +126,28 @@ export default abstract class FlowComp extends ItemSolid {
 		})
 	}
 
-	public setNode(node: number, p: IPoint): FlowComp {
-		//nobody should call this
-		return this;
+	/**
+	 * @description returns the node information
+	 * @param node 0-based pin/node number
+	 * @param onlyPoint not used here
+	 * 
+	 * this returns (x, y) relative to the EC location
+	 */
+	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {
+		return <INodeInfo>pinInfo(this.$.nodes, node)
+	}
+
+	public refresh(): FlowComp {
+		let
+			attrs: any = {
+				transform: `translate(${this.x} ${this.y})`
+			};
+		attr(this.g, attrs);
+		//check below
+		each(this.bonds, (b: Bond, key: any) => {
+			this.nodeRefresh(key);
+		});
+		return this
 	}
 
 	//highlights from itemSolid must be overridden here to allow inputs/outputs when available

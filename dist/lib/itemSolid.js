@@ -15,15 +15,6 @@ var ItemSolid = /** @class */ (function (_super) {
         var _this = this;
         options.rot = point_1.default.validateRotation(options.rot);
         _this = _super.call(this, container, options) || this;
-        _this.g.innerHTML = _this.base.data;
-        //for labels in N555, 7408, Atmega168
-        if (_this.base.meta.label) {
-            dab_1.aChld(_this.g, extra_1.createText({
-                x: _this.base.meta.label.x,
-                y: _this.base.meta.label.y,
-                "class": _this.base.meta.label.class
-            }, _this.base.meta.label.text));
-        }
         return _this;
     }
     Object.defineProperty(ItemSolid.prototype, "last", {
@@ -32,9 +23,7 @@ var ItemSolid = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(ItemSolid.prototype, "count", {
-        get: function () {
-            return this.base.meta.nodes.list.length;
-        },
+        get: function () { return this.base.meta.nodes.list.length; },
         enumerable: false,
         configurable: true
     });
@@ -57,10 +46,6 @@ var ItemSolid = /** @class */ (function (_super) {
         }
         return this.refresh();
     };
-    ItemSolid.prototype.move = function (x, y) {
-        _super.prototype.move.call(this, x, y);
-        return this.refresh();
-    };
     ItemSolid.prototype.rect = function () {
         var size = size_1.default.create(this.box), p = this.p;
         if (this.rot) {
@@ -70,31 +55,6 @@ var ItemSolid = /** @class */ (function (_super) {
             return new rect_1.default(Math.round(x), Math.round(y), Math.round(w - x), Math.round(h - y));
         }
         return new rect_1.default(p.x, p.y, size.width, size.height);
-    };
-    ItemSolid.prototype.valid = function (node) { return node >= 0 && node < this.count; };
-    ItemSolid.prototype.highlightable = function (node) { return this.valid(node); };
-    /**
-     * @description detects a point over a node
-     * @param p point to check for component node
-     * @param ln 1-based line number, for EC it's discarded
-     */
-    ItemSolid.prototype.over = function (p, ln) {
-        for (var i = 0, len = this.count; i < len; i++) {
-            var node = this.node(i);
-            //radius 5 =>  5^2 = 25
-            if ((Math.pow((p.x) - node.x, 2) + Math.pow((p.y) - node.y, 2)) <= ItemSolid.nodeArea)
-                return i;
-        }
-        return -1;
-    };
-    ItemSolid.prototype.nodeRefresh = function (node) {
-        var _this = this;
-        var bond = this.nodeBonds(node), p = this.node(node);
-        p && bond && bond.to.forEach(function (d) {
-            var ic = _this.container.get(d.id);
-            ic && ic.setNode(d.ndx, p);
-        });
-        return this;
     };
     ItemSolid.prototype.refresh = function () {
         var _this = this;
@@ -119,7 +79,7 @@ var ItemSolid = /** @class */ (function (_super) {
      * this returns (x, y) relative to the EC location
      */
     ItemSolid.prototype.node = function (node, nodeOnly) {
-        var pin = extra_1.pinInfo(this.$, node);
+        var pin = extra_1.pinInfo(this.base.meta.nodes.list, node);
         if (!pin)
             return;
         if (!nodeOnly) {
@@ -138,7 +98,6 @@ var ItemSolid = /** @class */ (function (_super) {
             rot: 0,
         });
     };
-    ItemSolid.nodeArea = 81;
     return ItemSolid;
 }(itemsBoard_1.default));
 exports.default = ItemSolid;

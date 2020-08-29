@@ -1,4 +1,3 @@
-import { IPoint } from 'dabbjs/dist/lib/interfaces';
 import { Type, IECDefaults } from './interfaces';
 import ItemSolid from './itemSolid';
 import Circuit from './circuit';
@@ -9,7 +8,6 @@ export default class EC extends ItemSolid {
         [x: string]: any;
     });
     refresh(): EC;
-    setNode(node: number, p: IPoint): EC;
     setVisible(value: boolean): EC;
     remove(): void;
     onDOM(): void;

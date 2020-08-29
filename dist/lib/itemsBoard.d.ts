@@ -11,20 +11,31 @@ export default abstract class ItemBoard extends ItemBase {
     get bonds(): Bond[] | undefined;
     get dir(): boolean;
     abstract get count(): number;
-    abstract valid(node: number): boolean;
     abstract get last(): number;
     abstract refresh(): ItemBoard;
-    abstract nodeRefresh(node: number): ItemBoard;
     abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
-    abstract setNode(node: number, p: IPoint): ItemBoard;
-    abstract over(p: IPoint, ln?: number): number;
     constructor(container: Container<ItemBoard>, options: {
         [x: string]: any;
     });
     select(value: boolean): ItemBoard;
+    valid(node: number): boolean;
+    highlightable(node: number): boolean;
     move(x: number, y: number): ItemBoard;
+    static nodeArea: number;
+    /**
+     * @description detects a point over a node
+     * @param p point to check for component node
+     * @param ln 1-based line number, for EC it's discarded
+     */
+    over(p: IPoint, ln?: number): number;
+    nodeRefresh(node: number): ItemBoard;
+    /**
+     * @description sets node new location. Only works for Wire
+     * @param node 0-base node
+     * @param p new location
+     */
+    setNode(node: number, p: IPoint): ItemBoard;
     setOnProp(value: (args: IItemBoardPropEvent) => void): ItemBoard;
-    abstract highlightable(node: number): boolean;
     /**
      * @description returns true if there's at least one node highlighted.
      */

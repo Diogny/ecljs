@@ -19,6 +19,7 @@ var ItemBoard = /** @class */ (function (_super) {
             id: _this.id,
             "svg-comp": _this.base.type,
         });
+        _this.g.innerHTML = _this.base.data;
         return _this;
         //this still doesn't work to get all overridable properties ¿?
         //properties still cannot access super value
@@ -58,6 +59,9 @@ var ItemBoard = /** @class */ (function (_super) {
         }
         return this;
     };
+    ItemBoard.prototype.valid = function (node) { return node >= 0 && node < this.count; };
+    //this returns true for an EC, and any Wire node and that it is not a start|end bonded node
+    ItemBoard.prototype.highlightable = function (node) { return this.valid(node); };
     ItemBoard.prototype.move = function (x, y) {
         _super.prototype.move.call(this, x, y);
         //trigger property changed if applicable
@@ -65,8 +69,37 @@ var ItemBoard = /** @class */ (function (_super) {
             id: "#" + this.id,
             code: 2 // "move" code: 2
         });
+        return this.refresh();
+    };
+    /**
+     * @description detects a point over a node
+     * @param p point to check for component node
+     * @param ln 1-based line number, for EC it's discarded
+     */
+    ItemBoard.prototype.over = function (p, ln) {
+        for (var i = 0, len = this.count; i < len; i++) {
+            var node = this.node(i);
+            //radius 5 =>  5^2 = 25
+            if ((Math.pow((p.x) - node.x, 2) + Math.pow((p.y) - node.y, 2)) <= ItemBoard.nodeArea)
+                return i;
+        }
+        return -1;
+    };
+    ItemBoard.prototype.nodeRefresh = function (node) {
+        var _this = this;
+        var bond = this.nodeBonds(node), p = this.node(node);
+        p && bond && bond.to.forEach(function (d) {
+            var ic = _this.container.get(d.id);
+            ic && ic.setNode(d.ndx, p);
+        });
         return this;
     };
+    /**
+     * @description sets node new location. Only works for Wire
+     * @param node 0-base node
+     * @param p new location
+     */
+    ItemBoard.prototype.setNode = function (node, p) { return this; };
     ItemBoard.prototype.setOnProp = function (value) {
         dab_1.isFn(value) && (this.$.onProp = value);
         return this;
@@ -196,6 +229,7 @@ var ItemBoard = /** @class */ (function (_super) {
             hlRadius: 5
         });
     };
+    ItemBoard.nodeArea = 81;
     return ItemBoard;
 }(itemsBase_1.default));
 exports.default = ItemBoard;

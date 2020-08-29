@@ -29,8 +29,10 @@ var FlowProcess = /** @class */ (function (_super) {
          * client rect where text should be safely contained
          */
         get: function () {
-            var r = this.body.getBoundingClientRect();
-            return (new rect_1.default(0, 0, r.width | 0, r.height | 0)).grow(-this.$.padding, -this.$.padding);
+            var 
+            //r = this.body.getBoundingClientRect(),
+            s = this.size;
+            return (new rect_1.default(0, 0, s.width | 0, s.height | 0)).grow(-this.$.padding, -this.$.padding);
         },
         enumerable: false,
         configurable: true

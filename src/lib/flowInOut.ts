@@ -20,8 +20,9 @@ export default class FlowInOut extends FlowComp {
 	 */
 	get clientRect(): Rect {
 		let
-			r = this.body.getBoundingClientRect();
-		return (new Rect(0, 0, r.width | 0, r.height | 0)).grow(-this.$.shift, -this.$.padding)
+			//r = this.body.getBoundingClientRect();
+			s = this.size;
+		return (new Rect(0, 0, s.width | 0, s.height | 0)).grow(-this.$.shift, -this.$.padding)
 	}
 
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {

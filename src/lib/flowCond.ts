@@ -20,11 +20,12 @@ export default class FlowConditional extends FlowComp {
 	 */
 	get clientRect(): Rect {
 		let
-			dom = this.body.getBoundingClientRect(),
-			r = new Rect(0, 0, dom.width | 0, dom.height | 0),
+			//dom = this.body.getBoundingClientRect(),
+			s = this.size,
+			r = new Rect(0, 0, s.width | 0, s.height | 0),
 			sw = r.width / 4 | 0,
 			sh = r.height / 4 | 0;
-		return r.grow(-sw, -sh- this.$.padding)
+		return r.grow(-sw - this.$.padding, -sh - this.$.padding)
 	}
 
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {

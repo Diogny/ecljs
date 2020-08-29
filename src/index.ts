@@ -3,7 +3,6 @@ import * as Interfaces from "./lib/interfaces";
 import { UIProp, ReactProp, PropContainer } from "./lib/props";
 import Bonds from "./lib/bonds";
 
-import CompNode from "./lib/compNode";
 import HighlightNode from "./lib/highlightNode";
 import Label from "./lib/label";
 import Tooltip from "./lib/tooltip";
@@ -38,7 +37,6 @@ export {
 	Interfaces,
 
 	Bonds,
-	CompNode,
 	HighlightNode,
 	Label,
 	Tooltip,

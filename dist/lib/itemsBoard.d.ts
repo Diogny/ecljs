@@ -3,7 +3,6 @@ import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEve
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
-import CompNode from './compNode';
 export default abstract class ItemBoard extends ItemBase {
     container: Container<ItemBoard>;
     protected $: IItemBoardDefaults;
@@ -27,7 +26,7 @@ export default abstract class ItemBoard extends ItemBase {
     setOnProp(value: (args: IItemBoardPropEvent) => void): ItemBoard;
     abstract highlightable(node: number): boolean;
     /**
-     * @description returns true if there's at least one node highlighted
+     * @description returns true if there's at least one node highlighted.
      */
     get isHighlighted(): boolean;
     /**
@@ -36,7 +35,7 @@ export default abstract class ItemBoard extends ItemBase {
      * @param value undefined: returns Highlighter; true: highlights; false: removes highlight
      * @returns Highlighter for get if exists & set to true; otherwise undefined
      */
-    highlighted(node: number, value?: boolean): CompNode | undefined;
+    highlighted(node: number, value?: boolean): boolean | undefined;
     /**
      * @description show/hide all node highlighted
      * @param value true shows all nodes highlighted, false removes all highlights

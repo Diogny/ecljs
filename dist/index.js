@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FlowInOut = exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.CompNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = void 0;
+exports.FlowInOut = exports.FlowEnd = exports.FlowStart = exports.FlowConditional = exports.FlowProcess = exports.FlowComp = exports.Wire = exports.EC = exports.ItemSolid = exports.Flowchart = exports.Circuit = exports.Container = exports.ItemBoard = exports.ItemBase = exports.Item = exports.Comp = exports.Tooltip = exports.Label = exports.HighlightNode = exports.Bonds = exports.Interfaces = exports.PropContainer = exports.UIProp = exports.ReactProp = void 0;
 var tslib_1 = require("tslib");
 var Interfaces = tslib_1.__importStar(require("./lib/interfaces"));
 exports.Interfaces = Interfaces;
@@ -10,8 +10,6 @@ Object.defineProperty(exports, "ReactProp", { enumerable: true, get: function ()
 Object.defineProperty(exports, "PropContainer", { enumerable: true, get: function () { return props_1.PropContainer; } });
 var bonds_1 = tslib_1.__importDefault(require("./lib/bonds"));
 exports.Bonds = bonds_1.default;
-var compNode_1 = tslib_1.__importDefault(require("./lib/compNode"));
-exports.CompNode = compNode_1.default;
 var highlightNode_1 = tslib_1.__importDefault(require("./lib/highlightNode"));
 exports.HighlightNode = highlightNode_1.default;
 var label_1 = tslib_1.__importDefault(require("./lib/label"));

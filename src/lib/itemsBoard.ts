@@ -4,7 +4,7 @@ import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEve
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
-import CompNode from './compNode';
+import { tag } from 'dabbjs/dist/lib/utils';
 
 //ItemBoard->Wire
 export default abstract class ItemBoard extends ItemBase {
@@ -76,9 +76,9 @@ export default abstract class ItemBoard extends ItemBase {
 	abstract highlightable(node: number): boolean;
 
 	/**
-	 * @description returns true if there's at least one node highlighted
+	 * @description returns true if there's at least one node highlighted.
 	 */
-	get isHighlighted(): boolean { return this.$.highlights["length"] != 0 }
+	get isHighlighted(): boolean { return this.g.querySelector(`circle[svg-type="node"]`) != null }
 
 	/**
 	 * @description returns highlighted status of a node, or sets it's status
@@ -86,41 +86,32 @@ export default abstract class ItemBoard extends ItemBase {
 	 * @param value undefined: returns Highlighter; true: highlights; false: removes highlight
 	 * @returns Highlighter for get if exists & set to true; otherwise undefined
 	 */
-	public highlighted(node: number, value?: boolean): CompNode | undefined {
-		//get part
-		if (value === undefined) {
-			return this.$.highlights[node]
-		}
-		//set part
+	public highlighted(node: number, value?: boolean): boolean | undefined {
 		let
-			hl = this.$.highlights[node];
+			circleNode = getNode(this.g, node);
+		if (value === undefined) {
+			return circleNode != null
+		}
 		if (value === false) {
 			//remove if exists, otherwise do nothing, it doesn't exists
-			if (hl) {
-				let
-					svg = this.g.removeChild(hl.g);
-				delete this.$.highlights[node];
-				this.$.highlights["length"]--;
-				return
-			}
+			circleNode && this.g.removeChild(circleNode);
 		}
 		else {
-			if (!this.highlightable(node))
-				return;
+			if (!this.highlightable(node) || circleNode)
+				return false;
 			//value == true, and it doesn't exists, create and return
 			//some bug, it's not deleted
 			let
 				pin = <INodeInfo>this.node(node, true),
-				exists = hl != undefined;
-			hl = new CompNode({
-				node: node,
-				x: pin.x,
-				y: pin.y,
-				label: pin.label
-			});
-			this.g.appendChild(hl.g);
-			this.$.highlights[node] = hl;
-			!exists && this.$.highlights["length"]++;
+				attributes = {
+					"svg-type": this.$.hlNode,
+					cx: pin.x,
+					cy: pin.y,
+					r: this.$.hlRadius
+				};
+			attributes[this.$.hlNode] = node;
+			circleNode = <SVGCircleElement>tag("circle", "", attributes);
+			this.g.appendChild(circleNode);
 		}
 	}
 
@@ -129,11 +120,8 @@ export default abstract class ItemBoard extends ItemBase {
 	 * @param value true shows all nodes highlighted, false removes all highlights
 	 */
 	public highlight(value: boolean): void {
-		//setting to false with no highlights shortcut
-		//if (!value && !this.isHighlighted)
-		//	return;
 		for (let node = 0, count = this.count; node < count; node++)
-			this.highlighted(node, value);
+			this.highlighted(node, value)
 	}
 
 	/**
@@ -152,15 +140,15 @@ export default abstract class ItemBoard extends ItemBase {
 	 */
 	public refreshHighlight(node: number): boolean {
 		let
-			hl = this.highlighted(node);
-		if (hl) {
-			let
-				pin = <INodeInfo>this.node(node, true);
-			//only changes x,y
-			hl.move(pin.x, pin.y);
-			return true
-		}
-		return false
+			circleNode = getNode(this.g, node),
+			pin = <INodeInfo>this.node(node, true);
+		if (!circleNode)
+			return false;
+		attr(circleNode, {
+			X: pin.x,
+			y: pin.y
+		})
+		return true
 	}
 
 	/**
@@ -218,8 +206,13 @@ export default abstract class ItemBoard extends ItemBase {
 			selected: false,
 			onProp: void 0,
 			dir: false,
-			highlights: { length: 0 }
+			hlNode: "node",
+			hlRadius: 5
 		})
 	}
 
+}
+
+function getNode(g: SVGElement, n: number) {
+	return <SVGCircleElement>g.querySelector(`circle[svg-type="node"][node="${n}"]`)
 }

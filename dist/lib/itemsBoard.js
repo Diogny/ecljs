@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var dab_1 = require("dabbjs/dist/lib/dab");
 var itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
-var compNode_1 = tslib_1.__importDefault(require("./compNode"));
+var utils_1 = require("dabbjs/dist/lib/utils");
 //ItemBoard->Wire
 var ItemBoard = /** @class */ (function (_super) {
     tslib_1.__extends(ItemBoard, _super);
@@ -73,9 +73,9 @@ var ItemBoard = /** @class */ (function (_super) {
     };
     Object.defineProperty(ItemBoard.prototype, "isHighlighted", {
         /**
-         * @description returns true if there's at least one node highlighted
+         * @description returns true if there's at least one node highlighted.
          */
-        get: function () { return this.$.highlights["length"] != 0; },
+        get: function () { return this.g.querySelector("circle[svg-type=\"node\"]") != null; },
         enumerable: false,
         configurable: true
     });
@@ -86,36 +86,28 @@ var ItemBoard = /** @class */ (function (_super) {
      * @returns Highlighter for get if exists & set to true; otherwise undefined
      */
     ItemBoard.prototype.highlighted = function (node, value) {
-        //get part
+        var circleNode = getNode(this.g, node);
         if (value === undefined) {
-            return this.$.highlights[node];
+            return circleNode != null;
         }
-        //set part
-        var hl = this.$.highlights[node];
         if (value === false) {
             //remove if exists, otherwise do nothing, it doesn't exists
-            if (hl) {
-                var svg = this.g.removeChild(hl.g);
-                delete this.$.highlights[node];
-                this.$.highlights["length"]--;
-                return;
-            }
+            circleNode && this.g.removeChild(circleNode);
         }
         else {
-            if (!this.highlightable(node))
-                return;
+            if (!this.highlightable(node) || circleNode)
+                return false;
             //value == true, and it doesn't exists, create and return
             //some bug, it's not deleted
-            var pin = this.node(node, true), exists = hl != undefined;
-            hl = new compNode_1.default({
-                node: node,
-                x: pin.x,
-                y: pin.y,
-                label: pin.label
-            });
-            this.g.appendChild(hl.g);
-            this.$.highlights[node] = hl;
-            !exists && this.$.highlights["length"]++;
+            var pin = this.node(node, true), attributes = {
+                "svg-type": this.$.hlNode,
+                cx: pin.x,
+                cy: pin.y,
+                r: this.$.hlRadius
+            };
+            attributes[this.$.hlNode] = node;
+            circleNode = utils_1.tag("circle", "", attributes);
+            this.g.appendChild(circleNode);
         }
     };
     /**
@@ -123,9 +115,6 @@ var ItemBoard = /** @class */ (function (_super) {
      * @param value true shows all nodes highlighted, false removes all highlights
      */
     ItemBoard.prototype.highlight = function (value) {
-        //setting to false with no highlights shortcut
-        //if (!value && !this.isHighlighted)
-        //	return;
         for (var node = 0, count = this.count; node < count; node++)
             this.highlighted(node, value);
     };
@@ -143,14 +132,14 @@ var ItemBoard = /** @class */ (function (_super) {
      * @param node 0-base node
      */
     ItemBoard.prototype.refreshHighlight = function (node) {
-        var hl = this.highlighted(node);
-        if (hl) {
-            var pin = this.node(node, true);
-            //only changes x,y
-            hl.move(pin.x, pin.y);
-            return true;
-        }
-        return false;
+        var circleNode = getNode(this.g, node), pin = this.node(node, true);
+        if (!circleNode)
+            return false;
+        dab_1.attr(circleNode, {
+            X: pin.x,
+            y: pin.y
+        });
+        return true;
     };
     /**
      * @description bonds two components two-way
@@ -203,9 +192,13 @@ var ItemBoard = /** @class */ (function (_super) {
             selected: false,
             onProp: void 0,
             dir: false,
-            highlights: { length: 0 }
+            hlNode: "node",
+            hlRadius: 5
         });
     };
     return ItemBoard;
 }(itemsBase_1.default));
 exports.default = ItemBoard;
+function getNode(g, n) {
+    return g.querySelector("circle[svg-type=\"node\"][node=\"" + n + "\"]");
+}

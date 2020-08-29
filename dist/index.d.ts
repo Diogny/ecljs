@@ -1,7 +1,6 @@
 import * as Interfaces from "./lib/interfaces";
 import { UIProp, ReactProp, PropContainer } from "./lib/props";
 import Bonds from "./lib/bonds";
-import CompNode from "./lib/compNode";
 import HighlightNode from "./lib/highlightNode";
 import Label from "./lib/label";
 import Tooltip from "./lib/tooltip";
@@ -21,4 +20,4 @@ import FlowConditional from "./lib/flowCond";
 import FlowStart from "./lib/flowstart";
 import FlowEnd from "./lib/flowend";
 import FlowInOut from "./lib/flowInOut";
-export { ReactProp, UIProp, PropContainer, Interfaces, Bonds, CompNode, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowComp, FlowProcess, FlowConditional, FlowStart, FlowEnd, FlowInOut };
+export { ReactProp, UIProp, PropContainer, Interfaces, Bonds, HighlightNode, Label, Tooltip, Comp, Item, ItemBase, ItemBoard, Container, Circuit, Flowchart, ItemSolid, EC, Wire, FlowComp, FlowProcess, FlowConditional, FlowStart, FlowEnd, FlowInOut };

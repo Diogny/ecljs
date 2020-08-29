@@ -8,7 +8,6 @@ import Label from "./label";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
-import CompNode from "./compNode";
 import CompStore from "./components";
 export declare enum Type {
     UNDEFINED = 0,
@@ -269,9 +268,14 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
     selected: boolean;
     onProp: (args: IItemBoardPropEvent) => void;
     dir: boolean;
-    highlights: {
-        [node: number]: CompNode;
-    };
+    /**
+     * has the highlight node name for [svg-type="hlNode"] and [hlNode="n"]
+     */
+    hlNode: string;
+    /**
+     * has the highlight node circle radius
+     */
+    hlRadius: number;
 }
 export interface IWireDefaults extends IItemBoardDefaults {
     points: Point[];

@@ -22,7 +22,7 @@ var EC = /** @class */ (function (_super) {
         //add node labels for DIP packages
         if (_this.base.meta.nodes.createLabels) {
             var pins = _this.count / 2;
-            for (var y = 55, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
+            for (var y = 48, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
                 for (var col = 0; col < pins; col++, i++, x += factor)
                     dab_1.aChld(_this.g, extra_1.createText({ x: x, y: y }, i + ""));
         }

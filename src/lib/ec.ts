@@ -26,7 +26,7 @@ export default class EC extends ItemSolid {
 		if (this.base.meta.nodes.createLabels) {
 			let
 				pins = (this as unknown as EC).count / 2;
-			for (let y = 55, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
+			for (let y = 48, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
 				for (let col = 0; col < pins; col++, i++, x += factor)
 					aChld(this.g, createText({ x: x, y: y }, i + ""));
 		}

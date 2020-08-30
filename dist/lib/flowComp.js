@@ -16,20 +16,25 @@ var FlowComp = /** @class */ (function (_super) {
     tslib_1.__extends(FlowComp, _super);
     function FlowComp(flowchart, options) {
         var _this = _super.call(this, flowchart, options) || this;
-        //get size from properties
-        //(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
-        _this.$.nodes = dab_1.clone(_this.base.meta.nodes.list);
-        _this.$.size = size_1.default.parse(_this.base.meta.size);
-        _this.$.minSize = size_1.default.parse(_this.base.meta.minSize);
-        _this.$.fontSize = _this.base.meta.fontSize;
-        _this.$.text = _this.base.meta.text;
-        _this.$.pos = point_1.default.parse(_this.base.meta.position);
+        //set internal properties
+        _this.$.ins = 0;
+        _this.$.outs = 0;
+        var meta = _this.base.meta;
+        _this.$.nodes = dab_1.clone(meta.nodes.list);
+        _this.$.minSize = size_1.default.parse(meta.minSize);
+        _this.$.fontSize = meta.fontSize;
+        //check if these properties were provided in options
+        _this.$.size = options.size || size_1.default.parse(meta.size);
+        _this.$.text = options.text || meta.text;
+        var pos = options.pos || point_1.default.parse(meta.position);
         //create text
         dab_1.aChld(_this.g, _this.$.svgText = extra_1.createText({
-            x: _this.$.pos.x,
-            y: _this.$.pos.y,
-        }, "<tspan x=\"" + _this.$.pos.x + "\" dy=\"0\">" + _this.text + "</tspan>"));
+            //if options.text was set, then svg text pos may change with UI algorithm
+            x: pos.x,
+            y: pos.y,
+        }, "<tspan x=\"" + pos.x + "\" dy=\"0\">" + (options.text ? '' : _this.text) + "</tspan>"));
         dab_1.css(_this.$.svgText, {
+            //if options.text was set, then fontSize may change with UI algorithm
             "font-size": _this.fontSize + "px",
         });
         return _this;
@@ -126,8 +131,8 @@ var FlowComp = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(FlowComp.prototype, "text", {
-        //will be removed, internal, just to dev easier from outside
         get: function () { return this.$.text; },
+        //probably will be removed, internal, just to dev easier from outside
         set: function (value) { this.$.text = value; },
         enumerable: false,
         configurable: true
@@ -135,12 +140,6 @@ var FlowComp = /** @class */ (function (_super) {
     Object.defineProperty(FlowComp.prototype, "fontSize", {
         get: function () { return this.$.fontSize; },
         set: function (value) { this.$.fontSize = value; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FlowComp.prototype, "pos", {
-        get: function () { return this.$.pos; },
-        set: function (value) { this.$.pos = value; },
         enumerable: false,
         configurable: true
     });
@@ -180,9 +179,10 @@ var FlowComp = /** @class */ (function (_super) {
             class: "fl",
             dir: true,
             onResize: void 0,
-            ins: 0,
-            outs: 0,
-            padding: 2
+            padding: 2,
+            //can be customized, set to undefined to check on creation
+            size: void 0,
+            text: void 0,
         });
     };
     return FlowComp;

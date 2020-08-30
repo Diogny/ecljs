@@ -353,7 +353,6 @@ export interface IFlowChartDefaults extends IItemBoardDefaults {
 	fontSize: number;
 	text: string;
 	svgText: SVGTextElement;
-	pos: Point;
 	onResize: (size: Size) => void;
 	/**
 	 * client rect text padding

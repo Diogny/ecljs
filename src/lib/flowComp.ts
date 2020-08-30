@@ -97,31 +97,37 @@ export default abstract class FlowComp extends ItemBoard {
 	 */
 	get svgText(): SVGTextElement { return this.$.svgText }
 
-	//will be removed, internal, just to dev easier from outside
 	get text(): string { return this.$.text }
+
+	//probably will be removed, internal, just to dev easier from outside
 	set text(value: string) { this.$.text = value }
 	get fontSize(): number { return this.$.fontSize }
 	set fontSize(value: number) { this.$.fontSize = value }
-	get pos(): Point { return this.$.pos }
-	set pos(value: Point) { this.$.pos = value }
 
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
 		super(flowchart, options);
-		//get size from properties
-		//(<string>(<IComponentProperty>this.prop("size")).value) = `${value.width},${value.height}`;
-		this.$.nodes = clone(this.base.meta.nodes.list);
-		this.$.size = <Size>Size.parse((<IFlowchartMetadata>this.base.meta).size);
-		this.$.minSize = <Size>Size.parse((<IFlowchartMetadata>this.base.meta).minSize);
-		this.$.fontSize = (<IFlowchartMetadata>this.base.meta).fontSize;
-		this.$.text = (<IFlowchartMetadata>this.base.meta).text;
-		this.$.pos = <Point>Point.parse((<IFlowchartMetadata>this.base.meta).position);
+		//set internal properties
+		this.$.ins = 0;
+		this.$.outs = 0;
+		let
+			meta = <IFlowchartMetadata>this.base.meta;
+		this.$.nodes = clone(meta.nodes.list);
+		this.$.minSize = <Size>Size.parse(meta.minSize);
+		this.$.fontSize = meta.fontSize;
+		//check if these properties were provided in options
+		this.$.size = options.size || <Size>Size.parse(meta.size);
+		this.$.text = options.text || meta.text;
+		let
+			pos = options.pos || <Point>Point.parse(meta.position);
 		//create text
 		aChld(this.g, this.$.svgText = createText({
-			x: this.$.pos.x,
-			y: this.$.pos.y,
-			//"class": this.base.meta.label.class
-		}, `<tspan x="${this.$.pos.x}" dy="0">${this.text}</tspan>`));
+			//if options.text was set, then svg text pos may change with UI algorithm
+			x: pos.x,
+			y: pos.y,
+			//if options.text was set, then UI must set text tspans with algorithms not here
+		}, `<tspan x="${pos.x}" dy="0">${options.text ? '' : this.text}</tspan>`));
 		css(this.$.svgText, {
+			//if options.text was set, then fontSize may change with UI algorithm
 			"font-size": this.fontSize + "px",
 		})
 	}
@@ -166,9 +172,10 @@ export default abstract class FlowComp extends ItemBoard {
 			class: "fl",
 			dir: true,
 			onResize: void 0,
-			ins: 0,
-			outs: 0,
-			padding: 2
+			padding: 2,
+			//can be customized, set to undefined to check on creation
+			size: void 0,
+			text: void 0,
 		})
 	}
 }

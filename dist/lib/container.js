@@ -219,14 +219,17 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.getAllBonds = function () {
         var bonds = [], keyDict = new Set(), findBonds = function (bond) {
-            var fromId = bond.from.id, fromNdx = bond.from.ndx, keyRoot = fromId + "," + fromNdx;
-            bond.to.forEach(function (b) {
-                var otherRoot = b.id + "," + b.ndx, key0 = keyRoot + "," + otherRoot;
-                if (!keyDict.has(key0)) {
-                    keyDict.add(key0).add(otherRoot + "," + keyRoot);
-                    bonds.push(key0);
-                }
-            });
+            //always return only the origin Bond
+            if (bond.dir === 0) {
+                var fromId = bond.from.id, fromNdx = bond.from.ndx, keyRoot_1 = fromId + "," + fromNdx;
+                bond.to.forEach(function (b) {
+                    var otherRoot = b.id + "," + b.ndx, key0 = keyRoot_1 + "," + otherRoot;
+                    if (!keyDict.has(key0)) {
+                        keyDict.add(key0).add(otherRoot + "," + keyRoot_1);
+                        bonds.push(key0);
+                    }
+                });
+            }
         };
         this.all
             .forEach(function (comp) { var _a; return (_a = comp.bonds) === null || _a === void 0 ? void 0 : _a.forEach(findBonds); });

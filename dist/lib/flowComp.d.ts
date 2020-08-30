@@ -1,4 +1,3 @@
-import Point from "dabbjs/dist/lib/point";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
 import { Type, IFlowChartDefaults, INodeInfo } from "./interfaces";
@@ -57,8 +56,6 @@ export default abstract class FlowComp extends ItemBoard {
     set text(value: string);
     get fontSize(): number;
     set fontSize(value: number);
-    get pos(): Point;
-    set pos(value: Point);
     constructor(flowchart: Flowchart, options: {
         [x: string]: any;
     });

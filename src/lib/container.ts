@@ -220,19 +220,22 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			bonds: string[] = [],
 			keyDict: Set<string> = new Set(),
 			findBonds = (bond: Bond) => {
-				let
-					fromId = bond.from.id,
-					fromNdx = bond.from.ndx,
-					keyRoot = `${fromId},${fromNdx}`;
-				bond.to.forEach(b => {
+				//always return only the origin Bond
+				if (bond.dir === 0) {
 					let
-						otherRoot = `${b.id},${b.ndx}`,
-						key0 = `${keyRoot},${otherRoot}`;
-					if (!keyDict.has(key0)) {
-						keyDict.add(key0).add(`${otherRoot},${keyRoot}`);
-						bonds.push(key0);
-					}
-				})
+						fromId = bond.from.id,
+						fromNdx = bond.from.ndx,
+						keyRoot = `${fromId},${fromNdx}`;
+					bond.to.forEach(b => {
+						let
+							otherRoot = `${b.id},${b.ndx}`,
+							key0 = `${keyRoot},${otherRoot}`;
+						if (!keyDict.has(key0)) {
+							keyDict.add(key0).add(`${otherRoot},${keyRoot}`);
+							bonds.push(key0);
+						}
+					})
+				}
 			};
 		this.all
 			.forEach(comp => comp.bonds?.forEach(findBonds));

@@ -1,5 +1,5 @@
 import { IPoint } from 'dabbjs/dist/lib/interfaces';
-import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
+import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent, BondDir } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
@@ -75,13 +75,16 @@ export default abstract class ItemBoard extends ItemBase {
      * @param node 0-base node to unbond
      * @param id component to unbond from
      */
-    unbond(node: number, id: string): void;
+    unbond(node: number, id: string): BondDir | undefined;
     /**
      * @description unbonds a node
      * @param node 0-base node
      * @returns undefined if invalid node, otherwise list of disconnected wire ids
      */
-    unbondNode(node: number): string[] | undefined;
+    unbondNode(node: number): {
+        dir: BondDir;
+        ids: string[];
+    } | undefined;
     remove(): void;
     disconnect(): void;
     prop(name: string): ComponentPropertyType;

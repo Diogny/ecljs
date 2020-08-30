@@ -10,6 +10,7 @@ import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import CompStore from "./components";
+import { FlowComp } from "src";
 
 //***************************************** Types ************************************//
 
@@ -67,14 +68,16 @@ export abstract class Base implements IBase {
 
 }
 
+export type ContainerMapType<T extends ItemBoard> = { t: T, b: Bond[], c: number };
+
 export interface IContainerDefaults<T extends ItemBoard> {
 	//name: string;
 	//board: Board;
 	store: CompStore;
 	counters: { [x: string]: any; };
 	components: Map<string, IBaseComponent>;
-	itemMap: Map<string, { t: T, b: Bond[], c: number }>;
-	wireMap: Map<string, { t: Wire, b: Bond[], c: number }>;
+	itemMap: Map<string, ContainerMapType<T>>;
+	wireMap: Map<string, ContainerMapType<Wire>>;
 	selected: (T | Wire)[];
 }
 

@@ -153,7 +153,7 @@ var FlowComp = /** @class */ (function (_super) {
      */
     FlowComp.prototype.node = function (node, nodeOnly) {
         var pin = extra_1.pinInfo(this.$.nodes, node);
-        if (!nodeOnly) {
+        if (pin && !nodeOnly) {
             pin.x += this.x;
             pin.y += this.y;
         }

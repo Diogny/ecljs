@@ -6,6 +6,8 @@ import FlowConditional from "./flowCond";
 import FlowStart from "./flowstart";
 import FlowEnd from "./flowend";
 import FlowInOut from "./flowInOut";
+import { BondDir, ContainerMapType } from "./interfaces";
+import { getItem } from "./extra";
 
 /**
  * @description Flowchart component container
@@ -56,4 +58,43 @@ export default class Flowchart extends Container<FlowComp>{
 		return false
 	}
 
+	public unbond(thisObj: FlowComp | Wire, node: number, id: string): BondDir | undefined {
+		let
+			dir = super.unbond(thisObj, node, id);
+		if (dir != undefined) {
+			let
+				icId = <ContainerMapType<FlowComp | Wire>>getItem(this, id);
+			decrement(dir, thisObj, thisObj instanceof FlowComp, icId.t, icId.t instanceof FlowComp);
+			return dir
+		}
+	}
+
+	public unbondNode(thisObj: FlowComp | Wire, node: number): { dir: BondDir, ids: string[] } | undefined {
+		let
+			bond = super.unbondNode(thisObj, node);
+		if (bond != undefined) {
+			let
+				objflow = thisObj instanceof FlowComp,
+				dir = bond.dir;
+			//the should be only one connection for flowcharts
+			bond.ids.forEach(id => {
+				let
+					icId = <ContainerMapType<FlowComp | Wire>>getItem(this, id);
+				decrement(dir, thisObj, objflow, icId.t, icId.t instanceof FlowComp)
+			})
+		}
+		return bond
+	}
+
+}
+
+function decrement(dir: BondDir, obj: FlowComp | Wire, objFlow: boolean, ic: FlowComp | Wire, icFlow: boolean) {
+	let
+		propName = (direction: BondDir) => direction == 0 ? "outs" : "ins";
+	if (objFlow) {
+		(<any>obj).$[propName(dir)]--;
+	}
+	else if (icFlow) {
+		(<any>ic).$[propName(<BondDir>(dir ^ 1))]--;
+	}
 }

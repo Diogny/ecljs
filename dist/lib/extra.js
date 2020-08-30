@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.flowNodes = exports.pinInfo = exports.createText = void 0;
+exports.getItem = exports.flowNodes = exports.pinInfo = exports.createText = void 0;
 var utils_1 = require("dabbjs/dist/lib/utils");
 exports.createText = function (attr, text) {
     var svgText = utils_1.tag("text", "", attr);
@@ -32,4 +32,7 @@ exports.flowNodes = function (list, size) {
     (node = list[n++]).x = w2;
     node.y = size.height;
     list[n].y = h2;
+};
+exports.getItem = function (container, id) {
+    return container.itemMap.get(id) || container.wireMap.get(id);
 };

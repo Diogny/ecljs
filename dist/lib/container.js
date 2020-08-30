@@ -5,6 +5,7 @@ var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
 var interfaces_1 = require("./interfaces");
 var bonds_1 = tslib_1.__importDefault(require("./bonds"));
 var wire_1 = tslib_1.__importDefault(require("./wire"));
+var extra_1 = require("./extra");
 var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
     /**
@@ -170,7 +171,7 @@ var Container = /** @class */ (function (_super) {
             && this.bondOneWay(ic, icNode, thisObj, thisNode, 1); // back B to A
     };
     Container.prototype.bondOneWay = function (thisObj, thisNode, ic, icNode, dir) {
-        var item = getItem(this, thisObj.id), entry = item && item.b[thisNode];
+        var item = extra_1.getItem(this, thisObj.id), entry = item && item.b[thisNode];
         if (!item)
             return false;
         if (!ic
@@ -191,25 +192,26 @@ var Container = /** @class */ (function (_super) {
         return true;
     };
     Container.prototype.unbond = function (thisObj, node, id) {
-        unbond(this, thisObj.id, node, id, true);
+        return unbond(this, thisObj.id, node, id, true);
     };
     /**
      * @description unbonds a component node
      * @param thisObj component to be unbonded
      * @param node 0-based node
-     * @returns undefined if invalid node, otherwise list of disconnected wire ids
+     * @returns undefined if not bonded, otherwise thisObj::Bond.dir and list of disconnected wire ids
      */
     Container.prototype.unbondNode = function (thisObj, node) {
-        var item = getItem(this, thisObj.id), bond = item && item.b[node], link = void 0, disconnected = [];
+        var item = extra_1.getItem(this, thisObj.id), bond = item && item.b[node], link = void 0, disconnected = [];
         if (!bond || !item)
             return;
         //try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
         while (bond.to.length) {
             link = bond.to[0];
+            //arbitrarily unbond a node, no matter its direction, so "origin" must be true to go the other way
             unbond(this, link.id, link.ndx, thisObj.id, true);
             disconnected.push(link.id);
         }
-        return disconnected;
+        return { dir: bond.dir, ids: disconnected };
     };
     Container.prototype.disconnect = function (thisObj) {
         for (var node = 0; node < thisObj.count; node++)
@@ -231,7 +233,7 @@ var Container = /** @class */ (function (_super) {
         return bonds;
     };
     Container.prototype.moveBond = function (id, node, newIndex) {
-        var item = getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.t;
+        var item = extra_1.getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.t;
         if (!item || !wire || wire.type != interfaces_1.Type.WIRE)
             return;
         var bond = wire.nodeBonds(node);
@@ -253,18 +255,26 @@ var Container = /** @class */ (function (_super) {
     return Container;
 }(interfaces_1.Base));
 exports.default = Container;
+/**
+ * @description unbonds two components, Comp with Wire, or Two Wires
+ * @param container container
+ * @param id component id
+ * @param node id::node
+ * @param toId the component id belonging to id::bonds
+ * @param origin true to unbond the other way back
+ * @returns BondDir of id Bond is any or undefined for not bonded
+ */
 function unbond(container, id, node, toId, origin) {
-    var item = getItem(container, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
+    var item = extra_1.getItem(container, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
     if (bond && b && item) {
         delete item.b[node];
         (--item.c == 0) && (item.b = []);
         if (origin) {
             unbond(container, toId, b.ndx, id, false);
         }
+        //return only [id] bond direction for reference
+        return bond.dir;
     }
-}
-function getItem(container, id) {
-    return container.itemMap.get(id) || container.wireMap.get(id);
 }
 function createBoardItem(container, options) {
     var base = void 0, item = void 0, setBase = function () {

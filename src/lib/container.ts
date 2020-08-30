@@ -4,6 +4,7 @@ import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 import CompStore from "./components";
+import { getItem } from "./extra";
 
 export default abstract class Container<T extends ItemBoard> extends Base {
 
@@ -181,17 +182,17 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return true
 	}
 
-	public unbond(thisObj: T | Wire, node: number, id: string): void {
-		unbond(this, thisObj.id, node, id, true);
+	public unbond(thisObj: T | Wire, node: number, id: string): BondDir | undefined {
+		return unbond(this, thisObj.id, node, id, true)
 	}
 
 	/**
 	 * @description unbonds a component node
 	 * @param thisObj component to be unbonded
 	 * @param node 0-based node
-	 * @returns undefined if invalid node, otherwise list of disconnected wire ids
+	 * @returns undefined if not bonded, otherwise thisObj::Bond.dir and list of disconnected wire ids
 	 */
-	public unbondNode(thisObj: T | Wire, node: number): string[] | undefined {
+	public unbondNode(thisObj: T | Wire, node: number): { dir: BondDir, ids: string[] } | undefined {
 		let
 			item = getItem(this, thisObj.id),
 			bond = item && item.b[node],
@@ -202,10 +203,11 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		//try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
 		while (bond.to.length) {
 			link = bond.to[0];
+			//arbitrarily unbond a node, no matter its direction, so "origin" must be true to go the other way
 			unbond(this, link.id, link.ndx, thisObj.id, true);
 			disconnected.push(link.id)
 		}
-		return disconnected
+		return { dir: bond.dir, ids: disconnected }
 	}
 
 	public disconnect(thisObj: T | Wire) {
@@ -266,7 +268,17 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	}
 }
 
-function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: number, toId: string, origin: boolean): void {
+/**
+ * @description unbonds two components, Comp with Wire, or Two Wires
+ * @param container container
+ * @param id component id
+ * @param node id::node
+ * @param toId the component id belonging to id::bonds
+ * @param origin true to unbond the other way back
+ * @returns BondDir of id Bond is any or undefined for not bonded
+ */
+function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: number, toId: string, origin: boolean)
+	: BondDir | undefined {
 	let
 		item = getItem(container, id),
 		bond = item && item.b[node],
@@ -277,12 +289,9 @@ function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: 
 		if (origin) {
 			unbond(container, toId, b.ndx, id, false);
 		}
+		//return only [id] bond direction for reference
+		return bond.dir
 	}
-}
-
-function getItem<T extends ItemBoard>(container: Container<T>, id: string)
-	: { t: T | Wire, b: Bond[], c: number } | undefined {
-	return container.itemMap.get(id) || container.wireMap.get(id)
 }
 
 function createBoardItem<T extends ItemBoard>(container: Container<T>, options: { [x: string]: any; }): T | Wire {

@@ -136,7 +136,7 @@ export default abstract class FlowComp extends ItemBoard {
 	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {
 		let
 			pin = <INodeInfo>pinInfo(this.$.nodes, node);
-		if (!nodeOnly) {
+		if (pin && !nodeOnly) {
 			pin.x += this.x;
 			pin.y += this.y;
 		}

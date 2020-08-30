@@ -60,22 +60,19 @@ export declare abstract class Base implements IBase {
         [x: string]: any;
     };
 }
+export declare type ContainerMapType<T extends ItemBoard> = {
+    t: T;
+    b: Bond[];
+    c: number;
+};
 export interface IContainerDefaults<T extends ItemBoard> {
     store: CompStore;
     counters: {
         [x: string]: any;
     };
     components: Map<string, IBaseComponent>;
-    itemMap: Map<string, {
-        t: T;
-        b: Bond[];
-        c: number;
-    }>;
-    wireMap: Map<string, {
-        t: Wire;
-        b: Bond[];
-        c: number;
-    }>;
+    itemMap: Map<string, ContainerMapType<T>>;
+    wireMap: Map<string, ContainerMapType<Wire>>;
     selected: (T | Wire)[];
 }
 export declare type IEqual = (p: Point | Size | Rect | Unit) => boolean;

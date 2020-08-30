@@ -192,7 +192,7 @@ var ItemBoard = /** @class */ (function (_super) {
      * @param id component to unbond from
      */
     ItemBoard.prototype.unbond = function (node, id) {
-        this.container.unbond(this, node, id);
+        return this.container.unbond(this, node, id);
     };
     /**
      * @description unbonds a node

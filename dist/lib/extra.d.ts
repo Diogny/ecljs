@@ -1,5 +1,8 @@
 import Size from "dabbjs/dist/lib/size";
-import { INodeInfo } from "./interfaces";
+import { INodeInfo, ContainerMapType } from "./interfaces";
+import ItemBoard from "./itemsBoard";
+import Container from "./container";
+import Wire from "./wire";
 export declare const createText: (attr: any, text: string) => SVGTextElement;
 /**
  * @description return the info of a node
@@ -13,3 +16,4 @@ export declare const pinInfo: (list: INodeInfo[], node: number) => INodeInfo | u
  * @param size component size
  */
 export declare const flowNodes: (list: INodeInfo[], size: Size) => void;
+export declare const getItem: <T extends ItemBoard>(container: Container<T>, id: string) => ContainerMapType<Wire | T> | undefined;

@@ -36,12 +36,11 @@ export default class FlowInOut extends FlowComp {
 
 	public refresh(): FlowInOut {
 		let
-			h = this.size.height,
-			s = this.$.shift = h / 4 | 0,
+			s = this.$.shift,
 			w = this.size.width,
 			s2 = w - s;
 		attr(this.$.path, {
-			d: `M ${s},0 H${w} L${s2},${h} H0 Z`
+			d: `M ${s},0 H${w} L${s2},${this.size.height} H0 Z`
 		});
 		//later text resize goes here
 		//...
@@ -51,7 +50,7 @@ export default class FlowInOut extends FlowComp {
 	public onResize(size: Size): void {
 		let
 			list = this.$.nodes,
-			xs = this.$.shift / 2 | 0;
+			xs = (this.$.shift = this.size.height / 4 | 0) / 2 | 0;
 		flowNodes(list, size);
 		list[1].x -= xs;
 		list[3].x = xs

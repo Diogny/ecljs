@@ -38,16 +38,16 @@ var FlowInOut = /** @class */ (function (_super) {
         configurable: true
     });
     FlowInOut.prototype.refresh = function () {
-        var h = this.size.height, s = this.$.shift = h / 4 | 0, w = this.size.width, s2 = w - s;
+        var s = this.$.shift, w = this.size.width, s2 = w - s;
         dab_1.attr(this.$.path, {
-            d: "M " + s + ",0 H" + w + " L" + s2 + "," + h + " H0 Z"
+            d: "M " + s + ",0 H" + w + " L" + s2 + "," + this.size.height + " H0 Z"
         });
         //later text resize goes here
         //...
         return _super.prototype.refresh.call(this), this;
     };
     FlowInOut.prototype.onResize = function (size) {
-        var list = this.$.nodes, xs = this.$.shift / 2 | 0;
+        var list = this.$.nodes, xs = (this.$.shift = this.size.height / 4 | 0) / 2 | 0;
         extra_1.flowNodes(list, size);
         list[1].x -= xs;
         list[3].x = xs;

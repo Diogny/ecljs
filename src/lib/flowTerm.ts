@@ -39,7 +39,7 @@ export default abstract class FlowTerminational extends FlowComp {
 		let
 			h = this.size.height,
 			h2 = h / 2 | 0,
-			c = this.$.curve = h / 4 | 0,
+			c = this.$.curve,
 			w = this.size.width,
 			c2 = w - c;
 		attr(this.$.path, {
@@ -53,7 +53,7 @@ export default abstract class FlowTerminational extends FlowComp {
 	public onResize(size: Size): void {
 		let
 			list = this.$.nodes,
-			xs = this.$.curve / 2 | 0;
+			xs = (this.$.curve = this.size.height / 4 | 0) / 2 | 0;
 		flowNodes(list, size);
 		list[1].x -= xs;
 		list[3].x = xs

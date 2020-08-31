@@ -38,7 +38,7 @@ var FlowTerminational = /** @class */ (function (_super) {
         configurable: true
     });
     FlowTerminational.prototype.refresh = function () {
-        var h = this.size.height, h2 = h / 2 | 0, c = this.$.curve = h / 4 | 0, w = this.size.width, c2 = w - c;
+        var h = this.size.height, h2 = h / 2 | 0, c = this.$.curve, w = this.size.width, c2 = w - c;
         dab_1.attr(this.$.path, {
             d: "M " + c + ",0 H" + c2 + " C " + c2 + ",0 " + w + "," + h2 + " " + c2 + "," + h + " H" + c + " C " + c + "," + h + " 0," + h2 + " " + c + ",0 Z"
         });
@@ -47,7 +47,7 @@ var FlowTerminational = /** @class */ (function (_super) {
         return _super.prototype.refresh.call(this), this;
     };
     FlowTerminational.prototype.onResize = function (size) {
-        var list = this.$.nodes, xs = this.$.curve / 2 | 0;
+        var list = this.$.nodes, xs = (this.$.curve = this.size.height / 4 | 0) / 2 | 0;
         extra_1.flowNodes(list, size);
         list[1].x -= xs;
         list[3].x = xs;

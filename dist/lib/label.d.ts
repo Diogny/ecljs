@@ -12,5 +12,6 @@ export default class Label extends ItemBase {
     });
     move(x: number, y: number): Label;
     setFontSize(value: number): Label;
+    setText(text: string): Label;
     defaults(): ILabelDefaults;
 }

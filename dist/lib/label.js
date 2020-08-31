@@ -10,7 +10,7 @@ var Label = /** @class */ (function (_super) {
     function Label(options) {
         var _this = _super.call(this, options) || this;
         dab_1.aChld(_this.g, _this.$.svgtext = utils_1.tag("text", "", {}));
-        _this.$.svgtext.innerHTML = _this.$.text;
+        _this.setText(_this.$.text);
         return _this;
     }
     Object.defineProperty(Label.prototype, "type", {
@@ -49,6 +49,9 @@ var Label = /** @class */ (function (_super) {
             "font-size": this.$.fontSize = value
         });
         return this;
+    };
+    Label.prototype.setText = function (text) {
+        return this.$.svgtext.innerHTML = this.$.text = text, this;
     };
     Label.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {

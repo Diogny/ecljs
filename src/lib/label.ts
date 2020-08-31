@@ -24,7 +24,7 @@ export default class Label extends ItemBase {
 	constructor(options: { [x: string]: any; }) {
 		super(options);
 		aChld(this.g, this.$.svgtext = <SVGTextElement>tag("text", "", {}));
-		this.$.svgtext.innerHTML = this.$.text
+		this.setText(this.$.text)
 	}
 
 	public move(x: number, y: number): Label {
@@ -38,6 +38,10 @@ export default class Label extends ItemBase {
 			"font-size": this.$.fontSize = value
 		});
 		return this
+	}
+
+	public setText(text: string): Label {
+		return this.$.svgtext.innerHTML = this.$.text = text, this
 	}
 
 	public defaults(): ILabelDefaults {

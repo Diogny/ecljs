@@ -14,16 +14,18 @@ export default class EC extends ItemSolid {
 
 	constructor(circuit: Circuit, options: { [x: string]: any; }) {
 		super(circuit, options);
+		let
+			m = this.base.meta;
 		//for labels in N555, 7408, Atmega168
-		if (this.base.meta.label) {
+		if (m.label) {
 			aChld(this.g, createText({
-				x: this.base.meta.label.x,
-				y: this.base.meta.label.y,
-				"class": this.base.meta.label.class
-			}, this.base.meta.label.text))
+				x: m.label.x,
+				y: m.label.y,
+				"class": m.label.class
+			}, m.label.text))
 		}
 		//add node labels for DIP packages
-		if (this.base.meta.nodes.createLabels) {
+		if (m.nodes.createLabels) {
 			let
 				pins = (this as unknown as EC).count / 2;
 			for (let y = 48, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
@@ -31,13 +33,14 @@ export default class EC extends ItemSolid {
 					aChld(this.g, createText({ x: x, y: y }, i + ""));
 		}
 		//create label if defined
-		if (this.base.meta.labelId) {
+		if (m.labelId) {
 			this.$.boardLabel = new Label(<any>{
-				fontSize: 15,
-				x: this.base.meta.labelId.x,
-				y: this.base.meta.labelId.y
-			});
-			this.$.boardLabel.setText(this.id)
+				//fontSize default Label::fontSize = 15
+				x: m.labelId.x,
+				y: m.labelId.y,
+				text: this.id,
+				visible: false
+			})
 		}
 		this.refresh();
 		//signal component creation
@@ -84,7 +87,7 @@ export default class EC extends ItemSolid {
 	public defaults(): IECDefaults {
 		return <IECDefaults>extend(super.defaults(), {
 			class: "ec",
-			boardLabel: void 0
+			boardLabel: void 0,
 		})
 	}
 }

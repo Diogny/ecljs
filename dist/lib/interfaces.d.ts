@@ -9,6 +9,7 @@ import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import CompStore from "./components";
+import ConditionalLabel from "./flowCondLabel";
 export declare enum Type {
     /**
      * Undefined/unknown type
@@ -272,6 +273,9 @@ export interface ITooltipDefaults extends ILabelDefaults {
     svgrect: SVGRectElement;
     gap: number;
 }
+export interface IConditionalLabel extends ILabelDefaults {
+    node: number;
+}
 export interface IHighlighNodeDefaults extends IItemBaseDefaults {
     radius: number;
     mainNode: SVGCircleElement;
@@ -344,6 +348,8 @@ export interface IFlowProcessDefaults extends IFlowChartDefaults {
 }
 export interface IFlowCondDefaults extends IFlowChartDefaults {
     path: SVGPathElement;
+    true: ConditionalLabel;
+    false: ConditionalLabel;
 }
 export interface IFlowTermDefaults extends IFlowCondDefaults {
     curve: number;

@@ -10,6 +10,7 @@ import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
 import Wire from "./wire";
 import CompStore from "./components";
+import ConditionalLabel from "./flowCondLabel";
 
 //***************************************** Types ************************************//
 
@@ -315,6 +316,11 @@ export interface ITooltipDefaults extends ILabelDefaults {
 	gap: number;
 }
 
+//internal interface
+export interface IConditionalLabel extends ILabelDefaults {
+	node: number;
+}
+
 export interface IHighlighNodeDefaults extends IItemBaseDefaults {
 	radius: number;
 	mainNode: SVGCircleElement;
@@ -392,6 +398,8 @@ export interface IFlowProcessDefaults extends IFlowChartDefaults {
 
 export interface IFlowCondDefaults extends IFlowChartDefaults {
 	path: SVGPathElement;
+	true: ConditionalLabel;
+	false: ConditionalLabel;
 }
 
 export interface IFlowTermDefaults extends IFlowCondDefaults {

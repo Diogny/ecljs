@@ -11,29 +11,31 @@ var EC = /** @class */ (function (_super) {
     tslib_1.__extends(EC, _super);
     function EC(circuit, options) {
         var _this = _super.call(this, circuit, options) || this;
+        var m = _this.base.meta;
         //for labels in N555, 7408, Atmega168
-        if (_this.base.meta.label) {
+        if (m.label) {
             dab_1.aChld(_this.g, extra_1.createText({
-                x: _this.base.meta.label.x,
-                y: _this.base.meta.label.y,
-                "class": _this.base.meta.label.class
-            }, _this.base.meta.label.text));
+                x: m.label.x,
+                y: m.label.y,
+                "class": m.label.class
+            }, m.label.text));
         }
         //add node labels for DIP packages
-        if (_this.base.meta.nodes.createLabels) {
+        if (m.nodes.createLabels) {
             var pins = _this.count / 2;
             for (var y = 48, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
                 for (var col = 0; col < pins; col++, i++, x += factor)
                     dab_1.aChld(_this.g, extra_1.createText({ x: x, y: y }, i + ""));
         }
         //create label if defined
-        if (_this.base.meta.labelId) {
+        if (m.labelId) {
             _this.$.boardLabel = new label_1.default({
-                fontSize: 15,
-                x: _this.base.meta.labelId.x,
-                y: _this.base.meta.labelId.y
+                //fontSize default Label::fontSize = 15
+                x: m.labelId.x,
+                y: m.labelId.y,
+                text: _this.id,
+                visible: false
             });
-            _this.$.boardLabel.setText(_this.id);
         }
         _this.refresh();
         //signal component creation
@@ -77,7 +79,7 @@ var EC = /** @class */ (function (_super) {
     EC.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             class: "ec",
-            boardLabel: void 0
+            boardLabel: void 0,
         });
     };
     return EC;

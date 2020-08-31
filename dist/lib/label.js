@@ -8,12 +8,9 @@ var itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
 var Label = /** @class */ (function (_super) {
     tslib_1.__extends(Label, _super);
     function Label(options) {
-        var _this = this;
-        options.visible = false;
-        _this = _super.call(this, options) || this;
-        _this.$.text = '';
-        _this.$.svgtext = utils_1.tag("text", "", {});
-        dab_1.aChld(_this.g, _this.$.svgtext);
+        var _this = _super.call(this, options) || this;
+        dab_1.aChld(_this.g, _this.$.svgtext = utils_1.tag("text", "", {}));
+        _this.$.svgtext.innerHTML = _this.$.text;
         return _this;
     }
     Object.defineProperty(Label.prototype, "type", {
@@ -48,26 +45,17 @@ var Label = /** @class */ (function (_super) {
         return this;
     };
     Label.prototype.setFontSize = function (value) {
-        this.$.fontSize = value;
-        return this.build();
-    };
-    Label.prototype.build = function () {
         dab_1.attr(this.$.svgtext, {
-            "font-size": this.fontSize,
-            x: 0,
-            y: 0
+            "font-size": this.$.fontSize = value
         });
         return this;
-    };
-    Label.prototype.setText = function (value) {
-        this.$.svgtext.innerHTML = this.$.text = value;
-        return this.build();
     };
     Label.prototype.defaults = function () {
         return dab_1.extend(_super.prototype.defaults.call(this), {
             name: "label",
             class: "label",
-            fontSize: 50
+            fontSize: 15,
+            text: ""
         });
     };
     return Label;

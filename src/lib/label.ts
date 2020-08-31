@@ -22,11 +22,9 @@ export default class Label extends ItemBase {
 	get fontSize(): number { return this.$.fontSize }
 
 	constructor(options: { [x: string]: any; }) {
-		options.visible = false;
 		super(options);
-		this.$.text = '';
-		this.$.svgtext = <SVGTextElement>tag("text", "", {});
-		aChld(this.g, this.$.svgtext);
+		aChld(this.g, this.$.svgtext = <SVGTextElement>tag("text", "", {}));
+		this.$.svgtext.innerHTML = this.$.text
 	}
 
 	public move(x: number, y: number): Label {
@@ -36,29 +34,18 @@ export default class Label extends ItemBase {
 	}
 
 	public setFontSize(value: number): Label {
-		this.$.fontSize = value;
-		return this.build()
-	}
-
-	protected build(): Label {
 		attr(this.$.svgtext, {
-			"font-size": this.fontSize,
-			x: 0,
-			y: 0
+			"font-size": this.$.fontSize = value
 		});
-		return this;
-	}
-
-	public setText(value: string): Label {
-		this.$.svgtext.innerHTML = this.$.text = value;
-		return this.build()
+		return this
 	}
 
 	public defaults(): ILabelDefaults {
 		return <ILabelDefaults>extend(super.defaults(), {
 			name: "label",
 			class: "label",
-			fontSize: 50
+			fontSize: 15,
+			text: ""
 		})
 	}
 

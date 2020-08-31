@@ -1,4 +1,3 @@
-import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
 import { IFlowProcessDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
@@ -16,6 +15,8 @@ export default class FlowProcess extends FlowComp {
     constructor(flowchart: Flowchart, options: {
         [x: string]: any;
     });
+    /**
+     * @description refreshes flowchart location, size, and updates bonded cmoponents
+     */
     refresh(): FlowProcess;
-    onResize(size: Size): void;
 }

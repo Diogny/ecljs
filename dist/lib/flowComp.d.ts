@@ -28,11 +28,6 @@ export default abstract class FlowComp extends ItemBoard {
      */
     setSize(value: Size): boolean;
     /**
-     * @description every descendant must implement it's own custom node readjustment
-     * @param size new size
-     */
-    abstract onResize(size: Size): void;
-    /**
      * @description maximum inbounds
      */
     get inputs(): number;
@@ -60,6 +55,11 @@ export default abstract class FlowComp extends ItemBoard {
         [x: string]: any;
     });
     /**
+     * @description perform node readjustment, it calls refresh() function
+     * @param size new size
+     */
+    onResize(size: Size): void;
+    /**
      * @description returns the node information
      * @param node 0-based pin/node number
      * @param onlyPoint true to get internal point, false get the real board point
@@ -67,6 +67,9 @@ export default abstract class FlowComp extends ItemBoard {
      * this returns (x, y) relative to the EC location
      */
     node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
+    /**
+     * @description refreshes flowchart location, and updates bonded cmoponents
+     */
     refresh(): FlowComp;
     defaults(): IFlowChartDefaults;
 }

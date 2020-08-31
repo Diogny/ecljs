@@ -16,6 +16,13 @@ export default class FlowInOut extends FlowComp {
     constructor(flowchart: Flowchart, options: {
         [x: string]: any;
     });
+    /**
+     * @description refreshes flowchart location, size, and updates bonded cmoponents
+     */
     refresh(): FlowInOut;
+    /**
+     * @description perform node readjustment, it calls refresh() function
+     * @param size new size
+     */
     onResize(size: Size): void;
 }

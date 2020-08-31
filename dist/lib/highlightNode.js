@@ -23,7 +23,7 @@ var HighlightNode = /** @class */ (function (_super) {
         return _this;
     }
     Object.defineProperty(HighlightNode.prototype, "type", {
-        get: function () { return interfaces_1.Type.HIGHLIGHT; },
+        get: function () { return interfaces_1.Type.HL; },
         enumerable: false,
         configurable: true
     });

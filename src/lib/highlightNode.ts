@@ -8,7 +8,7 @@ export default class HighlightNode extends ItemBase {
 
 	protected $: IHighlighNodeDefaults;
 
-	get type(): Type { return Type.HIGHLIGHT }
+	get type(): Type { return Type.HL }
 	get radius(): number { return this.$.radius }
 
 	get selectedId(): string { return this.$.selectedId }

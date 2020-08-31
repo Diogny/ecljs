@@ -9,11 +9,8 @@ var FlowTerminational = /** @class */ (function (_super) {
     tslib_1.__extends(FlowTerminational, _super);
     function FlowTerminational(flowchart, options) {
         var _this = _super.call(this, flowchart, options) || this;
-        //get path, hould be this.g.firstChild
         _this.$.path = _this.g.firstElementChild;
-        //refresh nodes
         _this.onResize(_this.size);
-        _this.refresh();
         return _this;
     }
     Object.defineProperty(FlowTerminational.prototype, "body", {
@@ -29,28 +26,32 @@ var FlowTerminational = /** @class */ (function (_super) {
          * client rect where text should be safely contained
          */
         get: function () {
-            var 
-            //r = this.body.getBoundingClientRect(),
-            s = this.size;
+            var s = this.size;
             return (new rect_1.default(0, 0, s.width | 0, s.height | 0)).grow(-this.$.curve, -this.$.padding);
         },
         enumerable: false,
         configurable: true
     });
+    /**
+     * @description refreshes flowchart location, size, and updates bonded cmoponents
+     */
     FlowTerminational.prototype.refresh = function () {
         var h = this.size.height, h2 = h / 2 | 0, c = this.$.curve, w = this.size.width, c2 = w - c;
         dab_1.attr(this.$.path, {
             d: "M " + c + ",0 H" + c2 + " C " + c2 + ",0 " + w + "," + h2 + " " + c2 + "," + h + " H" + c + " C " + c + "," + h + " 0," + h2 + " " + c + ",0 Z"
         });
-        //later text resize goes here
-        //...
         return _super.prototype.refresh.call(this), this;
     };
+    /**
+     * @description perform node readjustment, it calls this.refresh() function
+     * @param size new size
+     */
     FlowTerminational.prototype.onResize = function (size) {
         var list = this.$.nodes, xs = (this.$.curve = this.size.height / 4 | 0) / 2 | 0;
         extra_1.flowNodes(list, size);
         list[1].x -= xs;
         list[3].x = xs;
+        this.refresh();
     };
     return FlowTerminational;
 }(flowComp_1.default));

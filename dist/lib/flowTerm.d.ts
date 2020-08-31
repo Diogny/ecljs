@@ -16,6 +16,13 @@ export default abstract class FlowTerminational extends FlowComp {
     constructor(flowchart: Flowchart, options: {
         [x: string]: any;
     });
+    /**
+     * @description refreshes flowchart location, size, and updates bonded cmoponents
+     */
     refresh(): FlowTerminational;
+    /**
+     * @description perform node readjustment, it calls this.refresh() function
+     * @param size new size
+     */
     onResize(size: Size): void;
 }

@@ -8,7 +8,7 @@ import { Type, IFlowChartDefaults, IFlowchartMetadata, INodeInfo } from "./inter
 import Flowchart from "./flowchart";
 import ItemBoard from "./itemsBoard";
 import Bond from "./bonds";
-import { createText, pinInfo } from "./extra";
+import { createText, pinInfo, flowNodes } from "./extra";
 
 /**
  * @description flowchart base component class
@@ -17,7 +17,7 @@ export default abstract class FlowComp extends ItemBoard {
 
 	protected $: IFlowChartDefaults;
 
-	get type(): Type { return Type.FLOWCHART }
+	get type(): Type { return Type.FL }
 
 	get last(): number { return this.$.nodes.length - 1 }
 
@@ -55,22 +55,15 @@ export default abstract class FlowComp extends ItemBoard {
 					value.height = m
 				}
 				this.$.size = value;
-				//internal adjust node points
+				//internal adjust node points, this calls refresh() inside
 				this.onResize(value);
-				this.refresh();
-				//hooked events if any
+				//call hooked external event if any
 				this.$.onResize && this.$.onResize(value);
 				return true
 			}
 		}
 		return false
 	}
-
-	/**
-	 * @description every descendant must implement it's own custom node readjustment
-	 * @param size new size
-	 */
-	abstract onResize(size: Size): void;
 
 	/**
 	 * @description maximum inbounds
@@ -133,6 +126,15 @@ export default abstract class FlowComp extends ItemBoard {
 	}
 
 	/**
+	 * @description perform node readjustment, it calls refresh() function
+	 * @param size new size
+	 */
+	public onResize(size: Size): void {
+		flowNodes(this.$.nodes, size);
+		this.refresh()
+	}
+
+	/**
 	 * @description returns the node information
 	 * @param node 0-based pin/node number
 	 * @param onlyPoint true to get internal point, false get the real board point
@@ -149,12 +151,13 @@ export default abstract class FlowComp extends ItemBoard {
 		return pin
 	}
 
+	/**
+	 * @description refreshes flowchart location, and updates bonded cmoponents
+	 */
 	public refresh(): FlowComp {
-		let
-			attrs: any = {
-				transform: `translate(${this.x} ${this.y})`
-			};
-		attr(this.g, attrs);
+		attr(this.g, {
+			transform: `translate(${this.x} ${this.y})`
+		});
 		//check below
 		each(this.bonds, (b: Bond, key: any) => {
 			this.nodeRefresh(key);

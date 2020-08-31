@@ -40,7 +40,7 @@ var FlowComp = /** @class */ (function (_super) {
         return _this;
     }
     Object.defineProperty(FlowComp.prototype, "type", {
-        get: function () { return interfaces_1.Type.FLOWCHART; },
+        get: function () { return interfaces_1.Type.FL; },
         enumerable: false,
         configurable: true
     });
@@ -80,10 +80,9 @@ var FlowComp = /** @class */ (function (_super) {
                     value.height = m;
                 }
                 this.$.size = value;
-                //internal adjust node points
+                //internal adjust node points, this calls refresh() inside
                 this.onResize(value);
-                this.refresh();
-                //hooked events if any
+                //call hooked external event if any
                 this.$.onResize && this.$.onResize(value);
                 return true;
             }
@@ -144,6 +143,14 @@ var FlowComp = /** @class */ (function (_super) {
         configurable: true
     });
     /**
+     * @description perform node readjustment, it calls refresh() function
+     * @param size new size
+     */
+    FlowComp.prototype.onResize = function (size) {
+        extra_1.flowNodes(this.$.nodes, size);
+        this.refresh();
+    };
+    /**
      * @description returns the node information
      * @param node 0-based pin/node number
      * @param onlyPoint true to get internal point, false get the real board point
@@ -158,12 +165,14 @@ var FlowComp = /** @class */ (function (_super) {
         }
         return pin;
     };
+    /**
+     * @description refreshes flowchart location, and updates bonded cmoponents
+     */
     FlowComp.prototype.refresh = function () {
         var _this = this;
-        var attrs = {
+        dab_1.attr(this.g, {
             transform: "translate(" + this.x + " " + this.y + ")"
-        };
-        dab_1.attr(this.g, attrs);
+        });
         //check below
         utils_1.each(this.bonds, function (b, key) {
             _this.nodeRefresh(key);

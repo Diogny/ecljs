@@ -10,15 +10,42 @@ import Bond from "./bonds";
 import Wire from "./wire";
 import CompStore from "./components";
 export declare enum Type {
-    UNDEFINED = 0,
+    /**
+     * Undefined/unknown type
+     */
+    NONE = 0,
+    /**
+     * Electric Circuit Component
+     */
     EC = 1,
+    /**
+     * Wire, can be directional/arrow
+     */
     WIRE = 2,
+    /**
+     * Component bond
+     */
     BOND = 3,
+    /**
+     * Text Label on the board
+     */
     LABEL = 4,
+    /**
+     * HTML window on the board
+     */
     WIN = 5,
+    /**
+     * Tooltip text label
+     */
     TOOLTIP = 6,
-    HIGHLIGHT = 7,
-    FLOWCHART = 8
+    /**
+     * HighLight
+     */
+    HL = 7,
+    /**
+     * Flowchart resizable component
+     */
+    FL = 8
 }
 export interface IType {
     type: Type;

@@ -38,8 +38,8 @@ export default class FlowConditional extends FlowComp {
 	 * @description this happens after component was inserted in the DOM
 	 */
 	public onDOM() {
-		this.$.true && this.g.insertAdjacentElement("afterend", this.$.true.g);
-		this.$.false && this.g.insertAdjacentElement("afterend", this.$.false.g)
+		this.$.true && this.g.insertAdjacentElement("beforebegin", this.$.true.g);
+		this.$.false && this.g.insertAdjacentElement("beforebegin", this.$.false.g)
 	}
 
 	public setVisible(value: boolean): FlowConditional {

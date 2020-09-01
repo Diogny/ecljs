@@ -54,6 +54,22 @@ export default class Wire extends ItemBoard {
 		!value && this.refresh();
 	}
 
+	get head(): number { return this.$.headLength }
+	get swipe(): number { return this.$.headAngle }
+
+	/**
+	 * @description customize arrow for directional wires only
+	 * @param length arrow line length
+	 * @param angle arrow lines swipe angle
+	 */
+	public arrow(length: number, angle: number) {
+		if (!this.$.dir)
+			return
+		this.$.headLength = length;
+		this.$.headAngle = angle;
+		arrow(this.$)
+	}
+
 	constructor(container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(container, options);
 		this.$.dir = container.dir;
@@ -286,6 +302,7 @@ export default class Wire extends ItemBoard {
 			class: "wire",
 			edit: false,
 			head: 14,
+			headAngle: 0.78
 		})
 	}
 
@@ -364,13 +381,14 @@ function arrow($: IWireDefaults, node?: number) {
 		c = $.points.length - 1,
 		last = $.points[c],
 		prev = $.points[c - 1],
-		r = $.head,
+		r = $.headLength,
 		angle = Math.atan2(last.y - prev.y, last.x - prev.x),
+		swipe = $.headAngle,
 		p = (ang: number) => new Point((last.x - r * Math.cos(ang)) | 0, (last.y - r * Math.sin(ang)) | 0);
 	//if node is defined, only redraw arrow when node is prev|last node of wire
 	if (node != undefined && !(node == c || node == c - 1))
 		return;
 	attr($.arrow, {
-		points: [p(angle - 0.78), last, p(angle + 0.78)].map(p => `${p.x}, ${p.y}`).join(' ')
+		points: [p(angle - swipe), last, p(angle + swipe)].map(p => `${p.x}, ${p.y}`).join(' ')
 	})
 }

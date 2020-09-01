@@ -38,8 +38,8 @@ var FlowConditional = /** @class */ (function (_super) {
      * @description this happens after component was inserted in the DOM
      */
     FlowConditional.prototype.onDOM = function () {
-        this.$.true && this.g.insertAdjacentElement("afterend", this.$.true.g);
-        this.$.false && this.g.insertAdjacentElement("afterend", this.$.false.g);
+        this.$.true && this.g.insertAdjacentElement("beforebegin", this.$.true.g);
+        this.$.false && this.g.insertAdjacentElement("beforebegin", this.$.false.g);
     };
     FlowConditional.prototype.setVisible = function (value) {
         _super.prototype.setVisible.call(this, value);

@@ -18,6 +18,14 @@ export default class Wire extends ItemBoard {
      * @description get/set wire edit mode
      */
     set edit(value: boolean);
+    get head(): number;
+    get swipe(): number;
+    /**
+     * @description customize arrow for directional wires only
+     * @param length arrow line length
+     * @param angle arrow lines swipe angle
+     */
+    arrow(length: number, angle: number): void;
     constructor(container: Container<ItemBoard>, options: {
         [x: string]: any;
     });

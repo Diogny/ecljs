@@ -82,6 +82,28 @@ var Wire = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Wire.prototype, "head", {
+        get: function () { return this.$.headLength; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Wire.prototype, "swipe", {
+        get: function () { return this.$.headAngle; },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * @description customize arrow for directional wires only
+     * @param length arrow line length
+     * @param angle arrow lines swipe angle
+     */
+    Wire.prototype.arrow = function (length, angle) {
+        if (!this.$.dir)
+            return;
+        this.$.headLength = length;
+        this.$.headAngle = angle;
+        arrow(this.$);
+    };
     Wire.prototype.refresh = function () {
         if (this.edit) {
             for (var i = 0, a = this.$.points[0], last = this.last; i < last; i++) {
@@ -278,6 +300,7 @@ var Wire = /** @class */ (function (_super) {
             class: "wire",
             edit: false,
             head: 14,
+            headAngle: 0.78
         });
     };
     Wire.nodeArea = 25;
@@ -342,11 +365,11 @@ function poly(g, type, line) {
 function arrow($, node) {
     if (!$.dir)
         return;
-    var c = $.points.length - 1, last = $.points[c], prev = $.points[c - 1], r = $.head, angle = Math.atan2(last.y - prev.y, last.x - prev.x), p = function (ang) { return new point_1.default((last.x - r * Math.cos(ang)) | 0, (last.y - r * Math.sin(ang)) | 0); };
+    var c = $.points.length - 1, last = $.points[c], prev = $.points[c - 1], r = $.headLength, angle = Math.atan2(last.y - prev.y, last.x - prev.x), swipe = $.headAngle, p = function (ang) { return new point_1.default((last.x - r * Math.cos(ang)) | 0, (last.y - r * Math.sin(ang)) | 0); };
     //if node is defined, only redraw arrow when node is prev|last node of wire
     if (node != undefined && !(node == c || node == c - 1))
         return;
     dab_1.attr($.arrow, {
-        points: [p(angle - 0.78), last, p(angle + 0.78)].map(function (p) { return p.x + ", " + p.y; }).join(' ')
+        points: [p(angle - swipe), last, p(angle + swipe)].map(function (p) { return p.x + ", " + p.y; }).join(' ')
     });
 }

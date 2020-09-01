@@ -320,10 +320,20 @@ export interface IItemBoardDefaults extends IItemBaseDefaults {
 export interface IWireDefaults extends IItemBoardDefaults {
     points: Point[];
     poly: SVGPolylineElement;
-    arrow: SVGPolylineElement;
-    head: number;
     lines: SVGLineElement[];
     edit: boolean;
+    /**
+     * polyline arrow for directional wire
+     */
+    arrow: SVGPolylineElement;
+    /**
+     * arrow head length for directional wire
+     */
+    headLength: number;
+    /**
+     * arrow head line angle for directional wire
+     */
+    headAngle: number;
 }
 export interface IItemSolidDefaults extends IItemBoardDefaults {
     /**

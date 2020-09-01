@@ -10,7 +10,7 @@ import Bond from "./bonds";
 import Wire from "./wire";
 import CompStore from "./components";
 import ConditionalLabel from "./flowCondLabel";
-import { FlowComp } from "src";
+import FlowComp from "./flowComp";
 export declare enum Type {
     /**
      * Undefined/unknown type

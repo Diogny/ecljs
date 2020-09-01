@@ -299,7 +299,7 @@ var Wire = /** @class */ (function (_super) {
             name: "wire",
             class: "wire",
             edit: false,
-            head: 14,
+            headLength: 14,
             headAngle: 0.78
         });
     };

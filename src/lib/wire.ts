@@ -301,7 +301,7 @@ export default class Wire extends ItemBoard {
 			name: "wire",
 			class: "wire",
 			edit: false,
-			head: 14,
+			headLength: 14,
 			headAngle: 0.78
 		})
 	}

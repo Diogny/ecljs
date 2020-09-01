@@ -74,12 +74,18 @@ export default class EC extends ItemSolid {
 		return this;
 	}
 
+	/**
+	 * removes this electronic component form the board
+	 */
 	public remove() {
 		//delete label if any first
 		this.$.boardLabel && this.g.parentNode?.removeChild(this.$.boardLabel.g);
 		super.remove();
 	}
 
+	/**
+	 * this happens when this component was inserted in the board
+	 */
 	public onDOM() {
 		this.$.boardLabel && (this.g.insertAdjacentElement("afterend", this.$.boardLabel.g), this.$.boardLabel.setVisible(true))
 	}

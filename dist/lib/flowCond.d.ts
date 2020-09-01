@@ -20,6 +20,9 @@ export default class FlowConditional extends FlowComp {
      */
     onDOM(): void;
     setVisible(value: boolean): FlowConditional;
+    /**
+     * removes this flowchart conditional from the board
+     */
     remove(): void;
     /**
      * @description link a condition label to a node

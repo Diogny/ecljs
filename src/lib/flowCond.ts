@@ -49,6 +49,9 @@ export default class FlowConditional extends FlowComp {
 		return this;
 	}
 
+	/**
+	 * removes this flowchart conditional from the board
+	 */
 	public remove() {
 		//delete label if any first
 		this.$.true && this.g.parentNode?.removeChild(this.$.true.g);

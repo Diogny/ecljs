@@ -85,9 +85,13 @@ var ItemBoard = /** @class */ (function (_super) {
         }
         return -1;
     };
+    /**
+     * @description refreshes all bonded components to this node
+     * @param node 0-base node
+     */
     ItemBoard.prototype.nodeRefresh = function (node) {
         var _this = this;
-        var bond = this.nodeBonds(node), p = this.node(node);
+        var bond = this.container.nodeBonds(this, node), p = this.node(node);
         p && bond && bond.to.forEach(function (d) {
             var ic = _this.container.get(d.id);
             ic && ic.setNode(d.ndx, p);
@@ -175,39 +179,11 @@ var ItemBoard = /** @class */ (function (_super) {
         return true;
     };
     /**
-     * @description bonds two components two-way
-     * @param node 0-based node
-     * @param ic component to bond to
-     * @param icNode component node
+     * removes this board component from then board
      */
-    ItemBoard.prototype.bond = function (node, ic, icNode) {
-        return this.container.bond(this, node, ic, icNode);
-    };
-    ItemBoard.prototype.nodeBonds = function (node) {
-        return this.container.nodeBonds(this, node); // <Bond>(<any>this.bonds)[node]
-    };
-    /**
-     * @description unbonds a node from a component
-     * @param node 0-base node to unbond
-     * @param id component to unbond from
-     */
-    ItemBoard.prototype.unbond = function (node, id) {
-        return this.container.unbond(this, node, id);
-    };
-    /**
-     * @description unbonds a node
-     * @param node 0-base node
-     * @returns undefined if invalid node, otherwise list of disconnected wire ids
-     */
-    ItemBoard.prototype.unbondNode = function (node) {
-        return this.container.unbondNode(this, node);
-    };
     ItemBoard.prototype.remove = function () {
         this.highlight(false);
         _super.prototype.remove.call(this);
-    };
-    ItemBoard.prototype.disconnect = function () {
-        this.container.disconnect(this);
     };
     ItemBoard.prototype.prop = function (name) {
         return this.$.props[name];

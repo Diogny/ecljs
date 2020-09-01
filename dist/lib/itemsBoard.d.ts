@@ -1,5 +1,5 @@
 import { IPoint } from 'dabbjs/dist/lib/interfaces';
-import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent, IUnbondNodeData, IUnbondData } from './interfaces';
+import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
@@ -28,6 +28,10 @@ export default abstract class ItemBoard extends ItemBase {
      * @param ln 1-based line number, for EC it's discarded
      */
     over(p: IPoint, ln?: number): number;
+    /**
+     * @description refreshes all bonded components to this node
+     * @param node 0-base node
+     */
     nodeRefresh(node: number): ItemBoard;
     /**
      * @description sets node new location. Only works for Wire
@@ -63,27 +67,9 @@ export default abstract class ItemBoard extends ItemBase {
      */
     refreshHighlight(node: number): boolean;
     /**
-     * @description bonds two components two-way
-     * @param node 0-based node
-     * @param ic component to bond to
-     * @param icNode component node
+     * removes this board component from then board
      */
-    bond(node: number, ic: ItemBoard, icNode: number): boolean;
-    nodeBonds(node: number): Bond | undefined;
-    /**
-     * @description unbonds a node from a component
-     * @param node 0-base node to unbond
-     * @param id component to unbond from
-     */
-    unbond(node: number, id: string): IUnbondData | undefined;
-    /**
-     * @description unbonds a node
-     * @param node 0-base node
-     * @returns undefined if invalid node, otherwise list of disconnected wire ids
-     */
-    unbondNode(node: number): IUnbondNodeData | undefined;
     remove(): void;
-    disconnect(): void;
     prop(name: string): ComponentPropertyType;
     /**
      * @description returns all custom properties of this component

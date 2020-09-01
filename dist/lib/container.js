@@ -79,6 +79,10 @@ var Container = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    /**
+     * @description gets the component
+     * @param id component's id
+     */
     Container.prototype.get = function (id) {
         var _a, _b;
         return ((_a = this.itemMap.get(id)) === null || _a === void 0 ? void 0 : _a.t) || ((_b = this.wireMap.get(id)) === null || _b === void 0 ? void 0 : _b.t);
@@ -149,25 +153,50 @@ var Container = /** @class */ (function (_super) {
         // 	throw `component incompatible type`;
         return comp;
     };
+    /**
+     * @description deletes a component from the board, and unbonds all nodes
+     * @param comp component
+     */
     Container.prototype.delete = function (comp) {
+        var _this = this;
         if (comp == undefined)
             return false;
-        comp.disconnect();
+        var list = this.disconnect(comp);
         comp.remove();
+        list.forEach(function (id) {
+            var nc = _this.get(id);
+            nc && (nc.type == interfaces_1.Type.WIRE) && _this.delete(nc);
+        });
         return (comp.type == interfaces_1.Type.WIRE) ?
             this.wireMap.delete(comp.id) :
             this.itemMap.delete(comp.id);
     };
+    /**
+     * @description gets all bonds of a component
+     * @param item component
+     */
     Container.prototype.itemBonds = function (item) {
         var _a, _b;
         var bonds = ((_a = this.itemMap.get(item.id)) === null || _a === void 0 ? void 0 : _a.b) || ((_b = this.wireMap.get(item.id)) === null || _b === void 0 ? void 0 : _b.b);
         //"bonds" cannot be filtered so array node indexes don't get lost
         return bonds;
     };
+    /**
+     * @description returns the bonds of a node
+     * @param item board component
+     * @param node 0-based node
+     */
     Container.prototype.nodeBonds = function (item, node) {
         var bonds = this.itemBonds(item);
         return bonds && bonds[node];
     };
+    /**
+     * @description bonds two components two-way
+     * @param thisObj start component
+     * @param node 0-based node
+     * @param ic component to bond to
+     * @param icNode component node
+     */
     Container.prototype.bond = function (thisObj, thisNode, ic, icNode) {
         if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
             return false;
@@ -195,6 +224,12 @@ var Container = /** @class */ (function (_super) {
         thisObj.nodeRefresh(thisNode);
         return true;
     };
+    /**
+         * @description unbonds a node from a component
+         * @param thisObj component to unbond
+         * @param node 0-base node to unbond
+         * @param id component to unbond from
+         */
     Container.prototype.unbond = function (thisObj, node, id) {
         return unbond(this, thisObj.id, node, id, true);
     };
@@ -217,9 +252,18 @@ var Container = /** @class */ (function (_super) {
         }
         return { dir: bond.dir, id: thisObj.id, node: node, bonds: list };
     };
-    Container.prototype.disconnect = function (thisObj) {
-        for (var node = 0; node < thisObj.count; node++)
-            this.unbondNode(thisObj, node);
+    /**
+     * @description removes all bonds of a component
+     * @param comp component to disconnect
+     * @returns list of removed component's id
+     */
+    Container.prototype.disconnect = function (comp) {
+        var list = [];
+        for (var node = 0; node < comp.count; node++) {
+            var data = this.unbondNode(comp, node);
+            data && data.bonds.forEach(function (b) { return list.push(b.id); });
+        }
+        return list;
     };
     Container.prototype.getAllBonds = function () {
         var bonds = [], keyDict = new Set(), findBonds = function (bond) {
@@ -240,16 +284,17 @@ var Container = /** @class */ (function (_super) {
         return bonds;
     };
     Container.prototype.moveBond = function (id, node, newIndex) {
+        var _this = this;
         var item = extra_1.getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.t;
         if (!item || !wire || wire.type != interfaces_1.Type.WIRE)
             return;
-        var bond = wire.nodeBonds(node);
+        var bond = this.nodeBonds(wire, node);
         if (bond) {
             //fix this from index
             bond.from.ndx = newIndex;
             //fix all incoming indexes
             bond.to.forEach(function (bond) {
-                var compTo = wire.container.get(bond.id), compToBonds = compTo === null || compTo === void 0 ? void 0 : compTo.nodeBonds(bond.ndx);
+                var compTo = wire.container.get(bond.id), compToBonds = compTo && _this.nodeBonds(compTo, bond.ndx);
                 compToBonds === null || compToBonds === void 0 ? void 0 : compToBonds.to.filter(function (b) { return b.id == wire.id; }).forEach(function (b) {
                     b.ndx = newIndex;
                 });
@@ -283,6 +328,11 @@ function unbond(container, id, node, toId, origin) {
         return { dir: bond.dir, id: id, node: node, toId: toId, toNode: b.ndx };
     }
 }
+/**
+ * @description creates a board component
+ * @param container container
+ * @param options options to create component
+ */
 function createBoardItem(container, options) {
     var base = void 0, item = void 0, setBase = function () {
         if (!(base = container.root(options.name))) {

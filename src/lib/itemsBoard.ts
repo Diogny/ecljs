@@ -1,6 +1,6 @@
 import { IPoint } from 'dabbjs/dist/lib/interfaces';
 import { tCl, attr, extend, isFn, obj } from 'dabbjs/dist/lib/dab';
-import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent, IUnbondNodeData, IUnbondData } from './interfaces';
+import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent} from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
@@ -87,9 +87,13 @@ export default abstract class ItemBoard extends ItemBase {
 		return -1;
 	}
 
+	/**
+	 * @description refreshes all bonded components to this node
+	 * @param node 0-base node
+	 */
 	public nodeRefresh(node: number): ItemBoard {
 		let
-			bond = this.nodeBonds(node),
+			bond = this.container.nodeBonds(this, node),
 			p = this.node(node);
 		p && bond && bond.to.forEach((d) => {
 			let
@@ -188,44 +192,11 @@ export default abstract class ItemBoard extends ItemBase {
 	}
 
 	/**
-	 * @description bonds two components two-way
-	 * @param node 0-based node
-	 * @param ic component to bond to
-	 * @param icNode component node
+	 * removes this board component from then board
 	 */
-	public bond(node: number, ic: ItemBoard, icNode: number): boolean {
-		return this.container.bond(this, node, ic, icNode)
-	}
-
-	public nodeBonds(node: number): Bond | undefined {
-		return this.container.nodeBonds(this, node); // <Bond>(<any>this.bonds)[node]
-	}
-
-	/**
-	 * @description unbonds a node from a component
-	 * @param node 0-base node to unbond
-	 * @param id component to unbond from
-	 */
-	public unbond(node: number, id: string): IUnbondData | undefined {
-		return this.container.unbond(this, node, id)
-	}
-
-	/**
-	 * @description unbonds a node
-	 * @param node 0-base node
-	 * @returns undefined if invalid node, otherwise list of disconnected wire ids
-	 */
-	public unbondNode(node: number): IUnbondNodeData | undefined {
-		return this.container.unbondNode(this, node)
-	}
-
 	public remove() {
 		this.highlight(false);
 		super.remove()
-	}
-
-	public disconnect() {
-		this.container.disconnect(this)
 	}
 
 	public prop(name: string): ComponentPropertyType {

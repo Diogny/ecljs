@@ -40,7 +40,7 @@ var Wire = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Wire.prototype, "isOpen", {
-        get: function () { return !this.nodeBonds(0) || !this.nodeBonds(this.last); },
+        get: function () { return !this.container.nodeBonds(this, 0) || !this.container.nodeBonds(this, this.last); },
         enumerable: false,
         configurable: true
     });
@@ -137,7 +137,7 @@ var Wire = /** @class */ (function (_super) {
             this.refresh();
         }
         if (!(node == 0 || node == this.last)) {
-            var bond = this.nodeBonds(node), p_1 = this.$.points[node];
+            var bond = this.container.nodeBonds(this, node), p_1 = this.$.points[node];
             bond && bond.to.forEach(function (b) {
                 var _a;
                 (_a = _this.container.get(b.id)) === null || _a === void 0 ? void 0 : _a.setNode(b.ndx, p_1);
@@ -159,7 +159,7 @@ var Wire = /** @class */ (function (_super) {
         this.edit = false;
         for (var i = 0, p = this.$.points[i], end = this.last; i <= end; p = this.$.points[++i]) {
             //avoid circular reference, bonded start/end nodes are refresed by EC's nodes
-            if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.nodeBonds(i))) {
+            if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.container.nodeBonds(this, i))) {
                 this.setNode(i, point_1.default.translateBy(p, dx, dy));
             }
         }
@@ -193,7 +193,7 @@ var Wire = /** @class */ (function (_super) {
     };
     Wire.prototype.highlightable = function (node) {
         //any Wire node and that it is not a start|end bonded node
-        return !((node == 0 || node == this.last) && this.nodeBonds(node));
+        return !((node == 0 || node == this.last) && this.container.nodeBonds(this, node));
     };
     Wire.prototype.setPoints = function (points) {
         if (!dab_1.isArr(points)
@@ -316,7 +316,7 @@ function deleteWireNode(wire, $, node) {
     //first or last node cannot be deleted, only middle nodes
     if (node <= 0 || node >= last || isNaN(node))
         return;
-    wire.unbondNode(node);
+    wire.container.unbondNode(wire, node);
     wire.container.moveBond(wire.id, last, last - 1);
     var p = $.points.splice(node, 1)[0];
     if (wire.edit) {

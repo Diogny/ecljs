@@ -9,7 +9,13 @@ export default class EC extends ItemSolid {
     });
     refresh(): EC;
     setVisible(value: boolean): EC;
+    /**
+     * removes this electronic component form the board
+     */
     remove(): void;
+    /**
+     * this happens when this component was inserted in the board
+     */
     onDOM(): void;
     defaults(): IECDefaults;
 }

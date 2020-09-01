@@ -67,12 +67,18 @@ var EC = /** @class */ (function (_super) {
         this.$.boardLabel && this.$.boardLabel.setVisible(value);
         return this;
     };
+    /**
+     * removes this electronic component form the board
+     */
     EC.prototype.remove = function () {
         var _a;
         //delete label if any first
         this.$.boardLabel && ((_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.$.boardLabel.g));
         _super.prototype.remove.call(this);
     };
+    /**
+     * this happens when this component was inserted in the board
+     */
     EC.prototype.onDOM = function () {
         this.$.boardLabel && (this.g.insertAdjacentElement("afterend", this.$.boardLabel.g), this.$.boardLabel.setVisible(true));
     };

@@ -37,6 +37,9 @@ export default abstract class ItemBase extends Item implements IType {
 		});
 	}
 
+	/**
+	 * removes this base component from the board
+	 */
 	public remove() {
 		this.g.parentNode?.removeChild(this.g);
 	}

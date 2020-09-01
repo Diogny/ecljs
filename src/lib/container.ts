@@ -31,6 +31,10 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 
 	get store(): CompStore { return this.$.store }
 
+	/**
+	 * @description gets the component
+	 * @param id component's id
+	 */
 	public get(id: string): T | Wire | undefined {
 		return this.itemMap.get(id)?.t || this.wireMap.get(id)?.t
 	}
@@ -132,16 +136,30 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return comp
 	}
 
+	/**
+	 * @description deletes a component from the board, and unbonds all nodes
+	 * @param comp component
+	 */
 	public delete(comp: T | Wire): boolean {
 		if (comp == undefined)
 			return false;
-		comp.disconnect();
+		let
+			list = this.disconnect(comp);
 		comp.remove();
+		list.forEach(id => {
+			let
+				nc = this.get(id);
+			nc && (nc.type == Type.WIRE) && this.delete(nc)
+		})
 		return (comp.type == Type.WIRE) ?
 			this.wireMap.delete(comp.id) :
 			this.itemMap.delete(comp.id)
 	}
 
+	/**
+	 * @description gets all bonds of a component
+	 * @param item component
+	 */
 	public itemBonds(item: T | Wire): Bond[] | undefined {
 		let
 			bonds = this.itemMap.get(item.id)?.b || this.wireMap.get(item.id)?.b;
@@ -149,12 +167,24 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return bonds
 	}
 
+	/**
+	 * @description returns the bonds of a node
+	 * @param item board component
+	 * @param node 0-based node
+	 */
 	public nodeBonds(item: T | Wire, node: number): Bond | undefined {
 		let
 			bonds = this.itemBonds(item);
 		return bonds && bonds[node]
 	}
 
+	/**
+	 * @description bonds two components two-way
+	 * @param thisObj start component
+	 * @param node 0-based node
+	 * @param ic component to bond to
+	 * @param icNode component node
+	 */
 	public bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean {
 		if (!this.hasItem(thisObj.id) || !this.hasItem(ic.id))
 			return false;
@@ -185,6 +215,12 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return true
 	}
 
+	/**
+		 * @description unbonds a node from a component
+		 * @param thisObj component to unbond
+		 * @param node 0-base node to unbond
+		 * @param id component to unbond from
+		 */
 	public unbond(thisObj: T | Wire, node: number, id: string): IUnbondData | undefined {
 		return unbond(this, thisObj.id, node, id, true)
 	}
@@ -213,9 +249,20 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return { dir: bond.dir, id: thisObj.id, node: node, bonds: list }
 	}
 
-	public disconnect(thisObj: T | Wire) {
-		for (let node = 0; node < thisObj.count; node++)
-			this.unbondNode(thisObj, node);
+	/**
+	 * @description removes all bonds of a component
+	 * @param comp component to disconnect
+	 * @returns list of removed component's id
+	 */
+	public disconnect(comp: T | Wire): string[] {
+		let
+			list: string[] = [];
+		for (let node = 0; node < comp.count; node++) {
+			let
+				data = this.unbondNode(comp, node);
+			data && data.bonds.forEach(b => list.push(b.id));
+		}
+		return list
 	}
 
 	public getAllBonds(): string[] {
@@ -252,15 +299,15 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		if (!item || !wire || wire.type != Type.WIRE)
 			return;
 		let
-			bond = wire.nodeBonds(node);
+			bond = this.nodeBonds(wire, node);
 		if (bond) {
 			//fix this from index
 			bond.from.ndx = newIndex;
 			//fix all incoming indexes
 			bond.to.forEach(bond => {
 				let
-					compTo = wire.container.get(bond.id),
-					compToBonds = compTo?.nodeBonds(bond.ndx);
+					compTo = <T | Wire>wire.container.get(bond.id),
+					compToBonds = compTo && this.nodeBonds(compTo, bond.ndx);
 				compToBonds?.to
 					.filter(b => b.id == wire.id)
 					.forEach(b => {
@@ -300,6 +347,11 @@ function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: 
 	}
 }
 
+/**
+ * @description creates a board component
+ * @param container container
+ * @param options options to create component
+ */
 function createBoardItem<T extends ItemBoard>(container: Container<T>, options: { [x: string]: any; }): T | Wire {
 	let
 		base: IBaseComponent = <any>void 0,

@@ -14,6 +14,9 @@ export default abstract class ItemBase extends Item implements IType {
     constructor(options: {
         [x: string]: any;
     });
+    /**
+     * removes this base component from the board
+     */
     remove(): void;
     /**
      * @description this's called after component is inserted in the DOM

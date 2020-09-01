@@ -19,7 +19,7 @@ export default class Wire extends ItemBoard {
 
 	get lastLine(): number { return this.edit ? this.$.lines.length : 0 }
 
-	get isOpen(): boolean { return !this.nodeBonds(0) || !this.nodeBonds(this.last) }
+	get isOpen(): boolean { return !this.container.nodeBonds(this, 0) || !this.container.nodeBonds(this, this.last) }
 
 	public rect(): Rect { return Rect.create(this.box) }
 
@@ -117,7 +117,7 @@ export default class Wire extends ItemBoard {
 		}
 		if (!(node == 0 || node == this.last)) {
 			let
-				bond = this.nodeBonds(node),
+				bond = this.container.nodeBonds(this, node),
 				p = this.$.points[node];
 			bond && bond.to.forEach(b => {
 				this.container.get(b.id)?.setNode(b.ndx, p)
@@ -142,7 +142,7 @@ export default class Wire extends ItemBoard {
 		this.edit = false;
 		for (let i = 0, p = this.$.points[i], end = this.last; i <= end; p = this.$.points[++i]) {
 			//avoid circular reference, bonded start/end nodes are refresed by EC's nodes
-			if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.nodeBonds(i))) {
+			if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.container.nodeBonds(this, i))) {
 				this.setNode(i, Point.translateBy(p, dx, dy));
 			}
 		}
@@ -179,7 +179,7 @@ export default class Wire extends ItemBoard {
 
 	public highlightable(node: number): boolean {
 		//any Wire node and that it is not a start|end bonded node
-		return !((node == 0 || node == this.last) && this.nodeBonds(node))
+		return !((node == 0 || node == this.last) && this.container.nodeBonds(this, node))
 	}
 
 	protected setPoints(points: IPoint[]): Wire {
@@ -319,7 +319,7 @@ function deleteWireNode(wire: Wire, $: IWireDefaults, node: number): Point | und
 	//first or last node cannot be deleted, only middle nodes
 	if (node <= 0 || node >= last || isNaN(node))
 		return;
-	wire.unbondNode(node);
+	wire.container.unbondNode(wire, node);
 	wire.container.moveBond(wire.id, last, last - 1);
 	let
 		p = $.points.splice(node, 1)[0];

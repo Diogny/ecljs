@@ -44,6 +44,9 @@ var ItemBase = /** @class */ (function (_super) {
     ItemBase.prototype.setVisible = function (value) {
         return dab_1.tCl(this.g, "hide", !_super.prototype.setVisible.call(this, value).visible), this;
     };
+    /**
+     * removes this base component from the board
+     */
     ItemBase.prototype.remove = function () {
         var _a;
         (_a = this.g.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(this.g);

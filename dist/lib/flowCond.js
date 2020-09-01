@@ -47,6 +47,9 @@ var FlowConditional = /** @class */ (function (_super) {
         this.$.false && this.$.false.setVisible(this.$.false.node == -1 ? false : value);
         return this;
     };
+    /**
+     * removes this flowchart conditional from the board
+     */
     FlowConditional.prototype.remove = function () {
         var _a, _b;
         //delete label if any first

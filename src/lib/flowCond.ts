@@ -63,7 +63,7 @@ export default class FlowConditional extends FlowComp {
 	 */
 	public setLabel(cond: boolean, node: number) {
 		let
-			label = this.getLabel(cond);
+			label = getLabel(this.$, cond);
 		if (label && node >= -1 && node < this.count) {
 			label.node = node;
 			positionLabel(this, label)
@@ -71,11 +71,14 @@ export default class FlowConditional extends FlowComp {
 	}
 
 	/**
-	 * @description gets label associated with a Condition
+	 * @description returns the node associated with a label
 	 * @param cond true for true label, false for false label
+	 * @returns 0-based node, or -1 if it's not linked
 	 */
-	public getLabel(cond: boolean): ConditionalLabel | undefined {
-		return <ConditionalLabel>this.$[String(!!cond)]
+	public nodeLabel(cond: boolean): number {
+		let
+			label = getLabel(this.$, cond);
+		return (label == undefined) ? -1 : label.node
 	}
 
 	/**
@@ -96,6 +99,10 @@ export default class FlowConditional extends FlowComp {
 
 }
 
+function getLabel($: IFlowCondDefaults, cond: boolean): ConditionalLabel | undefined {
+	return <ConditionalLabel>$[String(!!cond)]
+}
+
 function positionLabel(fl: FlowConditional, label: ConditionalLabel) {
 	if (label.setVisible(label.node != -1).visible) {
 		let
@@ -107,9 +114,9 @@ function positionLabel(fl: FlowConditional, label: ConditionalLabel) {
 			x = fl.x,
 			y = fl.y,
 			n = label.node,
-			pad = 5;
-		(!(n & 1) && (x += w2 + pad), 1) || (x += n == 1 ? w + pad : -wh.width - pad);
-		((n & 1) && (y += h2 - wh.height - pad), 1) || (x += n == 0 ? -wh.height - pad : h + pad);
+			pad = 7;
+		(!(n & 1) && (x += w2 + pad, 1)) || (x += (n == 1 ? w + pad : -wh.width - pad));
+		((n & 1) && (y += h2 - pad, 1)) || (y += (n == 0 ? - pad : h + pad));
 		label.move(x, y)
 	}
 }

@@ -2,7 +2,6 @@ import Rect from "dabbjs/dist/lib/rect";
 import { IFlowCondDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
 import Flowchart from "./flowchart";
-import ConditionalLabel from "./flowCondLabel";
 export default class FlowConditional extends FlowComp {
     protected $: IFlowCondDefaults;
     /**
@@ -29,10 +28,11 @@ export default class FlowConditional extends FlowComp {
      */
     setLabel(cond: boolean, node: number): void;
     /**
-     * @description gets label associated with a Condition
+     * @description returns the node associated with a label
      * @param cond true for true label, false for false label
+     * @returns 0-based node, or -1 if it's not linked
      */
-    getLabel(cond: boolean): ConditionalLabel | undefined;
+    nodeLabel(cond: boolean): number;
     /**
      * @description refreshes flowchart location, size, and updates bonded cmoponents
      */

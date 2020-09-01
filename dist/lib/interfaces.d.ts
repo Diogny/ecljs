@@ -375,3 +375,39 @@ export interface IBondNode {
  * - 1 - dest bond. this's the way back in this bond relationship
  */
 export declare type BondDir = 0 | 1;
+/**
+ * unbond origin/start data
+ */
+export interface IUnbondStart {
+    /**
+    * Direction of the origin/start object
+    */
+    dir: BondDir;
+    /**
+     * origin/start unbond id
+     */
+    id: string;
+    /**
+     * origin/start unbond node
+     */
+    node: number;
+}
+/**
+ * unbond data with origin/start and dest info data
+ */
+export interface IUnbondData extends IUnbondStart {
+    toId: string;
+    toNode: number;
+}
+/**
+ * unbond data for a full unbond node
+ */
+export interface IUnbondNodeData extends IUnbondStart {
+    /**
+     * list unbonded links with id, node
+     */
+    bonds: {
+        id: string;
+        node: number;
+    }[];
+}

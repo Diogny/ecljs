@@ -60,18 +60,20 @@ var FlowConditional = /** @class */ (function (_super) {
      * @param node 0-base node, or -1 to unlink/hide
      */
     FlowConditional.prototype.setLabel = function (cond, node) {
-        var label = this.getLabel(cond);
+        var label = getLabel(this.$, cond);
         if (label && node >= -1 && node < this.count) {
             label.node = node;
             positionLabel(this, label);
         }
     };
     /**
-     * @description gets label associated with a Condition
+     * @description returns the node associated with a label
      * @param cond true for true label, false for false label
+     * @returns 0-based node, or -1 if it's not linked
      */
-    FlowConditional.prototype.getLabel = function (cond) {
-        return this.$[String(!!cond)];
+    FlowConditional.prototype.nodeLabel = function (cond) {
+        var label = getLabel(this.$, cond);
+        return (label == undefined) ? -1 : label.node;
     };
     /**
      * @description refreshes flowchart location, size, and updates bonded cmoponents
@@ -89,11 +91,14 @@ var FlowConditional = /** @class */ (function (_super) {
     return FlowConditional;
 }(flowComp_1.default));
 exports.default = FlowConditional;
+function getLabel($, cond) {
+    return $[String(!!cond)];
+}
 function positionLabel(fl, label) {
     if (label.setVisible(label.node != -1).visible) {
-        var wh = label.g.getBoundingClientRect(), w = fl.size.width, w2 = w / 2, h = fl.size.height, h2 = h / 2, x = fl.x, y = fl.y, n = label.node, pad = 5;
-        (!(n & 1) && (x += w2 + pad), 1) || (x += n == 1 ? w + pad : -wh.width - pad);
-        ((n & 1) && (y += h2 - wh.height - pad), 1) || (x += n == 0 ? -wh.height - pad : h + pad);
+        var wh = label.g.getBoundingClientRect(), w = fl.size.width, w2 = w / 2, h = fl.size.height, h2 = h / 2, x = fl.x, y = fl.y, n = label.node, pad = 7;
+        (!(n & 1) && (x += w2 + pad, 1)) || (x += (n == 1 ? w + pad : -wh.width - pad));
+        ((n & 1) && (y += h2 - pad, 1)) || (y += (n == 0 ? -pad : h + pad));
         label.move(x, y);
     }
 }

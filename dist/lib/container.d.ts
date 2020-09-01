@@ -1,5 +1,5 @@
 import Rect from "dabbjs/dist/lib/rect";
-import { IBaseComponent, IContainerDefaults, Base, BondDir } from "./interfaces";
+import { IBaseComponent, IContainerDefaults, Base, BondDir, IUnbondNodeData, IUnbondData } from "./interfaces";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
@@ -61,17 +61,14 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     nodeBonds(item: T | Wire, node: number): Bond | undefined;
     bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean;
     protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, dir: BondDir): boolean;
-    unbond(thisObj: T | Wire, node: number, id: string): BondDir | undefined;
+    unbond(thisObj: T | Wire, node: number, id: string): IUnbondData | undefined;
     /**
      * @description unbonds a component node
      * @param thisObj component to be unbonded
      * @param node 0-based node
      * @returns undefined if not bonded, otherwise thisObj::Bond.dir and list of disconnected wire ids
      */
-    unbondNode(thisObj: T | Wire, node: number): {
-        dir: BondDir;
-        ids: string[];
-    } | undefined;
+    unbondNode(thisObj: T | Wire, node: number): IUnbondNodeData | undefined;
     disconnect(thisObj: T | Wire): void;
     getAllBonds(): string[];
     moveBond(id: string, node: number, newIndex: number): void;

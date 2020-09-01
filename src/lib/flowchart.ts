@@ -6,7 +6,7 @@ import FlowConditional from "./flowCond";
 import FlowStart from "./flowstart";
 import FlowEnd from "./flowend";
 import FlowInOut from "./flowInOut";
-import { BondDir, ContainerMapType } from "./interfaces";
+import { BondDir, ContainerMapType, IUnbondNodeData, IUnbondData } from "./interfaces";
 import { getItem } from "./extra";
 
 /**
@@ -58,43 +58,68 @@ export default class Flowchart extends Container<FlowComp>{
 		return false
 	}
 
-	public unbond(thisObj: FlowComp | Wire, node: number, id: string): BondDir | undefined {
+	public unbond(thisObj: FlowComp | Wire, node: number, id: string): IUnbondData | undefined {
 		let
-			dir = super.unbond(thisObj, node, id);
-		if (dir != undefined) {
+			data = super.unbond(thisObj, node, id);
+		if (data != undefined) {
 			let
 				icId = <ContainerMapType<FlowComp | Wire>>getItem(this, id);
-			decrement(dir, thisObj, thisObj instanceof FlowComp, icId.t, icId.t instanceof FlowComp);
-			return dir
+			decrement(<IUnbondData>data, thisObj, thisObj instanceof FlowComp, icId.t, icId.t instanceof FlowComp);
+			return data
 		}
 	}
 
-	public unbondNode(thisObj: FlowComp | Wire, node: number): { dir: BondDir, ids: string[] } | undefined {
+	/**
+	 * @description fully unbonds a component node
+	 * @param thisObj component
+	 * @param node 0-base node
+	 * @returns an structure with unbonded information
+	 */
+	public unbondNode(thisObj: FlowComp | Wire, node: number): IUnbondNodeData | undefined {
 		let
-			bond = super.unbondNode(thisObj, node);
-		if (bond != undefined) {
+			res = super.unbondNode(thisObj, node);
+		if (res != undefined) {
 			let
 				objflow = thisObj instanceof FlowComp,
-				dir = bond.dir;
+				data = <IUnbondData>{
+					dir: res.dir,
+					id: res.id,
+					node: res.node
+				};
 			//the should be only one connection for flowcharts
-			bond.ids.forEach(id => {
+			res.bonds.forEach((obj) => {
 				let
-					icId = <ContainerMapType<FlowComp | Wire>>getItem(this, id);
-				decrement(dir, thisObj, objflow, icId.t, icId.t instanceof FlowComp)
+					icId = <ContainerMapType<FlowComp | Wire>>getItem(this, obj.id);
+				data.toId = obj.id;
+				data.toNode = obj.node;
+				decrement(data, thisObj, objflow, icId.t, icId.t instanceof FlowComp)
 			})
 		}
-		return bond
+		return res
 	}
 
 }
 
-function decrement(dir: BondDir, obj: FlowComp | Wire, objFlow: boolean, ic: FlowComp | Wire, icFlow: boolean) {
+function decrement(data: IUnbondData, obj: FlowComp | Wire, objFlow: boolean, ic: FlowComp | Wire, icFlow: boolean) {
 	let
-		propName = (direction: BondDir) => direction == 0 ? "outs" : "ins";
+		propName = (direction: BondDir) => direction == 0 ? "outs" : "ins",
+		condLabel = (fl: FlowConditional, node: number) => {
+			if (!(fl instanceof FlowConditional))
+				return;
+			let
+				nodeLabel = fl.nodeLabel(false);
+			if (nodeLabel == node) {
+				fl.setLabel(false, -1)
+			} else if ((nodeLabel = fl.nodeLabel(true)) == node) {
+				fl.setLabel(true, -1)
+			}
+		};
 	if (objFlow) {
-		(<any>obj).$[propName(dir)]--;
+		(<any>obj).$[propName(data.dir)]--;
+		condLabel(<FlowConditional>obj, data.node)
 	}
 	else if (icFlow) {
-		(<any>ic).$[propName(<BondDir>(dir ^ 1))]--;
+		(<any>ic).$[propName(<BondDir>(data.dir ^ 1))]--;
+		condLabel(<FlowConditional>ic, data.toNode)
 	}
 }

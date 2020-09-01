@@ -10,7 +10,7 @@ var Label = /** @class */ (function (_super) {
     function Label(options) {
         var _this = _super.call(this, options) || this;
         dab_1.aChld(_this.g, _this.$.svgtext = utils_1.tag("text", "", {}));
-        _this.setText(_this.$.text);
+        _this.$.svgtext.innerHTML = _this.$.text;
         return _this;
     }
     Object.defineProperty(Label.prototype, "type", {

@@ -201,7 +201,7 @@ var Container = /** @class */ (function (_super) {
      * @returns undefined if not bonded, otherwise thisObj::Bond.dir and list of disconnected wire ids
      */
     Container.prototype.unbondNode = function (thisObj, node) {
-        var item = extra_1.getItem(this, thisObj.id), bond = item && item.b[node], link = void 0, disconnected = [];
+        var item = extra_1.getItem(this, thisObj.id), bond = item && item.b[node], link = void 0, list = [];
         if (!bond || !item)
             return;
         //try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
@@ -209,9 +209,9 @@ var Container = /** @class */ (function (_super) {
             link = bond.to[0];
             //arbitrarily unbond a node, no matter its direction, so "origin" must be true to go the other way
             unbond(this, link.id, link.ndx, thisObj.id, true);
-            disconnected.push(link.id);
+            list.push({ id: link.id, node: link.ndx });
         }
-        return { dir: bond.dir, ids: disconnected };
+        return { dir: bond.dir, id: thisObj.id, node: node, bonds: list };
     };
     Container.prototype.disconnect = function (thisObj) {
         for (var node = 0; node < thisObj.count; node++)
@@ -275,8 +275,8 @@ function unbond(container, id, node, toId, origin) {
         if (origin) {
             unbond(container, toId, b.ndx, id, false);
         }
-        //return only [id] bond direction for reference
-        return bond.dir;
+        //return [id] bond direction for reference
+        return { dir: bond.dir, id: id, node: node, toId: toId, toNode: b.ndx };
     }
 }
 function createBoardItem(container, options) {

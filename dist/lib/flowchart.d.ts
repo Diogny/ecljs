@@ -1,7 +1,7 @@
 import Container from "./container";
 import FlowComp from "./flowComp";
 import Wire from "./wire";
-import { BondDir } from "./interfaces";
+import { IUnbondNodeData, IUnbondData } from "./interfaces";
 /**
  * @description Flowchart component container
  */
@@ -12,9 +12,12 @@ export default class Flowchart extends Container<FlowComp> {
         [x: string]: any;
     }): FlowComp;
     bond(thisObj: FlowComp | Wire, thisNode: number, ic: FlowComp | Wire, icNode: number): boolean;
-    unbond(thisObj: FlowComp | Wire, node: number, id: string): BondDir | undefined;
-    unbondNode(thisObj: FlowComp | Wire, node: number): {
-        dir: BondDir;
-        ids: string[];
-    } | undefined;
+    unbond(thisObj: FlowComp | Wire, node: number, id: string): IUnbondData | undefined;
+    /**
+     * @description fully unbonds a component node
+     * @param thisObj component
+     * @param node 0-base node
+     * @returns an structure with unbonded information
+     */
+    unbondNode(thisObj: FlowComp | Wire, node: number): IUnbondNodeData | undefined;
 }

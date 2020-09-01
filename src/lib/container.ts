@@ -1,5 +1,5 @@
 import Rect from "dabbjs/dist/lib/rect";
-import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base, IComponent, BondDir } from "./interfaces";
+import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base, IComponent, BondDir, IUnbondNodeData, IUnbondData } from "./interfaces";
 import Bond from "./bonds";
 import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
@@ -182,7 +182,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		return true
 	}
 
-	public unbond(thisObj: T | Wire, node: number, id: string): BondDir | undefined {
+	public unbond(thisObj: T | Wire, node: number, id: string): IUnbondData | undefined {
 		return unbond(this, thisObj.id, node, id, true)
 	}
 
@@ -192,12 +192,12 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	 * @param node 0-based node
 	 * @returns undefined if not bonded, otherwise thisObj::Bond.dir and list of disconnected wire ids
 	 */
-	public unbondNode(thisObj: T | Wire, node: number): { dir: BondDir, ids: string[] } | undefined {
+	public unbondNode(thisObj: T | Wire, node: number): IUnbondNodeData | undefined {
 		let
 			item = getItem(this, thisObj.id),
 			bond = item && item.b[node],
 			link: IBondNode = <any>void 0,
-			disconnected: string[] = [];
+			list: { id: string, node: number }[] = [];
 		if (!bond || !item)
 			return;
 		//try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
@@ -205,9 +205,9 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			link = bond.to[0];
 			//arbitrarily unbond a node, no matter its direction, so "origin" must be true to go the other way
 			unbond(this, link.id, link.ndx, thisObj.id, true);
-			disconnected.push(link.id)
+			list.push({ id: link.id, node: link.ndx })
 		}
-		return { dir: bond.dir, ids: disconnected }
+		return { dir: bond.dir, id: thisObj.id, node: node, bonds: list }
 	}
 
 	public disconnect(thisObj: T | Wire) {
@@ -281,7 +281,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
  * @returns BondDir of id Bond is any or undefined for not bonded
  */
 function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: number, toId: string, origin: boolean)
-	: BondDir | undefined {
+	: IUnbondData | undefined {
 	let
 		item = getItem(container, id),
 		bond = item && item.b[node],
@@ -292,8 +292,8 @@ function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: 
 		if (origin) {
 			unbond(container, toId, b.ndx, id, false);
 		}
-		//return only [id] bond direction for reference
-		return bond.dir
+		//return [id] bond direction for reference
+		return { dir: bond.dir, id: id, node: node, toId: toId, toNode: b.ndx }
 	}
 }
 

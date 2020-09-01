@@ -24,7 +24,7 @@ export default class Label extends ItemBase {
 	constructor(options: { [x: string]: any; }) {
 		super(options);
 		aChld(this.g, this.$.svgtext = <SVGTextElement>tag("text", "", {}));
-		this.setText(this.$.text)
+		this.$.svgtext.innerHTML = this.$.text
 	}
 
 	public move(x: number, y: number): Label {

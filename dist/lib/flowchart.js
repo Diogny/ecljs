@@ -64,35 +64,59 @@ var Flowchart = /** @class */ (function (_super) {
         return false;
     };
     Flowchart.prototype.unbond = function (thisObj, node, id) {
-        var dir = _super.prototype.unbond.call(this, thisObj, node, id);
-        if (dir != undefined) {
+        var data = _super.prototype.unbond.call(this, thisObj, node, id);
+        if (data != undefined) {
             var icId = extra_1.getItem(this, id);
-            decrement(dir, thisObj, thisObj instanceof flowComp_1.default, icId.t, icId.t instanceof flowComp_1.default);
-            return dir;
+            decrement(data, thisObj, thisObj instanceof flowComp_1.default, icId.t, icId.t instanceof flowComp_1.default);
+            return data;
         }
     };
+    /**
+     * @description fully unbonds a component node
+     * @param thisObj component
+     * @param node 0-base node
+     * @returns an structure with unbonded information
+     */
     Flowchart.prototype.unbondNode = function (thisObj, node) {
         var _this = this;
-        var bond = _super.prototype.unbondNode.call(this, thisObj, node);
-        if (bond != undefined) {
-            var objflow_1 = thisObj instanceof flowComp_1.default, dir_1 = bond.dir;
+        var res = _super.prototype.unbondNode.call(this, thisObj, node);
+        if (res != undefined) {
+            var objflow_1 = thisObj instanceof flowComp_1.default, data_1 = {
+                dir: res.dir,
+                id: res.id,
+                node: res.node
+            };
             //the should be only one connection for flowcharts
-            bond.ids.forEach(function (id) {
-                var icId = extra_1.getItem(_this, id);
-                decrement(dir_1, thisObj, objflow_1, icId.t, icId.t instanceof flowComp_1.default);
+            res.bonds.forEach(function (obj) {
+                var icId = extra_1.getItem(_this, obj.id);
+                data_1.toId = obj.id;
+                data_1.toNode = obj.node;
+                decrement(data_1, thisObj, objflow_1, icId.t, icId.t instanceof flowComp_1.default);
             });
         }
-        return bond;
+        return res;
     };
     return Flowchart;
 }(container_1.default));
 exports.default = Flowchart;
-function decrement(dir, obj, objFlow, ic, icFlow) {
-    var propName = function (direction) { return direction == 0 ? "outs" : "ins"; };
+function decrement(data, obj, objFlow, ic, icFlow) {
+    var propName = function (direction) { return direction == 0 ? "outs" : "ins"; }, condLabel = function (fl, node) {
+        if (!(fl instanceof flowCond_1.default))
+            return;
+        var nodeLabel = fl.nodeLabel(false);
+        if (nodeLabel == node) {
+            fl.setLabel(false, -1);
+        }
+        else if ((nodeLabel = fl.nodeLabel(true)) == node) {
+            fl.setLabel(true, -1);
+        }
+    };
     if (objFlow) {
-        obj.$[propName(dir)]--;
+        obj.$[propName(data.dir)]--;
+        condLabel(obj, data.node);
     }
     else if (icFlow) {
-        ic.$[propName((dir ^ 1))]--;
+        ic.$[propName((data.dir ^ 1))]--;
+        condLabel(ic, data.toNode);
     }
 }

@@ -10,10 +10,19 @@ var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
     /**
      * @description creates a library component container
-     * @param store component store
+     * @param options configurable options, see below:
+     *
+     * - store: CompStore;  component store
      */
-    function Container(store) {
-        return _super.call(this, { store: store }) || this;
+    function Container(options) {
+        var _this = _super.call(this, options) || this;
+        //non-configurable properties
+        _this.$.counters = {};
+        _this.$.components = new Map();
+        _this.$.itemMap = new Map();
+        _this.$.wireMap = new Map();
+        _this.$.selected = [];
+        return _this;
     }
     Object.defineProperty(Container.prototype, "counters", {
         get: function () { return this.$.counters; },
@@ -77,11 +86,6 @@ var Container = /** @class */ (function (_super) {
     Container.prototype.defaults = function () {
         return {
             store: void 0,
-            counters: {},
-            components: new Map(),
-            itemMap: new Map(),
-            wireMap: new Map(),
-            selected: [],
         };
     };
     Container.prototype.root = function (name) {

@@ -37,20 +37,23 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 
 	/**
 	 * @description creates a library component container
-	 * @param store component store
+	 * @param options configurable options, see below:
+	 * 
+	 * - store: CompStore;  component store
 	 */
-	constructor(store: CompStore) {
-		super({ store: store })
+	constructor(options: { [x: string]: any; }) {//store: CompStore
+		super(options);
+		//non-configurable properties
+		this.$.counters = {};
+		this.$.components = new Map();
+		this.$.itemMap = new Map();
+		this.$.wireMap = new Map();
+		this.$.selected = []
 	}
 
 	public defaults(): IContainerDefaults<T> {
-		return {
+		return <IContainerDefaults<T>>{
 			store: <any>void 0,
-			counters: {},
-			components: new Map(),
-			itemMap: new Map(),
-			wireMap: new Map(),
-			selected: [],
 		}
 	}
 

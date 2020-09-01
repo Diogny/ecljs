@@ -8,6 +8,7 @@ import ItemBoard from "./itemsBoard";
  */
 export default abstract class FlowComp extends ItemBoard {
     protected $: IFlowChartDefaults;
+    container: Flowchart;
     get type(): Type;
     get last(): number;
     get count(): number;

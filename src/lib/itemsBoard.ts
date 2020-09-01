@@ -1,6 +1,6 @@
 import { IPoint } from 'dabbjs/dist/lib/interfaces';
 import { tCl, attr, extend, isFn, obj } from 'dabbjs/dist/lib/dab';
-import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent, BondDir, IUnbondNodeData, IUnbondData } from './interfaces';
+import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent, IUnbondNodeData, IUnbondData } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';

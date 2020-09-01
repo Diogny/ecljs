@@ -35,9 +35,13 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     get(id: string): T | Wire | undefined;
     /**
      * @description creates a library component container
-     * @param store component store
+     * @param options configurable options, see below:
+     *
+     * - store: CompStore;  component store
      */
-    constructor(store: CompStore);
+    constructor(options: {
+        [x: string]: any;
+    });
     defaults(): IContainerDefaults<T>;
     root(name: string): IBaseComponent | undefined;
     hasItem(id: string): boolean;

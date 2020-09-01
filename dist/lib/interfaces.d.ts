@@ -10,6 +10,7 @@ import Bond from "./bonds";
 import Wire from "./wire";
 import CompStore from "./components";
 import ConditionalLabel from "./flowCondLabel";
+import { FlowComp } from "src";
 export declare enum Type {
     /**
      * Undefined/unknown type
@@ -102,6 +103,10 @@ export interface IContainerDefaults<T extends ItemBoard> {
     itemMap: Map<string, ContainerMapType<T>>;
     wireMap: Map<string, ContainerMapType<Wire>>;
     selected: (T | Wire)[];
+}
+export declare type IFlowResizePolicy = "grow" | "expand";
+export interface IFlowchartDefaults extends IContainerDefaults<FlowComp> {
+    reSizePolicy: IFlowResizePolicy;
 }
 export declare type IEqual = (p: Point | Size | Rect | Unit) => boolean;
 export interface IPropHookProp {

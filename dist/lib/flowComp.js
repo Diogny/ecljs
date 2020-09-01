@@ -79,6 +79,11 @@ var FlowComp = /** @class */ (function (_super) {
                     value.width = m;
                     value.height = m;
                 }
+                if (this.container.reSizePolicy == "grow") {
+                    s = this.size;
+                    this.$.x -= value.width - s.width;
+                    this.$.y -= value.height - s.height;
+                }
                 this.$.size = value;
                 //internal adjust node points, this calls refresh() inside
                 this.onResize(value);

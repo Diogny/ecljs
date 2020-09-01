@@ -9,6 +9,7 @@ var flowstart_1 = tslib_1.__importDefault(require("./flowstart"));
 var flowend_1 = tslib_1.__importDefault(require("./flowend"));
 var flowInOut_1 = tslib_1.__importDefault(require("./flowInOut"));
 var extra_1 = require("./extra");
+var dab_1 = require("dabbjs/dist/lib/dab");
 /**
  * @description Flowchart component container
  */
@@ -27,6 +28,18 @@ var Flowchart = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Flowchart.prototype, "reSizePolicy", {
+        /**
+         * Returns the resize policy for this flowchart container
+         */
+        get: function () { return this.$.reSizePolicy; },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * @description creates a flowchart component
+     * @param options customizable options
+     */
     Flowchart.prototype.createItem = function (options) {
         switch (options.name) {
             case "proc":
@@ -95,6 +108,11 @@ var Flowchart = /** @class */ (function (_super) {
             });
         }
         return res;
+    };
+    Flowchart.prototype.defaults = function () {
+        return dab_1.extend(_super.prototype.defaults.call(this), {
+            reSizePolicy: "expand",
+        });
     };
     return Flowchart;
 }(container_1.default));

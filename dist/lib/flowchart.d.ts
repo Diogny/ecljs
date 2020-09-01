@@ -1,13 +1,22 @@
 import Container from "./container";
 import FlowComp from "./flowComp";
 import Wire from "./wire";
-import { IUnbondNodeData, IUnbondData } from "./interfaces";
+import { IUnbondNodeData, IUnbondData, IFlowchartDefaults, IFlowResizePolicy } from "./interfaces";
 /**
  * @description Flowchart component container
  */
 export default class Flowchart extends Container<FlowComp> {
+    protected $: IFlowchartDefaults;
     get name(): string;
     get dir(): boolean;
+    /**
+     * Returns the resize policy for this flowchart container
+     */
+    get reSizePolicy(): IFlowResizePolicy;
+    /**
+     * @description creates a flowchart component
+     * @param options customizable options
+     */
     createItem(options: {
         [x: string]: any;
     }): FlowComp;
@@ -20,4 +29,5 @@ export default class Flowchart extends Container<FlowComp> {
      * @returns an structure with unbonded information
      */
     unbondNode(thisObj: FlowComp | Wire, node: number): IUnbondNodeData | undefined;
+    defaults(): IFlowchartDefaults;
 }

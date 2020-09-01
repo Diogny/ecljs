@@ -58,8 +58,13 @@ export default abstract class FlowComp extends ItemBoard {
 				}
 				if (this.container.reSizePolicy == "grow") {
 					s = this.size;
-					this.$.x -= value.width - s.width;
-					this.$.y -= value.height - s.height;
+					let
+						sx = value.width - s.width,
+						sy = value.height - s.height;
+					this.$.x -= sx;
+					this.$.y -= sy;
+					value.width += sx;
+					value.height += sy
 				}
 				this.$.size = value;
 				//internal adjust node points, this calls refresh() inside

@@ -75,7 +75,7 @@ export default class Flowchart extends Container<FlowComp>{
 			data = super.unbond(thisObj, node, id);
 		if (data != undefined) {
 			let
-				icId = <ContainerMapType<FlowComp | Wire>>getItem(this, id);
+				icId = <ContainerMapType<FlowComp | Wire>>getItem(this.$, id);
 			decrement(<IUnbondData>data, thisObj, thisObj instanceof FlowComp, icId.t, icId.t instanceof FlowComp);
 			return data
 		}
@@ -101,7 +101,7 @@ export default class Flowchart extends Container<FlowComp>{
 			//the should be only one connection for flowcharts
 			res.bonds.forEach((obj) => {
 				let
-					icId = <ContainerMapType<FlowComp | Wire>>getItem(this, obj.id);
+					icId = <ContainerMapType<FlowComp | Wire>>getItem(this.$, obj.id);
 				data.toId = obj.id;
 				data.toNode = obj.node;
 				decrement(data, thisObj, objflow, icId.t, icId.t instanceof FlowComp)

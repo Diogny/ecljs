@@ -1,8 +1,7 @@
 import { tag } from "dabbjs/dist/lib/utils"
 import Size from "dabbjs/dist/lib/size";
-import { INodeInfo, ContainerMapType } from "./interfaces";
+import { INodeInfo, ContainerMapType, IContainerDefaults } from "./interfaces";
 import ItemBoard from "./itemsBoard";
-import Container from "./container";
 import Wire from "./wire";
 
 export const createText = (attr: any, text: string): SVGTextElement => {
@@ -47,6 +46,6 @@ export const flowNodes = (list: INodeInfo[], size: Size) => {
 
 
 export const getItem =
-	<T extends ItemBoard>(container: Container<T>, id: string): ContainerMapType<T | Wire> | undefined => {
-		return container.itemMap.get(id) || container.wireMap.get(id)
+	<T extends ItemBoard>($: IContainerDefaults<T>, id: string): ContainerMapType<T | Wire> | undefined => {
+		return $.itemMap.get(id) || $.wireMap.get(id)
 	}

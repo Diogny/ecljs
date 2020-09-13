@@ -5,6 +5,7 @@ import ItemBoard from "./itemsBoard";
 import Wire from "./wire";
 import CompStore from "./components";
 import { getItem } from "./extra";
+import { dP } from "dabbjs/dist/lib/dab";
 
 export default abstract class Container<T extends ItemBoard> extends Base {
 
@@ -14,20 +15,14 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	abstract get dir(): boolean;
 	abstract createItem(options: { [x: string]: any; }): T;
 
-	get counters(): { [x: string]: any; } { return this.$.counters }
-	get components(): Map<string, IBaseComponent> { return this.$.components }
-
-	get itemMap(): Map<string, { t: T, b: Bond[], c: number }> { return this.$.itemMap }
-	get wireMap(): Map<string, { t: Wire, b: Bond[], c: number }> { return this.$.wireMap }
-
 	get selected(): (T | Wire)[] { return this.$.selected }
 
-	get items(): T[] { return Array.from(this.itemMap.values()).map(item => item.t) }
-	get wires(): Wire[] { return Array.from(this.wireMap.values()).map(item => item.t) }
+	get items(): T[] { return Array.from(this.$.itemMap.values()).map(item => item.t) }
+	get wires(): Wire[] { return Array.from(this.$.wireMap.values()).map(item => item.t) }
 	get all(): (T | Wire)[] { return (this.items as (T | Wire)[]).concat(this.wires) }
 
-	get empty(): boolean { return !(this.wireMap.size || this.itemMap.size) }
-	get size(): number { return this.itemMap.size + this.wireMap.size }
+	get empty(): boolean { return !(this.$.wireMap.size || this.$.itemMap.size) }
+	get size(): number { return this.$.itemMap.size + this.$.wireMap.size }
 
 	get store(): CompStore { return this.$.store }
 
@@ -35,9 +30,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	 * @description gets the component
 	 * @param id component's id
 	 */
-	public get(id: string): T | Wire | undefined {
-		return this.itemMap.get(id)?.t || this.wireMap.get(id)?.t
-	}
+	public get(id: string): T | Wire | undefined { return getItem(this.$, id)?.t }
 
 	/**
 	 * @description creates a library component container
@@ -62,10 +55,10 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	}
 
 	public root(name: string): IBaseComponent | undefined {
-		return this.components.get(name)
+		return this.$.components.get(name)
 	}
 
-	public hasItem(id: string): boolean { return this.itemMap.has(id) || this.wireMap.has(id); }
+	public hasItem(id: string): boolean { return this.$.itemMap.has(id) || this.$.wireMap.has(id); }
 
 	public selectAll(value: boolean): (T | Wire)[] {
 		return this.$.selected = this.all
@@ -130,7 +123,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	 */
 	public add(options: { [x: string]: any; }): T | Wire {
 		let
-			comp: T | Wire = createBoardItem(this, options);
+			comp: T | Wire = createBoardItem.call(this, this.$, options);
 		// if (comp.type != Type.WIRE && comp.base.library != this.name)
 		// 	throw `component incompatible type`;
 		return comp
@@ -152,8 +145,8 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			nc && (nc.type == Type.WIRE) && this.delete(nc)
 		})
 		return (comp.type == Type.WIRE) ?
-			this.wireMap.delete(comp.id) :
-			this.itemMap.delete(comp.id)
+			this.$.wireMap.delete(comp.id) :
+			this.$.itemMap.delete(comp.id)
 	}
 
 	/**
@@ -162,7 +155,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	 */
 	public itemBonds(item: T | Wire): Bond[] | undefined {
 		let
-			bonds = this.itemMap.get(item.id)?.b || this.wireMap.get(item.id)?.b;
+			bonds = this.$.itemMap.get(item.id)?.b || this.$.wireMap.get(item.id)?.b;
 		//"bonds" cannot be filtered so array node indexes don't get lost
 		return bonds
 	}
@@ -194,7 +187,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 
 	protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, dir: BondDir): boolean {
 		let
-			item = getItem(this, thisObj.id),
+			item = getItem(this.$, thisObj.id),
 			entry = item && item.b[thisNode];
 		if (!item)
 			return false;
@@ -222,7 +215,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		 * @param id component to unbond from
 		 */
 	public unbond(thisObj: T | Wire, node: number, id: string): IUnbondData | undefined {
-		return unbond(this, thisObj.id, node, id, true)
+		return unbond(this.$, thisObj.id, node, id, true)
 	}
 
 	/**
@@ -233,7 +226,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 	 */
 	public unbondNode(thisObj: T | Wire, node: number): IUnbondNodeData | undefined {
 		let
-			item = getItem(this, thisObj.id),
+			item = getItem(this.$, thisObj.id),
 			bond = item && item.b[node],
 			link: IBondNode = <any>void 0,
 			list: { id: string, node: number }[] = [];
@@ -243,7 +236,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 		while (bond.to.length) {
 			link = bond.to[0];
 			//arbitrarily unbond a node, no matter its direction, so "origin" must be true to go the other way
-			unbond(this, link.id, link.ndx, thisObj.id, true);
+			unbond(this.$, link.id, link.ndx, thisObj.id, true);
 			list.push({ id: link.id, node: link.ndx })
 		}
 		return { dir: bond.dir, id: thisObj.id, node: node, bonds: list }
@@ -294,7 +287,7 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 
 	public moveBond(id: string, node: number, newIndex: number) {
 		let
-			item = getItem(this, id),
+			item = getItem(this.$, id),
 			wire = item?.t as Wire;
 		if (!item || !wire || wire.type != Type.WIRE)
 			return;
@@ -330,21 +323,44 @@ export default abstract class Container<T extends ItemBoard> extends Base {
  * @param origin true to unbond the other way back
  * @returns BondDir of id Bond is any or undefined for not bonded
  */
-function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: number, toId: string, origin: boolean)
+function unbond<T extends ItemBoard>($: IContainerDefaults<T>, id: string, node: number, toId: string, origin: boolean)
 	: IUnbondData | undefined {
 	let
-		item = getItem(container, id),
+		item = getItem($, id),
 		bond = item && item.b[node],
 		b = bond?.remove(toId);
 	if (bond && b && item) {
 		delete item.b[node];
 		(--item.c == 0) && (item.b = []);
 		if (origin) {
-			unbond(container, toId, b.ndx, id, false);
+			unbond($, toId, b.ndx, id, false);
 		}
 		//return [id] bond direction for reference
 		return { dir: bond.dir, id: id, node: node, toId: toId, toNode: b.ndx }
 	}
+}
+
+function getBaseComp<T extends ItemBoard>($: IContainerDefaults<T>, name: string) {
+	let
+		that = <Container<T>>this,
+		obj: { [x: string]: any; } = {
+			comp: <IComponent>that.store.find(name)
+		};
+	if (!obj.comp)
+		throw new Error(`unregistered component: ${name}`);
+	if ((obj.tmpl = obj.comp.meta.nameTmpl)) {
+		dP(obj, "count", {
+			get(): number {
+				return $.counters[obj.tmpl]
+			},
+			set(val: number) {
+				$.counters[obj.tmpl] = val
+			}
+		});
+		isNaN(obj.count) && (obj.count = 0)
+	} else
+		obj.count = 0;
+	return obj
 }
 
 /**
@@ -352,19 +368,15 @@ function unbond<T extends ItemBoard>(container: Container<T>, id: string, node: 
  * @param container container
  * @param options options to create component
  */
-function createBoardItem<T extends ItemBoard>(container: Container<T>, options: { [x: string]: any; }): T | Wire {
+function createBoardItem<T extends ItemBoard>($: IContainerDefaults<T>, options: { [x: string]: any; }): T | Wire {
 	let
+		that = <Container<T>>this,
 		base: IBaseComponent = <any>void 0,
 		item: T | Wire = <any>void 0,
 		setBase = () => {
-			if (!(base = <IBaseComponent>container.root(options.name))) {
-				base = {
-					comp: <IComponent>container.store.find(options.name),
-					count: 0
-				};
-				if (!base.comp)
-					throw `unregistered component: ${options.name}`;
-				container.components.set(options.name, base)
+			if (!(base = <IBaseComponent>that.root(options.name))) {
+				base = <IBaseComponent>getBaseComp.call(that, $, options.name);
+				$.components.set(options.name, base)
 			}
 			options.base = base.comp;
 		}
@@ -377,10 +389,12 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 		if (match == null)
 			throw `invalid id: ${options.id}`;
 		//name can't contain numbers at the end,
-		//	id = name[count]    nand0	7408IC2
-		options.name = match[1];
+		//	id = name[count]    nand1	7408IC2	N555IC7	 							doesn't need name
+		//		 C[count]	name could be: capacitor, capacitor-polarized, etc.		needs name
+		if (!$.counters[match[1]])
+			options.name = match[1];
 		count = parseInt(match[2]);
-		if (count <= 0)
+		if (count <= 0 || !options.name)
 			throw `invalid id: ${options.id}`;
 		setBase();
 		//update internal component counter only if count > internal counter
@@ -390,28 +404,28 @@ function createBoardItem<T extends ItemBoard>(container: Container<T>, options: 
 		setBase();
 		base.count++;
 		if (!base.comp.meta.nameTmpl)
-			options.id = `${options.name}${base.count}`		//"{base.comp.name}-{base.count}";
+			options.id = `${options.name}${base.count}`
 		else {
 			options.id = `${base.comp.meta.nameTmpl}${base.count}`
 		}
 	} else
-		throw `invalid component options`;
+		throw new Error('invalid component options');
 
 	!options.onProp && (options.onProp = function () {
 		//this happens when this component is created...
 	});
 
 	if (options.name == "wire") {
-		item = new Wire(container, <any>options);
-		if (container.wireMap.has(item.id))
-			throw `duplicated connector`;
-		container.wireMap.set(item.id, { t: <Wire>item, b: [], c: 0 });
+		item = new Wire(that, <any>options);
+		if ($.wireMap.has(item.id))
+			throw new Error('duplicated connector');
+		$.wireMap.set(item.id, { t: <Wire>item, b: [], c: 0 });
 	} else {
 		options.type = base.comp.type;
-		item = container.createItem(options);
-		if (container.itemMap.has(item.id))
-			throw `duplicated component: ${item.id}`;
-		container.itemMap.set(item.id, { t: <T>item, b: [], c: 0 });
+		item = that.createItem(options);
+		if ($.itemMap.has(item.id))
+			throw new Error(`duplicated component: ${item.id}`);
+		$.itemMap.set(item.id, { t: <T>item, b: [], c: 0 });
 	}
 	return item
 }

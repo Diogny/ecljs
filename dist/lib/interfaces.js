@@ -41,6 +41,10 @@ var Type;
      * Flowchart resizable component
      */
     Type[Type["FL"] = 8] = "FL";
+    /**
+     * UI Widget
+     */
+    Type[Type["WIDGET"] = 9] = "WIDGET";
 })(Type = exports.Type || (exports.Type = {}));
 ;
 var Base = /** @class */ (function () {
@@ -60,7 +64,7 @@ var Base = /** @class */ (function () {
      * @param options [key]::value options to be copied internally
      */
     Base.prototype.clear = function (options) {
-        this.$ = dab_1.obj(dab_1.copy(this.defaults(), options || {}));
+        this.$ = dab_1.copy(this.defaults(), options || {});
     };
     return Base;
 }());

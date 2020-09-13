@@ -6,6 +6,7 @@ var interfaces_1 = require("./interfaces");
 var bonds_1 = tslib_1.__importDefault(require("./bonds"));
 var wire_1 = tslib_1.__importDefault(require("./wire"));
 var extra_1 = require("./extra");
+var dab_1 = require("dabbjs/dist/lib/dab");
 var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
     /**
@@ -24,38 +25,18 @@ var Container = /** @class */ (function (_super) {
         _this.$.selected = [];
         return _this;
     }
-    Object.defineProperty(Container.prototype, "counters", {
-        get: function () { return this.$.counters; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Container.prototype, "components", {
-        get: function () { return this.$.components; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Container.prototype, "itemMap", {
-        get: function () { return this.$.itemMap; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Container.prototype, "wireMap", {
-        get: function () { return this.$.wireMap; },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Container.prototype, "selected", {
         get: function () { return this.$.selected; },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "items", {
-        get: function () { return Array.from(this.itemMap.values()).map(function (item) { return item.t; }); },
+        get: function () { return Array.from(this.$.itemMap.values()).map(function (item) { return item.t; }); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "wires", {
-        get: function () { return Array.from(this.wireMap.values()).map(function (item) { return item.t; }); },
+        get: function () { return Array.from(this.$.wireMap.values()).map(function (item) { return item.t; }); },
         enumerable: false,
         configurable: true
     });
@@ -65,12 +46,12 @@ var Container = /** @class */ (function (_super) {
         configurable: true
     });
     Object.defineProperty(Container.prototype, "empty", {
-        get: function () { return !(this.wireMap.size || this.itemMap.size); },
+        get: function () { return !(this.$.wireMap.size || this.$.itemMap.size); },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Container.prototype, "size", {
-        get: function () { return this.itemMap.size + this.wireMap.size; },
+        get: function () { return this.$.itemMap.size + this.$.wireMap.size; },
         enumerable: false,
         configurable: true
     });
@@ -83,19 +64,16 @@ var Container = /** @class */ (function (_super) {
      * @description gets the component
      * @param id component's id
      */
-    Container.prototype.get = function (id) {
-        var _a, _b;
-        return ((_a = this.itemMap.get(id)) === null || _a === void 0 ? void 0 : _a.t) || ((_b = this.wireMap.get(id)) === null || _b === void 0 ? void 0 : _b.t);
-    };
+    Container.prototype.get = function (id) { var _a; return (_a = extra_1.getItem(this.$, id)) === null || _a === void 0 ? void 0 : _a.t; };
     Container.prototype.defaults = function () {
         return {
             store: void 0,
         };
     };
     Container.prototype.root = function (name) {
-        return this.components.get(name);
+        return this.$.components.get(name);
     };
-    Container.prototype.hasItem = function (id) { return this.itemMap.has(id) || this.wireMap.has(id); };
+    Container.prototype.hasItem = function (id) { return this.$.itemMap.has(id) || this.$.wireMap.has(id); };
     Container.prototype.selectAll = function (value) {
         return this.$.selected = this.all
             .filter(function (comp) { return (comp.select(value), value); });
@@ -148,7 +126,7 @@ var Container = /** @class */ (function (_super) {
      * @param options disctionary of options
      */
     Container.prototype.add = function (options) {
-        var comp = createBoardItem(this, options);
+        var comp = createBoardItem.call(this, this.$, options);
         // if (comp.type != Type.WIRE && comp.base.library != this.name)
         // 	throw `component incompatible type`;
         return comp;
@@ -168,8 +146,8 @@ var Container = /** @class */ (function (_super) {
             nc && (nc.type == interfaces_1.Type.WIRE) && _this.delete(nc);
         });
         return (comp.type == interfaces_1.Type.WIRE) ?
-            this.wireMap.delete(comp.id) :
-            this.itemMap.delete(comp.id);
+            this.$.wireMap.delete(comp.id) :
+            this.$.itemMap.delete(comp.id);
     };
     /**
      * @description gets all bonds of a component
@@ -177,7 +155,7 @@ var Container = /** @class */ (function (_super) {
      */
     Container.prototype.itemBonds = function (item) {
         var _a, _b;
-        var bonds = ((_a = this.itemMap.get(item.id)) === null || _a === void 0 ? void 0 : _a.b) || ((_b = this.wireMap.get(item.id)) === null || _b === void 0 ? void 0 : _b.b);
+        var bonds = ((_a = this.$.itemMap.get(item.id)) === null || _a === void 0 ? void 0 : _a.b) || ((_b = this.$.wireMap.get(item.id)) === null || _b === void 0 ? void 0 : _b.b);
         //"bonds" cannot be filtered so array node indexes don't get lost
         return bonds;
     };
@@ -204,7 +182,7 @@ var Container = /** @class */ (function (_super) {
             && this.bondOneWay(ic, icNode, thisObj, thisNode, 1); // back B to A
     };
     Container.prototype.bondOneWay = function (thisObj, thisNode, ic, icNode, dir) {
-        var item = extra_1.getItem(this, thisObj.id), entry = item && item.b[thisNode];
+        var item = extra_1.getItem(this.$, thisObj.id), entry = item && item.b[thisNode];
         if (!item)
             return false;
         if (!ic
@@ -231,7 +209,7 @@ var Container = /** @class */ (function (_super) {
          * @param id component to unbond from
          */
     Container.prototype.unbond = function (thisObj, node, id) {
-        return unbond(this, thisObj.id, node, id, true);
+        return unbond(this.$, thisObj.id, node, id, true);
     };
     /**
      * @description unbonds a component node
@@ -240,14 +218,14 @@ var Container = /** @class */ (function (_super) {
      * @returns undefined if not bonded, otherwise thisObj::Bond.dir and list of disconnected wire ids
      */
     Container.prototype.unbondNode = function (thisObj, node) {
-        var item = extra_1.getItem(this, thisObj.id), bond = item && item.b[node], link = void 0, list = [];
+        var item = extra_1.getItem(this.$, thisObj.id), bond = item && item.b[node], link = void 0, list = [];
         if (!bond || !item)
             return;
         //try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
         while (bond.to.length) {
             link = bond.to[0];
             //arbitrarily unbond a node, no matter its direction, so "origin" must be true to go the other way
-            unbond(this, link.id, link.ndx, thisObj.id, true);
+            unbond(this.$, link.id, link.ndx, thisObj.id, true);
             list.push({ id: link.id, node: link.ndx });
         }
         return { dir: bond.dir, id: thisObj.id, node: node, bonds: list };
@@ -285,7 +263,7 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.moveBond = function (id, node, newIndex) {
         var _this = this;
-        var item = extra_1.getItem(this, id), wire = item === null || item === void 0 ? void 0 : item.t;
+        var item = extra_1.getItem(this.$, id), wire = item === null || item === void 0 ? void 0 : item.t;
         if (!item || !wire || wire.type != interfaces_1.Type.WIRE)
             return;
         var bond = this.nodeBonds(wire, node);
@@ -316,33 +294,49 @@ exports.default = Container;
  * @param origin true to unbond the other way back
  * @returns BondDir of id Bond is any or undefined for not bonded
  */
-function unbond(container, id, node, toId, origin) {
-    var item = extra_1.getItem(container, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
+function unbond($, id, node, toId, origin) {
+    var item = extra_1.getItem($, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
     if (bond && b && item) {
         delete item.b[node];
         (--item.c == 0) && (item.b = []);
         if (origin) {
-            unbond(container, toId, b.ndx, id, false);
+            unbond($, toId, b.ndx, id, false);
         }
         //return [id] bond direction for reference
         return { dir: bond.dir, id: id, node: node, toId: toId, toNode: b.ndx };
     }
+}
+function getBaseComp($, name) {
+    var that = this, obj = {
+        comp: that.store.find(name)
+    };
+    if (!obj.comp)
+        throw new Error("unregistered component: " + name);
+    if ((obj.tmpl = obj.comp.meta.nameTmpl)) {
+        dab_1.dP(obj, "count", {
+            get: function () {
+                return $.counters[obj.tmpl];
+            },
+            set: function (val) {
+                $.counters[obj.tmpl] = val;
+            }
+        });
+        isNaN(obj.count) && (obj.count = 0);
+    }
+    else
+        obj.count = 0;
+    return obj;
 }
 /**
  * @description creates a board component
  * @param container container
  * @param options options to create component
  */
-function createBoardItem(container, options) {
-    var base = void 0, item = void 0, setBase = function () {
-        if (!(base = container.root(options.name))) {
-            base = {
-                comp: container.store.find(options.name),
-                count: 0
-            };
-            if (!base.comp)
-                throw "unregistered component: " + options.name;
-            container.components.set(options.name, base);
+function createBoardItem($, options) {
+    var that = this, base = void 0, item = void 0, setBase = function () {
+        if (!(base = that.root(options.name))) {
+            base = getBaseComp.call(that, $, options.name);
+            $.components.set(options.name, base);
         }
         options.base = base.comp;
     };
@@ -353,10 +347,12 @@ function createBoardItem(container, options) {
         if (match == null)
             throw "invalid id: " + options.id;
         //name can't contain numbers at the end,
-        //	id = name[count]    nand0	7408IC2
-        options.name = match[1];
+        //	id = name[count]    nand1	7408IC2	N555IC7	 							doesn't need name
+        //		 C[count]	name could be: capacitor, capacitor-polarized, etc.		needs name
+        if (!$.counters[match[1]])
+            options.name = match[1];
         count = parseInt(match[2]);
-        if (count <= 0)
+        if (count <= 0 || !options.name)
             throw "invalid id: " + options.id;
         setBase();
         //update internal component counter only if count > internal counter
@@ -367,28 +363,28 @@ function createBoardItem(container, options) {
         setBase();
         base.count++;
         if (!base.comp.meta.nameTmpl)
-            options.id = "" + options.name + base.count; //"{base.comp.name}-{base.count}";
+            options.id = "" + options.name + base.count;
         else {
             options.id = "" + base.comp.meta.nameTmpl + base.count;
         }
     }
     else
-        throw "invalid component options";
+        throw new Error('invalid component options');
     !options.onProp && (options.onProp = function () {
         //this happens when this component is created...
     });
     if (options.name == "wire") {
-        item = new wire_1.default(container, options);
-        if (container.wireMap.has(item.id))
-            throw "duplicated connector";
-        container.wireMap.set(item.id, { t: item, b: [], c: 0 });
+        item = new wire_1.default(that, options);
+        if ($.wireMap.has(item.id))
+            throw new Error('duplicated connector');
+        $.wireMap.set(item.id, { t: item, b: [], c: 0 });
     }
     else {
         options.type = base.comp.type;
-        item = container.createItem(options);
-        if (container.itemMap.has(item.id))
-            throw "duplicated component: " + item.id;
-        container.itemMap.set(item.id, { t: item, b: [], c: 0 });
+        item = that.createItem(options);
+        if ($.itemMap.has(item.id))
+            throw new Error("duplicated component: " + item.id);
+        $.itemMap.set(item.id, { t: item, b: [], c: 0 });
     }
     return item;
 }

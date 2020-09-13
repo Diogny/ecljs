@@ -33,6 +33,6 @@ exports.flowNodes = function (list, size) {
     node.y = size.height;
     list[n].y = h2;
 };
-exports.getItem = function (container, id) {
-    return container.itemMap.get(id) || container.wireMap.get(id);
+exports.getItem = function ($, id) {
+    return $.itemMap.get(id) || $.wireMap.get(id);
 };

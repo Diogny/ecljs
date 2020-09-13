@@ -1,5 +1,5 @@
 import { IPoint } from "dabbjs/dist/lib/interfaces";
-import { obj, copy } from "dabbjs/dist/lib/dab";
+import { copy } from "dabbjs/dist/lib/dab";
 import Point from 'dabbjs/dist/lib/point';
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
@@ -51,7 +51,11 @@ export enum Type {
 	/**
 	 * Flowchart resizable component
 	 */
-	FL = 8
+	FL = 8,
+	/**
+	 * UI Widget
+	 */
+	WIDGET =9
 };
 
 export interface IType {
@@ -86,7 +90,7 @@ export abstract class Base implements IBase {
 	 * @param options [key]::value options to be copied internally
 	 */
 	protected clear(options?: { [x: string]: any; }): void {
-		this.$ = obj(copy(this.defaults(), options || {}));
+		this.$ = copy(this.defaults(), options || {})
 	}
 
 	/**
@@ -102,7 +106,7 @@ export interface IContainerDefaults<T extends ItemBoard> {
 	//name: string;
 	//board: Board;
 	store: CompStore;
-	counters: { [x: string]: any; };
+	counters: { [x: string]: number; };
 	components: Map<string, IBaseComponent>;
 	itemMap: Map<string, ContainerMapType<T>>;
 	wireMap: Map<string, ContainerMapType<Wire>>;

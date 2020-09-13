@@ -11,20 +11,6 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     abstract createItem(options: {
         [x: string]: any;
     }): T;
-    get counters(): {
-        [x: string]: any;
-    };
-    get components(): Map<string, IBaseComponent>;
-    get itemMap(): Map<string, {
-        t: T;
-        b: Bond[];
-        c: number;
-    }>;
-    get wireMap(): Map<string, {
-        t: Wire;
-        b: Bond[];
-        c: number;
-    }>;
     get selected(): (T | Wire)[];
     get items(): T[];
     get wires(): Wire[];

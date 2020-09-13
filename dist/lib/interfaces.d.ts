@@ -47,7 +47,11 @@ export declare enum Type {
     /**
      * Flowchart resizable component
      */
-    FL = 8
+    FL = 8,
+    /**
+     * UI Widget
+     */
+    WIDGET = 9
 }
 export interface IType {
     type: Type;
@@ -97,7 +101,7 @@ export declare type ContainerMapType<T extends ItemBoard> = {
 export interface IContainerDefaults<T extends ItemBoard> {
     store: CompStore;
     counters: {
-        [x: string]: any;
+        [x: string]: number;
     };
     components: Map<string, IBaseComponent>;
     itemMap: Map<string, ContainerMapType<T>>;

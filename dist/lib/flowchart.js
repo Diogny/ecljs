@@ -79,7 +79,7 @@ var Flowchart = /** @class */ (function (_super) {
     Flowchart.prototype.unbond = function (thisObj, node, id) {
         var data = _super.prototype.unbond.call(this, thisObj, node, id);
         if (data != undefined) {
-            var icId = extra_1.getItem(this, id);
+            var icId = extra_1.getItem(this.$, id);
             decrement(data, thisObj, thisObj instanceof flowComp_1.default, icId.t, icId.t instanceof flowComp_1.default);
             return data;
         }
@@ -101,7 +101,7 @@ var Flowchart = /** @class */ (function (_super) {
             };
             //the should be only one connection for flowcharts
             res.bonds.forEach(function (obj) {
-                var icId = extra_1.getItem(_this, obj.id);
+                var icId = extra_1.getItem(_this.$, obj.id);
                 data_1.toId = obj.id;
                 data_1.toNode = obj.node;
                 decrement(data_1, thisObj, objflow_1, icId.t, icId.t instanceof flowComp_1.default);

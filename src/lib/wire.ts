@@ -6,6 +6,7 @@ import Rect from 'dabbjs/dist/lib/rect';
 import { Type, IWireDefaults, INodeInfo } from './interfaces';
 import ItemBoard from './itemsBoard';
 import Container from './container';
+import Size from 'dabbjs/dist/lib/size';
 
 export default class Wire extends ItemBoard {
 
@@ -56,6 +57,24 @@ export default class Wire extends ItemBoard {
 
 	get head(): number { return this.$.headLength }
 	get swipe(): number { return this.$.headAngle }
+
+	/**
+	 * @description returns wire size, it's computed every time, so save locally if called multiple times
+	 */
+	get size(): Size {
+		let
+			minX = Infinity,
+			minY = Infinity,
+			maxX = -Infinity,
+			maxY = -Infinity;
+		this.$.points.forEach(p => {
+			minX = Math.min(minX, p.x);
+			maxX = Math.max(maxX, p.x);
+			minY = Math.min(minY, p.y);
+			maxY = Math.max(maxY, p.y)
+		})
+		return new Size(maxX - minX + 1, maxY - minY + 1)
+	}
 
 	/**
 	 * @description customize arrow for directional wires only

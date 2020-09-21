@@ -1,10 +1,11 @@
 import { IPoint } from 'dabbjs/dist/lib/interfaces';
 import { tCl, attr, extend, isFn, obj } from 'dabbjs/dist/lib/dab';
-import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent} from './interfaces';
+import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
 import { tag } from 'dabbjs/dist/lib/utils';
+import Size from 'dabbjs/dist/lib/size';
 
 //ItemBoard->Wire
 export default abstract class ItemBoard extends ItemBase {
@@ -20,6 +21,7 @@ export default abstract class ItemBoard extends ItemBase {
 	abstract get last(): number;
 	abstract refresh(): ItemBoard;
 	abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
+	abstract get size(): Size;
 
 	constructor(public container: Container<ItemBoard>, options: { [x: string]: any; }) {
 		super(options);

@@ -7,10 +7,12 @@ var interfaces_1 = require("./interfaces");
 var itemSolid_1 = tslib_1.__importDefault(require("./itemSolid"));
 var label_1 = tslib_1.__importDefault(require("./label"));
 var extra_1 = require("./extra");
+var size_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/size"));
 var EC = /** @class */ (function (_super) {
     tslib_1.__extends(EC, _super);
     function EC(circuit, options) {
         var _this = _super.call(this, circuit, options) || this;
+        _this.$.size = options.size || size_1.default.parse(_this.base.meta.size);
         var m = _this.base.meta;
         //for labels in N555, 7408, Atmega168
         if (m.label) {
@@ -47,6 +49,14 @@ var EC = /** @class */ (function (_super) {
     }
     Object.defineProperty(EC.prototype, "type", {
         get: function () { return interfaces_1.Type.EC; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(EC.prototype, "size", {
+        /**
+         * @description returns the read-only size of this component
+         */
+        get: function () { return this.$.size.clone(); },
         enumerable: false,
         configurable: true
     });

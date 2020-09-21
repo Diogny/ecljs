@@ -208,6 +208,10 @@ export interface IComponentMetadata {
     countStart: number;
     nameTmpl: string;
     labelId: IPoint;
+    /**
+     * "width, height"
+     */
+    size: string;
     nodes: IMetadataNodes;
     logic: IMetadataLogic;
     label: IComponentTemplateLabel;
@@ -218,8 +222,10 @@ export interface IFlowchartMetadata extends IComponentMetadata {
     /**
      * "width, height"
      */
-    size: string;
     minSize: string;
+    /**
+     * "width, height"
+     */
     lockedSize: string;
     fontSize: number;
     text: string;
@@ -346,6 +352,7 @@ export interface IItemSolidDefaults extends IItemBoardDefaults {
     rot: number;
 }
 export interface IECDefaults extends IItemSolidDefaults {
+    size: Size;
     boardLabel: Label;
 }
 export interface IFlowChartDefaults extends IItemBoardDefaults {

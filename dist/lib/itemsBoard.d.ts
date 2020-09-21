@@ -3,6 +3,7 @@ import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEve
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
+import Size from 'dabbjs/dist/lib/size';
 export default abstract class ItemBoard extends ItemBase {
     container: Container<ItemBoard>;
     protected $: IItemBoardDefaults;
@@ -14,6 +15,7 @@ export default abstract class ItemBoard extends ItemBase {
     abstract get last(): number;
     abstract refresh(): ItemBoard;
     abstract node(node: number, nodeOnly?: boolean): INodeInfo | undefined;
+    abstract get size(): Size;
     constructor(container: Container<ItemBoard>, options: {
         [x: string]: any;
     });

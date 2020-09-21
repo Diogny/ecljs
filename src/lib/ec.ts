@@ -5,6 +5,7 @@ import ItemSolid from './itemSolid';
 import Label from './label';
 import Circuit from './circuit';
 import { createText } from './extra';
+import Size from 'dabbjs/dist/lib/size';
 
 export default class EC extends ItemSolid {
 
@@ -12,8 +13,14 @@ export default class EC extends ItemSolid {
 
 	get type(): Type { return Type.EC }
 
+	/**
+	 * @description returns the read-only size of this component
+	 */
+	get size(): Size { return this.$.size.clone() }
+
 	constructor(circuit: Circuit, options: { [x: string]: any; }) {
 		super(circuit, options);
+		this.$.size = options.size || <Size>Size.parse(this.base.meta.size);
 		let
 			m = this.base.meta;
 		//for labels in N555, 7408, Atmega168

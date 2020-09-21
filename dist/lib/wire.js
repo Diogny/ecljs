@@ -7,6 +7,7 @@ var point_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/point"));
 var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
 var interfaces_1 = require("./interfaces");
 var itemsBoard_1 = tslib_1.__importDefault(require("./itemsBoard"));
+var size_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/size"));
 var Wire = /** @class */ (function (_super) {
     tslib_1.__extends(Wire, _super);
     function Wire(container, options) {
@@ -89,6 +90,23 @@ var Wire = /** @class */ (function (_super) {
     });
     Object.defineProperty(Wire.prototype, "swipe", {
         get: function () { return this.$.headAngle; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Wire.prototype, "size", {
+        /**
+         * @description returns wire size, it's computed every time, so save locally if called multiple times
+         */
+        get: function () {
+            var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            this.$.points.forEach(function (p) {
+                minX = Math.min(minX, p.x);
+                maxX = Math.max(maxX, p.x);
+                minY = Math.min(minY, p.y);
+                maxY = Math.max(maxY, p.y);
+            });
+            return new size_1.default(maxX - minX + 1, maxY - minY + 1);
+        },
         enumerable: false,
         configurable: true
     });

@@ -4,6 +4,7 @@ import Rect from 'dabbjs/dist/lib/rect';
 import { Type, IWireDefaults, INodeInfo } from './interfaces';
 import ItemBoard from './itemsBoard';
 import Container from './container';
+import Size from 'dabbjs/dist/lib/size';
 export default class Wire extends ItemBoard {
     protected $: IWireDefaults;
     get type(): Type;
@@ -20,6 +21,10 @@ export default class Wire extends ItemBoard {
     set edit(value: boolean);
     get head(): number;
     get swipe(): number;
+    /**
+     * @description returns wire size, it's computed every time, so save locally if called multiple times
+     */
+    get size(): Size;
     /**
      * @description customize arrow for directional wires only
      * @param length arrow line length

@@ -384,7 +384,7 @@ function createBoardItem<T extends ItemBoard>($: IContainerDefaults<T>, options:
 		//this comes from a file read, get id counter
 		//get name from id
 		let
-			match = (/^(\w+)(\d+)$/g).exec(options.id),
+			match = (/^([\w-]+)(\d+)$/g).exec(options.id),
 			count = 0;
 		if (match == null)
 			throw `invalid id: ${options.id}`;

@@ -343,7 +343,7 @@ function createBoardItem($, options) {
     if (options.id) {
         //this comes from a file read, get id counter
         //get name from id
-        var match = (/^(\w+)(\d+)$/g).exec(options.id), count = 0;
+        var match = (/^([\w-]+)(\d+)$/g).exec(options.id), count = 0;
         if (match == null)
             throw "invalid id: " + options.id;
         //name can't contain numbers at the end,

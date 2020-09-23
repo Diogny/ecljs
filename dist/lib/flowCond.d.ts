@@ -12,6 +12,14 @@ export default class FlowConditional extends FlowComp {
      * client rect where text should be safely contained
      */
     get clientRect(): Rect;
+    /**
+     * @description returns then board true label outerHTML if any
+     */
+    get trueLabel(): string;
+    /**
+     * @description returns then board false label outerHTML if any
+     */
+    get falseLabel(): string;
     constructor(flowchart: Flowchart, options: {
         [x: string]: any;
     });

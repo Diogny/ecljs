@@ -34,6 +34,22 @@ var FlowConditional = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(FlowConditional.prototype, "trueLabel", {
+        /**
+         * @description returns then board true label outerHTML if any
+         */
+        get: function () { var _a; return (_a = this.$.true) === null || _a === void 0 ? void 0 : _a.g.outerHTML; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FlowConditional.prototype, "falseLabel", {
+        /**
+         * @description returns then board false label outerHTML if any
+         */
+        get: function () { var _a; return (_a = this.$.false) === null || _a === void 0 ? void 0 : _a.g.outerHTML; },
+        enumerable: false,
+        configurable: true
+    });
     /**
      * @description this happens after component was inserted in the DOM
      */

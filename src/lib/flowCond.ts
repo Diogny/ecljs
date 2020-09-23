@@ -26,6 +26,16 @@ export default class FlowConditional extends FlowComp {
 		return r.grow(-sw - this.$.padding, -sh - this.$.padding)
 	}
 
+	/**
+	 * @description returns then board true label outerHTML if any
+	 */
+	get trueLabel(): string { return this.$.true?.g.outerHTML }
+
+	/**
+	 * @description returns then board false label outerHTML if any
+	 */
+	get falseLabel(): string { return this.$.false?.g.outerHTML }
+
 	constructor(flowchart: Flowchart, options: { [x: string]: any; }) {
 		super(flowchart, options);
 		this.$.path = <SVGPathElement>this.g.firstElementChild;

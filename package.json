@@ -1,7 +1,7 @@
 {
 	"name": "ecljs",
 	"author": "Diogny A. B. <diognyab@outlook.com>",
-	"version": "0.2.105",
+	"version": "0.2.106",
 	"description": "electric circuits library",
 	"license": "MIT",
 	"main": "dist/index.js",

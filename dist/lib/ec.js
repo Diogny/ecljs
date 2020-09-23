@@ -60,6 +60,14 @@ var EC = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(EC.prototype, "boardLabel", {
+        /**
+         * @description returns then board label outerHTML if any
+         */
+        get: function () { var _a; return (_a = this.$.boardLabel) === null || _a === void 0 ? void 0 : _a.g.outerHTML; },
+        enumerable: false,
+        configurable: true
+    });
     EC.prototype.refresh = function () {
         _super.prototype.refresh.call(this);
         if (this.$.boardLabel) {

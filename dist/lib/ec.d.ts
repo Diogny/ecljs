@@ -9,6 +9,10 @@ export default class EC extends ItemSolid {
      * @description returns the read-only size of this component
      */
     get size(): Size;
+    /**
+     * @description returns then board label outerHTML if any
+     */
+    get boardLabel(): string;
     constructor(circuit: Circuit, options: {
         [x: string]: any;
     });

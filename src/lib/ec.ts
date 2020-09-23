@@ -18,6 +18,11 @@ export default class EC extends ItemSolid {
 	 */
 	get size(): Size { return this.$.size.clone() }
 
+	/**
+	 * @description returns then board label outerHTML if any
+	 */
+	get boardLabel(): string { return this.$.boardLabel?.g.outerHTML }
+
 	constructor(circuit: Circuit, options: { [x: string]: any; }) {
 		super(circuit, options);
 		this.$.size = options.size || <Size>Size.parse(this.base.meta.size);

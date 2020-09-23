@@ -112,9 +112,8 @@ export default abstract class Container<T extends ItemBoard> extends Base {
 			array = this.all,
 			first = array.shift(),
 			r = first ? first.rect() : Rect.empty;
-		array.forEach(ec => r.add(ec.rect()));
-		r.grow(20, 20);
-		return r;
+		array.forEach(ec => r = r.add(ec.rect()));
+		return r.grow(20, 20)
 	}
 
 	/**

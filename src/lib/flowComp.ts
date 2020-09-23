@@ -131,7 +131,7 @@ export default abstract class FlowComp extends ItemBoard {
 			y: pos.y,
 			//if options.text was set, then UI must set text tspans with algorithms not here
 		}, `<tspan x="${pos.x}" dy="0">${options.text ? '' : this.text}</tspan>`));
-		css(this.$.svgText, {
+		css(<HTMLElement><unknown>this.$.svgText, {
 			//if options.text was set, then fontSize may change with UI algorithm
 			"font-size": this.fontSize + "px",
 		})

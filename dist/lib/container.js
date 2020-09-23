@@ -117,9 +117,8 @@ var Container = /** @class */ (function (_super) {
     };
     Container.prototype.boundariesRect = function () {
         var array = this.all, first = array.shift(), r = first ? first.rect() : rect_1.default.empty;
-        array.forEach(function (ec) { return r.add(ec.rect()); });
-        r.grow(20, 20);
-        return r;
+        array.forEach(function (ec) { return r = r.add(ec.rect()); });
+        return r.grow(20, 20);
     };
     /**
      * @description adds a new component to this container

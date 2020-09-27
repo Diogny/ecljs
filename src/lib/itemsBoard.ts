@@ -31,7 +31,7 @@ export default abstract class ItemBoard extends ItemBase {
 		//and later save it along the .xml file for custom values
 
 		this.$.props = obj(this.base.props);
-		attr(this.g, {
+		attr(<any>this.g, {
 			id: this.id,
 			"svg-comp": this.base.type,
 		});
@@ -186,7 +186,7 @@ export default abstract class ItemBoard extends ItemBase {
 			pin = <INodeInfo>this.node(node, true);
 		if (!circleNode)
 			return false;
-		attr(circleNode, {
+		attr(<any>circleNode, {
 			cx: pin.x,
 			cy: pin.y,
 		})

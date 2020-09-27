@@ -38,7 +38,7 @@ export default class FlowInOut extends FlowComp {
 			s = this.$.shift,
 			w = this.size.width,
 			s2 = w - s;
-		attr(this.$.path, {
+		attr(<any>this.$.path, {
 			d: `M ${s},0 H${w} L${s2},${this.size.height} H0 Z`
 		});
 		return super.refresh(), this

@@ -101,7 +101,7 @@ export default class FlowConditional extends FlowComp {
 		let
 			w = this.size.width / 2 | 0,
 			h = this.size.height / 2 | 0;
-		attr(this.$.path, {
+		attr(<any>this.$.path, {
 			d: `M ${w},0 L ${this.size.width},${h} L ${w},${this.size.height} L 0,${h} Z`
 		});
 		super.refresh();

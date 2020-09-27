@@ -32,7 +32,7 @@ export default class FlowProcess extends FlowComp {
 	 * @description refreshes flowchart location, size, and updates bonded cmoponents
 	 */
 	public refresh(): FlowProcess {
-		attr(this.$.rect, {
+		attr(<any>this.$.rect, {
 			width: this.size.width,
 			height: this.size.height
 		});

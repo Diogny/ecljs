@@ -51,14 +51,14 @@ export default class Tooltip extends Label {
 
 	protected build(): Tooltip {
 		this.$.gap = Math.round(this.fontSize / 2) + 1;
-		attr(this.$.svgtext, {
+		attr(<any>this.$.svgtext, {
 			"font-size": this.fontSize,
 			x: Math.round(this.$.gap / 2), //+ 2, // + 1,
 			y: this.fontSize //+ 8
 		});
 		let
 			s = this.size;
-		attr(this.$.svgrect, {
+		attr(<any>this.$.svgrect, {
 			width: s.width,
 			height: s.height,
 			rx: this.borderRadius

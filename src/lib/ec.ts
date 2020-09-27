@@ -75,7 +75,7 @@ export default class EC extends ItemSolid {
 				center = Point.minus(Point.plus(this.p, center), pos),
 				attrs.transform += ` rotate(${this.rot} ${center.x} ${center.y})`
 			);
-			attr(this.$.boardLabel.g, attrs)
+			attr(<any>this.$.boardLabel.g, attrs)
 		}
 		return this;
 	}

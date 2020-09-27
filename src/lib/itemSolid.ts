@@ -69,7 +69,7 @@ export default abstract class ItemSolid extends ItemBoard {
 		if (this.rot) {
 			attrs.transform += ` rotate(${this.rot} ${center.x} ${center.y})`
 		}
-		attr(this.g, attrs);
+		attr(<any>this.g, attrs);
 		//check below
 		each(this.bonds, (b: Bond, key: any) => {
 			this.nodeRefresh(key);

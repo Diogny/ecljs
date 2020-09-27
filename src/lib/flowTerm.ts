@@ -41,7 +41,7 @@ export default abstract class FlowTerminational extends FlowComp {
 			c = this.$.curve,
 			w = this.size.width,
 			c2 = w - c;
-		attr(this.$.path, {
+		attr(<any>this.$.path, {
 			d: `M ${c},0 H${c2} C ${c2},0 ${w},${h2} ${c2},${h} H${c} C ${c},${h} 0,${h2} ${c},0 Z`
 		});
 		return super.refresh(), this

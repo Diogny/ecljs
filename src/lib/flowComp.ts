@@ -167,7 +167,7 @@ export default abstract class FlowComp extends ItemBoard {
 	 * @description refreshes flowchart location, and updates bonded cmoponents
 	 */
 	public refresh(): FlowComp {
-		attr(this.g, {
+		attr(<any>this.g, {
 			transform: `translate(${this.x} ${this.y})`
 		});
 		//check below

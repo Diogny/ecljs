@@ -105,7 +105,7 @@ export default class Wire extends ItemBoard {
 				let
 					b = this.$.points[i + 1],
 					ln = this.$.lines[i];
-				attr(ln, {
+				attr(<any>ln, {
 					line: i + 1,
 					x1: a.x,
 					y1: a.y,
@@ -116,7 +116,7 @@ export default class Wire extends ItemBoard {
 			}
 		}
 		else
-			attr(this.$.poly, {
+			attr(<any>this.$.poly, {
 				points: this.$.points.map(p => `${p.x}, ${p.y}`).join(' ')
 			});
 		arrow(this.$);	//	full-refresh
@@ -128,8 +128,8 @@ export default class Wire extends ItemBoard {
 			let
 				ln: SVGElement,
 				p = this.$.points[node];
-			(ln = this.$.lines[node - 1]) && attr(ln, { x2: p.x, y2: p.y });
-			(ln = this.$.lines[node]) && attr(ln, { x1: p.x, y1: p.y });
+			(ln = this.$.lines[node - 1]) && attr(<any>ln, { x2: p.x, y2: p.y });
+			(ln = this.$.lines[node]) && attr(<any>ln, { x1: p.x, y1: p.y });
 			arrow(this.$, node);	// partial-refresh
 		} else {
 			this.refresh();
@@ -407,7 +407,7 @@ function arrow($: IWireDefaults, node?: number) {
 	//if node is defined, only redraw arrow when node is prev|last node of wire
 	if (node != undefined && !(node == c || node == c - 1))
 		return;
-	attr($.arrow, {
+	attr(<any>$.arrow, {
 		points: [p(angle - swipe), last, p(angle + swipe)].map(p => `${p.x}, ${p.y}`).join(' ')
 	})
 }

@@ -29,12 +29,12 @@ export default class Label extends ItemBase {
 
 	public move(x: number, y: number): Label {
 		super.move(x, y);
-		attr(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
+		attr(<any>this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
 		return this;
 	}
 
 	public setFontSize(value: number): Label {
-		attr(this.$.svgtext, {
+		attr(<any>this.$.svgtext, {
 			"font-size": this.$.fontSize = value
 		});
 		return this

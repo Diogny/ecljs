@@ -43,7 +43,7 @@ export default class HighlightNode extends ItemBase {
 
 	public show(x: number, y: number, id: string, node: number): HighlightNode {
 		this.move(x, y);
-		attr(this.$.mainNode, {
+		attr(<any>this.$.mainNode, {
 			cx: this.x,
 			cy: this.y,
 			//"node-x": <any>node,

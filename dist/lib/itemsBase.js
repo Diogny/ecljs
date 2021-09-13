@@ -47,4 +47,3 @@ class ItemBase extends item_1.default {
     }
 }
 exports.default = ItemBase;
-//# sourceMappingURL=itemsBase.js.map

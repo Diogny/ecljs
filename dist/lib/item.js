@@ -49,4 +49,3 @@ class Item extends interfaces_1.Base {
     }
 }
 exports.default = Item;
-//# sourceMappingURL=item.js.map

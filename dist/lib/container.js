@@ -354,4 +354,3 @@ function createBoardItem(that, $, options) {
     }
     return item;
 }
-//# sourceMappingURL=container.js.map

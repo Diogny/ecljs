@@ -186,4 +186,3 @@ ItemBoard.nodeArea = 81;
 function getNode(g, n) {
     return g.querySelector(`circle[svg-type="node"][node="${n}"]`);
 }
-//# sourceMappingURL=itemsBoard.js.map

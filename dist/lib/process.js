@@ -33,4 +33,3 @@ class FlowProcess extends flowComp_1.default {
     }
 }
 exports.default = FlowProcess;
-//# sourceMappingURL=process.js.map

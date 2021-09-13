@@ -45,4 +45,3 @@ class FlowTerminational extends flowComp_1.default {
     }
 }
 exports.default = FlowTerminational;
-//# sourceMappingURL=flowTerm.js.map

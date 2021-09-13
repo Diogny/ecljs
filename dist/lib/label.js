@@ -46,4 +46,3 @@ class Label extends itemsBase_1.default {
     }
 }
 exports.default = Label;
-//# sourceMappingURL=label.js.map

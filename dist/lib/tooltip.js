@@ -90,4 +90,3 @@ class Tooltip extends label_1.default {
     }
 }
 exports.default = Tooltip;
-//# sourceMappingURL=tooltip.js.map

@@ -84,4 +84,3 @@ class ItemSolid extends itemsBoard_1.default {
     }
 }
 exports.default = ItemSolid;
-//# sourceMappingURL=itemSolid.js.map

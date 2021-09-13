@@ -1,7 +1,7 @@
 {
   "name": "ecljs",
   "author": "Diogny A. B. <diognyab@outlook.com>",
-  "version": "0.2.110",
+  "version": "0.2.112",
   "description": "electric circuits library",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -27,8 +27,7 @@
   "files": [
     "dist/lib/*",
     "dist/index.js",
-    "dist/index.d.ts",
-    "dist/index.js.map"
+    "dist/index.d.ts"
   ],
   "scripts": {
     "preinstall": "node -e \"!process.env.npm_config_user_agent.startsWith('pnpm/') && !console.log('Use \\`npx pnpm install\\` to install dependencies in this repository\\n') && process.exit(1)\"",
@@ -41,7 +40,7 @@
     "build": "pnpm clean && tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "dabbjs": "^0.0.24",
+    "dabbjs": "^0.0.25",
     "electric-units": "^1.0.7",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.9.1",

@@ -70,4 +70,3 @@ class HighlightNode extends itemsBase_1.default {
     }
 }
 exports.default = HighlightNode;
-//# sourceMappingURL=highlightNode.js.map

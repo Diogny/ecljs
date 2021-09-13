@@ -155,4 +155,3 @@ class FlowComp extends itemsBoard_1.default {
     }
 }
 exports.default = FlowComp;
-//# sourceMappingURL=flowComp.js.map

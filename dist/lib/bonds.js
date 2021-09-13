@@ -61,4 +61,3 @@ exports.default = Bond;
 Bond.display = (arr) => {
     return (arr == undefined) ? [] : arr === null || arr === void 0 ? void 0 : arr.filter(b => b != undefined).map((o) => o.toString());
 };
-//# sourceMappingURL=bonds.js.map

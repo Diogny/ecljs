@@ -348,4 +348,3 @@ function arrow($, node) {
         points: [p(angle - swipe), last, p(angle + swipe)].map(p => `${p.x}, ${p.y}`).join(' ')
     });
 }
-//# sourceMappingURL=wire.js.map

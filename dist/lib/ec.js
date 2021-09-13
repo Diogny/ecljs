@@ -95,4 +95,3 @@ class EC extends itemSolid_1.default {
     }
 }
 exports.default = EC;
-//# sourceMappingURL=ec.js.map

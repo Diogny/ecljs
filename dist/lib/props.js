@@ -292,4 +292,3 @@ function hook(parent, name, options) {
     Object.freeze(prop);
     return prop;
 }
-//# sourceMappingURL=props.js.map

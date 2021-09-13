@@ -60,4 +60,3 @@ function PHook(p) {
     return prop;
 }
 exports.PHook = PHook;
-//# sourceMappingURL=hooks.js.map

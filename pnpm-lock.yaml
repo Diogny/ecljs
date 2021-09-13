@@ -5,7 +5,7 @@ specifiers:
   '@types/node': ^16.9.1
   '@typescript-eslint/eslint-plugin': ^4.31.1
   '@typescript-eslint/parser': ^4.31.1
-  dabbjs: ^0.0.24
+  dabbjs: ^0.0.25
   electric-units: ^1.0.7
   esbuild: ^0.12.27
   eslint: ^7.32.0
@@ -21,7 +21,7 @@ devDependencies:
   '@types/node': 16.9.1
   '@typescript-eslint/eslint-plugin': 4.31.1_e2d3c88d378335c4183365c112128ce9
   '@typescript-eslint/parser': 4.31.1_eslint@7.32.0+typescript@4.4.3
-  dabbjs: 0.0.24
+  dabbjs: 0.0.25
   electric-units: 1.0.7
   esbuild: 0.12.27
   eslint: 7.32.0
@@ -1223,8 +1223,8 @@ packages:
       cssom: 0.3.8
     dev: true
 
-  /dabbjs/0.0.24:
-    resolution: {integrity: sha512-5VPmKu1bdFzR1sX/nxkwop5PEgYRpvTZL7wWMso5bNYZumRbabAydo2v9C79Xv1EIRJxY5IzcrwZirDlR/tLDQ==}
+  /dabbjs/0.0.25:
+    resolution: {integrity: sha512-RDBxJj1kQ7CEiU61ut+Wc0CqIdvLSl8G9Wq5++iiOXwA2LYIVuS8hKuADKgaBcNna7rZZ5sOAC4/6HAvidOUsw==}
     requiresBuild: true
     dev: true
 

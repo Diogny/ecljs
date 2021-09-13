@@ -23,4 +23,3 @@ class ConditionalLabel extends label_1.default {
     }
 }
 exports.default = ConditionalLabel;
-//# sourceMappingURL=flowCondLabel.js.map

@@ -75,4 +75,3 @@ class CompStore {
     get size() { return this.store.size; }
 }
 exports.default = CompStore;
-//# sourceMappingURL=components.js.map

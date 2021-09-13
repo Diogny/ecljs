@@ -40,4 +40,3 @@ const getItem = ($, id) => {
     return $.itemMap.get(id) || $.wireMap.get(id);
 };
 exports.getItem = getItem;
-//# sourceMappingURL=extra.js.map

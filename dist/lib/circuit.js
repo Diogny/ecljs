@@ -21,4 +21,3 @@ class Circuit extends container_1.default {
     }
 }
 exports.default = Circuit;
-//# sourceMappingURL=circuit.js.map

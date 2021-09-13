@@ -69,4 +69,3 @@ class Base {
     }
 }
 exports.Base = Base;
-//# sourceMappingURL=interfaces.js.map

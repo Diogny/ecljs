@@ -5,4 +5,3 @@ const flowTerm_1 = (0, tslib_1.__importDefault)(require("./flowTerm"));
 class FlowEnd extends flowTerm_1.default {
 }
 exports.default = FlowEnd;
-//# sourceMappingURL=flowend.js.map

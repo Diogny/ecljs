@@ -1,13 +1,14 @@
 import { ISize } from 'dabbjs/dist/lib/interfaces';
-import { attr, obj, isStr, pojo, extend } from 'dabbjs/dist/lib/dab';
-import { tag, map, filter } from 'dabbjs/dist/lib/utils';
+import { obj, isStr, pojo } from 'dabbjs/dist/lib/dab';
+import { map, filter, extend } from 'dabbjs/dist/lib/misc';
+import { attr, tag } from 'dabbjs/dist/lib/dom';
 import { Type, ITooltipDefaults } from "./interfaces";
 import Label from './label';
 
 export default class Tooltip extends Label {
 
 	get type(): Type { return Type.TOOLTIP }
-	protected $: ITooltipDefaults;
+	protected $!: ITooltipDefaults;
 
 	get borderRadius(): number { return this.$.borderRadius }
 
@@ -84,7 +85,7 @@ export default class Tooltip extends Label {
 			} else if (pojo(value)) {
 				txt = (<any>value).text;
 				attrs = map(
-					filter(value, (val: any, key: string) => key != 'text'),
+					filter(<any>value, (_val: any, key: string) => key != 'text'),
 					(v: string, k: string) => `${k}="${v}"`).join('');
 			}
 			txtArray.push(txt);

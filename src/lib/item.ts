@@ -4,7 +4,8 @@ import { IItemDefaults, Base } from "./interfaces";
 export default abstract class Item extends Base {
 
 	//thi's until we can get real private variables
-	protected $: IItemDefaults;
+
+  protected $!: IItemDefaults;
 
 	get name(): string { return this.$.name }
 	get id(): string { return this.$.id }

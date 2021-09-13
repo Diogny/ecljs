@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Base = exports.Type = void 0;
-var dab_1 = require("dabbjs/dist/lib/dab");
+const misc_1 = require("dabbjs/dist/lib/misc");
+//import { type } from "os";
 //***************************************** Types ************************************//
 var Type;
 (function (Type) {
@@ -47,7 +48,7 @@ var Type;
     Type[Type["WIDGET"] = 9] = "WIDGET";
 })(Type = exports.Type || (exports.Type = {}));
 ;
-var Base = /** @class */ (function () {
+class Base {
     /**
      *
      * @param options [key]::value object with default values
@@ -56,16 +57,16 @@ var Base = /** @class */ (function () {
      *
      * Only keys inside defaults() object will be copied to the internal object
      */
-    function Base(options) {
+    constructor(options) {
         this.clear(options);
     }
     /**
      *
      * @param options [key]::value options to be copied internally
      */
-    Base.prototype.clear = function (options) {
-        this.$ = dab_1.copy(this.defaults(), options || {});
-    };
-    return Base;
-}());
+    clear(options) {
+        this.$ = (0, misc_1.copy)(this.defaults(), options || {});
+    }
+}
 exports.Base = Base;
+//# sourceMappingURL=interfaces.js.map

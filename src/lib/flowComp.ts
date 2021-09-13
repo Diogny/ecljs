@@ -1,5 +1,6 @@
-import { extend, aChld, css, toBool, clone, attr } from "dabbjs/dist/lib/dab";
-import { each } from "dabbjs/dist/lib/utils";
+import { toBool, clone } from "dabbjs/dist/lib/dab";
+import { extend, each } from "dabbjs/dist/lib/misc";
+import { aChld, css, attr } from "dabbjs/dist/lib/dom";
 import Point from "dabbjs/dist/lib/point";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
@@ -15,9 +16,9 @@ import { createText, pinInfo, flowNodes } from "./extra";
  */
 export default abstract class FlowComp extends ItemBoard {
 
-	protected $: IFlowChartDefaults;
+	protected $!: IFlowChartDefaults;
 
-	container: Flowchart;
+	container!: Flowchart;
 
 	get type(): Type { return Type.FL }
 
@@ -150,7 +151,7 @@ export default abstract class FlowComp extends ItemBoard {
 	 * @description returns the node information
 	 * @param node 0-based pin/node number
 	 * @param onlyPoint true to get internal point, false get the real board point
-	 * 
+	 *
 	 * this returns (x, y) relative to the EC location
 	 */
 	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {
@@ -171,7 +172,7 @@ export default abstract class FlowComp extends ItemBoard {
 			transform: `translate(${this.x} ${this.y})`
 		});
 		//check below
-		each(this.bonds, (b: Bond, key: any) => {
+		each(<any>this.bonds, (_b: Bond, key: any) => {
 			this.nodeRefresh(key);
 		});
 		return this

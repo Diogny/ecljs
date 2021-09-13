@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tslib_1 = require("tslib");
-var dab_1 = require("dabbjs/dist/lib/dab");
+const dab_1 = require("dabbjs/dist/lib/dab");
 //const tmpl = "{base.comp.name}-{base.count}";
-var defaults = function (type, name) { return ({
+const defaults = (type, name) => ({
     name: name,
     comp: {
         type: type,
@@ -14,36 +13,24 @@ var defaults = function (type, name) { return ({
         },
         props: {}
     }
-}); };
-var CompStore = /** @class */ (function () {
-    function CompStore(library) {
-        var _this = this;
-        this.has = function (name) { return _this.store.has(name); };
+});
+class CompStore {
+    constructor(library) {
+        this.has = (name) => this.store.has(name);
         /**
          * @description find a component by name
          * @param name component name
          */
-        this.find = function (name) {
-            var e_1, _a;
-            var comp = _this.store.get(name);
+        this.find = (name) => {
+            let comp = this.store.get(name);
             if (!comp) {
-                try {
-                    //look by meta.nameTmpl, the hard way; for C, R, F, VR, BZ
-                    for (var _b = tslib_1.__values(_this.store.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
-                        var item = _c.value;
-                        if (item.meta.nameTmpl == name)
-                            return item;
-                    }
-                }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-                    }
-                    finally { if (e_1) throw e_1.error; }
+                //look by meta.nameTmpl, the hard way; for C, R, F, VR, BZ
+                for (let item of this.store.values()) {
+                    if (item.meta.nameTmpl == name)
+                        return item;
                 }
             }
-            return dab_1.obj(comp);
+            return (0, dab_1.obj)(comp);
         };
         this.name = library.name;
         this.type = library.type;
@@ -55,45 +42,37 @@ var CompStore = /** @class */ (function () {
             defaults("utils", "tooltip"),
             defaults("utils", "h-node"),
             defaults("wire", "wire")
-        ]).forEach(function (c) { return _this.store.set(c.name, c.comp); });
+        ]).forEach(c => this.store.set(c.name, c.comp));
         //register library
-        library.list.forEach(function (options) {
-            var template = options.tmpl;
+        library.list.forEach(options => {
+            let template = options.tmpl;
             if (template) {
-                var base = _this.find(template.name);
+                let base = this.find(template.name);
                 if (!base)
-                    throw "";
+                    throw new Error(`no base template`);
                 options.data = base.data;
                 options.meta = JSON.parse(JSON.stringify(base.meta));
-                template.label && (options.meta.label = dab_1.obj(template.label));
-                template.nodeLabels.forEach(function (lbl, ndx) {
+                template.label && (options.meta.label = (0, dab_1.obj)(template.label));
+                template.nodeLabels.forEach((lbl, ndx) => {
                     options.meta.nodes.list[ndx].label = lbl;
                 });
             }
             //new Comp(option)
-            if (_this.store.has(options.name))
-                throw "duplicated: " + options.name;
+            if (this.store.has(options.name))
+                throw new Error(`duplicated: ${options.name}`);
             else
-                _this.store.set(options.name, options);
+                this.store.set(options.name, options);
         });
     }
-    Object.defineProperty(CompStore.prototype, "keys", {
-        /**
-         * returns all registered components, except wire and system components
-         */
-        get: function () {
-            return Array.from(this.store.values())
-                .filter(function (c) { return !(c.type == "utils" || c.type == "wire"); })
-                .map(function (c) { return c.name; });
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(CompStore.prototype, "size", {
-        get: function () { return this.store.size; },
-        enumerable: false,
-        configurable: true
-    });
-    return CompStore;
-}());
+    /**
+     * returns all registered components, except wire and system components
+     */
+    get keys() {
+        return Array.from(this.store.values())
+            .filter(c => !(c.type == "utils" || c.type == "wire"))
+            .map(c => c.name);
+    }
+    get size() { return this.store.size; }
+}
 exports.default = CompStore;
+//# sourceMappingURL=components.js.map

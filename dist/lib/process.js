@@ -1,46 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tslib_1 = require("tslib");
-var dab_1 = require("dabbjs/dist/lib/dab");
-var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
-var flowComp_1 = tslib_1.__importDefault(require("./flowComp"));
-var FlowProcess = /** @class */ (function (_super) {
-    tslib_1.__extends(FlowProcess, _super);
-    function FlowProcess(flowchart, options) {
-        var _this = _super.call(this, flowchart, options) || this;
-        _this.$.rect = _this.g.firstElementChild;
-        _this.onResize(_this.size);
-        return _this;
+const tslib_1 = require("tslib");
+const dom_1 = require("dabbjs/dist/lib/dom");
+const rect_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/rect"));
+const flowComp_1 = (0, tslib_1.__importDefault)(require("./flowComp"));
+class FlowProcess extends flowComp_1.default {
+    constructor(flowchart, options) {
+        super(flowchart, options);
+        this.$.rect = this.g.firstElementChild;
+        this.onResize(this.size);
     }
-    Object.defineProperty(FlowProcess.prototype, "body", {
-        /**
-         * contains the main frame body, where full component size can be calculated
-         */
-        get: function () { return this.$.rect; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FlowProcess.prototype, "clientRect", {
-        /**
-         * client rect where text should be safely contained
-         */
-        get: function () {
-            var s = this.size;
-            return (new rect_1.default(0, 0, s.width | 0, s.height | 0)).grow(-this.$.padding, -this.$.padding);
-        },
-        enumerable: false,
-        configurable: true
-    });
+    /**
+     * contains the main frame body, where full component size can be calculated
+     */
+    get body() { return this.$.rect; }
+    /**
+     * client rect where text should be safely contained
+     */
+    get clientRect() {
+        let s = this.size;
+        return (new rect_1.default(0, 0, s.width | 0, s.height | 0)).grow(-this.$.padding, -this.$.padding);
+    }
     /**
      * @description refreshes flowchart location, size, and updates bonded cmoponents
      */
-    FlowProcess.prototype.refresh = function () {
-        dab_1.attr(this.$.rect, {
+    refresh() {
+        (0, dom_1.attr)(this.$.rect, {
             width: this.size.width,
             height: this.size.height
         });
-        return _super.prototype.refresh.call(this), this;
-    };
-    return FlowProcess;
-}(flowComp_1.default));
+        return super.refresh(), this;
+    }
+}
 exports.default = FlowProcess;
+//# sourceMappingURL=process.js.map

@@ -1,6 +1,7 @@
 import { ISize } from "dabbjs/dist/lib/interfaces";
-import { obj, aChld, attr, extend } from "dabbjs/dist/lib/dab";
-import { tag } from "dabbjs/dist/lib/utils";
+import { obj } from "dabbjs/dist/lib/dab";
+import { aChld, attr, tag } from "dabbjs/dist/lib/dom";
+import { extend } from "dabbjs/dist/lib/misc";
 import { Type, ILabelDefaults } from "./interfaces";
 import ItemBase from "./itemsBase";
 
@@ -8,7 +9,8 @@ export default class Label extends ItemBase {
 
 	get type(): Type { return Type.LABEL }
 
-	protected $: ILabelDefaults;
+	protected $!: ILabelDefaults;
+
 	get text(): string { return this.$.text }
 
 	get size(): ISize {

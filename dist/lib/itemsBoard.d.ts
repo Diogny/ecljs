@@ -1,9 +1,9 @@
 import { IPoint } from 'dabbjs/dist/lib/interfaces';
+import Size from 'dabbjs/dist/lib/size';
 import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
 import Bond from './bonds';
 import ItemBase from './itemsBase';
 import Container from './container';
-import Size from 'dabbjs/dist/lib/size';
 export default abstract class ItemBoard extends ItemBase {
     container: Container<ItemBoard>;
     protected $: IItemBoardDefaults;
@@ -27,9 +27,9 @@ export default abstract class ItemBoard extends ItemBase {
     /**
      * @description detects a point over a node
      * @param p point to check for component node
-     * @param ln 1-based line number, for EC it's discarded
+     * @param _ln 1-based line number, for EC it's discarded
      */
-    over(p: IPoint, ln?: number): number;
+    over(p: IPoint, _ln?: number): number;
     /**
      * @description refreshes all bonded components to this node
      * @param node 0-base node
@@ -37,10 +37,10 @@ export default abstract class ItemBoard extends ItemBase {
     nodeRefresh(node: number): ItemBoard;
     /**
      * @description sets node new location. Only works for Wire
-     * @param node 0-base node
-     * @param p new location
+     * @param _node 0-base node
+     * @param _p new location
      */
-    setNode(node: number, p: IPoint): ItemBoard;
+    setNode(_node: number, _p: IPoint): ItemBoard;
     setOnProp(value: (args: IItemBoardPropEvent) => void): ItemBoard;
     /**
      * @description returns true if there's at least one node highlighted.

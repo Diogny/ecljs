@@ -1,24 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PHook = void 0;
-var tslib_1 = require("tslib");
-var dab_1 = require("dabbjs/dist/lib/dab");
-var size_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/size"));
-var point_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/point"));
-var rect_1 = tslib_1.__importDefault(require("dabbjs/dist/lib/rect"));
-var units_1 = tslib_1.__importDefault(require("electric-units/dist/units"));
+const tslib_1 = require("tslib");
+const dab_1 = require("dabbjs/dist/lib/dab");
+const size_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/size"));
+const point_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/point"));
+const rect_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/rect"));
+const units_1 = (0, tslib_1.__importDefault)(require("electric-units/dist/units"));
 /**
  * @description creates a property hook
  * @param p a component property
  */
 function PHook(p) {
-    var modified = false, prop = {}, value = void 0;
+    let modified = false, prop = {}, value = void 0;
     if (typeof p === "string")
         value = p;
     else if (typeof p === "number")
         value = p;
     else {
-        var cast = p;
+        let cast = p;
         switch (cast.valueType) {
             case "number":
                 value = cast.value;
@@ -39,24 +39,25 @@ function PHook(p) {
                 value = new units_1.default(cast.value);
                 break;
             default:
-                throw "unsupported type";
+                throw new Error(`unsupported type`);
         }
     }
-    dab_1.dP(prop, "value", {
-        get: function () {
+    (0, dab_1.dP)(prop, "value", {
+        get() {
             return value;
         },
-        set: function (val) {
+        set(val) {
             //test for equality
-            var fn = value["equal"];
+            let fn = value["equal"];
             if ((fn == undefined) ? value == val : value["equal"](val)) //fn.apply(value, val)
                 return;
             value = val;
             modified = true;
         }
     });
-    dab_1.dP(prop, "modified", { get: function () { return modified; } });
+    (0, dab_1.dP)(prop, "modified", { get() { return modified; } });
     Object.freeze(prop);
     return prop;
 }
 exports.PHook = PHook;
+//# sourceMappingURL=hooks.js.map

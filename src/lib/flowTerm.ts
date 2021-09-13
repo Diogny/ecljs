@@ -1,4 +1,4 @@
-import { attr } from "dabbjs/dist/lib/dab";
+import { attr } from "dabbjs/dist/lib/dom";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
 //
@@ -9,7 +9,7 @@ import { flowNodes } from "./extra";
 
 export default abstract class FlowTerminational extends FlowComp {
 
-	protected $: IFlowTermDefaults;
+	protected $!: IFlowTermDefaults;
 
 	/**
 	* contains the main frame body, where full component size can be calculated

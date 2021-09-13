@@ -1,12 +1,12 @@
-import { extend, attr } from "dabbjs/dist/lib/dab";
-import { tag } from "dabbjs/dist/lib/utils";
+import { extend } from "dabbjs/dist/lib/misc";
+import { tag, attr } from "dabbjs/dist/lib/dom";
 import Point from "dabbjs/dist/lib/point";
 import { Type, IHighlighNodeDefaults } from "./interfaces";
 import ItemBase from "./itemsBase";
 
 export default class HighlightNode extends ItemBase {
 
-	protected $: IHighlighNodeDefaults;
+	protected $!: IHighlighNodeDefaults;
 
 	get type(): Type { return Type.HL }
 	get radius(): number { return this.$.radius }

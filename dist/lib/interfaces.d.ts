@@ -141,7 +141,7 @@ export interface IDisposable {
 }
 export interface IReactProp extends IDisposable {
     value: any;
-    onChange?: IUIPropertyCallback | undefined;
+    onChange: IUIPropertyCallback | undefined;
     _: {
         [id: string]: any;
     };
@@ -155,6 +155,7 @@ export interface IReactPropDefaults {
     };
     value: any;
 }
+export declare type IHookValue = number | string | Size | Point | Unit | Rect;
 export interface IPropHook {
     value: any;
     modified: boolean;

@@ -8,14 +8,14 @@ import FlowEnd from "./flowend";
 import FlowInOut from "./flowInOut";
 import { BondDir, ContainerMapType, IUnbondNodeData, IUnbondData, IFlowchartDefaults, IFlowResizePolicy } from "./interfaces";
 import { getItem } from "./extra";
-import { extend } from "dabbjs/dist/lib/dab";
+import { extend } from "dabbjs/dist/lib/misc";
 
 /**
  * @description Flowchart component container
  */
 export default class Flowchart extends Container<FlowComp>{
 
-	protected $: IFlowchartDefaults;
+	protected $!: IFlowchartDefaults;
 
 	get name(): string { return "flowchart" }
 	get dir(): boolean { return true }
@@ -24,7 +24,7 @@ export default class Flowchart extends Container<FlowComp>{
 	 * Returns the resize policy for this flowchart container
 	 */
 	get reSizePolicy(): IFlowResizePolicy { return this.$.reSizePolicy }
-	
+
 	/**
 	 * @description creates a flowchart component
 	 * @param options customizable options
@@ -42,7 +42,7 @@ export default class Flowchart extends Container<FlowComp>{
 			case "inout":
 				return new FlowInOut(this, <any>options);
 			default:
-				throw `unknown flowchart`
+				throw new Error(`unknown flowchart`)
 		}
 	}
 
@@ -76,9 +76,10 @@ export default class Flowchart extends Container<FlowComp>{
 		if (data != undefined) {
 			let
 				icId = <ContainerMapType<FlowComp | Wire>>getItem(this.$, id);
-			decrement(<IUnbondData>data, thisObj, thisObj instanceof FlowComp, icId.t, icId.t instanceof FlowComp);
+			decrement(data, thisObj, thisObj instanceof FlowComp, icId.t, icId.t instanceof FlowComp);
 			return data
 		}
+    return
 	}
 
 	/**
@@ -127,7 +128,7 @@ function decrement(data: IUnbondData, obj: FlowComp | Wire, objFlow: boolean, ic
 				nodeLabel = fl.nodeLabel(false);
 			if (nodeLabel == node) {
 				fl.setLabel(false, -1)
-			} else if ((nodeLabel = fl.nodeLabel(true)) == node) {
+			} else if ((fl.nodeLabel(true)) == node) {
 				fl.setLabel(true, -1)
 			}
 		};

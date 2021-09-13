@@ -1,11 +1,11 @@
 import { IConditionalLabel } from "./interfaces";
 import Label from "./label";
-import { extend } from "dabbjs/dist/lib/dab";
+import { extend } from "dabbjs/dist/lib/misc";
 
 //internal class
 export default class ConditionalLabel extends Label {
 
-	protected $: IConditionalLabel;
+	protected $!: IConditionalLabel;
 
 	/**
 	 * @description liked 0-base node, -1 if not linked

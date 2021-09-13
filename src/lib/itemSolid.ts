@@ -1,5 +1,5 @@
-import { attr, extend } from "dabbjs/dist/lib/dab";
-import { each } from "dabbjs/dist/lib/utils";
+import { attr } from "dabbjs/dist/lib/dom";
+import { each, extend } from "dabbjs/dist/lib/misc";
 import Point from "dabbjs/dist/lib/point";
 import Size from "dabbjs/dist/lib/size";
 import Rect from "dabbjs/dist/lib/rect";
@@ -12,7 +12,7 @@ import { pinInfo } from "./extra";
 //ItemBoard->ItemSolid->EC
 export default abstract class ItemSolid extends ItemBoard {
 
-	protected $: IItemSolidDefaults;
+	protected $!: IItemSolidDefaults;
 
 	get last(): number { return this.base.meta.nodes.list.length - 1 }
 
@@ -37,7 +37,7 @@ export default abstract class ItemSolid extends ItemBoard {
 				code: 4					// "rotate" code: 4
 			});
 		}
-		return <ItemSolid>this.refresh();
+		return this.refresh();
 	}
 
 	public rect(): Rect {
@@ -71,7 +71,7 @@ export default abstract class ItemSolid extends ItemBoard {
 		}
 		attr(<any>this.g, attrs);
 		//check below
-		each(this.bonds, (b: Bond, key: any) => {
+		each(<any>this.bonds, (_b: Bond, key: any) => {
 			this.nodeRefresh(key);
 		});
 		return this
@@ -81,7 +81,7 @@ export default abstract class ItemSolid extends ItemBoard {
 	 * @description returns the node information
 	 * @param node 0-based pin/node number
 	 * @param onlyPoint true to get internal rotated point only without transformations
-	 * 
+	 *
 	 * this returns (x, y) relative to the EC location
 	 */
 	public node(node: number, nodeOnly?: boolean): INodeInfo | undefined {

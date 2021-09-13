@@ -1,4 +1,4 @@
-import { attr } from "dabbjs/dist/lib/dab";
+import { attr } from "dabbjs/dist/lib/dom";
 import Rect from "dabbjs/dist/lib/rect";
 import { IFlowProcessDefaults } from "./interfaces";
 import FlowComp from "./flowComp";
@@ -6,7 +6,7 @@ import Flowchart from "./flowchart";
 
 export default class FlowProcess extends FlowComp {
 
-	protected $: IFlowProcessDefaults;
+	protected $!: IFlowProcessDefaults;
 
 	/**
 	 * contains the main frame body, where full component size can be calculated

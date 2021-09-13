@@ -47,7 +47,7 @@ export default class CompStore {
 				let
 					base = this.find(template.name);
 				if (!base)
-					throw ``;
+					throw new Error(`no base template`);
 				options.data = base.data;
 				options.meta = JSON.parse(JSON.stringify(base.meta));
 				template.label && (options.meta.label = obj(template.label));
@@ -57,7 +57,7 @@ export default class CompStore {
 			}
 			//new Comp(option)
 			if (this.store.has(options.name))
-				throw `duplicated: ${options.name}`
+				throw new Error(`duplicated: ${options.name}`)
 			else
 				this.store.set(options.name, options)
 		});

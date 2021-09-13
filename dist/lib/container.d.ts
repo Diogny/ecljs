@@ -76,11 +76,11 @@ export default abstract class Container<T extends ItemBoard> extends Base {
     bond(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number): boolean;
     protected bondOneWay(thisObj: T | Wire, thisNode: number, ic: T | Wire, icNode: number, dir: BondDir): boolean;
     /**
-         * @description unbonds a node from a component
-         * @param thisObj component to unbond
-         * @param node 0-base node to unbond
-         * @param id component to unbond from
-         */
+       * @description unbonds a node from a component
+       * @param thisObj component to unbond
+       * @param node 0-base node to unbond
+       * @param id component to unbond from
+       */
     unbond(thisObj: T | Wire, node: number, id: string): IUnbondData | undefined;
     /**
      * @description unbonds a component node

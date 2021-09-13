@@ -1,31 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getItem = exports.flowNodes = exports.pinInfo = exports.createText = void 0;
-var utils_1 = require("dabbjs/dist/lib/utils");
-exports.createText = function (attr, text) {
-    var svgText = utils_1.tag("text", "", attr);
+const dom_1 = require("dabbjs/dist/lib/dom");
+const createText = (attr, text) => {
+    let svgText = (0, dom_1.tag)("text", "", attr);
     return svgText.innerHTML = text, svgText;
 };
+exports.createText = createText;
 /**
  * @description return the info of a node
  * @param list pin/node list
  * @param node 0-based node
  */
-exports.pinInfo = function (list, node) {
-    var pin = list[node];
+const pinInfo = (list, node) => {
+    let pin = list[node];
     return pin && {
         x: pin.x,
         y: pin.y,
         label: pin.label
     };
 };
+exports.pinInfo = pinInfo;
 /**
  * @description updates node positions for resizable components like: Flowchart
  * @param list pin/node list
  * @param size component size
  */
-exports.flowNodes = function (list, size) {
-    var w2 = size.width / 2 | 0, h2 = size.height / 2 | 0, n = 0, node = list[n++];
+const flowNodes = (list, size) => {
+    let w2 = size.width / 2 | 0, h2 = size.height / 2 | 0, n = 0, node = list[n++];
     node.x = w2;
     (node = list[n++]).x = size.width;
     node.y = h2;
@@ -33,6 +35,9 @@ exports.flowNodes = function (list, size) {
     node.y = size.height;
     list[n].y = h2;
 };
-exports.getItem = function ($, id) {
+exports.flowNodes = flowNodes;
+const getItem = ($, id) => {
     return $.itemMap.get(id) || $.wireMap.get(id);
 };
+exports.getItem = getItem;
+//# sourceMappingURL=extra.js.map

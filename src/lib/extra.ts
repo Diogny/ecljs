@@ -1,4 +1,4 @@
-import { tag } from "dabbjs/dist/lib/utils"
+import { tag } from "dabbjs/dist/lib/dom";
 import Size from "dabbjs/dist/lib/size";
 import { INodeInfo, ContainerMapType, IContainerDefaults } from "./interfaces";
 import ItemBoard from "./itemsBoard";
@@ -17,7 +17,7 @@ export const createText = (attr: any, text: string): SVGTextElement => {
  */
 export const pinInfo = (list: INodeInfo[], node: number): INodeInfo | undefined => {
 	let
-		pin = <INodeInfo>list[node];
+		pin = list[node];
 	return pin && {
 		x: pin.x,
 		y: pin.y,

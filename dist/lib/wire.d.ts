@@ -60,7 +60,7 @@ export default class Wire extends ItemBoard {
      *
      * this returns absolute (x, y) position
      */
-    node(node: number, onlyPoint?: boolean): INodeInfo | undefined;
+    node(node: number): INodeInfo | undefined;
     static nodeArea: number;
     /**
      * @description detects a point over a node

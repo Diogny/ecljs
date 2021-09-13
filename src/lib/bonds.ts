@@ -24,7 +24,7 @@ export default class Bond implements IType {
 	 */
 	constructor(from: ItemBoard, fromPin: number, to: ItemBoard, toNode: number, public dir: BondDir) {
 		if (!from || !to)
-			throw 'empty bond';
+			throw new Error('empty bond');
 		this.from = this.create(from, fromPin);
 		this.to = [];
 		this.add(to, toNode);

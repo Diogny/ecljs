@@ -1,4 +1,5 @@
-import { attr, extend, aChld } from 'dabbjs/dist/lib/dab';
+import { attr, aChld } from 'dabbjs/dist/lib/dom';
+import { extend } from "dabbjs/dist/lib/misc";
 import Point from 'dabbjs/dist/lib/point';
 import { Type, IECDefaults } from './interfaces';
 import ItemSolid from './itemSolid';
@@ -9,7 +10,7 @@ import Size from 'dabbjs/dist/lib/size';
 
 export default class EC extends ItemSolid {
 
-	protected $: IECDefaults;
+	protected $!: IECDefaults;
 
 	get type(): Type { return Type.EC }
 

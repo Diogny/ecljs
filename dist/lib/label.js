@@ -1,66 +1,49 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tslib_1 = require("tslib");
-var dab_1 = require("dabbjs/dist/lib/dab");
-var utils_1 = require("dabbjs/dist/lib/utils");
-var interfaces_1 = require("./interfaces");
-var itemsBase_1 = tslib_1.__importDefault(require("./itemsBase"));
-var Label = /** @class */ (function (_super) {
-    tslib_1.__extends(Label, _super);
-    function Label(options) {
-        var _this = _super.call(this, options) || this;
-        dab_1.aChld(_this.g, _this.$.svgtext = utils_1.tag("text", "", {}));
-        _this.$.svgtext.innerHTML = _this.$.text;
-        return _this;
+const tslib_1 = require("tslib");
+const dab_1 = require("dabbjs/dist/lib/dab");
+const dom_1 = require("dabbjs/dist/lib/dom");
+const misc_1 = require("dabbjs/dist/lib/misc");
+const interfaces_1 = require("./interfaces");
+const itemsBase_1 = (0, tslib_1.__importDefault)(require("./itemsBase"));
+class Label extends itemsBase_1.default {
+    constructor(options) {
+        super(options);
+        (0, dom_1.aChld)(this.g, this.$.svgtext = (0, dom_1.tag)("text", "", {}));
+        this.$.svgtext.innerHTML = this.$.text;
     }
-    Object.defineProperty(Label.prototype, "type", {
-        get: function () { return interfaces_1.Type.LABEL; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Label.prototype, "text", {
-        get: function () { return this.$.text; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Label.prototype, "size", {
-        get: function () {
-            var b = this.$.svgtext.getBBox();
-            return dab_1.obj({
-                width: Math.round(b.width),
-                height: Math.round(b.height)
-            });
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Label.prototype, "fontSize", {
-        get: function () { return this.$.fontSize; },
-        enumerable: false,
-        configurable: true
-    });
-    Label.prototype.move = function (x, y) {
-        _super.prototype.move.call(this, x, y);
-        dab_1.attr(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
+    get type() { return interfaces_1.Type.LABEL; }
+    get text() { return this.$.text; }
+    get size() {
+        let b = this.$.svgtext.getBBox();
+        return (0, dab_1.obj)({
+            width: Math.round(b.width),
+            height: Math.round(b.height)
+        });
+    }
+    get fontSize() { return this.$.fontSize; }
+    move(x, y) {
+        super.move(x, y);
+        (0, dom_1.attr)(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
         return this;
-    };
-    Label.prototype.setFontSize = function (value) {
-        dab_1.attr(this.$.svgtext, {
+    }
+    setFontSize(value) {
+        (0, dom_1.attr)(this.$.svgtext, {
             "font-size": this.$.fontSize = value
         });
         return this;
-    };
-    Label.prototype.setText = function (text) {
+    }
+    setText(text) {
         return this.$.svgtext.innerHTML = this.$.text = text, this;
-    };
-    Label.prototype.defaults = function () {
-        return dab_1.extend(_super.prototype.defaults.call(this), {
+    }
+    defaults() {
+        return (0, misc_1.extend)(super.defaults(), {
             name: "label",
             class: "label",
             fontSize: 15,
             text: ""
         });
-    };
-    return Label;
-}(itemsBase_1.default));
+    }
+}
 exports.default = Label;
+//# sourceMappingURL=label.js.map

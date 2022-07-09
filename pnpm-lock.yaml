@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@types/jest': ^27.0.1
@@ -19,15 +19,15 @@ specifiers:
 devDependencies:
   '@types/jest': 27.0.1
   '@types/node': 16.9.1
-  '@typescript-eslint/eslint-plugin': 4.31.1_e2d3c88d378335c4183365c112128ce9
-  '@typescript-eslint/parser': 4.31.1_eslint@7.32.0+typescript@4.4.3
+  '@typescript-eslint/eslint-plugin': 4.31.1_4lj4rdjxqm24igbtmxareeum5e
+  '@typescript-eslint/parser': 4.31.1_sek7ybhoe3wua6y4z6v7featku
   dabbjs: 0.0.25
   electric-units: 1.0.7
   esbuild: 0.12.27
   eslint: 7.32.0
   jest: 27.2.0_ts-node@10.2.1
-  ts-jest: 27.0.5_77a678c07bcdbdfd88181ff63fe325b2
-  ts-node: 10.2.1_c51a13cfa2c3195bf611f1652e33c9c1
+  ts-jest: 27.0.5_o6thrqd3zw673cayd73d7yzfwi
+  ts-node: 10.2.1_yunbht5cymmvx5qr6fss4m6jye
   tslib: 2.3.1
   typedoc: 0.22.3_typescript@4.4.3
   typescript: 4.4.3
@@ -193,6 +193,8 @@ packages:
     resolution: {integrity: sha512-X9rD8qqm695vgmeaQ4fvz/o3+Wk4ZzQvSHkDBgpYKxpD4qTAUm88ZKtHkVqIOsYFFbIQ6wQYhC6q7pjqVK0E0Q==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dependencies:
+      '@babel/types': 7.11.5
     dev: true
 
   /@babel/plugin-syntax-async-generators/7.8.4_@babel+core@7.11.6:
@@ -741,7 +743,7 @@ packages:
       '@types/yargs-parser': 20.2.1
     dev: true
 
-  /@typescript-eslint/eslint-plugin/4.31.1_e2d3c88d378335c4183365c112128ce9:
+  /@typescript-eslint/eslint-plugin/4.31.1_4lj4rdjxqm24igbtmxareeum5e:
     resolution: {integrity: sha512-UDqhWmd5i0TvPLmbK5xY3UZB0zEGseF+DHPghZ37Sb83Qd3p8ujhvAtkU4OF46Ka5Pm5kWvFIx0cCTBFKo0alA==}
     engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
@@ -752,8 +754,8 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/experimental-utils': 4.31.1_eslint@7.32.0+typescript@4.4.3
-      '@typescript-eslint/parser': 4.31.1_eslint@7.32.0+typescript@4.4.3
+      '@typescript-eslint/experimental-utils': 4.31.1_sek7ybhoe3wua6y4z6v7featku
+      '@typescript-eslint/parser': 4.31.1_sek7ybhoe3wua6y4z6v7featku
       '@typescript-eslint/scope-manager': 4.31.1
       debug: 4.3.2
       eslint: 7.32.0
@@ -766,7 +768,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/experimental-utils/4.31.1_eslint@7.32.0+typescript@4.4.3:
+  /@typescript-eslint/experimental-utils/4.31.1_sek7ybhoe3wua6y4z6v7featku:
     resolution: {integrity: sha512-NtoPsqmcSsWty0mcL5nTZXMf7Ei0Xr2MT8jWjXMVgRK0/1qeQ2jZzLFUh4QtyJ4+/lPUyMw5cSfeeME+Zrtp9Q==}
     engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
@@ -784,7 +786,7 @@ packages:
       - typescript
     dev: true
 
-  /@typescript-eslint/parser/4.31.1_eslint@7.32.0+typescript@4.4.3:
+  /@typescript-eslint/parser/4.31.1_sek7ybhoe3wua6y4z6v7featku:
     resolution: {integrity: sha512-dnVZDB6FhpIby6yVbHkwTKkn2ypjVIfAR9nh+kYsA/ZL0JlTsd22BiDjouotisY3Irmd3OW1qlk9EI5R8GrvRQ==}
     engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
@@ -1240,6 +1242,11 @@ packages:
   /debug/4.1.1:
     resolution: {integrity: sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==}
     deprecated: Debug versions >=3.2.0 <3.2.7 || >=4 <4.3.1 have a low-severity ReDos regression when used in a Node.js environment. It is recommended you upgrade to 3.2.7 or 4.3.1. (https://github.com/visionmedia/debug/issues/797)
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.1.2
     dev: true
@@ -2001,7 +2008,7 @@ packages:
       jest-validate: 27.2.0
       micromatch: 4.0.4
       pretty-format: 27.2.0
-      ts-node: 10.2.1_c51a13cfa2c3195bf611f1652e33c9c1
+      ts-node: 10.2.1_yunbht5cymmvx5qr6fss4m6jye
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -3109,7 +3116,7 @@ packages:
       punycode: 2.1.1
     dev: true
 
-  /ts-jest/27.0.5_77a678c07bcdbdfd88181ff63fe325b2:
+  /ts-jest/27.0.5_o6thrqd3zw673cayd73d7yzfwi:
     resolution: {integrity: sha512-lIJApzfTaSSbtlksfFNHkWOzLJuuSm4faFAfo5kvzOiRAuoN4/eKxVJ2zEAho8aecE04qX6K1pAzfH5QHL1/8w==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
@@ -3140,7 +3147,7 @@ packages:
       yargs-parser: 20.2.9
     dev: true
 
-  /ts-node/10.2.1_c51a13cfa2c3195bf611f1652e33c9c1:
+  /ts-node/10.2.1_yunbht5cymmvx5qr6fss4m6jye:
     resolution: {integrity: sha512-hCnyOyuGmD5wHleOQX6NIjJtYVIO8bPP8F2acWkB4W06wdlkgyvJtubO/I9NkI88hCFECbsEgoLc0VNkYmcSfw==}
     engines: {node: '>=12.0.0'}
     hasBin: true

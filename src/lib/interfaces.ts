@@ -267,6 +267,10 @@ export interface IMetadataNodes {
   //size: ISize;
   createLabels: boolean;
   list: INodeInfo[];
+  /**
+   * label displacement, default is undefined
+   */
+  disp?: IPoint;
 }
 
 export interface INodeInfo extends IPoint {

@@ -24,8 +24,11 @@ class EC extends itemSolid_1.default {
         }
         //add node labels for DIP packages
         if (m.nodes.createLabels) {
-            let pins = this.count / 2;
-            for (let y = 48, x = 7, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
+            let pins = this.count / 2, disp = m.nodes.disp || {
+                x: 0,
+                y: 0
+            };
+            for (let y = 48 + disp.y, x = 7 + disp.x, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
                 for (let col = 0; col < pins; col++, i++, x += factor)
                     (0, dom_1.aChld)(this.g, (0, extra_1.createText)({ x: x, y: y }, i + ""));
         }

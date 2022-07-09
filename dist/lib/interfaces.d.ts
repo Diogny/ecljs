@@ -238,6 +238,10 @@ export interface IFlowchartMetadata extends IComponentMetadata {
 export interface IMetadataNodes {
     createLabels: boolean;
     list: INodeInfo[];
+    /**
+     * label displacement, default is undefined
+     */
+    disp?: IPoint;
 }
 export interface INodeInfo extends IPoint {
     label: string;

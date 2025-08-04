@@ -1,11 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const interfaces_1 = require("./interfaces");
-const itemsBase_1 = (0, tslib_1.__importDefault)(require("./itemsBase"));
-class HighlightNode extends itemsBase_1.default {
+import { extend } from "dabbjs/dist/lib/misc";
+import { tag, attr } from "dabbjs/dist/lib/dom";
+import { Type } from "./interfaces";
+import { ItemBase } from "./itemsBase";
+export class HighlightNode extends ItemBase {
+    get type() { return Type.HL; }
+    get radius() { return this.$.radius; }
+    get selectedId() { return this.$.selectedId; }
+    get selectedNode() { return this.$.selectedNode; }
     constructor(options) {
         //override
         options.selectedNode = -1;
@@ -13,16 +14,12 @@ class HighlightNode extends itemsBase_1.default {
         //options.id = "highlighNode";
         super(options);
         this.g.setAttribute("svg-comp", "h-node");
-        this.$.mainNode = (0, dom_1.tag)("circle", "", {
-            "svg-type": "node",
+        this.$.mainNode = tag("circle", "", {
+            "svg-type": "node", // "node-x",
             r: this.radius
         });
         this.g.append(this.$.mainNode);
     }
-    get type() { return interfaces_1.Type.HL; }
-    get radius() { return this.$.radius; }
-    get selectedId() { return this.$.selectedId; }
-    get selectedNode() { return this.$.selectedNode; }
     setRadius(value) {
         this.$.mainNode.setAttribute("r", (this.$.radius = value <= 0 ? 5 : value));
         return this;
@@ -36,7 +33,7 @@ class HighlightNode extends itemsBase_1.default {
     }
     show(x, y, id, node) {
         this.move(x, y);
-        (0, dom_1.attr)(this.$.mainNode, {
+        attr(this.$.mainNode, {
             cx: this.x,
             cy: this.y,
             //"node-x": <any>node,
@@ -50,7 +47,7 @@ class HighlightNode extends itemsBase_1.default {
         this.$.mainNode.classList.add("hide");
         this.g.classList.remove("hide");
         nodes.forEach(p => {
-            let circle = (0, dom_1.tag)("circle", "", {
+            let circle = tag("circle", "", {
                 cx: p.x,
                 cy: p.y,
                 r: this.radius,
@@ -61,7 +58,7 @@ class HighlightNode extends itemsBase_1.default {
         return this;
     }
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             name: "h-node",
             class: "h-node",
             visible: false,
@@ -69,4 +66,3 @@ class HighlightNode extends itemsBase_1.default {
         });
     }
 }
-exports.default = HighlightNode;

@@ -1,14 +1,14 @@
 import { attr, aChld } from 'dabbjs/dist/lib/dom';
 import { extend } from "dabbjs/dist/lib/misc";
-import Point from 'dabbjs/dist/lib/point';
+import { Point } from 'dabbjs/dist/lib/point';
 import { Type, IECDefaults } from './interfaces';
-import ItemSolid from './itemSolid';
-import Label from './label';
-import Circuit from './circuit';
+import { ItemSolid } from './itemSolid';
+import { Label } from './label';
+import { Circuit } from './circuit';
 import { createText } from './extra';
-import Size from 'dabbjs/dist/lib/size';
+import { Size } from 'dabbjs/dist/lib/size';
 
-export default class EC extends ItemSolid {
+export class EC extends ItemSolid {
 
   protected $!: IECDefaults;
 

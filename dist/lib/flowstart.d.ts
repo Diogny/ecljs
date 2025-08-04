@@ -1,3 +1,3 @@
-import FlowTerminational from "./flowTerm";
-export default class FlowStart extends FlowTerminational {
+import { FlowTerminational } from "./flowTerm";
+export declare class FlowStart extends FlowTerminational {
 }

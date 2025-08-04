@@ -1,30 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const dab_1 = require("dabbjs/dist/lib/dab");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const point_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/point"));
-const rect_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/rect"));
-const interfaces_1 = require("./interfaces");
-const itemsBoard_1 = (0, tslib_1.__importDefault)(require("./itemsBoard"));
-const size_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/size"));
-class Wire extends itemsBoard_1.default {
-    constructor(container, options) {
-        super(container, options);
-        this.$.dir = container.dir;
-        this.setPoints(options.points);
-        this.onProp && this.onProp({
-            id: `#${this.id}`,
-            code: 1 // "create" code = 1
-        });
-    }
-    get type() { return interfaces_1.Type.WIRE; }
+import { isArr } from 'dabbjs/dist/lib/dab';
+import { attr, tag } from 'dabbjs/dist/lib/dom';
+import { extend } from 'dabbjs/dist/lib/misc';
+import { Point } from 'dabbjs/dist/lib/point';
+import { Rect } from 'dabbjs/dist/lib/rect';
+import { Size } from 'dabbjs/dist/lib/size';
+import { Type } from './interfaces';
+import { ItemBoard } from './itemsBoard';
+export class Wire extends ItemBoard {
+    get type() { return Type.WIRE; }
     get count() { return this.$.points.length; }
     get last() { return this.$.points.length - 1; }
     get lastLine() { return this.edit ? this.$.lines.length : 0; }
     get isOpen() { return !this.container.nodeBonds(this, 0) || !this.container.nodeBonds(this, this.last); }
-    rect() { return rect_1.default.create(this.box); }
+    rect() { return Rect.create(this.box); }
     get points() { return Array.from(this.$.points); }
     get edit() { return this.$.edit; }
     /**
@@ -67,7 +55,7 @@ class Wire extends itemsBoard_1.default {
             minY = Math.min(minY, p.y);
             maxY = Math.max(maxY, p.y);
         });
-        return new size_1.default(maxX - minX + 1, maxY - minY + 1);
+        return new Size(maxX - minX + 1, maxY - minY + 1);
     }
     /**
      * @description customize arrow for directional wires only
@@ -81,11 +69,20 @@ class Wire extends itemsBoard_1.default {
         this.$.headAngle = angle;
         arrow(this.$);
     }
+    constructor(container, options) {
+        super(container, options);
+        this.$.dir = container.dir;
+        this.setPoints(options.points);
+        this.onProp && this.onProp({
+            id: `#${this.id}`,
+            code: 1 // "create" code = 1
+        });
+    }
     refresh() {
         if (this.edit) {
             for (let i = 0, a = this.$.points[0], last = this.last; i < last; i++) {
                 let b = this.$.points[i + 1], ln = this.$.lines[i];
-                (0, dom_1.attr)(ln, {
+                attr(ln, {
                     line: i + 1,
                     x1: a.x,
                     y1: a.y,
@@ -96,7 +93,7 @@ class Wire extends itemsBoard_1.default {
             }
         }
         else
-            (0, dom_1.attr)(this.$.poly, {
+            attr(this.$.poly, {
                 points: this.$.points.map(p => `${p.x}, ${p.y}`).join(' ')
             });
         arrow(this.$); //	full-refresh
@@ -105,8 +102,8 @@ class Wire extends itemsBoard_1.default {
     nodeRefresh(node) {
         if (this.edit) {
             let ln, p = this.$.points[node];
-            (ln = this.$.lines[node - 1]) && (0, dom_1.attr)(ln, { x2: p.x, y2: p.y });
-            (ln = this.$.lines[node]) && (0, dom_1.attr)(ln, { x1: p.x, y1: p.y });
+            (ln = this.$.lines[node - 1]) && attr(ln, { x2: p.x, y2: p.y });
+            (ln = this.$.lines[node]) && attr(ln, { x1: p.x, y1: p.y });
             arrow(this.$, node); // partial-refresh
         }
         else {
@@ -136,7 +133,7 @@ class Wire extends itemsBoard_1.default {
         for (let i = 0, p = this.$.points[i], end = this.last; i <= end; p = this.$.points[++i]) {
             //avoid circular reference, bonded start/end nodes are refresed by EC's nodes
             if ((i > 0 && i < end) || ((i == 0 || i == end) && !this.container.nodeBonds(this, i))) {
-                this.setNode(i, point_1.default.translateBy(p, dx, dy));
+                this.setNode(i, Point.translateBy(p, dx, dy));
             }
         }
         this.edit = savededit;
@@ -172,12 +169,12 @@ class Wire extends itemsBoard_1.default {
         return !((node == 0 || node == this.last) && this.container.nodeBonds(this, node));
     }
     setPoints(points) {
-        if (!(0, dab_1.isArr)(points)
+        if (!isArr(points)
             || points.length < 2)
             throw new Error('wire min 2 points');
         //cleanup
         this.g.innerHTML = "";
-        this.$.points = points.map(p => new point_1.default(p.x | 0, p.y | 0));
+        this.$.points = points.map(p => new Point(p.x | 0, p.y | 0));
         this.$.dir && (this.$.arrow = poly(this.g, "arrow", -1));
         moveToStart(this.$);
         if (this.edit) {
@@ -251,7 +248,7 @@ class Wire extends itemsBoard_1.default {
         }
         this.$.points.splice(node, 0, p);
         if (this.edit) {
-            let newline = line(0, point_1.default.origin, point_1.default.origin);
+            let newline = line(0, Point.origin, Point.origin);
             this.g.insertBefore(newline, this.$.lines[0]);
             //this's for ARROW next to last
             this.$.lines.unshift(newline);
@@ -271,7 +268,7 @@ class Wire extends itemsBoard_1.default {
         return -1;
     }
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             name: "wire",
             class: "wire",
             edit: false,
@@ -280,7 +277,6 @@ class Wire extends itemsBoard_1.default {
         });
     }
 }
-exports.default = Wire;
 Wire.nodeArea = 25;
 function moveToStart($) {
     $.x = $.points[0].x;
@@ -309,7 +305,7 @@ function line(ln, a, b, arrow) {
         x2: b.x,
         y2: b.y
     };
-    return !arrow && (options["svg-type"] = "line"), (0, dom_1.tag)("line", "", options);
+    return !arrow && (options["svg-type"] = "line"), tag("line", "", options);
 }
 function setlines(w, $) {
     $.lines = [];
@@ -322,7 +318,7 @@ function setlines(w, $) {
     arrow($);
 }
 function poly(g, type, line) {
-    let polyline = (0, dom_1.tag)("polyline", "", {
+    let polyline = tag("polyline", "", {
         "svg-type": type || "line",
         line: line || "0",
         points: "",
@@ -340,11 +336,11 @@ function poly(g, type, line) {
 function arrow($, node) {
     if (!$.dir)
         return;
-    let c = $.points.length - 1, last = $.points[c], prev = $.points[c - 1], r = $.headLength, angle = Math.atan2(last.y - prev.y, last.x - prev.x), swipe = $.headAngle, p = (ang) => new point_1.default((last.x - r * Math.cos(ang)) | 0, (last.y - r * Math.sin(ang)) | 0);
+    let c = $.points.length - 1, last = $.points[c], prev = $.points[c - 1], r = $.headLength, angle = Math.atan2(last.y - prev.y, last.x - prev.x), swipe = $.headAngle, p = (ang) => new Point((last.x - r * Math.cos(ang)) | 0, (last.y - r * Math.sin(ang)) | 0);
     //if node is defined, only redraw arrow when node is prev|last node of wire
     if (node != undefined && !(node == c || node == c - 1))
         return;
-    (0, dom_1.attr)($.arrow, {
+    attr($.arrow, {
         points: [p(angle - swipe), last, p(angle + swipe)].map(p => `${p.x}, ${p.y}`).join(' ')
     });
 }

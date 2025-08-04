@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const container_1 = (0, tslib_1.__importDefault)(require("./container"));
-const flowComp_1 = (0, tslib_1.__importDefault)(require("./flowComp"));
-const process_1 = (0, tslib_1.__importDefault)(require("./process"));
-const flowCond_1 = (0, tslib_1.__importDefault)(require("./flowCond"));
-const flowstart_1 = (0, tslib_1.__importDefault)(require("./flowstart"));
-const flowend_1 = (0, tslib_1.__importDefault)(require("./flowend"));
-const flowInOut_1 = (0, tslib_1.__importDefault)(require("./flowInOut"));
-const extra_1 = require("./extra");
-const misc_1 = require("dabbjs/dist/lib/misc");
+import { Container } from "./container";
+import { FlowComp } from "./flowComp";
+import { FlowProcess } from "./process";
+import { FlowConditional } from "./flowCond";
+import { FlowStart } from "./flowstart";
+import { FlowEnd } from "./flowend";
+import { FlowInOut } from "./flowInOut";
+import { getItem } from "./extra";
+import { extend } from "dabbjs/dist/lib/misc";
 /**
  * @description Flowchart component container
  */
-class Flowchart extends container_1.default {
+export class Flowchart extends Container {
     get name() { return "flowchart"; }
     get dir() { return true; }
     /**
@@ -27,15 +24,15 @@ class Flowchart extends container_1.default {
     createItem(options) {
         switch (options.name) {
             case "proc":
-                return new process_1.default(this, options);
+                return new FlowProcess(this, options);
             case "cond":
-                return new flowCond_1.default(this, options);
+                return new FlowConditional(this, options);
             case "start":
-                return new flowstart_1.default(this, options);
+                return new FlowStart(this, options);
             case "end":
-                return new flowend_1.default(this, options);
+                return new FlowEnd(this, options);
             case "inout":
-                return new flowInOut_1.default(this, options);
+                return new FlowInOut(this, options);
             default:
                 throw new Error(`unknown flowchart`);
         }
@@ -46,8 +43,8 @@ class Flowchart extends container_1.default {
         //directional components can only be connected to other directional components or wires
         //directional components have a specific amount of origin|destination bonds
         let thisFlow, icFlow;
-        if (((thisFlow = thisObj instanceof flowComp_1.default) && thisObj.outs >= thisObj.outputs)
-            || ((icFlow = ic instanceof flowComp_1.default) && ic.ins >= ic.inputs)) {
+        if (((thisFlow = thisObj instanceof FlowComp) && thisObj.outs >= thisObj.outputs)
+            || ((icFlow = ic instanceof FlowComp) && ic.ins >= ic.inputs)) {
             return false;
         }
         else if (this.bondOneWay(thisObj, thisNode, ic, icNode, 0) // from A to B
@@ -63,8 +60,8 @@ class Flowchart extends container_1.default {
     unbond(thisObj, node, id) {
         let data = super.unbond(thisObj, node, id);
         if (data != undefined) {
-            let icId = (0, extra_1.getItem)(this.$, id);
-            decrement(data, thisObj, thisObj instanceof flowComp_1.default, icId.t, icId.t instanceof flowComp_1.default);
+            let icId = getItem(this.$, id);
+            decrement(data, thisObj, thisObj instanceof FlowComp, icId.t, icId.t instanceof FlowComp);
             return data;
         }
         return;
@@ -78,31 +75,30 @@ class Flowchart extends container_1.default {
     unbondNode(thisObj, node) {
         let res = super.unbondNode(thisObj, node);
         if (res != undefined) {
-            let objflow = thisObj instanceof flowComp_1.default, data = {
+            let objflow = thisObj instanceof FlowComp, data = {
                 dir: res.dir,
                 id: res.id,
                 node: res.node
             };
             //the should be only one connection for flowcharts
             res.bonds.forEach((obj) => {
-                let icId = (0, extra_1.getItem)(this.$, obj.id);
+                let icId = getItem(this.$, obj.id);
                 data.toId = obj.id;
                 data.toNode = obj.node;
-                decrement(data, thisObj, objflow, icId.t, icId.t instanceof flowComp_1.default);
+                decrement(data, thisObj, objflow, icId.t, icId.t instanceof FlowComp);
             });
         }
         return res;
     }
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             reSizePolicy: "expand",
         });
     }
 }
-exports.default = Flowchart;
 function decrement(data, obj, objFlow, ic, icFlow) {
     let propName = (direction) => direction == 0 ? "outs" : "ins", condLabel = (fl, node) => {
-        if (!(fl instanceof flowCond_1.default))
+        if (!(fl instanceof FlowConditional))
             return;
         let nodeLabel = fl.nodeLabel(false);
         if (nodeLabel == node) {

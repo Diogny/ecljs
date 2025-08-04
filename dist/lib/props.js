@@ -1,24 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PropContainer = exports.UIProp = exports.ReactProp = void 0;
-const dab_1 = require("dabbjs/dist/lib/dab");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const interfaces_1 = require("./interfaces");
-class ReactProp extends interfaces_1.Base {
-    /**
-     * @description creates a react property
-     * @param options [key]::value object as description
-     *
-     * valid [options] are:
-     * - value: property default value, default is undefined.
-     * - _: [key]::value object with internal data
-     * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
-     */
-    constructor(options) {
-        super(options);
-        (0, dab_1.isFn)(options.onChange) && (this.onChange = options.onChange);
-    }
+import { dP, typeOf, isInt, splat, isStr, isNumeric, isFn } from 'dabbjs/dist/lib/dab';
+import { qS, isDOM } from 'dabbjs/dist/lib/dom';
+import { each } from 'dabbjs/dist/lib/misc';
+import { Base } from './interfaces';
+export class ReactProp extends Base {
     /**
      * @description returns an object [key]::any with the property inside data
      */
@@ -34,6 +18,19 @@ class ReactProp extends interfaces_1.Base {
         this.$.value = val;
         this.onChange && this.onChange(val, 2, this, void 0);
     }
+    /**
+     * @description creates a react property
+     * @param options [key]::value object as description
+     *
+     * valid [options] are:
+     * - value: property default value, default is undefined.
+     * - _: [key]::value object with internal data
+     * - onChange: (value: any, where: number, prop: IReactProp, e: any): any | void
+     */
+    constructor(options) {
+        super(options);
+        isFn(options.onChange) && (this.onChange = options.onChange);
+    }
     dispose() {
         //
     }
@@ -47,8 +44,13 @@ class ReactProp extends interfaces_1.Base {
         };
     }
 }
-exports.ReactProp = ReactProp;
-class UIProp extends ReactProp {
+export class UIProp extends ReactProp {
+    get type() { return this.$.type; }
+    get html() { return this.$.html; }
+    get editable() { return this.$.editable; }
+    get tag() { return this.$.tag; }
+    get nodeName() { return this.html.nodeName.toLowerCase(); }
+    get react() { return this.editable || this.$.htmlSelect; }
     /**
      * @description creates a react UI property
      * @param options [key]::value object as description
@@ -61,7 +63,7 @@ class UIProp extends ReactProp {
      */
     constructor(options) {
         super(options);
-        if (!(this.$.html = ((0, dom_1.isDOM)(options.tag) ? (options.tag) : (0, dom_1.qS)(options.tag))))
+        if (!(this.$.html = (isDOM(options.tag) ? (options.tag) : qS(options.tag))))
             throw new Error('wrong options');
         this.html.dab = this;
         switch (this.nodeName) {
@@ -109,7 +111,7 @@ class UIProp extends ReactProp {
                 let index = -1;
                 this.$.selectCount = this.html.length;
                 //later return an array for select multiple
-                (0, dab_1.dP)(this, "index", {
+                dP(this, "index", {
                     get: () => index,
                     set(value) {
                         (value >= 0 && value < this.$.selectCount) && // this.options.length
@@ -118,7 +120,7 @@ class UIProp extends ReactProp {
                                 this.trigger());
                     }
                 });
-                (0, dab_1.dP)(this, "selectedOption", {
+                dP(this, "selectedOption", {
                     get: () => this.html.options[this.html.selectedIndex]
                 });
                 break;
@@ -131,12 +133,6 @@ class UIProp extends ReactProp {
         this.react
             && this.html.addEventListener('change', this.trigger);
     }
-    get type() { return this.$.type; }
-    get html() { return this.$.html; }
-    get editable() { return this.$.editable; }
-    get tag() { return this.$.tag; }
-    get nodeName() { return this.html.nodeName.toLowerCase(); }
-    get react() { return this.editable || this.$.htmlSelect; }
     get value() {
         if (!this.react) {
             return this.$.value;
@@ -167,22 +163,22 @@ class UIProp extends ReactProp {
             return;
         }
         if (!this.$.htmlSelect) {
-            let valtype = (0, dab_1.typeOf)(val);
+            let valtype = typeOf(val);
             if ((this.type == "text" && valtype == "string") ||
                 (this.type == "boolean" && valtype == "boolean") ||
-                (this.type == "integer" && (0, dab_1.isInt)(val)) ||
-                (this.type == "number" && (0, dab_1.isNumeric)(val)))
+                (this.type == "integer" && isInt(val)) ||
+                (this.type == "number" && isNumeric(val)))
                 this.html[this.$.getter] = val;
         }
         else {
             if (this.$.selectMultiple) {
-                let values = (0, dab_1.splat)(val).map((num) => num + '');
+                let values = splat(val).map((num) => num + '');
                 [].forEach.call(this.html.options, (option) => {
                     (values.indexOf(option.value) >= 0) && (option.selected = true);
                 });
             }
             else {
-                if ((0, dab_1.isStr)(this.value)) {
+                if (isStr(this.value)) {
                     val = [].findIndex.call(this.html.options, (option) => option.value == val);
                 }
                 this.html.selectedIndex = val | 0;
@@ -226,8 +222,10 @@ class UIProp extends ReactProp {
         };
     }
 }
-exports.UIProp = UIProp;
-class PropContainer extends interfaces_1.Base {
+export class PropContainer extends Base {
+    get props() { return this.$._; }
+    get modified() { return this.$.modified; }
+    set modified(value) { this.$.modified = value; }
     /**
      * @description creates a property container
      * @param props [key]::value object
@@ -240,11 +238,8 @@ class PropContainer extends interfaces_1.Base {
      */
     constructor(props) {
         super();
-        (0, misc_1.each)(props, (options, key) => this.$._[key] = hook(this, key, options));
+        each(props, (options, key) => this.$._[key] = hook(this, key, options));
     }
-    get props() { return this.$._; }
-    get modified() { return this.$.modified; }
-    set modified(value) { this.$.modified = value; }
     /**
      * @description class property defaults. Only these keys are copied internally
      */
@@ -255,7 +250,6 @@ class PropContainer extends interfaces_1.Base {
         };
     }
 }
-exports.PropContainer = PropContainer;
 /**
  * @description creates a property hook to container properties
  * @param parent container
@@ -273,7 +267,7 @@ function hook(parent, name, options) {
     var 
     //defaults to "true" if not defined
     onModify = options.modify == undefined ? true : options.modify, p = (options.tag) ? new UIProp(options) : new ReactProp(options), modified = false, prop = {};
-    (0, dab_1.dP)(prop, "value", {
+    dP(prop, "value", {
         get() {
             return p.value;
         },
@@ -284,11 +278,11 @@ function hook(parent, name, options) {
             onModify && (parent.$.modified = true);
         }
     });
-    (0, dab_1.dP)(prop, "name", { get() { return name; } });
-    (0, dab_1.dP)(prop, "modified", { get() { return modified; } });
-    (0, dab_1.dP)(prop, "prop", { get() { return p; } });
+    dP(prop, "name", { get() { return name; } });
+    dP(prop, "modified", { get() { return modified; } });
+    dP(prop, "prop", { get() { return p; } });
     //shortcut returns the data of the property
-    (0, dab_1.dP)(prop, "_", { get() { return p._; } });
+    dP(prop, "_", { get() { return p._; } });
     Object.freeze(prop);
     return prop;
 }

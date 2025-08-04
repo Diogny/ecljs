@@ -1,65 +1,65 @@
-import * as Interfaces from "./lib/interfaces";
+//import * as Interfaces from "./lib/interfaces";
 
 import { UIProp, ReactProp, PropContainer } from "./lib/props";
-import Bonds from "./lib/bonds";
+import { Bond } from "./lib/bonds";
 
-import HighlightNode from "./lib/highlightNode";
-import Label from "./lib/label";
-import Tooltip from "./lib/tooltip";
+import { HighlightNode } from "./lib/highlightNode";
+import { Label } from "./lib/label";
+import { Tooltip } from "./lib/tooltip";
 
-import Comp from "./lib/components";
+import { CompStore } from "./lib/components";
 
-import Item from "./lib/item";
-import ItemBase from "./lib/itemsBase";
-import ItemBoard from "./lib/itemsBoard";
-import ItemSolid from "./lib/itemSolid";
+import { Item } from "./lib/item";
+import { ItemBase } from "./lib/itemsBase";
+import { ItemBoard } from "./lib/itemsBoard";
+import { ItemSolid } from "./lib/itemSolid";
 
-import Container from "./lib/container";
-import Circuit from "./lib/circuit";
-import Flowchart from "./lib/flowchart";
+import { Container } from "./lib/container";
+import { Circuit } from "./lib/circuit";
+import { Flowchart } from "./lib/flowchart";
 
-import EC from "./lib/ec";
-import Wire from "./lib/wire";
+import { EC } from "./lib/ec";
+import { Wire } from "./lib/wire";
 
-import FlowComp from "./lib/flowComp";
-import FlowProcess from "./lib/process";
-import FlowConditional from "./lib/flowCond";
-import FlowStart from "./lib/flowstart";
-import FlowEnd from "./lib/flowend";
-import FlowInOut from "./lib/flowInOut";
+import { FlowComp } from "./lib/flowComp";
+import { FlowProcess } from "./lib/process";
+import { FlowConditional } from "./lib/flowCond";
+import { FlowStart } from "./lib/flowstart";
+import { FlowEnd } from "./lib/flowend";
+import { FlowInOut } from "./lib/flowInOut";
 
 export {
 
-	ReactProp,
-	UIProp,
-	PropContainer,
+  ReactProp,
+  UIProp,
+  PropContainer,
 
-	Interfaces,
+  //Interfaces,
 
-	Bonds,
-	HighlightNode,
-	Label,
-	Tooltip,
+  Bond,
+  HighlightNode,
+  Label,
+  Tooltip,
 
-	Comp,
+  CompStore as Comp,
 
-	Item,
-	ItemBase,
-	ItemBoard,
+  Item,
+  ItemBase,
+  ItemBoard,
 
-	Container,
-	Circuit,
-	Flowchart,
+  Container,
+  Circuit,
+  Flowchart,
 
-	ItemSolid,
-	EC,
-	Wire,
+  ItemSolid,
+  EC,
+  Wire,
 
-	FlowComp,
-	FlowProcess,
-	FlowConditional,
-	FlowStart,
-	FlowEnd,
-	FlowInOut
+  FlowComp,
+  FlowProcess,
+  FlowConditional,
+  FlowStart,
+  FlowEnd,
+  FlowInOut
 
 }

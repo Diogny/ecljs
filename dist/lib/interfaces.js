@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Base = exports.Type = void 0;
-const misc_1 = require("dabbjs/dist/lib/misc");
+import { copy } from "dabbjs/dist/lib/misc";
 //import { type } from "os";
 //***************************************** Types ************************************//
-var Type;
+export var Type;
 (function (Type) {
     /**
      * Undefined/unknown type
@@ -46,9 +43,9 @@ var Type;
      * UI Widget
      */
     Type[Type["WIDGET"] = 9] = "WIDGET";
-})(Type = exports.Type || (exports.Type = {}));
+})(Type || (Type = {}));
 ;
-class Base {
+export class Base {
     /**
      *
      * @param options [key]::value object with default values
@@ -65,7 +62,6 @@ class Base {
      * @param options [key]::value options to be copied internally
      */
     clear(options) {
-        this.$ = (0, misc_1.copy)(this.defaults(), options || {});
+        this.$ = copy(this.defaults(), options || {});
     }
 }
-exports.Base = Base;

@@ -1,9 +1,9 @@
 import { IConditionalLabel } from "./interfaces";
-import Label from "./label";
+import { Label } from "./label";
 import { extend } from "dabbjs/dist/lib/misc";
 
 //internal class
-export default class ConditionalLabel extends Label {
+export class ConditionalLabel extends Label {
 
 	protected $!: IConditionalLabel;
 

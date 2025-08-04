@@ -1,17 +1,17 @@
 import { IPoint } from "dabbjs/dist/lib/interfaces";
 import { copy } from "dabbjs/dist/lib/misc";
-import Point from 'dabbjs/dist/lib/point';
-import Size from "dabbjs/dist/lib/size";
-import Rect from "dabbjs/dist/lib/rect";
+import { Point } from 'dabbjs/dist/lib/point';
+import { Size } from "dabbjs/dist/lib/size";
+import { Rect } from "dabbjs/dist/lib/rect";
 import Unit from "electric-units/dist/units";
 import { ReactProp } from "./props";
-import Label from "./label";
-import ItemBoard from "./itemsBoard";
-import Bond from "./bonds";
-import Wire from "./wire";
-import CompStore from "./components";
-import ConditionalLabel from "./flowCondLabel";
-import FlowComp from "./flowComp";
+import { Label } from "./label";
+import { ItemBoard } from "./itemsBoard";
+import { Bond } from "./bonds";
+import { Wire } from "./wire";
+import { CompStore } from "./components";
+import { ConditionalLabel } from "./flowCondLabel";
+import { FlowComp } from "./flowComp";
 //import { type } from "os";
 
 //***************************************** Types ************************************//

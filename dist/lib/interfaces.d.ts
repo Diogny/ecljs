@@ -1,16 +1,16 @@
 import { IPoint } from "dabbjs/dist/lib/interfaces";
-import Point from 'dabbjs/dist/lib/point';
-import Size from "dabbjs/dist/lib/size";
-import Rect from "dabbjs/dist/lib/rect";
+import { Point } from 'dabbjs/dist/lib/point';
+import { Size } from "dabbjs/dist/lib/size";
+import { Rect } from "dabbjs/dist/lib/rect";
 import Unit from "electric-units/dist/units";
 import { ReactProp } from "./props";
-import Label from "./label";
-import ItemBoard from "./itemsBoard";
-import Bond from "./bonds";
-import Wire from "./wire";
-import CompStore from "./components";
-import ConditionalLabel from "./flowCondLabel";
-import FlowComp from "./flowComp";
+import { Label } from "./label";
+import { ItemBoard } from "./itemsBoard";
+import { Bond } from "./bonds";
+import { Wire } from "./wire";
+import { CompStore } from "./components";
+import { ConditionalLabel } from "./flowCondLabel";
+import { FlowComp } from "./flowComp";
 export declare enum Type {
     /**
      * Undefined/unknown type
@@ -93,7 +93,7 @@ export declare abstract class Base implements IBase {
         [x: string]: any;
     };
 }
-export declare type ContainerMapType<T extends ItemBoard> = {
+export type ContainerMapType<T extends ItemBoard> = {
     t: T;
     b: Bond[];
     c: number;
@@ -108,11 +108,11 @@ export interface IContainerDefaults<T extends ItemBoard> {
     wireMap: Map<string, ContainerMapType<Wire>>;
     selected: (T | Wire)[];
 }
-export declare type IFlowResizePolicy = "grow" | "expand";
+export type IFlowResizePolicy = "grow" | "expand";
 export interface IFlowchartDefaults extends IContainerDefaults<FlowComp> {
     reSizePolicy: IFlowResizePolicy;
 }
-export declare type IEqual = (p: Point | Size | Rect | Unit) => boolean;
+export type IEqual = (p: Point | Size | Rect | Unit) => boolean;
 export interface IPropHookProp {
     /**
     * value
@@ -123,7 +123,7 @@ export interface IPropHookProp {
      */
     valueType: string;
 }
-export declare type IPropHookPropType = string | number | IPropHookProp;
+export type IPropHookPropType = string | number | IPropHookProp;
 export interface IComponentProperty extends IPropHookProp {
     /**
      * input, select, string, number
@@ -135,7 +135,7 @@ export interface IComponentProperty extends IPropHookProp {
     options?: string[];
     readonly: boolean;
 }
-export declare type ComponentPropertyType = string | number | IComponentProperty;
+export type ComponentPropertyType = string | number | IComponentProperty;
 export interface IDisposable {
     dispose(): void;
 }
@@ -155,7 +155,7 @@ export interface IReactPropDefaults {
     };
     value: any;
 }
-export declare type IHookValue = number | string | Size | Point | Unit | Rect;
+export type IHookValue = number | string | Size | Point | Unit | Rect;
 export interface IPropHook {
     value: any;
     modified: boolean;
@@ -405,7 +405,7 @@ export interface IBondNode {
  * - 0 - origin bond. this's the start of EC | FlowComp or Wire node bond
  * - 1 - dest bond. this's the way back in this bond relationship
  */
-export declare type BondDir = 0 | 1;
+export type BondDir = 0 | 1;
 /**
  * unbond origin/start data
  */

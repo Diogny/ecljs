@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const dab_1 = require("dabbjs/dist/lib/dab");
+import { obj } from 'dabbjs/dist/lib/dab';
 //const tmpl = "{base.comp.name}-{base.count}";
 const defaults = (type, name) => ({
     name: name,
@@ -14,7 +12,7 @@ const defaults = (type, name) => ({
         props: {}
     }
 });
-class CompStore {
+export class CompStore {
     constructor(library) {
         this.has = (name) => this.store.has(name);
         /**
@@ -30,7 +28,7 @@ class CompStore {
                         return item;
                 }
             }
-            return (0, dab_1.obj)(comp);
+            return obj(comp);
         };
         this.name = library.name;
         this.type = library.type;
@@ -52,7 +50,7 @@ class CompStore {
                     throw new Error(`no base template`);
                 options.data = base.data;
                 options.meta = JSON.parse(JSON.stringify(base.meta));
-                template.label && (options.meta.label = (0, dab_1.obj)(template.label));
+                template.label && (options.meta.label = obj(template.label));
                 template.nodeLabels.forEach((lbl, ndx) => {
                     options.meta.nodes.list[ndx].label = lbl;
                 });
@@ -74,4 +72,3 @@ class CompStore {
     }
     get size() { return this.store.size; }
 }
-exports.default = CompStore;

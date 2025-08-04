@@ -1,12 +1,12 @@
-import Size from "dabbjs/dist/lib/size";
-import Rect from "dabbjs/dist/lib/rect";
+import { Size } from "dabbjs/dist/lib/size";
+import { Rect } from "dabbjs/dist/lib/rect";
 import { Type, IFlowChartDefaults, INodeInfo } from "./interfaces";
-import Flowchart from "./flowchart";
-import ItemBoard from "./itemsBoard";
+import { Flowchart } from "./flowchart";
+import { ItemBoard } from "./itemsBoard";
 /**
  * @description flowchart base component class
  */
-export default abstract class FlowComp extends ItemBoard {
+export declare abstract class FlowComp extends ItemBoard {
     protected $: IFlowChartDefaults;
     container: Flowchart;
     get type(): Type;

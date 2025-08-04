@@ -1,6 +1,6 @@
-import Point from "dabbjs/dist/lib/point";
+import { Point } from "dabbjs/dist/lib/point";
 import { IItemDefaults, Base } from "./interfaces";
-export default abstract class Item extends Base {
+export declare abstract class Item extends Base {
     protected $: IItemDefaults;
     get name(): string;
     get id(): string;

@@ -3,9 +3,9 @@ import { obj, isStr, pojo } from 'dabbjs/dist/lib/dab';
 import { map, filter, extend } from 'dabbjs/dist/lib/misc';
 import { attr, tag } from 'dabbjs/dist/lib/dom';
 import { Type, ITooltipDefaults } from "./interfaces";
-import Label from './label';
+import { Label } from './label';
 
-export default class Tooltip extends Label {
+export class Tooltip extends Label {
 
 	get type(): Type { return Type.TOOLTIP }
 	protected $!: ITooltipDefaults;

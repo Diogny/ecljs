@@ -1,7 +1,7 @@
 import { dP } from "dabbjs/dist/lib/dab";
-import Size from "dabbjs/dist/lib/size";
-import Point from "dabbjs/dist/lib/point";
-import Rect from "dabbjs/dist/lib/rect";
+import { Size } from "dabbjs/dist/lib/size";
+import { Point } from "dabbjs/dist/lib/point";
+import { Rect } from "dabbjs/dist/lib/rect";
 import Unit from "electric-units/dist/units";
 import {
   IPropHook,

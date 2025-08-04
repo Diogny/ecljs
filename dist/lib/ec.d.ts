@@ -1,8 +1,8 @@
 import { Type, IECDefaults } from './interfaces';
-import ItemSolid from './itemSolid';
-import Circuit from './circuit';
-import Size from 'dabbjs/dist/lib/size';
-export default class EC extends ItemSolid {
+import { ItemSolid } from './itemSolid';
+import { Circuit } from './circuit';
+import { Size } from 'dabbjs/dist/lib/size';
+export declare class EC extends ItemSolid {
     protected $: IECDefaults;
     get type(): Type;
     /**

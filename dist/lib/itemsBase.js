@@ -1,30 +1,27 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const point_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/point"));
-const rect_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/rect"));
-const item_1 = (0, tslib_1.__importDefault)(require("./item"));
-class ItemBase extends item_1.default {
-    constructor(options) {
-        super(options);
-        this.$.g = (0, dom_1.tag)("g", this.$.id, {
-            class: this.class + (this.visible ? '' : ' hide')
-        });
-    }
+import { extend } from 'dabbjs/dist/lib/misc';
+import { tCl, tag } from 'dabbjs/dist/lib/dom';
+import { Point } from 'dabbjs/dist/lib/point';
+import { Rect } from 'dabbjs/dist/lib/rect';
+import { Item } from './item';
+export class ItemBase extends Item {
     get base() { return this.$.base; }
     get g() { return this.$.g; }
     get box() { return this.g.getBBox(); }
     get origin() {
         let b = this.box;
-        return new point_1.default((b.x + b.width / 2) | 0, (b.y + b.height / 2) | 0);
+        return new Point((b.x + b.width / 2) | 0, (b.y + b.height / 2) | 0);
     }
     rect() {
-        return new rect_1.default(this.p.x, this.p.y, this.box.width, this.box.height);
+        return new Rect(this.p.x, this.p.y, this.box.width, this.box.height);
     }
     setVisible(value) {
-        return (0, dom_1.tCl)(this.g, "hide", !super.setVisible(value).visible), this;
+        return tCl(this.g, "hide", !super.setVisible(value).visible), this;
+    }
+    constructor(options) {
+        super(options);
+        this.$.g = tag("g", this.$.id, {
+            class: this.class + (this.visible ? '' : ' hide')
+        });
     }
     /**
      * removes this base component from the board
@@ -40,10 +37,9 @@ class ItemBase extends item_1.default {
         //
     }
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             g: void 0,
             base: void 0 //this comes from createItem by default
         });
     }
 }
-exports.default = ItemBase;

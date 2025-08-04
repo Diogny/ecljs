@@ -1,8 +1,8 @@
-import Rect from "dabbjs/dist/lib/rect";
+import { Rect } from "dabbjs/dist/lib/rect";
 import { IItemSolidDefaults, INodeInfo } from "./interfaces";
-import ItemBoard from "./itemsBoard";
-import Container from "./container";
-export default abstract class ItemSolid extends ItemBoard {
+import { ItemBoard } from "./itemsBoard";
+import { Container } from "./container";
+export declare abstract class ItemSolid extends ItemBoard {
     protected $: IItemSolidDefaults;
     get last(): number;
     get count(): number;

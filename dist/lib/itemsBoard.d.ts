@@ -1,10 +1,10 @@
 import { IPoint } from 'dabbjs/dist/lib/interfaces';
-import Size from 'dabbjs/dist/lib/size';
+import { Size } from 'dabbjs/dist/lib/size';
 import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
-import Bond from './bonds';
-import ItemBase from './itemsBase';
-import Container from './container';
-export default abstract class ItemBoard extends ItemBase {
+import { Bond } from './bonds';
+import { ItemBase } from './itemsBase';
+import { Container } from './container';
+export declare abstract class ItemBoard extends ItemBase {
     container: Container<ItemBoard>;
     protected $: IItemBoardDefaults;
     get onProp(): (args: IItemBoardPropEvent) => void;

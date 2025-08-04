@@ -1,11 +1,11 @@
-import Container from "./container";
-import FlowComp from "./flowComp";
-import Wire from "./wire";
+import { Container } from "./container";
+import { FlowComp } from "./flowComp";
+import { Wire } from "./wire";
 import { IUnbondNodeData, IUnbondData, IFlowchartDefaults, IFlowResizePolicy } from "./interfaces";
 /**
  * @description Flowchart component container
  */
-export default class Flowchart extends Container<FlowComp> {
+export declare class Flowchart extends Container<FlowComp> {
     protected $: IFlowchartDefaults;
     get name(): string;
     get dir(): boolean;

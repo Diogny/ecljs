@@ -2,14 +2,14 @@ import { IPoint } from 'dabbjs/dist/lib/interfaces';
 import { isFn, obj } from 'dabbjs/dist/lib/dab';
 import { extend } from 'dabbjs/dist/lib/misc';
 import { tCl, attr, tag } from 'dabbjs/dist/lib/dom';
-import Size from 'dabbjs/dist/lib/size';
+import { Size } from 'dabbjs/dist/lib/size';
 import { IItemBoardDefaults, INodeInfo, ComponentPropertyType, IItemBoardPropEvent } from './interfaces';
-import Bond from './bonds';
-import ItemBase from './itemsBase';
-import Container from './container';
+import { Bond } from './bonds';
+import { ItemBase } from './itemsBase';
+import { Container } from './container';
 
 //ItemBoard->Wire
-export default abstract class ItemBoard extends ItemBase {
+export abstract class ItemBoard extends ItemBase {
 
   protected $!: IItemBoardDefaults;
 

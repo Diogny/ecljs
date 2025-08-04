@@ -1,6 +1,6 @@
 import { IConditionalLabel } from "./interfaces";
-import Label from "./label";
-export default class ConditionalLabel extends Label {
+import { Label } from "./label";
+export declare class ConditionalLabel extends Label {
     protected $: IConditionalLabel;
     /**
      * @description liked 0-base node, -1 if not linked

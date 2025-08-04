@@ -1,9 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const point_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/point"));
-const interfaces_1 = require("./interfaces");
-class Item extends interfaces_1.Base {
+import { Point } from "dabbjs/dist/lib/point";
+import { Base } from "./interfaces";
+export class Item extends Base {
+    get name() { return this.$.name; }
+    get id() { return this.$.id; }
+    get x() { return this.$.x; }
+    get y() { return this.$.y; }
+    get p() { return new Point(this.x, this.y); }
+    get class() { return this.$.class; }
+    get visible() { return this.$.visible; }
     constructor(options) {
         //merge defaults and deep copy
         //all default properties must be refrenced from this or this.$
@@ -15,13 +19,6 @@ class Item extends interfaces_1.Base {
         this.$.x = this.$.x || 0;
         this.$.y = this.$.y || 0;
     }
-    get name() { return this.$.name; }
-    get id() { return this.$.id; }
-    get x() { return this.$.x; }
-    get y() { return this.$.y; }
-    get p() { return new point_1.default(this.x, this.y); }
-    get class() { return this.$.class; }
-    get visible() { return this.$.visible; }
     setVisible(value) {
         this.$.visible = !!value;
         return this;
@@ -48,4 +45,3 @@ class Item extends interfaces_1.Base {
         };
     }
 }
-exports.default = Item;

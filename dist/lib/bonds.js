@@ -1,8 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const dab_1 = require("dabbjs/dist/lib/dab");
-const interfaces_1 = require("./interfaces");
-class Bond {
+import { obj } from 'dabbjs/dist/lib/dab';
+import { Type } from './interfaces';
+export class Bond {
+    get type() { return Type.BOND; }
+    get count() { return this.to.length; }
+    // 0>id-0(1)&id-1(12)
+    get link() { return `${this.from.ndx}>` + this.to.map(b => `${b.id}(${b.ndx})`).join('&'); }
     /**
      * @description implements a component bond, it must be created by default as a One-to-One bond
      * @param from component
@@ -23,10 +25,6 @@ class Bond {
         this.to = [];
         this.add(to, toNode);
     }
-    get type() { return interfaces_1.Type.BOND; }
-    get count() { return this.to.length; }
-    // 0>id-0(1)&id-1(12)
-    get link() { return `${this.from.ndx}>` + this.to.map(b => `${b.id}(${b.ndx})`).join('&'); }
     has(id) { return this.to.some((b) => id == b.id); }
     get(id) {
         return this.to.find((b) => id == b.id);
@@ -40,7 +38,7 @@ class Bond {
         return false;
     }
     create(ec, ndx) {
-        return (0, dab_1.obj)({
+        return obj({
             id: ec.id,
             type: ec.type,
             ndx: ndx
@@ -57,7 +55,6 @@ class Bond {
         return b;
     }
 }
-exports.default = Bond;
 Bond.display = (arr) => {
     return (arr == undefined) ? [] : arr === null || arr === void 0 ? void 0 : arr.filter(b => b != undefined).map((o) => o.toString());
 };

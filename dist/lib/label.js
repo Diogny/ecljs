@@ -1,34 +1,31 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const dab_1 = require("dabbjs/dist/lib/dab");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const interfaces_1 = require("./interfaces");
-const itemsBase_1 = (0, tslib_1.__importDefault)(require("./itemsBase"));
-class Label extends itemsBase_1.default {
-    constructor(options) {
-        super(options);
-        (0, dom_1.aChld)(this.g, this.$.svgtext = (0, dom_1.tag)("text", "", {}));
-        this.$.svgtext.innerHTML = this.$.text;
-    }
-    get type() { return interfaces_1.Type.LABEL; }
+import { obj } from "dabbjs/dist/lib/dab";
+import { aChld, attr, tag } from "dabbjs/dist/lib/dom";
+import { extend } from "dabbjs/dist/lib/misc";
+import { Type } from "./interfaces";
+import { ItemBase } from "./itemsBase";
+export class Label extends ItemBase {
+    get type() { return Type.LABEL; }
     get text() { return this.$.text; }
     get size() {
         let b = this.$.svgtext.getBBox();
-        return (0, dab_1.obj)({
+        return obj({
             width: Math.round(b.width),
             height: Math.round(b.height)
         });
     }
     get fontSize() { return this.$.fontSize; }
+    constructor(options) {
+        super(options);
+        aChld(this.g, this.$.svgtext = tag("text", "", {}));
+        this.$.svgtext.innerHTML = this.$.text;
+    }
     move(x, y) {
         super.move(x, y);
-        (0, dom_1.attr)(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
+        attr(this.g, { transform: "translate(" + this.x + " " + this.y + ")" });
         return this;
     }
     setFontSize(value) {
-        (0, dom_1.attr)(this.$.svgtext, {
+        attr(this.$.svgtext, {
             "font-size": this.$.fontSize = value
         });
         return this;
@@ -37,7 +34,7 @@ class Label extends itemsBase_1.default {
         return this.$.svgtext.innerHTML = this.$.text = text, this;
     }
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             name: "label",
             class: "label",
             fontSize: 15,
@@ -45,4 +42,3 @@ class Label extends itemsBase_1.default {
         });
     }
 }
-exports.default = Label;

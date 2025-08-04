@@ -1,45 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const dab_1 = require("dabbjs/dist/lib/dab");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const point_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/point"));
-const size_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/size"));
+import { toBool, clone } from "dabbjs/dist/lib/dab";
+import { extend, each } from "dabbjs/dist/lib/misc";
+import { aChld, css, attr } from "dabbjs/dist/lib/dom";
+import { Point } from "dabbjs/dist/lib/point";
+import { Size } from "dabbjs/dist/lib/size";
 //
-const interfaces_1 = require("./interfaces");
-const itemsBoard_1 = (0, tslib_1.__importDefault)(require("./itemsBoard"));
-const extra_1 = require("./extra");
+import { Type } from "./interfaces";
+import { ItemBoard } from "./itemsBoard";
+import { createText, pinInfo, flowNodes } from "./extra";
 /**
  * @description flowchart base component class
  */
-class FlowComp extends itemsBoard_1.default {
-    constructor(flowchart, options) {
-        super(flowchart, options);
-        //set internal properties
-        this.$.ins = 0;
-        this.$.outs = 0;
-        let meta = this.base.meta;
-        this.$.nodes = (0, dab_1.clone)(meta.nodes.list);
-        this.$.minSize = size_1.default.parse(meta.minSize);
-        this.$.fontSize = meta.fontSize;
-        //check if these properties were provided in options
-        this.$.size = options.size || size_1.default.parse(meta.size);
-        this.$.text = options.text || meta.text;
-        let pos = options.pos || point_1.default.parse(meta.position);
-        //create text
-        (0, dom_1.aChld)(this.g, this.$.svgText = (0, extra_1.createText)({
-            //if options.text was set, then svg text pos may change with UI algorithm
-            x: pos.x,
-            y: pos.y,
-            //if options.text was set, then UI must set text tspans with algorithms not here
-        }, `<tspan x="${pos.x}" dy="0">${options.text ? '' : this.text}</tspan>`));
-        (0, dom_1.css)(this.$.svgText, {
-            //if options.text was set, then fontSize may change with UI algorithm
-            "font-size": this.fontSize + "px",
-        });
-    }
-    get type() { return interfaces_1.Type.FL; }
+export class FlowComp extends ItemBoard {
+    get type() { return Type.FL; }
     get last() { return this.$.nodes.length - 1; }
     get count() { return this.$.nodes.length; }
     get minSize() { return this.$.minSize; }
@@ -51,10 +23,10 @@ class FlowComp extends itemsBoard_1.default {
      */
     setSize(value) {
         if (!value.equal(this.size)) {
-            let s = new size_1.default(value.width - this.minSize.width, value.height - this.minSize.height);
+            let s = new Size(value.width - this.minSize.width, value.height - this.minSize.height);
             if (s.positive) {
                 //for flowchart conditional
-                if ((0, dab_1.toBool)(this.base.meta.lockedSize)) {
+                if (toBool(this.base.meta.lockedSize)) {
                     let m = Math.min(value.width, value.height);
                     value.width = m;
                     value.height = m;
@@ -102,12 +74,37 @@ class FlowComp extends itemsBoard_1.default {
     set text(value) { this.$.text = value; }
     get fontSize() { return this.$.fontSize; }
     set fontSize(value) { this.$.fontSize = value; }
+    constructor(flowchart, options) {
+        super(flowchart, options);
+        //set internal properties
+        this.$.ins = 0;
+        this.$.outs = 0;
+        let meta = this.base.meta;
+        this.$.nodes = clone(meta.nodes.list);
+        this.$.minSize = Size.parse(meta.minSize);
+        this.$.fontSize = meta.fontSize;
+        //check if these properties were provided in options
+        this.$.size = options.size || Size.parse(meta.size);
+        this.$.text = options.text || meta.text;
+        let pos = options.pos || Point.parse(meta.position);
+        //create text
+        aChld(this.g, this.$.svgText = createText({
+            //if options.text was set, then svg text pos may change with UI algorithm
+            x: pos.x,
+            y: pos.y,
+            //if options.text was set, then UI must set text tspans with algorithms not here
+        }, `<tspan x="${pos.x}" dy="0">${options.text ? '' : this.text}</tspan>`));
+        css(this.$.svgText, {
+            //if options.text was set, then fontSize may change with UI algorithm
+            "font-size": this.fontSize + "px",
+        });
+    }
     /**
      * @description perform node readjustment, it calls refresh() function
      * @param size new size
      */
     onResize(size) {
-        (0, extra_1.flowNodes)(this.$.nodes, size);
+        flowNodes(this.$.nodes, size);
         this.refresh();
     }
     /**
@@ -118,7 +115,7 @@ class FlowComp extends itemsBoard_1.default {
      * this returns (x, y) relative to the EC location
      */
     node(node, nodeOnly) {
-        let pin = (0, extra_1.pinInfo)(this.$.nodes, node);
+        let pin = pinInfo(this.$.nodes, node);
         if (pin && !nodeOnly) {
             pin.x += this.x;
             pin.y += this.y;
@@ -129,11 +126,11 @@ class FlowComp extends itemsBoard_1.default {
      * @description refreshes flowchart location, and updates bonded cmoponents
      */
     refresh() {
-        (0, dom_1.attr)(this.g, {
+        attr(this.g, {
             transform: `translate(${this.x} ${this.y})`
         });
         //check below
-        (0, misc_1.each)(this.bonds, (_b, key) => {
+        each(this.bonds, (_b, key) => {
             this.nodeRefresh(key);
         });
         return this;
@@ -143,7 +140,7 @@ class FlowComp extends itemsBoard_1.default {
     //			= 1,	show ony available inputs
     //wiring must send signal if it's starting or ending the bond
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             class: "fl",
             dir: true,
             onResize: void 0,
@@ -154,4 +151,3 @@ class FlowComp extends itemsBoard_1.default {
         });
     }
 }
-exports.default = FlowComp;

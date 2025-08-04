@@ -2,14 +2,14 @@ import { IPoint } from 'dabbjs/dist/lib/interfaces';
 import { isArr } from 'dabbjs/dist/lib/dab';
 import { attr, tag } from 'dabbjs/dist/lib/dom';
 import { extend } from 'dabbjs/dist/lib/misc';
-import Point from 'dabbjs/dist/lib/point';
-import Rect from 'dabbjs/dist/lib/rect';
+import { Point } from 'dabbjs/dist/lib/point';
+import { Rect } from 'dabbjs/dist/lib/rect';
+import { Size } from 'dabbjs/dist/lib/size';
 import { Type, IWireDefaults, INodeInfo } from './interfaces';
-import ItemBoard from './itemsBoard';
-import Container from './container';
-import Size from 'dabbjs/dist/lib/size';
+import { ItemBoard } from './itemsBoard';
+import { Container } from './container';
 
-export default class Wire extends ItemBoard {
+export class Wire extends ItemBoard {
 
   protected $!: IWireDefaults;
 

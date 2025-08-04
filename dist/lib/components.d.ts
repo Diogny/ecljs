@@ -1,5 +1,5 @@
 import { ILibrary, IComponent } from './interfaces';
-export default class CompStore {
+export declare class CompStore {
     /**
      * library
      */

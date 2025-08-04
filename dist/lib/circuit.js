@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const ec_1 = (0, tslib_1.__importDefault)(require("./ec"));
-const container_1 = (0, tslib_1.__importDefault)(require("./container"));
+import { EC } from "./ec";
+import { Container } from "./container";
 /**
  * @description Circuits component container
  */
-class Circuit extends container_1.default {
+export class Circuit extends Container {
     get name() { return "circuit"; }
     get dir() { return false; }
     get ec() {
@@ -17,7 +14,6 @@ class Circuit extends container_1.default {
      * @param options dictionary of options
      */
     createItem(options) {
-        return new ec_1.default(this, options);
+        return new EC(this, options);
     }
 }
-exports.default = Circuit;

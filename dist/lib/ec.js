@@ -1,22 +1,28 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const point_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/point"));
-const interfaces_1 = require("./interfaces");
-const itemSolid_1 = (0, tslib_1.__importDefault)(require("./itemSolid"));
-const label_1 = (0, tslib_1.__importDefault)(require("./label"));
-const extra_1 = require("./extra");
-const size_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/size"));
-class EC extends itemSolid_1.default {
+import { attr, aChld } from 'dabbjs/dist/lib/dom';
+import { extend } from "dabbjs/dist/lib/misc";
+import { Point } from 'dabbjs/dist/lib/point';
+import { Type } from './interfaces';
+import { ItemSolid } from './itemSolid';
+import { Label } from './label';
+import { createText } from './extra';
+import { Size } from 'dabbjs/dist/lib/size';
+export class EC extends ItemSolid {
+    get type() { return Type.EC; }
+    /**
+     * @description returns the read-only size of this component
+     */
+    get size() { return this.$.size.clone(); }
+    /**
+     * @description returns then board label outerHTML if any
+     */
+    get boardLabel() { var _a; return (_a = this.$.boardLabel) === null || _a === void 0 ? void 0 : _a.g.outerHTML; }
     constructor(circuit, options) {
         super(circuit, options);
-        this.$.size = options.size || size_1.default.parse(this.base.meta.size);
+        this.$.size = options.size || Size.parse(this.base.meta.size);
         let m = this.base.meta;
         //for labels in N555, 7408, Atmega168
         if (m.label) {
-            (0, dom_1.aChld)(this.g, (0, extra_1.createText)({
+            aChld(this.g, createText({
                 x: m.label.x,
                 y: m.label.y,
                 "class": m.label.class
@@ -30,11 +36,11 @@ class EC extends itemSolid_1.default {
             };
             for (let y = 48 + disp.y, x = 7 + disp.x, i = 0, factor = 20; y > 0; y -= 44, x += (factor = -factor))
                 for (let col = 0; col < pins; col++, i++, x += factor)
-                    (0, dom_1.aChld)(this.g, (0, extra_1.createText)({ x: x, y: y }, i + ""));
+                    aChld(this.g, createText({ x: x, y: y }, i + ""));
         }
         //create label if defined
         if (m.labelId) {
-            this.$.boardLabel = new label_1.default({
+            this.$.boardLabel = new Label({
                 //fontSize default Label::fontSize = 15
                 x: m.labelId.x,
                 y: m.labelId.y,
@@ -49,24 +55,15 @@ class EC extends itemSolid_1.default {
             code: 1 // "create" code = 1
         });
     }
-    get type() { return interfaces_1.Type.EC; }
-    /**
-     * @description returns the read-only size of this component
-     */
-    get size() { return this.$.size.clone(); }
-    /**
-     * @description returns then board label outerHTML if any
-     */
-    get boardLabel() { var _a; return (_a = this.$.boardLabel) === null || _a === void 0 ? void 0 : _a.g.outerHTML; }
     refresh() {
         super.refresh();
         if (this.$.boardLabel) {
-            let pos = point_1.default.plus(this.p, this.$.boardLabel.p), center = this.origin, attrs = {
+            let pos = Point.plus(this.p, this.$.boardLabel.p), center = this.origin, attrs = {
                 transform: `translate(${pos.x} ${pos.y})`
             };
-            this.rot && (center = point_1.default.minus(point_1.default.plus(this.p, center), pos),
+            this.rot && (center = Point.minus(Point.plus(this.p, center), pos),
                 attrs.transform += ` rotate(${this.rot} ${center.x} ${center.y})`);
-            (0, dom_1.attr)(this.$.boardLabel.g, attrs);
+            attr(this.$.boardLabel.g, attrs);
         }
         return this;
     }
@@ -91,10 +88,9 @@ class EC extends itemSolid_1.default {
         this.$.boardLabel && (this.g.insertAdjacentElement("afterend", this.$.boardLabel.g), this.$.boardLabel.setVisible(true));
     }
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             class: "ec",
             boardLabel: void 0,
         });
     }
 }
-exports.default = EC;

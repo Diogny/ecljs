@@ -1,18 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const rect_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/rect"));
-const flowComp_1 = (0, tslib_1.__importDefault)(require("./flowComp"));
-const flowCondLabel_1 = (0, tslib_1.__importDefault)(require("./flowCondLabel"));
-class FlowConditional extends flowComp_1.default {
-    constructor(flowchart, options) {
-        super(flowchart, options);
-        this.$.path = this.g.firstElementChild;
-        this.$.true = new flowCondLabel_1.default({ text: 'true', node: options["true"] });
-        this.$.false = new flowCondLabel_1.default({ text: 'false', node: options["false"] });
-        this.onResize(this.size);
-    }
+import { attr } from "dabbjs/dist/lib/dom";
+import { Rect } from "dabbjs/dist/lib/rect";
+import { FlowComp } from "./flowComp";
+import { ConditionalLabel } from "./flowCondLabel";
+export class FlowConditional extends FlowComp {
     /**
     * contains the main frame body, where full component size can be calculated
     */
@@ -21,7 +11,7 @@ class FlowConditional extends flowComp_1.default {
      * client rect where text should be safely contained
      */
     get clientRect() {
-        let s = this.size, r = new rect_1.default(0, 0, s.width | 0, s.height | 0), sw = r.width / 4 | 0, sh = r.height / 4 | 0;
+        let s = this.size, r = new Rect(0, 0, s.width | 0, s.height | 0), sw = r.width / 4 | 0, sh = r.height / 4 | 0;
         return r.grow(-sw - this.$.padding, -sh - this.$.padding);
     }
     /**
@@ -32,6 +22,13 @@ class FlowConditional extends flowComp_1.default {
      * @description returns then board false label outerHTML if any
      */
     get falseLabel() { var _a; return (_a = this.$.false) === null || _a === void 0 ? void 0 : _a.g.outerHTML; }
+    constructor(flowchart, options) {
+        super(flowchart, options);
+        this.$.path = this.g.firstElementChild;
+        this.$.true = new ConditionalLabel({ text: 'true', node: options["true"] });
+        this.$.false = new ConditionalLabel({ text: 'false', node: options["false"] });
+        this.onResize(this.size);
+    }
     /**
      * @description this happens after component was inserted in the DOM
      */
@@ -81,7 +78,7 @@ class FlowConditional extends flowComp_1.default {
      */
     refresh() {
         let w = this.size.width / 2 | 0, h = this.size.height / 2 | 0;
-        (0, dom_1.attr)(this.$.path, {
+        attr(this.$.path, {
             d: `M ${w},0 L ${this.size.width},${h} L ${w},${this.size.height} L 0,${h} Z`
         });
         super.refresh();
@@ -90,7 +87,6 @@ class FlowConditional extends flowComp_1.default {
         return this;
     }
 }
-exports.default = FlowConditional;
 function getLabel($, cond) {
     return $[String(!!cond)];
 }

@@ -1,6 +1,6 @@
 import { IType, IBondNode, Type, BondDir } from './interfaces';
-import ItemBoard from './itemsBoard';
-export default class Bond implements IType {
+import { ItemBoard } from './itemsBoard';
+export declare class Bond implements IType {
     dir: BondDir;
     from: IBondNode;
     to: IBondNode[];

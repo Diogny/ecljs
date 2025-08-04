@@ -1,8 +1,8 @@
-import Rect from "dabbjs/dist/lib/rect";
+import { Rect } from "dabbjs/dist/lib/rect";
 import { IFlowCondDefaults } from "./interfaces";
-import FlowComp from "./flowComp";
-import Flowchart from "./flowchart";
-export default class FlowConditional extends FlowComp {
+import { FlowComp } from "./flowComp";
+import { Flowchart } from "./flowchart";
+export declare class FlowConditional extends FlowComp {
     protected $: IFlowCondDefaults;
     /**
     * contains the main frame body, where full component size can be calculated

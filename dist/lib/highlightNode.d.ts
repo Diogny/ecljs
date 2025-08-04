@@ -1,7 +1,7 @@
-import Point from "dabbjs/dist/lib/point";
+import { Point } from "dabbjs/dist/lib/point";
 import { Type, IHighlighNodeDefaults } from "./interfaces";
-import ItemBase from "./itemsBase";
-export default class HighlightNode extends ItemBase {
+import { ItemBase } from "./itemsBase";
+export declare class HighlightNode extends ItemBase {
     protected $: IHighlighNodeDefaults;
     get type(): Type;
     get radius(): number;

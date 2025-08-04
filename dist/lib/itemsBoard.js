@@ -1,12 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const dab_1 = require("dabbjs/dist/lib/dab");
-const misc_1 = require("dabbjs/dist/lib/misc");
-const dom_1 = require("dabbjs/dist/lib/dom");
-const itemsBase_1 = (0, tslib_1.__importDefault)(require("./itemsBase"));
+import { isFn, obj } from 'dabbjs/dist/lib/dab';
+import { extend } from 'dabbjs/dist/lib/misc';
+import { tCl, attr, tag } from 'dabbjs/dist/lib/dom';
+import { ItemBase } from './itemsBase';
 //ItemBoard->Wire
-class ItemBoard extends itemsBase_1.default {
+export class ItemBoard extends ItemBase {
+    get onProp() { return this.$.onProp; }
+    get selected() { return this.$.selected; }
+    get bonds() { return this.container.itemBonds(this); }
+    get dir() { return this.$.dir; }
     constructor(container, options) {
         super(options);
         this.container = container;
@@ -14,8 +15,8 @@ class ItemBoard extends itemsBase_1.default {
             throw new Error(`missing container`);
         //create getter/setters for every property, so type=="size" or "point" don't need to parse always
         //and later save it along the .xml file for custom values
-        this.$.props = (0, dab_1.obj)(this.base.props);
-        (0, dom_1.attr)(this.g, {
+        this.$.props = obj(this.base.props);
+        attr(this.g, {
             id: this.id,
             "svg-comp": this.base.type,
         });
@@ -24,16 +25,12 @@ class ItemBoard extends itemsBase_1.default {
         //properties still cannot access super value
         //(<any>this.$).$elected = dab.propDescriptor(this, "selected");
     }
-    get onProp() { return this.$.onProp; }
-    get selected() { return this.$.selected; }
-    get bonds() { return this.container.itemBonds(this); }
-    get dir() { return this.$.dir; }
     select(value) {
         if (this.selected != value) {
             //set new value
             this.$.selected = value;
             //add class if selected, otherwise removes it
-            (0, dom_1.tCl)(this.g, "selected", this.selected);
+            tCl(this.g, "selected", this.selected);
             //trigger property changed if applicable
             this.onProp && this.onProp({
                 id: `#${this.id}`,
@@ -87,7 +84,7 @@ class ItemBoard extends itemsBase_1.default {
      */
     setNode(_node, _p) { return this; }
     setOnProp(value) {
-        (0, dab_1.isFn)(value) && (this.$.onProp = value);
+        isFn(value) && (this.$.onProp = value);
         return this;
     }
     /**
@@ -121,7 +118,7 @@ class ItemBoard extends itemsBase_1.default {
                 r: this.$.hlRadius
             };
             attributes[this.$.hlNode] = node;
-            circleNode = (0, dom_1.tag)("circle", "", attributes);
+            circleNode = tag("circle", "", attributes);
             this.g.appendChild(circleNode);
         }
         return;
@@ -151,7 +148,7 @@ class ItemBoard extends itemsBase_1.default {
         let circleNode = getNode(this.g, node), pin = this.node(node, true);
         if (!circleNode)
             return false;
-        (0, dom_1.attr)(circleNode, {
+        attr(circleNode, {
             cx: pin.x,
             cy: pin.y,
         });
@@ -172,7 +169,7 @@ class ItemBoard extends itemsBase_1.default {
      */
     get props() { return this.$.props; }
     defaults() {
-        return (0, misc_1.extend)(super.defaults(), {
+        return extend(super.defaults(), {
             selected: false,
             onProp: void 0,
             dir: false,
@@ -181,7 +178,6 @@ class ItemBoard extends itemsBase_1.default {
         });
     }
 }
-exports.default = ItemBoard;
 ItemBoard.nodeArea = 81;
 function getNode(g, n) {
     return g.querySelector(`circle[svg-type="node"][node="${n}"]`);

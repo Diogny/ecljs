@@ -1,13 +1,22 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const rect_1 = (0, tslib_1.__importDefault)(require("dabbjs/dist/lib/rect"));
-const interfaces_1 = require("./interfaces");
-const bonds_1 = (0, tslib_1.__importDefault)(require("./bonds"));
-const wire_1 = (0, tslib_1.__importDefault)(require("./wire"));
-const extra_1 = require("./extra");
-const dab_1 = require("dabbjs/dist/lib/dab");
-class Container extends interfaces_1.Base {
+import { Rect } from "dabbjs/dist/lib/rect";
+import { Type, Base } from "./interfaces";
+import { Bond } from "./bonds";
+import { Wire } from "./wire";
+import { getItem } from "./extra";
+import { dP } from "dabbjs/dist/lib/dab";
+export class Container extends Base {
+    get selected() { return this.$.selected; }
+    get items() { return Array.from(this.$.itemMap.values()).map(item => item.t); }
+    get wires() { return Array.from(this.$.wireMap.values()).map(item => item.t); }
+    get all() { return this.items.concat(this.wires); }
+    get empty() { return !(this.$.wireMap.size || this.$.itemMap.size); }
+    get size() { return this.$.itemMap.size + this.$.wireMap.size; }
+    get store() { return this.$.store; }
+    /**
+     * @description gets the component
+     * @param id component's id
+     */
+    get(id) { var _a; return (_a = getItem(this.$, id)) === null || _a === void 0 ? void 0 : _a.t; }
     /**
      * @description creates a library component container
      * @param options configurable options, see below:
@@ -23,18 +32,6 @@ class Container extends interfaces_1.Base {
         this.$.wireMap = new Map();
         this.$.selected = [];
     }
-    get selected() { return this.$.selected; }
-    get items() { return Array.from(this.$.itemMap.values()).map(item => item.t); }
-    get wires() { return Array.from(this.$.wireMap.values()).map(item => item.t); }
-    get all() { return this.items.concat(this.wires); }
-    get empty() { return !(this.$.wireMap.size || this.$.itemMap.size); }
-    get size() { return this.$.itemMap.size + this.$.wireMap.size; }
-    get store() { return this.$.store; }
-    /**
-     * @description gets the component
-     * @param id component's id
-     */
-    get(id) { var _a; return (_a = (0, extra_1.getItem)(this.$, id)) === null || _a === void 0 ? void 0 : _a.t; }
     defaults() {
         return {
             store: void 0,
@@ -84,7 +81,7 @@ class Container extends interfaces_1.Base {
         this.$ = void 0;
     }
     boundariesRect() {
-        let array = this.all, first = array.shift(), r = first ? first.rect() : rect_1.default.empty;
+        let array = this.all, first = array.shift(), r = first ? first.rect() : Rect.empty;
         array.forEach(ec => r = r.add(ec.rect()));
         return r.grow(20, 20);
     }
@@ -110,9 +107,9 @@ class Container extends interfaces_1.Base {
         comp.remove();
         list.forEach(id => {
             let nc = this.get(id);
-            nc && (nc.type == interfaces_1.Type.WIRE) && this.delete(nc);
+            nc && (nc.type == Type.WIRE) && this.delete(nc);
         });
-        return (comp.type == interfaces_1.Type.WIRE) ?
+        return (comp.type == Type.WIRE) ?
             this.$.wireMap.delete(comp.id) :
             this.$.itemMap.delete(comp.id);
     }
@@ -148,7 +145,7 @@ class Container extends interfaces_1.Base {
             && this.bondOneWay(ic, icNode, thisObj, thisNode, 1); // back B to A
     }
     bondOneWay(thisObj, thisNode, ic, icNode, dir) {
-        let item = (0, extra_1.getItem)(this.$, thisObj.id), entry = item && item.b[thisNode];
+        let item = getItem(this.$, thisObj.id), entry = item && item.b[thisNode];
         if (!item)
             return false;
         if (!ic
@@ -161,7 +158,7 @@ class Container extends interfaces_1.Base {
         }
         else {
             //this's the origin of the bond
-            entry = new bonds_1.default(thisObj, thisNode, ic, icNode, dir);
+            entry = new Bond(thisObj, thisNode, ic, icNode, dir);
             item.b[thisNode] = entry;
         }
         item.c++;
@@ -184,7 +181,7 @@ class Container extends interfaces_1.Base {
      * @returns undefined if not bonded, otherwise thisObj::Bond.dir and list of disconnected wire ids
      */
     unbondNode(thisObj, node) {
-        let item = (0, extra_1.getItem)(this.$, thisObj.id), bond = item && item.b[node], link = void 0, list = [];
+        let item = getItem(this.$, thisObj.id), bond = item && item.b[node], link = void 0, list = [];
         if (!bond || !item)
             return;
         //try later to use bond.to.forEach, it was giving an error with wire node selection, think it's fixed
@@ -228,8 +225,8 @@ class Container extends interfaces_1.Base {
         return bonds;
     }
     moveBond(id, node, newIndex) {
-        let item = (0, extra_1.getItem)(this.$, id), wire = item === null || item === void 0 ? void 0 : item.t;
-        if (!item || !wire || wire.type != interfaces_1.Type.WIRE)
+        let item = getItem(this.$, id), wire = item === null || item === void 0 ? void 0 : item.t;
+        if (!item || !wire || wire.type != Type.WIRE)
             return;
         let bond = this.nodeBonds(wire, node);
         if (bond) {
@@ -248,7 +245,6 @@ class Container extends interfaces_1.Base {
         }
     }
 }
-exports.default = Container;
 /**
  * @description unbonds two components, Comp with Wire, or Two Wires
  * @param container container
@@ -259,7 +255,7 @@ exports.default = Container;
  * @returns BondDir of id Bond is any or undefined for not bonded
  */
 function unbond($, id, node, toId, origin) {
-    let item = (0, extra_1.getItem)($, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
+    let item = getItem($, id), bond = item && item.b[node], b = bond === null || bond === void 0 ? void 0 : bond.remove(toId);
     if (bond && b && item) {
         delete item.b[node];
         (--item.c == 0) && (item.b = []);
@@ -279,7 +275,7 @@ function getBaseComp(that, $, name) {
     if (!obj.comp)
         throw new Error(`unregistered component: ${name}`);
     if ((obj.tmpl = obj.comp.meta.nameTmpl)) {
-        (0, dab_1.dP)(obj, "count", {
+        dP(obj, "count", {
             get() {
                 return $.counters[obj.tmpl];
             },
@@ -340,7 +336,7 @@ function createBoardItem(that, $, options) {
         //this happens when this component is created...
     });
     if (options.name == "wire") {
-        item = new wire_1.default(that, options);
+        item = new Wire(that, options);
         if ($.wireMap.has(item.id))
             throw new Error('duplicated connector');
         $.wireMap.set(item.id, { t: item, b: [], c: 0 });

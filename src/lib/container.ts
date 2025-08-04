@@ -1,13 +1,13 @@
-import Rect from "dabbjs/dist/lib/rect";
+import { Rect } from "dabbjs/dist/lib/rect";
 import { Type, IBaseComponent, IBondNode, IContainerDefaults, Base, IComponent, BondDir, IUnbondNodeData, IUnbondData } from "./interfaces";
-import Bond from "./bonds";
-import ItemBoard from "./itemsBoard";
-import Wire from "./wire";
-import CompStore from "./components";
+import { Bond } from "./bonds";
+import { ItemBoard } from "./itemsBoard";
+import { Wire } from "./wire";
+import { CompStore } from "./components";
 import { getItem } from "./extra";
 import { dP } from "dabbjs/dist/lib/dab";
 
-export default abstract class Container<T extends ItemBoard> extends Base {
+export abstract class Container<T extends ItemBoard> extends Base {
 
   protected $!: IContainerDefaults<T>;
 

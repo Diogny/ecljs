@@ -1,11 +1,11 @@
 import { attr } from "dabbjs/dist/lib/dom";
-import Rect from "dabbjs/dist/lib/rect";
+import { Rect } from "dabbjs/dist/lib/rect";
 import { IFlowCondDefaults } from "./interfaces";
-import FlowComp from "./flowComp";
-import Flowchart from "./flowchart";
-import ConditionalLabel from "./flowCondLabel";
+import { FlowComp } from "./flowComp";
+import { Flowchart } from "./flowchart";
+import { ConditionalLabel } from "./flowCondLabel";
 
-export default class FlowConditional extends FlowComp {
+export class FlowConditional extends FlowComp {
 
   protected $!: IFlowCondDefaults;
 

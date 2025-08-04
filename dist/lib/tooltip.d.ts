@@ -1,7 +1,7 @@
 import { ISize } from 'dabbjs/dist/lib/interfaces';
 import { Type, ITooltipDefaults } from "./interfaces";
-import Label from './label';
-export default class Tooltip extends Label {
+import { Label } from './label';
+export declare class Tooltip extends Label {
     get type(): Type;
     protected $: ITooltipDefaults;
     get borderRadius(): number;
